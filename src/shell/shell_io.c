@@ -471,7 +471,9 @@ static char *mib_regname[] =
     "TxDefer",
     "TxLateCol",
     "RxUniCast",
-    "TxUniCast"
+    "TxUniCast",
+    "RxJmFcsErr",
+    "RxJmAligErr"
 };
 
 void

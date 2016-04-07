@@ -75,6 +75,8 @@ extern "C" {
         a_uint32_t TxLateCol;
         a_uint32_t RxUniCast;
         a_uint32_t TxUniCast;
+        a_uint32_t RxJumboFcsErr;	/* add for  Hawkeye*/
+        a_uint32_t RxJumboAligenErr;		/* add for Hawkeye*/
     } fal_mib_info_t;
 
 
