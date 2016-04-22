@@ -219,6 +219,8 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_COUNTER_INFO, NULL, cmd_data_print_counter_info),
     SW_TYPE_DEF(SW_REG_DUMP, NULL, cmd_data_print_register_info),
     SW_TYPE_DEF(SW_DBG_REG_DUMP, NULL, cmd_data_print_debug_register_info),
+    SW_TYPE_DEF(SW_VSI_NEWADDR_LRN, cmd_data_check_newadr_lrn, NULL),
+    SW_TYPE_DEF(SW_VSI_STAMOVE, cmd_data_check_stamove, NULL),
 };
 
 sw_data_type_t *
@@ -10848,7 +10850,7 @@ cmd_data_check_array(char *cmdstr, void *val, a_uint32_t size)
 sw_error_t
 cmd_data_check_ip_wcmp_entry(char *cmd_str, void * val, a_uint32_t size)
 {
-	
+
 	char *cmd;
 	a_uint32_t tmp = 0;
 	sw_error_t rv;
@@ -10856,7 +10858,7 @@ cmd_data_check_ip_wcmp_entry(char *cmd_str, void * val, a_uint32_t size)
 	char buf[12] ={0};
 
 	aos_mem_zero(&entry, sizeof (fal_ip_wcmp_t));
-	
+
 	do
 	{
 		cmd = get_sub_cmd("nh_nr", "16");
@@ -11169,6 +11171,63 @@ cmd_data_check_ip6_rfs_entry(char *cmd_str, void * val, a_uint32_t size)
 	entry.load_balance = tmp;
 
 	*(fal_ip6_rfs_t *)val = entry;
+	return SW_OK;
+}
+
+
+sw_error_t
+cmd_data_check_newadr_lrn(char *cmd_str, void * val, a_uint32_t size)
+{
+	char *cmd;
+	a_uint32_t tmp;
+	sw_error_t rv;
+	fal_vsi_newaddr_lrn_t entry;
+
+	aos_mem_zero(&entry, sizeof (fal_vsi_newaddr_lrn_t));
+
+	rv = __cmd_data_check_complex("lrn_en", "1",
+                        "usage: 0-disable 1-enable\n",
+                        cmd_data_check_uint32, &(entry.lrn_en),
+                        sizeof (a_uint32_t));
+	if (rv)
+		return rv;
+
+	rv = __cmd_data_check_complex("action", 0,
+                            "usage: 0-Forward 1-Drop 2-Copy to CPU 3-redirect to CPU\n",
+                            cmd_data_check_uint32, &(entry.action),
+                            4);
+	if (rv)
+		return rv;
+
+	*(fal_vsi_newaddr_lrn_t *)val = entry;
+	return SW_OK;
+}
+
+sw_error_t
+cmd_data_check_stamove(char *cmd_str, void * val, a_uint32_t size)
+{
+	char *cmd;
+	a_uint32_t tmp;
+	sw_error_t rv;
+	fal_vsi_stamove_t entry;
+
+	aos_mem_zero(&entry, sizeof (fal_vsi_stamove_t));
+
+	rv = __cmd_data_check_complex("stamove", "1",
+                        "usage: 0-disable 1-enable\n",
+                        cmd_data_check_uint32, &(entry.stamove_en),
+                        sizeof (a_uint32_t));
+	if (rv)
+		return rv;
+
+	rv = __cmd_data_check_complex("action", 0,
+                            "usage: 0-Forward 1-Drop 2-Copy to CPU 3-redirect to CPU\n",
+                            cmd_data_check_uint32, &(entry.action),
+                            4);
+	if (rv)
+		return rv;
+
+	*(fal_vsi_stamove_t *)val = entry;
 	return SW_OK;
 }
 

@@ -93,6 +93,7 @@ extern "C" {
         CHIP_ISIS,
         CHIP_ISISC,
         CHIP_DESS,
+        CHIP_HPPE,
     } ssdk_chip_type;
 
     typedef struct

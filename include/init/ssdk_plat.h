@@ -103,7 +103,7 @@
 
 #define AR8327_NUM_PHYS		5
 #define AR8327_PORT_CPU     0
-#define AR8327_NUM_PORTS	7
+#define AR8327_NUM_PORTS	8
 #define AR8327_MAX_VLANS  128
 
 enum {

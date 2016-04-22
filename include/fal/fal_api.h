@@ -789,7 +789,7 @@ extern "C" {
     SW_API_DEF(SW_API_LLDP_STATUS_SET, fal_lldp_status_set), \
     SW_API_DEF(SW_API_LLDP_STATUS_GET, fal_lldp_status_get), \
     SW_API_DEF(SW_API_FRAME_CRC_RESERVE_SET, fal_frame_crc_reserve_set), \
-    SW_API_DEF(SW_API_FRAME_CRC_RESERVE_GET, fal_frame_crc_reserve_get), 
+    SW_API_DEF(SW_API_FRAME_CRC_RESERVE_GET, fal_frame_crc_reserve_get),
 
 
 
@@ -1210,6 +1210,40 @@ extern "C" {
 #define INTERFACECTRL_API_PARAM
 #endif
 
+#ifdef IN_VSI
+#define VSI_API \
+    SW_API_DEF(SW_API_VSI_ALLOC, fal_vsi_alloc), \
+    SW_API_DEF(SW_API_VSI_FREE, fal_vsi_free), \
+    SW_API_DEF(SW_API_PORT_VSI_SET, fal_port_vsi_set), \
+    SW_API_DEF(SW_API_PORT_VSI_GET, fal_port_vsi_get), \
+    SW_API_DEF(SW_API_PORT_VLAN_VSI_SET, fal_port_vlan_vsi_set), \
+    SW_API_DEF(SW_API_PORT_VLAN_VSI_GET, fal_port_vlan_vsi_get), \
+    SW_API_DEF(SW_API_VSI_TBL_DUMP, fal_vsi_tbl_dump), \
+    SW_API_DEF(SW_API_VSI_NEWADDR_LRN_GET, fal_vsi_newaddr_lrn_get), \
+    SW_API_DEF(SW_API_VSI_NEWADDR_LRN_SET, fal_vsi_newaddr_lrn_set), \
+    SW_API_DEF(SW_API_VSI_STAMOVE_SET, fal_vsi_stamove_set), \
+    SW_API_DEF(SW_API_VSI_STAMOVE_GET,fal_vsi_stamove_get),
+
+
+#define VSI_API_PARAM \
+    SW_API_DESC(SW_API_VSI_ALLOC)  \
+    SW_API_DESC(SW_API_VSI_FREE)  \
+    SW_API_DESC(SW_API_PORT_VSI_SET)  \
+    SW_API_DESC(SW_API_PORT_VSI_GET)  \
+    SW_API_DESC(SW_API_PORT_VLAN_VSI_SET)  \
+    SW_API_DESC(SW_API_PORT_VLAN_VSI_GET)  \
+    SW_API_DESC(SW_API_VSI_TBL_DUMP) \
+    SW_API_DESC(SW_API_VSI_NEWADDR_LRN_GET) \
+    SW_API_DESC(SW_API_VSI_NEWADDR_LRN_SET) \
+    SW_API_DESC(SW_API_VSI_STAMOVE_SET) \
+    SW_API_DESC(SW_API_VSI_STAMOVE_GET)
+
+#else
+#define VSI_API
+#define VSI_API_PARAM
+#endif
+
+
 #define REG_API \
     SW_API_DEF(SW_API_PHY_GET, fal_phy_get), \
     SW_API_DEF(SW_API_PHY_SET, fal_phy_set), \
@@ -1259,6 +1293,7 @@ extern "C" {
     NAT_API \
     TRUNK_API \
     INTERFACECTRL_API \
+    VSI_API \
     REG_API \
     SW_API_DEF(SW_API_MAX, NULL),
 
@@ -1287,6 +1322,7 @@ extern "C" {
     NAT_API_PARAM \
     TRUNK_API_PARAM \
     INTERFACECTRL_API_PARAM \
+    VSI_API_PARAM \
     REG_API_PARAM \
     SW_PARAM_DEF(SW_API_MAX, SW_UINT32, 4, SW_PARAM_IN, "Dev ID"),
 

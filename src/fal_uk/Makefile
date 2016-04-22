@@ -85,6 +85,10 @@ ifeq (TRUE, $(IN_INTERFACECONTROL))
   SRC_LIST += fal_interface_ctrl.c
 endif
 
+ifeq (TRUE, $(IN_VSI))
+  SRC_LIST += fal_vsi.c
+endif
+
 include $(PRJ_PATH)/make/components.mk
 include $(PRJ_PATH)/make/defs.mk
 include $(PRJ_PATH)/make/target.mk

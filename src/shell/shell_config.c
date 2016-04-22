@@ -569,7 +569,7 @@ struct cmd_des_t gcmd_des[] =
             {"rtdPppoe", "set", "set RM_RTD_PPPOE_EN status", "<enable|disable>", SW_API_RTD_PPPOE_EN_SET, NULL},
             {"rtdPppoe", "get", "get RM_RTD_PPPOE_EN status", "", SW_API_RTD_PPPOE_EN_GET, NULL},
 			{"glomacaddr", "set", "set global macaddr", "<macaddr>", SW_API_GLOBAL_MACADDR_SET, NULL},
-			{"glomacaddr", "get", "get global macaddr", "", SW_API_GLOBAL_MACADDR_GET, NULL},	
+			{"glomacaddr", "get", "get global macaddr", "", SW_API_GLOBAL_MACADDR_GET, NULL},
 			{"lldp", "set", "set lldp frames hardware identification status", "<enable|disable>", SW_API_LLDP_STATUS_SET, NULL},
 			{"lldp", "get", "get lldp frames hardware identification status", "", SW_API_LLDP_STATUS_GET, NULL},
 			{"framecrc", "set", "set frame crc reserve enable", "<enable|disable>", SW_API_FRAME_CRC_RESERVE_SET, NULL},
@@ -721,6 +721,27 @@ struct cmd_des_t gcmd_des[] =
         },
     },
 #endif
+
+#ifdef IN_VSI
+    {
+        "vsi", "config vsi",
+        {
+            {"vsi", "alloc", "Alloc new vsi", "", SW_API_VSI_ALLOC, NULL},
+            {"vsi", "free", "Free vsi", "", SW_API_VSI_FREE, NULL},
+            {"port_vsi", "set", "Set port based vsi", "<port_id> <vsi>", SW_API_PORT_VSI_SET, NULL},
+            {"port_vsi", "get", "Get port based vsi", "<port_id>", SW_API_PORT_VSI_GET, NULL},
+            {"vlan_vsi", "set", "Set vlan vsi", "<port_id> <vlan_id> <vsi>", SW_API_PORT_VLAN_VSI_SET, NULL},
+            {"vlan_vsi", "get", "Get vlan vsi", "<port_id> <vlan_id>", SW_API_PORT_VLAN_VSI_GET, NULL},
+            {"table", "dump", "Dump VSI SW and HW table", "", SW_API_VSI_TBL_DUMP, NULL},
+            {"newaddr_lrn", "set", "Set vsi based new address learn", "<vsi> <lrn_en> <action>", SW_API_VSI_NEWADDR_LRN_SET, NULL},
+            {"newaddr_lrn", "get", "Get vsi based new address learn", "<vsi>", SW_API_VSI_NEWADDR_LRN_GET, NULL},
+            {"stamove", "set", "Set vsi based station move", "<vsi> <stamove_en> <action>", SW_API_VSI_STAMOVE_SET, NULL},
+            {"stamove", "get", "Get vsi based station move", "<vsi>", SW_API_VSI_STAMOVE_GET, NULL},
+            {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
+        },
+    },
+#endif
+
 
     /* debug */
     {
