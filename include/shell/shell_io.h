@@ -387,6 +387,12 @@ cmd_data_check_newadr_lrn(char *cmd_str, void * val, a_uint32_t size);
 sw_error_t
 cmd_data_check_stamove(char *cmd_str, void * val, a_uint32_t size);
 
+sw_error_t
+cmd_data_check_mtu_entry(char *cmd_str, void * val, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_mru_entry(char *cmd_str, void * val, a_uint32_t size);
+
 void
 cmd_data_print_crossover_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
@@ -410,6 +416,12 @@ cmd_data_print_register_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 
 void
 cmd_data_print_debug_register_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+void
+cmd_data_print_mtu_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+void
+cmd_data_print_mru_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 #endif
 

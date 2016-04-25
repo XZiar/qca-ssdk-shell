@@ -755,4 +755,47 @@ fal_port_counter_show(a_uint32_t dev_id, fal_port_t port_id,
     return rv;
 }
 
+sw_error_t
+fal_port_mtu_set(a_uint32_t dev_id, fal_port_t port_id,
+                       fal_mtu_ctrl_t *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_MTU_SET, dev_id, port_id,
+                    (a_uint32_t) ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_port_mtu_get(a_uint32_t dev_id, fal_port_t port_id,
+                       fal_mtu_ctrl_t *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_MTU_GET, dev_id, port_id,
+                    (a_uint32_t) ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_port_mru_set(a_uint32_t dev_id, fal_port_t port_id,
+                       fal_mru_ctrl_t *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_MRU_SET, dev_id, port_id,
+                    (a_uint32_t) ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_port_mru_get(a_uint32_t dev_id, fal_port_t port_id,
+                       fal_mru_ctrl_t *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_MRU_GET, dev_id, port_id,
+                    (a_uint32_t) ctrl);
+    return rv;
+}
 

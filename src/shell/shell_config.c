@@ -98,6 +98,10 @@ struct cmd_des_t gcmd_des[] =
 	        {"counter", "set", "set counter status of a port", "<port_id> <enable|disable>", SW_API_PT_COUNTER_SET, NULL},
 	        {"counter", "get", "get counter status of a port", "<port_id>", SW_API_PT_COUNTER_GET, NULL},
 	        {"counter", "show", "show counter statistics of a port", "<port_id>", SW_API_PT_COUNTER_SHOW, NULL},
+            {"mtu", "set", "set port mtu value", "", SW_API_PT_MTU_SET, NULL},
+            {"mtu", "get", "get port mtu value", "", SW_API_PT_MTU_GET, NULL},
+            {"mru", "set", "set port mru value", "", SW_API_PT_MRU_SET, NULL},
+            {"mru", "get", "get port mru value", "", SW_API_PT_MRU_GET, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL},/*end of desc*/
         },
     },
