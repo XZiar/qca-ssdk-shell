@@ -101,6 +101,7 @@ extern "C" {
         SW_PHYCONFIG,
         SW_DATA_MAX,
         SW_FDBSMODE,
+        SW_FDB_CTRL_MODE,
         SW_FX100CONFIG,
         SW_SGENTRY,
         SW_SEC_MAC,

@@ -103,6 +103,24 @@ fal_fdb_port_learn_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t * enable)
 }
 
 sw_error_t
+fal_fdb_age_mode_set(a_uint32_t dev_id, a_uint32_t age_mode)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FDB_AGE_MODE_SET, dev_id, age_mode);
+    return rv;
+}
+
+sw_error_t
+fal_fdb_age_mode_get(a_uint32_t dev_id, a_uint32_t * age_mode)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FDB_AGE_MODE_GET, dev_id, age_mode);
+    return rv;
+}
+
+sw_error_t
 fal_fdb_age_ctrl_set(a_uint32_t dev_id, a_bool_t enable)
 {
     sw_error_t rv;
@@ -117,6 +135,42 @@ fal_fdb_age_ctrl_get(a_uint32_t dev_id, a_bool_t * enable)
     sw_error_t rv;
 
     rv = sw_uk_exec(SW_API_FDB_AGE_CTRL_GET, dev_id, (a_uint32_t) enable);
+    return rv;
+}
+
+sw_error_t
+fal_fdb_learn_ctrl_set(a_uint32_t dev_id, a_bool_t enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FDB_LEARN_CTRL_SET, dev_id, (a_uint32_t) enable);
+    return rv;
+}
+
+sw_error_t
+fal_fdb_learn_ctrl_get(a_uint32_t dev_id, a_bool_t * enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FDB_LEARN_CTRL_GET, dev_id, (a_uint32_t) enable);
+    return rv;
+}
+
+sw_error_t
+fal_fdb_learn_mode_set(a_uint32_t dev_id, a_uint32_t learn_mode)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FDB_LEARN_MODE_SET, dev_id, learn_mode);
+    return rv;
+}
+
+sw_error_t
+fal_fdb_learn_mode_get(a_uint32_t dev_id, a_uint32_t * learn_mode)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FDB_LEARN_MODE_GET, dev_id, learn_mode);
     return rv;
 }
 
@@ -192,6 +246,16 @@ fal_fdb_transfer(a_uint32_t dev_id, fal_port_t old_port, fal_port_t new_port,
     sw_error_t rv;
 
     rv = sw_uk_exec(SW_API_FDB_TRANSFER, dev_id, old_port, new_port, fid, (a_uint32_t)option);
+    return rv;
+}
+
+sw_error_t
+fal_port_fdb_learn_counter_get(a_uint32_t dev_id, fal_port_t port_id,
+                               a_uint32_t * cnt)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_FDB_LEARN_COUNTER_GET, dev_id, port_id, cnt);
     return rv;
 }
 

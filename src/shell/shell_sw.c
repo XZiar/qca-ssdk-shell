@@ -72,7 +72,8 @@ cmd_show_fdb(a_uint32_t *arg_val)
 	    else
 	        dprintf("\ntotal %d entries\n", cnt);
     }else if ((ssdk_cfg.init_cfg.chip_type == CHIP_ISISC) ||
-		(ssdk_cfg.init_cfg.chip_type == CHIP_DESS)) {
+               (ssdk_cfg.init_cfg.chip_type == CHIP_DESS) ||
+               (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE)) {
 	    sw_error_t rtn;
 	    a_uint32_t cnt = 0;
 	    fal_fdb_op_t    *fdb_op    = (fal_fdb_op_t *)    (ioctl_buf + sizeof(sw_error_t) / 4);

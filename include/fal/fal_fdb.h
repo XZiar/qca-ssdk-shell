@@ -55,9 +55,11 @@ extern "C" {
         fal_fwd_cmd_t sacmd;
         union
         {
-            a_uint32_t id;
+            fal_port_t id;
             fal_pbmp_t map;
+            fal_nexthop_t nexthop;
         } port;
+        a_bool_t nexthop_en;
         a_bool_t portmap_en;
         a_bool_t is_multicast;
         a_bool_t static_en;
@@ -70,6 +72,8 @@ extern "C" {
         a_bool_t white_list_en;
         a_bool_t load_balance_en;
         a_uint8_t load_balance;
+        a_bool_t entry_valid;
+        a_bool_t lookup_valid;
     } fal_fdb_entry_t;
 
 #define FAL_FDB_DEL_STATIC   0x1
@@ -144,14 +148,36 @@ extern "C" {
     fal_fdb_port_learn_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *enable);
 
 
+    sw_error_t
+    fal_fdb_age_mode_set(a_uint32_t dev_id, a_uint32_t age_mode);
+
+
+    sw_error_t
+    fal_fdb_age_mode_get(a_uint32_t dev_id, a_uint32_t * age_mode);
+
 
     sw_error_t
     fal_fdb_age_ctrl_set(a_uint32_t dev_id, a_bool_t enable);
 
 
-
     sw_error_t
     fal_fdb_age_ctrl_get(a_uint32_t dev_id, a_bool_t * enable);
+
+
+    sw_error_t
+    fal_fdb_learn_ctrl_set(a_uint32_t dev_id, a_bool_t enable);
+
+
+    sw_error_t
+    fal_fdb_learn_ctrl_get(a_uint32_t dev_id, a_bool_t * enable);
+
+
+    sw_error_t
+    fal_fdb_learn_mode_set(a_uint32_t dev_id, a_uint32_t learn_mode);
+
+
+    sw_error_t
+    fal_fdb_learn_mode_get(a_uint32_t dev_id, a_uint32_t * learn_mode);
 
 
     sw_error_t
@@ -188,6 +214,11 @@ extern "C" {
     sw_error_t
     fal_fdb_transfer(a_uint32_t dev_id, fal_port_t old_port, fal_port_t new_port,
                      a_uint32_t fid, fal_fdb_op_t * option);
+
+
+    sw_error_t
+    fal_port_fdb_learn_counter_get(a_uint32_t dev_id, fal_port_t port_id,
+                                  a_uint32_t * cnt);
 
 
     sw_error_t

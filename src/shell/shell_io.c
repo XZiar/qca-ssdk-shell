@@ -192,6 +192,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_MACCONFIG, cmd_data_check_mac_config, cmd_data_print_mac_config),
     SW_TYPE_DEF(SW_PHYCONFIG, cmd_data_check_phy_config, cmd_data_print_phy_config),
     SW_TYPE_DEF(SW_FDBSMODE, cmd_data_check_fdb_smode, cmd_data_print_fdb_smode),
+    SW_TYPE_DEF(SW_FDB_CTRL_MODE, NULL, cmd_data_print_fdb_ctrl_mode),
     SW_TYPE_DEF(SW_FX100CONFIG, cmd_data_check_fx100_config, cmd_data_print_fx100_config),
     SW_TYPE_DEF(SW_SGENTRY, cmd_data_check_multi, cmd_data_print_multi),
     SW_TYPE_DEF(SW_SEC_MAC, cmd_data_check_sec_mac, NULL),
@@ -2047,6 +2048,21 @@ cmd_data_print_confirm(char * param_name, a_bool_t val, a_uint32_t size)
 }
 
 sw_error_t
+cmd_data_check_portid(char *cmdstr, fal_port_t * val, a_uint32_t size)
+{
+    *val = 0;
+    //default input null
+    if(!strcasecmp(cmdstr, "null"))
+    {
+        return SW_OK;
+    }
+
+    sscanf(cmdstr, "%d", val);
+
+    return SW_OK;
+}
+
+sw_error_t
 cmd_data_check_portmap(char *cmdstr, fal_pbmp_t * val, a_uint32_t size)
 {
     char *tmp = NULL;
@@ -2182,7 +2198,7 @@ cmd_data_print_macaddr(char * param_name, a_uint32_t * buf,
 sw_error_t
 cmd_data_check_fdbentry(char *info, void *val, a_uint32_t size)
 {
-    char *cmd;
+    char *cmd, *cmd_find;
     sw_error_t rv;
     fal_fdb_entry_t entry;
     a_uint32_t tmp = 0;
@@ -2294,7 +2310,7 @@ cmd_data_check_fdbentry(char *info, void *val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("dest port", "null");
+        cmd = get_sub_cmd("nexthop enable", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -2304,19 +2320,81 @@ cmd_data_check_fdbentry(char *info, void *val, a_uint32_t size)
         }
         else if (!strncasecmp(cmd, "help", 4))
         {
-            dprintf("usage: input port number such as 1,3\n");
+            dprintf("usage: <yes/no/y/n>\n");
             rv = SW_BAD_VALUE;
         }
         else
         {
-            rv = cmd_data_check_portmap(cmd, &entry.port.map,
-                                        sizeof (fal_pbmp_t));
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &entry.nexthop_en,
+                                        sizeof (a_bool_t));
             if (SW_OK != rv)
-                dprintf("usage: input port number such as 1,3\n");
+                dprintf("usage: <yes/no/y/n>\n");
         }
+
     }
     while (talk_mode && (SW_OK != rv));
-    entry.portmap_en = A_TRUE;
+
+    if (entry.nexthop_en == A_TRUE)
+    {
+        do
+        {
+            cmd = get_sub_cmd("nexthop id", "null");
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+                dprintf("usage: input port number such as 1,3\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &entry.port.nexthop, sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: input port number such as 1,3\n");
+            }
+        }
+        while (talk_mode && (SW_OK != rv));
+    }
+    else
+    {
+        do
+        {
+            cmd = get_sub_cmd("dest port", "null");
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+                dprintf("usage: input port number such as 1,3\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                cmd_find = strstr(cmd, ",");
+                if (cmd_find == NULL)
+                    rv = cmd_data_check_portid(cmd, &entry.port.id,
+                                                sizeof (fal_port_t));
+                else
+                    rv = cmd_data_check_portmap(cmd, &entry.port.map,
+                                                sizeof (fal_pbmp_t));
+                if (SW_OK != rv)
+                    dprintf("usage: input port number such as 1,3\n");
+            }
+        }
+        while (talk_mode && (SW_OK != rv));
+        if (cmd_find != NULL)
+            entry.portmap_en = A_TRUE;
+
+    }
 
     do
     {
@@ -2603,8 +2681,12 @@ cmd_data_print_fdbentry(a_uint8_t * param_name, a_uint32_t * buf,
     dprintf(" ");
     cmd_data_print_confirm("[static]:", entry->static_en, sizeof (a_bool_t));
     dprintf(" ");
-    cmd_data_print_portmap("[dest_port]:", entry->port.map,
-                           sizeof (fal_pbmp_t));
+    if (entry->nexthop_en == A_TRUE)
+        dprintf("[nexthop]:%d", entry->port.nexthop);
+    else if (entry->portmap_en == A_TRUE)
+        cmd_data_print_portmap("[dest_port]:", entry->port.map, sizeof (fal_pbmp_t));
+    else
+        dprintf("[dest_port]:%d", entry->port.id);
     dprintf(" \n");
     cmd_data_print_maccmd("dacmd", (a_uint32_t *) & (entry->dacmd),
                           sizeof (fal_fwd_cmd_t));
@@ -9912,6 +9994,23 @@ cmd_data_print_fdb_smode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
     else if (*(a_uint32_t *) buf == 0)
     {
         dprintf("SVL");
+    }
+    else
+    {
+        dprintf("UNKNOWN VALUE");
+    }
+}
+
+void
+cmd_data_print_fdb_ctrl_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    if (*(a_uint32_t *) buf == 0)
+    {
+        dprintf("auto mode");
+    }
+    else if (*(a_uint32_t *) buf == 1)
+    {
+        dprintf("control mode");
     }
     else
     {
