@@ -83,7 +83,7 @@ fal_vsi_stamove_set(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_stamove_t *sta
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_VSI_STAMOVE_SET, dev_id);
+    rv = sw_uk_exec(SW_API_VSI_STAMOVE_SET, dev_id, vsi_id, stamove);
     return rv;
 }
 sw_error_t
@@ -91,7 +91,7 @@ fal_vsi_stamove_get(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_stamove_t *sta
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_VSI_STAMOVE_GET, dev_id);
+    rv = sw_uk_exec(SW_API_VSI_STAMOVE_GET, dev_id, vsi_id, stamove);
     return rv;
 }
 sw_error_t
@@ -99,7 +99,7 @@ fal_vsi_newaddr_lrn_get(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_newaddr_lr
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_VSI_NEWADDR_LRN_GET, dev_id);
+    rv = sw_uk_exec(SW_API_VSI_NEWADDR_LRN_GET, dev_id, vsi_id, newaddr_lrn);
     return rv;
 }
 sw_error_t
@@ -107,6 +107,8 @@ fal_vsi_newaddr_lrn_set(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_newaddr_lr
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_VSI_NEWADDR_LRN_SET, dev_id);
+    rv = sw_uk_exec(SW_API_VSI_NEWADDR_LRN_SET, dev_id, vsi_id, newaddr_lrn);
     return rv;
 }
+
+

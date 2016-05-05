@@ -220,8 +220,8 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_COUNTER_INFO, NULL, cmd_data_print_counter_info),
     SW_TYPE_DEF(SW_REG_DUMP, NULL, cmd_data_print_register_info),
     SW_TYPE_DEF(SW_DBG_REG_DUMP, NULL, cmd_data_print_debug_register_info),
-    SW_TYPE_DEF(SW_VSI_NEWADDR_LRN, cmd_data_check_newadr_lrn, NULL),
-    SW_TYPE_DEF(SW_VSI_STAMOVE, cmd_data_check_stamove, NULL),
+    SW_TYPE_DEF(SW_VSI_NEWADDR_LRN, cmd_data_check_newadr_lrn, cmd_data_print_newaddr_lrn_entry),
+    SW_TYPE_DEF(SW_VSI_STAMOVE, cmd_data_check_stamove, cmd_data_print_stamove_entry),
     SW_TYPE_DEF(SW_MTU_INFO, NULL, cmd_data_print_mtu_info),
     SW_TYPE_DEF(SW_MRU_INFO, NULL, cmd_data_print_mru_info),
     SW_TYPE_DEF(SW_MTU_ENTRY, cmd_data_check_mtu_entry, NULL),
@@ -11469,6 +11469,20 @@ cmd_data_check_newadr_lrn(char *cmd_str, void * val, a_uint32_t size)
 	return SW_OK;
 }
 
+void
+cmd_data_print_newaddr_lrn_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_vsi_newaddr_lrn_t *entry;
+
+    entry = (fal_vsi_newaddr_lrn_t *) buf;
+    dprintf("\n");
+    dprintf("[newaddr_lrn]:%s\n", entry->lrn_en?"enabled":"disabled");
+    dprintf("[action]:%d\n", entry->action);
+
+    return;
+}
+
+
 sw_error_t
 cmd_data_check_stamove(char *cmd_str, void * val, a_uint32_t size)
 {
@@ -11497,4 +11511,16 @@ cmd_data_check_stamove(char *cmd_str, void * val, a_uint32_t size)
 	return SW_OK;
 }
 
+void
+cmd_data_print_stamove_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_vsi_stamove_t *entry;
+
+    entry = (fal_vsi_stamove_t *) buf;
+    dprintf("\n");
+    dprintf("[stamove]:%s\n", entry->stamove_en?"enabled":"disabled");
+    dprintf("[action]:%d\n", entry->action);
+
+    return;
+}
 
