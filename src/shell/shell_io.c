@@ -2054,6 +2054,8 @@ cmd_data_check_portid(char *cmdstr, fal_port_t * val, a_uint32_t size)
     //default input null
     if(!strcasecmp(cmdstr, "null"))
     {
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE)
+            return SW_BAD_VALUE;
         return SW_OK;
     }
 
@@ -2354,6 +2356,8 @@ cmd_data_check_fdbentry(char *info, void *val, a_uint32_t size)
             else
             {
                 rv = cmd_data_check_uint32(cmd, &entry.port.nexthop, sizeof (a_uint32_t));
+                entry.nexthop_en = A_TRUE;
+                entry.portmap_en = A_FALSE;
                 if (SW_OK != rv)
                     dprintf("usage: input port number such as 1,3\n");
             }
@@ -2381,19 +2385,22 @@ cmd_data_check_fdbentry(char *info, void *val, a_uint32_t size)
             {
                 cmd_find = strstr(cmd, ",");
                 if (cmd_find == NULL)
-                    rv = cmd_data_check_portid(cmd, &entry.port.id,
-                                                sizeof (fal_port_t));
+                {
+                    rv = cmd_data_check_portid(cmd, &entry.port.id, sizeof (fal_port_t));
+                    entry.nexthop_en = A_FALSE;
+                    entry.portmap_en = A_FALSE;
+                }
                 else
-                    rv = cmd_data_check_portmap(cmd, &entry.port.map,
-                                                sizeof (fal_pbmp_t));
+                {
+                    rv = cmd_data_check_portmap(cmd, &entry.port.map, sizeof (fal_pbmp_t));
+                    entry.nexthop_en = A_FALSE;
+                    entry.portmap_en = A_TRUE;
+                }
                 if (SW_OK != rv)
                     dprintf("usage: input port number such as 1,3\n");
             }
         }
         while (talk_mode && (SW_OK != rv));
-        if (cmd_find != NULL)
-            entry.portmap_en = A_TRUE;
-
     }
 
     do
@@ -10004,6 +10011,7 @@ cmd_data_print_fdb_smode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
 void
 cmd_data_print_fdb_ctrl_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 {
+    dprintf("[%s]:", param_name);
     if (*(a_uint32_t *) buf == 0)
     {
         dprintf("auto mode");
