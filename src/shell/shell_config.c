@@ -383,6 +383,10 @@ struct cmd_des_t gcmd_des[] =
             {"ptIngress", "get", "get ingress mirror status of a port", "<port_id>", SW_API_MIRROR_IN_PT_GET, NULL},
             {"ptEgress", "set", "set egress mirror status of a port", "<port_id> <enable|disable>", SW_API_MIRROR_EG_PT_SET, NULL},
             {"ptEgress", "get", "get egress mirror status of a port", "<port_id>", SW_API_MIRROR_EG_PT_GET, NULL},
+            {"inanalyPt", "set", "set ingress mirror analysis port", "<port_id>", SW_API_IN_MIRROR_ANALY_PT_SET, NULL},
+            {"inanalyPt", "get", "get ingress mirror analysis port", "", SW_API_IN_MIRROR_ANALY_PT_GET, NULL},
+            {"eganalyPt", "set", "set egress mirror analysis port", "<port_id>", SW_API_EG_MIRROR_ANALY_PT_SET, NULL},
+            {"eganalyPt", "get", "get egress mirror analysis port", "", SW_API_EG_MIRROR_ANALY_PT_GET, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },
@@ -707,6 +711,8 @@ struct cmd_des_t gcmd_des[] =
             {"hashmode", "get", "get trunk hash mode", "", SW_API_TRUNK_HASH_GET, NULL},
             {"mansa", "set", "set trunk manipulable sa", "<macaddr>", SW_API_TRUNK_MAN_SA_SET, NULL},
             {"mansa", "get", "get trunk manipulable sa", "", SW_API_TRUNK_MAN_SA_GET, NULL},
+            {"failover", "set", "set failover status of trunk", "<failover> <enable|disable>", SW_API_TRUNK_FAILOVER_EN_SET, NULL},
+            {"failover", "get", "get failover status of trunk", "", SW_API_TRUNK_FAILOVER_EN_GET, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },

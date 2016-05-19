@@ -78,3 +78,24 @@ fal_trunk_manipulate_sa_get(a_uint32_t dev_id, fal_mac_addr_t * addr)
     return rv;
 }
 
+sw_error_t
+fal_trunk_fail_over_en_set(a_uint32_t dev_id, a_bool_t fail_over)
+
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_TRUNK_FAILOVER_EN_SET, dev_id, fail_over);
+    return rv;
+}
+
+sw_error_t
+fal_trunk_fail_over_en_get(a_uint32_t dev_id, a_bool_t *fail_over)
+
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_TRUNK_FAILOVER_EN_GET, dev_id, fail_over);
+    return rv;
+}
+
+
