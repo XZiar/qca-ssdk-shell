@@ -79,6 +79,7 @@ get_cmd_stdin(char *tag, char *defval)
         dprintf("%s: ", tag);
     }
 
+    fflush(stdout);
     memset(gsubcmdstr, 0, 128);
 
     while ((c = getchar()) != '\n')
@@ -2194,6 +2195,7 @@ cmd_data_print_macaddr(char * param_name, a_uint32_t * buf,
         dprintf("%02x-", val->uc[i]);
     }
     dprintf("%02x", val->uc[5]);
+    fflush(stdout);
 
 }
 

@@ -166,6 +166,7 @@ term_echo(void)
         putchar(' ');
     }
 
+    fflush(stdout);
     term_cursor++;
     cmd_cursor++;
 }
@@ -604,6 +605,7 @@ handle_tab(void)
         print_cmd_all();
         if (cmd_promptp)
             printf("\n%s%s", cmd_promptp, cmd_strp);
+	fflush(stdout);
         _cursor_recover();
         return;
     }
@@ -683,6 +685,7 @@ handle_tab(void)
         /*re-echo */
         if (cmd_promptp)
             printf("\n%s%s", cmd_promptp, cmd_strp);
+	fflush(stdout);
         _cursor_recover();
     }
     //_cursor_recover();
