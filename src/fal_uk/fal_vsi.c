@@ -110,5 +110,20 @@ fal_vsi_newaddr_lrn_set(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_newaddr_lr
     rv = sw_uk_exec(SW_API_VSI_NEWADDR_LRN_SET, dev_id, vsi_id, newaddr_lrn);
     return rv;
 }
+sw_error_t
+fal_vsi_member_get(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_member_t *vsi_member)
+{
+    sw_error_t rv;
 
+    rv = sw_uk_exec(SW_API_VSI_MEMBER_GET, dev_id, vsi_id, vsi_member);
+    return rv;
+}
+sw_error_t
+fal_vsi_member_set(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_member_t *vsi_member)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_VSI_MEMBER_SET, dev_id, vsi_id, vsi_member);
+    return rv;
+}
 

@@ -1256,7 +1256,9 @@ extern "C" {
     SW_API_DEF(SW_API_VSI_NEWADDR_LRN_GET, fal_vsi_newaddr_lrn_get), \
     SW_API_DEF(SW_API_VSI_NEWADDR_LRN_SET, fal_vsi_newaddr_lrn_set), \
     SW_API_DEF(SW_API_VSI_STAMOVE_SET, fal_vsi_stamove_set), \
-    SW_API_DEF(SW_API_VSI_STAMOVE_GET,fal_vsi_stamove_get),
+    SW_API_DEF(SW_API_VSI_STAMOVE_GET,fal_vsi_stamove_get),  \
+    SW_API_DEF(SW_API_VSI_MEMBER_SET, fal_vsi_member_set), \
+    SW_API_DEF(SW_API_VSI_MEMBER_GET,fal_vsi_member_get),
 
 
 #define VSI_API_PARAM \
@@ -1270,7 +1272,9 @@ extern "C" {
     SW_API_DESC(SW_API_VSI_NEWADDR_LRN_GET) \
     SW_API_DESC(SW_API_VSI_NEWADDR_LRN_SET) \
     SW_API_DESC(SW_API_VSI_STAMOVE_SET) \
-    SW_API_DESC(SW_API_VSI_STAMOVE_GET)
+    SW_API_DESC(SW_API_VSI_STAMOVE_GET) \
+    SW_API_DESC(SW_API_VSI_MEMBER_SET) \
+    SW_API_DESC(SW_API_VSI_MEMBER_GET)
 
 #else
 #define VSI_API

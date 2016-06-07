@@ -223,6 +223,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_DBG_REG_DUMP, NULL, cmd_data_print_debug_register_info),
     SW_TYPE_DEF(SW_VSI_NEWADDR_LRN, cmd_data_check_newadr_lrn, cmd_data_print_newaddr_lrn_entry),
     SW_TYPE_DEF(SW_VSI_STAMOVE, cmd_data_check_stamove, cmd_data_print_stamove_entry),
+    SW_TYPE_DEF(SW_VSI_MEMBER, cmd_data_check_vsi_member, cmd_data_print_vsi_member_entry),
     SW_TYPE_DEF(SW_MTU_INFO, NULL, cmd_data_print_mtu_info),
     SW_TYPE_DEF(SW_MRU_INFO, NULL, cmd_data_print_mru_info),
     SW_TYPE_DEF(SW_MTU_ENTRY, cmd_data_check_mtu_entry, NULL),
@@ -11461,19 +11462,11 @@ cmd_data_check_newadr_lrn(char *cmd_str, void * val, a_uint32_t size)
 
 	aos_mem_zero(&entry, sizeof (fal_vsi_newaddr_lrn_t));
 
-	rv = __cmd_data_check_complex("lrn_en", "1",
-                        "usage: 0-disable 1-enable\n",
-                        cmd_data_check_uint32, &(entry.lrn_en),
-                        sizeof (a_uint32_t));
-	if (rv)
-		return rv;
+	cmd_data_check_element("lrn_en", "1", "usage: 0-disable 1-enable\n",
+			cmd_data_check_integer, (cmd, &(entry.lrn_en), 1, 0));
 
-	rv = __cmd_data_check_complex("action", 0,
-                            "usage: 0-Forward 1-Drop 2-Copy to CPU 3-redirect to CPU\n",
-                            cmd_data_check_uint32, &(entry.action),
-                            4);
-	if (rv)
-		return rv;
+	cmd_data_check_element("action", "0", "usage: 0-Forward 1-Drop 2-Copy to CPU 3-redirect to CPU\n",
+			cmd_data_check_integer, (cmd, &(entry.action), 3, 0));
 
 	*(fal_vsi_newaddr_lrn_t *)val = entry;
 	return SW_OK;
@@ -11503,19 +11496,17 @@ cmd_data_check_stamove(char *cmd_str, void * val, a_uint32_t size)
 
 	aos_mem_zero(&entry, sizeof (fal_vsi_stamove_t));
 
-	rv = __cmd_data_check_complex("stamove", "1",
-                        "usage: 0-disable 1-enable\n",
-                        cmd_data_check_uint32, &(entry.stamove_en),
-                        sizeof (a_uint32_t));
-	if (rv)
-		return rv;
+	cmd_data_check_element("stamove", "1",
+			"usage: 0-disable 1-enable\n",
+			cmd_data_check_integer, (cmd, &tmp, 0x1, 0x0));
 
-	rv = __cmd_data_check_complex("action", 0,
-                            "usage: 0-Forward 1-Drop 2-Copy to CPU 3-redirect to CPU\n",
-                            cmd_data_check_uint32, &(entry.action),
-                            4);
-	if (rv)
-		return rv;
+	entry.stamove_en = tmp;
+
+	cmd_data_check_element("action", "0",
+			"usage: 0-Forward 1-Drop 2-Copy to CPU 3-redirect to CPU\n",
+			cmd_data_check_integer, (cmd, &tmp, 0x3, 0x0));
+
+	entry.action = tmp;
 
 	*(fal_vsi_stamove_t *)val = entry;
 	return SW_OK;
@@ -11533,4 +11524,61 @@ cmd_data_print_stamove_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 
     return;
 }
+
+sw_error_t
+cmd_data_check_vsi_member(char *cmd_str, void * val, a_uint32_t size)
+{
+	char *cmd;
+	a_uint32_t tmp;
+	sw_error_t rv;
+	fal_vsi_member_t entry;
+
+	aos_mem_zero(&entry, sizeof (fal_vsi_member_t));
+
+	rv = __cmd_data_check_complex("member_ports", 0,
+                        "usage: Bit0-port0 Bit1-port1 ....\n",
+                        cmd_data_check_pbmp, &(entry.member_ports),
+                        sizeof (a_uint32_t));
+	if (rv)
+		return rv;
+
+	rv = __cmd_data_check_complex("uuc_ports", 0,
+                        "usage: Bit0-port0 Bit1-port1 ....\n",
+                        cmd_data_check_pbmp, &(entry.uuc_ports),
+                        sizeof (a_uint32_t));
+	if (rv)
+		return rv;
+
+	rv = __cmd_data_check_complex("umc_ports", 0,
+                        "usage: Bit0-port0 Bit1-port1 ....\n",
+                        cmd_data_check_pbmp, &(entry.umc_ports),
+                        sizeof (a_uint32_t));
+	if (rv)
+		return rv;
+
+	rv = __cmd_data_check_complex("bc_ports", 0,
+                        "usage: Bit0-port0 Bit1-port1 ....\n",
+                        cmd_data_check_pbmp, &(entry.bc_ports),
+                        sizeof (a_uint32_t));
+	if (rv)
+		return rv;
+
+	*(fal_vsi_member_t *)val = entry;
+	return SW_OK;
+}
+
+void
+cmd_data_print_vsi_member_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_vsi_member_t *entry;
+
+    entry = (fal_vsi_member_t *) buf;
+    dprintf("\n");
+    dprintf("[member_ports]:0x%x\n", entry->member_ports);
+    dprintf("[uuc_ports]:0x%x\n", entry->uuc_ports);
+    dprintf("[umc_ports]:0x%x\n", entry->umc_ports);
+    dprintf("[bc_ports]:0x%x\n", entry->bc_ports);
+    return;
+}
+
 
