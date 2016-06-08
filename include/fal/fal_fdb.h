@@ -143,6 +143,25 @@ extern "C" {
     fal_fdb_port_learn_set(a_uint32_t dev_id, fal_port_t port_id, a_bool_t enable);
 
 
+    sw_error_t
+    fal_fdb_port_newaddr_lrn_set(a_uint32_t dev_id, fal_port_t port_id,
+                                 a_bool_t enable, fal_fwd_cmd_t cmd);
+
+
+    sw_error_t
+    fal_fdb_port_newaddr_lrn_get(a_uint32_t dev_id, fal_port_t port_id,
+                                 a_bool_t *enable, fal_fwd_cmd_t *cmd);
+
+
+    sw_error_t
+    fal_fdb_port_stamove_set(a_uint32_t dev_id, fal_port_t port_id,
+                                 a_bool_t enable, fal_fwd_cmd_t cmd);
+
+
+    sw_error_t
+    fal_fdb_port_stamove_get(a_uint32_t dev_id, fal_port_t port_id,
+                                 a_bool_t *enable, fal_fwd_cmd_t *cmd);
+
 
     sw_error_t
     fal_fdb_port_learn_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *enable);

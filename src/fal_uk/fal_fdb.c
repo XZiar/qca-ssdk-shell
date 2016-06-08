@@ -103,6 +103,46 @@ fal_fdb_port_learn_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t * enable)
 }
 
 sw_error_t
+fal_fdb_port_newaddr_lrn_set(a_uint32_t dev_id, fal_port_t port_id, a_bool_t enable, fal_fwd_cmd_t cmd)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FDB_PT_NEWADDR_LEARN_SET, dev_id, port_id,
+                    enable, cmd);
+    return rv;
+}
+
+sw_error_t
+fal_fdb_port_newaddr_lrn_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *enable, fal_fwd_cmd_t *cmd)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FDB_PT_NEWADDR_LEARN_GET, dev_id, port_id,
+                    enable, cmd);
+    return rv;
+}
+
+sw_error_t
+fal_fdb_port_stamove_set(a_uint32_t dev_id, fal_port_t port_id, a_bool_t enable, fal_fwd_cmd_t cmd)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FDB_PT_STAMOVE_SET, dev_id, port_id,
+                    enable, cmd);
+    return rv;
+}
+
+sw_error_t
+fal_fdb_port_stamove_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *enable, fal_fwd_cmd_t *cmd)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FDB_PT_STAMOVE_GET, dev_id, port_id,
+                    enable, cmd);
+    return rv;
+}
+
+sw_error_t
 fal_fdb_age_mode_set(a_uint32_t dev_id, a_uint32_t age_mode)
 {
     sw_error_t rv;
