@@ -440,3 +440,288 @@ fal_default_rt_flow_cmd_get(a_uint32_t dev_id, a_uint32_t vrf_id,
 	return rv;
 }
 
+sw_error_t
+fal_ip_vsi_arp_sg_cfg_set(a_uint32_t dev_id, a_uint32_t vsi,
+    			fal_arp_sg_cfg_t *arp_sg_cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_VIS_ARP_SG_CFG_SET, dev_id, vsi, (a_uint32_t) arp_sg_cfg);
+	return rv;
+}
+
+sw_error_t
+fal_ip_vsi_arp_sg_cfg_get(a_uint32_t dev_id, a_uint32_t vsi,
+    			fal_arp_sg_cfg_t *arp_sg_cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_VIS_ARP_SG_CFG_GET, dev_id, vsi, (a_uint32_t) arp_sg_cfg);
+	return rv;
+}
+
+sw_error_t
+fal_ip_network_route_set(a_uint32_t dev_id,
+			a_uint32_t index,
+			fal_network_route_entry_t *entry)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_NETWORK_ROUTE_SET, dev_id, index, (a_uint32_t)entry);
+	return rv;
+}
+
+sw_error_t
+fal_ip_network_route_get(a_uint32_t dev_id,
+			a_uint32_t index, a_uint8_t type,
+			fal_network_route_entry_t *entry)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_NETWORK_ROUTE_GET, dev_id, index, type, (a_uint32_t)entry);
+	return rv;
+}
+
+sw_error_t
+fal_ip_intf_set(
+    			a_uint32_t dev_id,
+    			a_uint32_t index,
+    			fal_intf_entry_t *entry)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_INTF_SET, dev_id, index, (a_uint32_t)entry);
+	return rv;
+}
+
+sw_error_t
+fal_ip_intf_get(
+    			a_uint32_t dev_id,
+    			a_uint32_t index,
+    			fal_intf_entry_t *entry)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_INTF_GET, dev_id, index, (a_uint32_t)entry);
+	return rv;
+}
+
+sw_error_t
+fal_ip_vsi_intf_set(a_uint32_t dev_id, a_uint32_t vsi, fal_intf_id_t *id)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_VSI_INTF_SET, dev_id, vsi, (a_uint32_t)id);
+	return rv;
+}
+
+sw_error_t
+fal_ip_vsi_intf_get(a_uint32_t dev_id, a_uint32_t vsi, fal_intf_id_t *id)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_VSI_INTF_GET, dev_id, vsi, (a_uint32_t)id);
+	return rv;
+}
+
+sw_error_t
+fal_ip_port_intf_set(a_uint32_t dev_id, fal_port_t port_id, fal_intf_id_t *id)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_PORT_INTF_SET, dev_id, port_id, (a_uint32_t)id);
+	return rv;
+}
+
+sw_error_t
+fal_ip_port_intf_get(a_uint32_t dev_id, fal_port_t port_id, fal_intf_id_t *id)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_PORT_INTF_GET, dev_id, port_id, (a_uint32_t)id);
+	return rv;
+}
+
+sw_error_t
+fal_ip_nexthop_set(a_uint32_t dev_id, a_uint32_t index,
+    			fal_ip_nexthop_t *entry)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_NEXTHOP_SET, dev_id, index, (a_uint32_t)entry);
+	return rv;
+}
+
+sw_error_t
+fal_ip_nexthop_get(a_uint32_t dev_id, a_uint32_t index,
+    			fal_ip_nexthop_t *entry)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_NEXTHOP_GET, dev_id, index, (a_uint32_t)entry);
+	return rv;
+}
+
+sw_error_t
+fal_ip_port_sg_cfg_set(a_uint32_t dev_id, fal_port_t port_id,
+    			fal_sg_cfg_t *sg_cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_PORT_SG_SET, dev_id, port_id, (a_uint32_t)sg_cfg);
+	return rv;
+}
+
+sw_error_t
+fal_ip_port_sg_cfg_get(a_uint32_t dev_id, fal_port_t port_id,
+    			fal_sg_cfg_t *sg_cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_PORT_SG_GET, dev_id, port_id, (a_uint32_t)sg_cfg);
+	return rv;
+}
+
+sw_error_t
+fal_ip_vsi_sg_cfg_get(a_uint32_t dev_id, a_uint32_t vsi,
+    			fal_sg_cfg_t *sg_cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_VSI_SG_GET, dev_id, vsi, (a_uint32_t)sg_cfg);
+	return rv;
+}
+
+sw_error_t
+fal_ip_vsi_sg_cfg_set(a_uint32_t dev_id, a_uint32_t vsi,
+    			fal_sg_cfg_t *sg_cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_VSI_SG_SET, dev_id, vsi, (a_uint32_t)sg_cfg);
+	return rv;
+}
+
+sw_error_t
+fal_ip_pub_addr_add(a_uint32_t dev_id, fal_ip_pub_addr_t *entry)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_PUB_IP_ADD, dev_id, (a_uint32_t)entry);
+	return rv;
+}
+
+sw_error_t
+fal_ip_pub_addr_del(a_uint32_t dev_id, a_uint32_t entry_id)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_PUB_IP_DEL, dev_id, entry_id);
+	return rv;
+}
+
+sw_error_t
+fal_ip_pub_addr_get(a_uint32_t dev_id, fal_ip_pub_addr_t *entry)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_PUB_IP_GET, dev_id, (a_uint32_t)entry);
+	return rv;
+}
+
+sw_error_t
+    fal_ip_port_macaddr_set(a_uint32_t dev_id, fal_port_t port_id,
+    			fal_macaddr_entry_t *macaddr)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_PORT_MAC_SET, dev_id, port_id, (a_uint32_t)macaddr);
+	return rv;
+}
+
+sw_error_t
+fal_ip_port_macaddr_get(a_uint32_t dev_id, fal_port_t port_id,
+    			fal_macaddr_entry_t *macaddr)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_PORT_MAC_GET, dev_id, port_id, (a_uint32_t)macaddr);
+	return rv;
+}
+
+sw_error_t
+fal_ip_route_mismatch_set(a_uint32_t dev_id, fal_fwd_cmd_t cmd)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_ROUTE_MISS_SET, dev_id, (a_uint32_t)cmd);
+	return rv;
+}
+
+sw_error_t
+fal_ip_route_mismatch_get(a_uint32_t dev_id, fal_fwd_cmd_t *cmd)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_ROUTE_MISS_GET, dev_id, (a_uint32_t)cmd);
+	return rv;
+}
+
+sw_error_t
+fal_ip_port_arp_sg_cfg_set(a_uint32_t dev_id, fal_port_t port_id,
+    			fal_arp_sg_cfg_t *arp_sg_cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_PORT_ARP_SG_SET, dev_id, port_id, (a_uint32_t)arp_sg_cfg);
+	return rv;
+}
+
+sw_error_t
+fal_ip_port_arp_sg_cfg_get(a_uint32_t dev_id, fal_port_t port_id,
+    			fal_arp_sg_cfg_t *arp_sg_cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_PORT_ARP_SG_GET, dev_id, port_id, (a_uint32_t)arp_sg_cfg);
+	return rv;
+}
+
+sw_error_t
+fal_ip_vsi_mc_mode_set(a_uint32_t dev_id, a_uint32_t vsi,
+    			fal_mc_mode_cfg_t *cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_VSI_MC_MODE_SET, dev_id, vsi, (a_uint32_t)cfg);
+	return rv;
+}
+
+sw_error_t
+fal_ip_vsi_mc_mode_get(a_uint32_t dev_id, a_uint32_t vsi,
+    			fal_mc_mode_cfg_t *cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_VSI_MC_MODE_GET, dev_id, vsi, (a_uint32_t)cfg);
+	return rv;
+}
+
+sw_error_t
+fal_ip_global_ctrl_get(a_uint32_t dev_id, fal_ip_global_cfg_t *cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_GLOBAL_CTRL_GET, dev_id, cfg);
+	return rv;
+}
+
+sw_error_t
+fal_ip_global_ctrl_set(a_uint32_t dev_id, fal_ip_global_cfg_t *cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_GLOBAL_CTRL_SET, dev_id, cfg);
+	return rv;
+}
+

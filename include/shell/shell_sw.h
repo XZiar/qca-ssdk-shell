@@ -27,6 +27,10 @@ extern "C" {
     sw_error_t cmd_show_vlan(a_uint32_t *arg_val);
     sw_error_t cmd_show_resv_fdb(a_uint32_t *arg_val);
     sw_error_t cmd_show_host(a_uint32_t *arg_val);
+    sw_error_t cmd_show_host_ipv4(a_uint32_t *arg_val);
+    sw_error_t cmd_show_host_ipv6(a_uint32_t *arg_val);
+    sw_error_t cmd_show_host_ipv4M(a_uint32_t *arg_val);
+    sw_error_t cmd_show_host_ipv6M(a_uint32_t *arg_val);
     sw_error_t cmd_show_nat(a_uint32_t *arg_val);
     sw_error_t cmd_show_napt(a_uint32_t *arg_val);
     sw_error_t cmd_show_intfmac(a_uint32_t *arg_val);

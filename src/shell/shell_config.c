@@ -608,6 +608,10 @@ struct cmd_des_t gcmd_des[] =
             {"hostentry", "get", "get host entry", "<get_mode>", SW_API_IP_HOST_GET, NULL},
             {"hostentry", "next", "next host entry", "<next_mode>", SW_API_IP_HOST_NEXT, NULL},
             {"hostentry", "show", "show whole host entries", "", SW_CMD_HOST_SHOW, cmd_show_host},
+	      {"hostipv4entry", "show", "show whole ipv4U host entries", "", SW_CMD_HOST_IPV4_SHOW, cmd_show_host_ipv4},
+	      {"hostipv6entry", "show", "show whole ipv6u host entries", "", SW_CMD_HOST_IPV6_SHOW, cmd_show_host_ipv6},	
+		{"hostipv4Mentry", "show", "show whole ipv4M host entries", "", SW_CMD_HOST_IPV4M_SHOW, cmd_show_host_ipv4M},
+	      {"hostipv6Mentry", "show", "show whole ipv6M host entries", "", SW_CMD_HOST_IPV6M_SHOW, cmd_show_host_ipv6M},	
             {"hostentry", "bindcnt", "bind counter to host entry", "<host entry id> <cnt id> <enable|disable>", SW_API_IP_HOST_COUNTER_BIND, NULL},
             {"hostentry", "bindpppoe", "bind pppoe to host entry", "<host entry id> <pppoe id> <enable|disable>", SW_API_IP_HOST_PPPOE_BIND, NULL},
             {"ptarplearn", "set", "set port arp learn flag, bit0 req bit1 ack", "<port_id> <flag>", SW_API_IP_PT_ARP_LEARN_SET, NULL},
@@ -649,7 +653,57 @@ struct cmd_des_t gcmd_des[] =
             {"defaultflowcmd", "get", "get default flow command", "<vrf id> <lan2lan|wan2lan|lan2wan|wan2wan>", SW_API_IP_DEFAULT_FLOW_CMD_GET, NULL},
             {"defaultrtflowcmd", "set", "set default route flow command", "<vrf id> <lan2lan|wan2lan|lan2wan|wan2wan> <forward|drop|rdtcpu|admit_all>", SW_API_IP_DEFAULT_RT_FLOW_CMD_SET, NULL},
             {"defaultrtflowcmd", "get", "get default route flow command", "<vrf id> <lan2lan|wan2lan|lan2wan|wan2wan>", SW_API_IP_DEFAULT_RT_FLOW_CMD_GET, NULL},
+	      {"vsiarpsg", "set", "set vsi arp sg", "", SW_API_IP_VIS_ARP_SG_CFG_SET, NULL},
+            {"vsiarpsg", "get", "get vsi arp sg", "", SW_API_IP_VIS_ARP_SG_CFG_GET, NULL},
+	      {"networkroute", "set", "set network route", "", SW_API_IP_NETWORK_ROUTE_SET, NULL},
+            {"networkroute", "get", "get network route", "", SW_API_IP_NETWORK_ROUTE_GET, NULL},
+	      {"intf", "set", "set l3 intf", "", SW_API_IP_INTF_SET, NULL},
+            {"intf", "get", "get l3 intf", "", SW_API_IP_INTF_GET, NULL},
+	      {"vsiintf", "set", "set vsi l3 intf", "", SW_API_IP_VSI_INTF_SET, NULL},
+            {"vsiintf", "get", "get vsi l3 intf", "", SW_API_IP_VSI_INTF_GET, NULL},
+		{"portintf", "set", "set port l3 intf", "", SW_API_IP_PORT_INTF_SET, NULL},
+            {"portintf", "get", "get port l3 intf", "", SW_API_IP_PORT_INTF_GET, NULL},
+		{"nexthop", "set", "set nexthop", "", SW_API_IP_NEXTHOP_SET, NULL},
+            {"nexthop", "get", "get nexthop", "", SW_API_IP_NEXTHOP_GET, NULL},
+		{"pubip", "add", "add pub ip", "", SW_API_IP_PUB_IP_ADD, NULL},
+		{"pubip", "del", "del pub ip", "", SW_API_IP_PUB_IP_DEL, NULL},
+		{"pubip", "get", "get pub ip", "", SW_API_IP_PUB_IP_GET, NULL},
+		{"vsisg", "set", "set vsi sg", "", SW_API_IP_VSI_SG_SET, NULL},
+            {"vsisg", "get", "get vsi sg", "", SW_API_IP_VSI_SG_GET, NULL},
+		{"portsg", "set", "set port sg", "", SW_API_IP_PORT_SG_SET, NULL},
+            {"portsg", "get", "get port sg", "", SW_API_IP_PORT_SG_GET, NULL},
+	      {"portmac", "set", "set portmac", "", SW_API_IP_PORT_MAC_SET, NULL},
+            {"portmac", "get", "get portmac", "", SW_API_IP_PORT_MAC_GET, NULL},
+		{"routemiss", "get", "get route miss cmd", "", SW_API_IP_ROUTE_MISS_GET, NULL},
+		{"routemiss", "set", "set route miss cmd", "", SW_API_IP_ROUTE_MISS_SET, NULL},
+		{"portarpsg", "set", "set port arp sg", "", SW_API_IP_PORT_ARP_SG_SET, NULL},
+            {"portarpsg", "get", "get port arp sg", "", SW_API_IP_PORT_ARP_SG_GET, NULL},
+            {"mcmode", "get", "get mc mode", "", SW_API_IP_VSI_MC_MODE_GET, NULL},
+		{"mcmode", "set", "set mc mode", "", SW_API_IP_VSI_MC_MODE_SET, NULL},
+		{"globalctrl", "set", "set global", "", SW_API_GLOBAL_CTRL_SET, NULL},
+		{"globalctrl", "get", "get global", "", SW_API_GLOBAL_CTRL_GET, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
+        },
+    },
+#endif
+
+ /* FLOW */
+#ifdef IN_FLOW
+    {
+        "flow", "config flow",
+        {
+            {"flowstatus", "set", "set flow status", "", SW_API_FLOW_STATUS_SET, NULL},
+	      {"flowstatus", "get", "get flow status", "", SW_API_FLOW_STATUS_GET, NULL},
+		{"flowage", "set", "set flow age timer", "", SW_API_FLOW_AGE_TIMER_SET, NULL},
+		{"flowage", "get", "get flow age timer", "", SW_API_FLOW_AGE_TIMER_GET, NULL},
+		{"flowactrl", "set", "set flow ctrl", "", SW_API_FLOW_CTRL_SET, NULL},
+		{"flowactrl", "get", "get flow ctrl", "", SW_API_FLOW_CTRL_GET, NULL},
+		{"entry", "add", "add flow entry", "", SW_API_FLOW_ENTRY_ADD, NULL},
+		{"entry", "del", "del flow entry", "", SW_API_FLOW_ENTRY_DEL, NULL},
+		{"entry", "get", "get flow entry", "", SW_API_FLOW_ENTRY_GET, NULL},
+		{"global", "get", "get flow global cfg", "", SW_API_FLOW_GLOBAL_CFG_GET, NULL},
+		{"global", "set", "set flow global cfg", "", SW_API_FLOW_GLOBAL_CFG_SET, NULL},
+	      {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },
 #endif
@@ -761,6 +815,35 @@ struct cmd_des_t gcmd_des[] =
             {"member", "set", "Set vsi based member ports", "<vsi> <member_ports>", SW_API_VSI_MEMBER_SET, NULL},
             {"member", "get", "Get vsi based member ports", "<vsi>", SW_API_VSI_MEMBER_GET, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
+        },
+    },
+#endif
+
+    /*QM*/
+#ifdef IN_QM
+    {
+        "qm", "config qm",
+        {
+            {"ucastqmap", "set", "set unicast queue map", "", SW_API_UCAST_QUEUE_MAP_SET, NULL},
+	      {"ucastqmap", "get", "get unicast queue map", "", SW_API_UCAST_QUEUE_MAP_GET, NULL},
+		{"ucastprimap", "set", "set unicast pri map", "", SW_API_UCAST_PRIORITY_MAP_SET, NULL},
+	      {"ucastprimap", "get", "get unicast pri map", "", SW_API_UCAST_PRIORITY_MAP_GET, NULL},
+		{"mcastpriclass", "set", "set mcast class", "", SW_API_MCAST_PRIORITY_CLASS_SET, NULL},
+	      {"mcastpriclass", "get", "get mcast class", "", SW_API_MCAST_PRIORITY_CLASS_GET, NULL},
+		{"queue", "flush", "flush queue", "", SW_API_QUEUE_FLUSH, NULL},
+		{"ucastqac", "set", "set unicast queue ac", "", SW_API_UNI_QUEUE_AC_SET, NULL},
+		{"ucastqac", "get", "get unicast queue ac", "", SW_API_UNI_QUEUE_AC_GET, NULL},
+		{"mcastqac", "set", "set mcast queue ac", "", SW_API_MULTI_QUEUE_AC_SET, NULL},
+		{"mcastqac", "get", "get mcast queue ac", "", SW_API_MULTI_QUEUE_AC_GET, NULL},
+		{"groupac", "set", "set group ac", "", SW_API_GROUP_AC_SET, NULL},
+		{"groupac", "get", "get group ac", "", SW_API_GROUP_AC_GET, NULL},
+		{"ucasthash", "set", "set unicast queue hash", "", SW_API_UCAST_HASH_MAP_SET, NULL},
+		{"ucasthash", "get", "get unicast queue hash", "", SW_API_UCAST_HASH_MAP_GET, NULL},
+		{"ucastdflthash", "set", "set unicast queue dflt hash", "", SW_API_UCAST_DFLT_HASH_MAP_SET, NULL},
+		{"ucastdflthash", "get", "get unicast queue dflt hash", "", SW_API_UCAST_DFLT_HASH_MAP_GET, NULL},
+		{"mcastqmap", "set", "set mcast queue map", "", SW_API_MCAST_QUEUE_MAP_SET, NULL},
+		{"mcastqmap", "get", "get mcast queue map", "", SW_API_MCAST_QUEUE_MAP_GET, NULL},
+	      {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },
 #endif

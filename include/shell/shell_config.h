@@ -33,7 +33,11 @@ extern "C" {
 #define SW_CMD_INTFMAC_SHOW    (SW_API_MAX + 8)
 #define SW_CMD_PUBADDR_SHOW    (SW_API_MAX + 9)
 #define SW_CMD_FLOW_SHOW       (SW_API_MAX + 10)
-#define SW_CMD_MAX             (SW_API_MAX + 11)
+#define SW_CMD_HOST_IPV4_SHOW       (SW_API_MAX + 11)
+#define SW_CMD_HOST_IPV6_SHOW       (SW_API_MAX + 12)
+#define SW_CMD_HOST_IPV4M_SHOW       (SW_API_MAX + 13)
+#define SW_CMD_HOST_IPV6M_SHOW       (SW_API_MAX + 14)
+#define SW_CMD_MAX             (SW_API_MAX + 15)
 
 #define MAX_SUB_CMD_DES_NUM  80
 

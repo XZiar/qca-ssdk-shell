@@ -46,6 +46,8 @@ extern "C" {
 #include "fal_fdb.h"
 #include "fal_multi.h"
 #include "fal_vsi.h"
+#include "fal_qm.h"
+#include "fal_flow.h"
 
 #ifdef __cplusplus
 }

@@ -319,6 +319,10 @@ cmd_parse_sw(char **cmd_str, a_uint32_t * arg_val)
                               api_id == SW_CMD_FDB_SHOW ||
                               api_id == SW_CMD_RESV_FDB_SHOW ||
                               api_id == SW_CMD_HOST_SHOW ||
+                              api_id == SW_CMD_HOST_IPV4_SHOW ||
+                              api_id == SW_CMD_HOST_IPV6_SHOW ||
+                              api_id == SW_CMD_HOST_IPV4M_SHOW ||
+                              api_id == SW_CMD_HOST_IPV6M_SHOW ||
                               api_id == SW_CMD_NAT_SHOW ||
                               api_id == SW_CMD_NAPT_SHOW ||
                               api_id == SW_CMD_FLOW_SHOW ||

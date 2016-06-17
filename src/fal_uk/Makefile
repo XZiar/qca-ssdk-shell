@@ -89,6 +89,15 @@ ifeq (TRUE, $(IN_VSI))
   SRC_LIST += fal_vsi.c
 endif
 
+ifeq (TRUE, $(IN_QM))
+  SRC_LIST += fal_qm.c
+endif
+
+
+ifeq (TRUE, $(IN_FLOW))
+  SRC_LIST += fal_flow.c
+endif
+
 include $(PRJ_PATH)/make/components.mk
 include $(PRJ_PATH)/make/defs.mk
 include $(PRJ_PATH)/make/target.mk

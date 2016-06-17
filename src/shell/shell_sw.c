@@ -323,6 +323,134 @@ cmd_show_host(a_uint32_t *arg_val)
 }
 
 sw_error_t
+cmd_show_host_ipv4(a_uint32_t *arg_val)
+{
+    sw_error_t rtn;
+    a_uint32_t cnt = 0;
+    fal_host_entry_t *host_entry = (fal_host_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+
+    aos_mem_zero(host_entry, sizeof (fal_host_entry_t));
+    host_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
+    arg_val[0] = SW_API_IP_HOST_NEXT;
+
+    while (1)
+    {
+        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[2] = get_devid();
+        arg_val[3] = FAL_IP_IP4_ADDR;
+        arg_val[4] = (a_uint32_t) host_entry;
+
+        rtn = cmd_exec_api(arg_val);
+        if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
+        {
+            break;
+        }
+        cnt++;
+    }
+
+
+    dprintf("\nipv4 total %d entries\n", cnt);
+
+    return SW_OK;
+}
+
+sw_error_t
+cmd_show_host_ipv6(a_uint32_t *arg_val)
+{
+    sw_error_t rtn;
+    a_uint32_t cnt = 0;
+    fal_host_entry_t *host_entry = (fal_host_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+
+    aos_mem_zero(host_entry, sizeof (fal_host_entry_t));
+    host_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
+    arg_val[0] = SW_API_IP_HOST_NEXT;
+
+    while (1)
+    {
+        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[2] = get_devid();
+        arg_val[3] = FAL_IP_IP6_ADDR;
+        arg_val[4] = (a_uint32_t) host_entry;
+
+        rtn = cmd_exec_api(arg_val);
+        if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
+        {
+            break;
+        }
+        cnt++;
+    }
+
+
+    dprintf("\nipv6 total %d entries\n", cnt);
+
+    return SW_OK;
+}
+
+sw_error_t
+cmd_show_host_ipv4M(a_uint32_t *arg_val)
+{
+    sw_error_t rtn;
+    a_uint32_t cnt = 0;
+    fal_host_entry_t *host_entry = (fal_host_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+
+    aos_mem_zero(host_entry, sizeof (fal_host_entry_t));
+    host_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
+    arg_val[0] = SW_API_IP_HOST_NEXT;
+
+    while (1)
+    {
+        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[2] = get_devid();
+        arg_val[3] = FAL_IP_IP4_ADDR_MCAST;
+        arg_val[4] = (a_uint32_t) host_entry;
+
+        rtn = cmd_exec_api(arg_val);
+        if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
+        {
+            break;
+        }
+        cnt++;
+    }
+
+
+    dprintf("\nipv4 multicast total %d entries\n", cnt);
+
+    return SW_OK;
+}
+
+sw_error_t
+cmd_show_host_ipv6M(a_uint32_t *arg_val)
+{
+    sw_error_t rtn;
+    a_uint32_t cnt = 0;
+    fal_host_entry_t *host_entry = (fal_host_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+
+    aos_mem_zero(host_entry, sizeof (fal_host_entry_t));
+    host_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
+    arg_val[0] = SW_API_IP_HOST_NEXT;
+
+    while (1)
+    {
+        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[2] = get_devid();
+        arg_val[3] = FAL_IP_IP6_ADDR_MCAST;
+        arg_val[4] = (a_uint32_t) host_entry;
+
+        rtn = cmd_exec_api(arg_val);
+        if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
+        {
+            break;
+        }
+        cnt++;
+    }
+
+
+    dprintf("\nipv6 multicast total %d entries\n", cnt);
+
+    return SW_OK;
+}
+
+sw_error_t
 cmd_show_intfmac(a_uint32_t *arg_val)
 {
     sw_error_t rtn;
