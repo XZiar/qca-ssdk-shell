@@ -48,6 +48,8 @@ extern "C" {
 #include "fal_vsi.h"
 #include "fal_qm.h"
 #include "fal_flow.h"
+#include "fal_ctrlpkt.h"
+#include "fal_servcode.h"
 
 #ifdef __cplusplus
 }

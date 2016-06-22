@@ -85,6 +85,14 @@ ifeq (TRUE, $(IN_INTERFACECONTROL))
   SRC_LIST += fal_interface_ctrl.c
 endif
 
+ifeq (TRUE, $(IN_CTRLPKT))
+  SRC_LIST += fal_ctrlpkt.c
+endif
+
+ifeq (TRUE, $(IN_SERVCODE))
+  SRC_LIST += fal_servcode.c
+endif
+
 ifeq (TRUE, $(IN_VSI))
   SRC_LIST += fal_vsi.c
 endif

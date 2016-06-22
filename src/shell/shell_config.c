@@ -183,6 +183,28 @@ struct cmd_des_t gcmd_des[] =
             {"egbypass", "get", "get the status of egress translation filter bypass", "", SW_API_EG_FLTR_BYPASS_EN_GET, NULL},
             {"ptvrfid", "set", "set port VRF ID", "<port_id> <vrf_id>", SW_API_PT_VRF_ID_SET, NULL},
             {"ptvrfid", "get", "get port VRF ID", "<port_id>", SW_API_PT_VRF_ID_GET, NULL},
+            {"globalqinqmode", "set", "set global qinq mode", "", SW_API_GLOBAL_QINQ_MODE_SET, NULL},
+            {"globalqinqmode", "get", "get global qinq mode", "", SW_API_GLOBAL_QINQ_MODE_GET, NULL},
+            {"ptqinqmode", "set", "set port qinq mode", "<port_id>", SW_API_PORT_QINQ_MODE_SET, NULL},
+            {"ptqinqmode", "get", "get port qinq mode", "<port_id>", SW_API_PORT_QINQ_MODE_GET, NULL},
+            {"tpid", "set", "set ingress tpid", "", SW_API_TPID_SET, NULL},
+            {"tpid", "get", "get ingress tpid", "", SW_API_TPID_GET, NULL},
+            {"egtpid", "set", "set egress tpid", "", SW_API_EGRESS_TPID_SET, NULL},
+            {"egtpid", "get", "get egress tpid", "", SW_API_EGRESS_TPID_GET, NULL},
+            {"ptIngressfilter", "set", "set port ingress filter", "<port_id>", SW_API_PT_INGRESS_FILTER_SET, NULL},
+            {"ptIngressfilter", "get", "get port ingress filter", "<port_id>", SW_API_PT_INGRESS_FILTER_GET, NULL},
+            {"ptdefaulttag", "set", "set port ingress default tag", "<port_id>", SW_API_PT_INGRESS_DEFAULT_TAG_SET, NULL},
+            {"ptdefaulttag", "get", "get port ingress default tag", "<port_id>", SW_API_PT_INGRESS_DEFAULT_TAG_GET, NULL},
+            {"pttagprop", "set", "set port ingress tag propogation", "<port_id>", SW_API_PT_TAG_PROPOGATION_SET, NULL},
+            {"pttagprop", "get", "get port ingress tag propogation", "<port_id>", SW_API_PT_TAG_PROPOGATION_GET, NULL},
+            {"ptegmode", "set", "set port egress vlan mode", "<port_id>", SW_API_PT_TAG_EGVLANMODE_SET, NULL},
+            {"ptegmode", "get", "get port egress vlan mode", "<port_id>", SW_API_PT_TAG_EGVLANMODE_GET, NULL},
+            {"ptxltmisscmd", "set", "set port xlt miss command", "<port_id> <forward|drop|cpycpu|rdtcpu>", SW_API_PT_VLAN_XLT_MISS_CMD_SET, NULL},
+            {"ptxltmisscmd", "get", "get port xlt miss command", "<port_id>", SW_API_PT_VLAN_XLT_MISS_CMD_GET, NULL},
+            {"ptegtagprop", "set", "set port egress tag propogation", "<port_id>", SW_API_PT_EGRESS_TAG_PROPOGATION_SET, NULL},
+            {"ptegtagprop", "get", "get port egress tag propogation", "<port_id>", SW_API_PT_EGRESS_TAG_PROPOGATION_GET, NULL},
+            {"ptegdefaultvid", "set", "set port egress default vid", "<port_id>", SW_API_PT_EGRESS_DEFAULT_VID_SET, NULL},
+            {"ptegdefaultvid", "get", "get port egress default vid", "<port_id>", SW_API_PT_EGRESS_DEFAULT_VID_GET, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },
@@ -848,6 +870,37 @@ struct cmd_des_t gcmd_des[] =
     },
 #endif
 
+    /*Ctrlpkt Control*/
+#ifdef IN_CTRLPKT
+    {
+        "ctrlpkt", "config control packet",
+        {
+            {"ethertype", "set", "set ethernet type profile", "<profile_id> <ethernet_type> <enable/disable>", SW_API_ETHERNET_TYPE_PROFILE_SET, NULL},
+            {"ethertype", "get", "get ethernet type profile", "<profile_id>", SW_API_ETHERNET_TYPE_PROFILE_GET, NULL},
+            {"rfdb", "set", "set rfdb profile", "<profile_id> <mac_addr> <enable/disable>", SW_API_RFDB_PROFILE_SET, NULL},
+            {"rfdb", "get", "get rfdb profile", "<profile_id>", SW_API_RFDB_PROFILE_GET, NULL},
+            {"appprofile", "set", "set app profile", "<profile_id> <app_entry>", SW_API_APP_PROFILE_SET, NULL},
+            {"appprofile", "get", "get app profile", "<profile_id>", SW_API_APP_PROFILE_GET, NULL},
+            {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
+        },
+    },
+#endif
+
+    /*Servcode Control*/
+#ifdef IN_SERVCODE
+    {
+        "servcode", "config service profile",
+        {
+            {"parseservice", "set", "set parse service profile", "<profile_id> <parse service entry>", SW_API_PARSE_SERVICE_PROFILE_SET, NULL},
+            {"parseservice", "get", "get parse service profile", "<profile_id>", SW_API_PARSE_SERVICE_PROFILE_GET, NULL},
+            {"ingressservice", "set", "set ingress service profile", "<profile_id> <ingress service entry>", SW_API_INGRESS_SERVICE_PROFILE_SET, NULL},
+            {"ingressservice", "get", "get ingress service profile", "<profile_id>", SW_API_INGRESS_SERVICE_PROFILE_GET, NULL},
+            {"egressservice", "set", "set egress service profile", "<profile_id> <egress service entry>", SW_API_EGRESS_SERVICE_PROFILE_SET, NULL},
+            {"egressservice", "get", "get egress service profile", "<profile_id>", SW_API_EGRESS_SERVICE_PROFILE_GET, NULL},
+            {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
+        },
+    },
+#endif
 
     /* debug */
     {

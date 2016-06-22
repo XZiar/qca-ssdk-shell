@@ -588,5 +588,76 @@ cmd_data_print_mtu_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 void
 cmd_data_print_mru_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
+sw_error_t
+cmd_data_check_global_qinqmode(char *info, void *val, a_uint32_t size);
+
+sw_error_t
+cmd_data_print_global_qinqmode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_port_qinqmode(char *info, void *val, a_uint32_t size);
+
+sw_error_t
+cmd_data_print_port_qinqmode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tpid(char *info, void *val, a_uint32_t size);
+
+sw_error_t
+cmd_data_print_tpid(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_ingress_filter(char *info, void *val, a_uint32_t size);
+
+sw_error_t
+cmd_data_print_ingress_filter(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_ptingress_tag(char *info, void *val, a_uint32_t size);
+
+sw_error_t
+cmd_data_print_ptingress_tag(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tag_propogation(char *info, void *val, a_uint32_t size);
+
+sw_error_t
+cmd_data_print_tag_propogation(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_egress_default_vid(char *info, void *val, a_uint32_t size);
+
+sw_error_t
+cmd_data_print_egress_default_vid(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_egress_mode(char *info, void *val, a_uint32_t size);
+
+sw_error_t
+cmd_data_print_egress_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size);
+
+sw_error_t
+cmd_data_print_ctrlpkt_profile(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_parse_service(char *info, void *val, a_uint32_t size);
+
+sw_error_t
+cmd_data_print_parse_service(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_ingress_service(char *info, void *val, a_uint32_t size);
+sw_error_t
+cmd_data_print_ingress_service(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_egress_service(char *info, void *val, a_uint32_t size);
+
+sw_error_t
+cmd_data_print_egress_service(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
 #endif
 
