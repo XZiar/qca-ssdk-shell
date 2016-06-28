@@ -110,6 +110,10 @@ ifeq (TRUE, $(IN_VSI))
   MODULE_CFLAG += -DIN_VSI
 endif
 
+ifeq (TRUE, $(IN_PPPOE))
+  MODULE_CFLAG += -DIN_PPPOE
+endif
+
 ifneq (TRUE, $(FAL))
   MODULE_CFLAG += -DHSL_STANDALONG
 endif

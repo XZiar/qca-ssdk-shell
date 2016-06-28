@@ -175,6 +175,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_HDRMODE, cmd_data_check_hdrmode, cmd_data_print_hdrmode),
     SW_TYPE_DEF(SW_FDBOPRATION, cmd_data_check_fdboperation, NULL),
     SW_TYPE_DEF(SW_PPPOE, cmd_data_check_pppoe, cmd_data_print_pppoe),
+    SW_TYPE_DEF(SW_PPPOE_LESS, cmd_data_check_pppoe_less, cmd_data_print_pppoe),
     SW_TYPE_DEF(SW_ACL_UDF_TYPE, cmd_data_check_udf_type, cmd_data_print_udf_type),
     SW_TYPE_DEF(SW_IP_HOSTENTRY, cmd_data_check_host_entry, cmd_data_print_host_entry),
     SW_TYPE_DEF(SW_ARP_LEARNMODE, cmd_data_check_arp_learn_mode, cmd_data_print_arp_learn_mode),
@@ -7459,6 +7460,129 @@ cmd_data_check_pppoe(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE)
+    {
+        do
+        {
+            cmd = get_sub_cmd("port", "null");
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+                dprintf("usage: input port number such as 1,3\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_portmap(cmd, &entry.port_bitmap, sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: input port number such as 1,3\n");
+            }
+        }
+        while (talk_mode && (SW_OK != rv));
+
+        do
+        {
+            cmd = get_sub_cmd("l3_interface_index", "0");
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+                dprintf("usage: the range is 0 -- 255\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &entry.l3_if_index, sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: the range is 0 -- 255\n");
+            }
+        }
+        while (talk_mode && (SW_OK != rv));
+
+        do
+        {
+            cmd = get_sub_cmd("l3_interface_index_valid", "no");
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+                dprintf("usage: <yes/no/y/n>\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_confirm(cmd, A_FALSE, &entry.l3_if_valid,
+                                            sizeof (a_bool_t));
+                if (SW_OK != rv)
+                    dprintf("usage: <yes/no/y/n>\n");
+            }
+
+        }
+        while (talk_mode && (SW_OK != rv));
+
+        do
+        {
+            cmd = get_sub_cmd("smac_addr", NULL);
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+                dprintf("usage: the format is xx-xx-xx-xx-xx-xx \n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_macaddr(cmd, &entry.smac_addr,
+                                            sizeof (fal_mac_addr_t));
+                if (SW_OK != rv)
+                    dprintf("usage: the format is xx-xx-xx-xx-xx-xx \n");
+            }
+        }
+        while (talk_mode && (SW_OK != rv));
+
+        do
+        {
+            cmd = get_sub_cmd("smac_valid", "no");
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+                dprintf("usage: <yes/no/y/n>\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_confirm(cmd, A_FALSE, &entry.smac_valid,
+                                            sizeof (a_bool_t));
+                if (SW_OK != rv)
+                    dprintf("usage: <yes/no/y/n>\n");
+            }
+
+        }
+        while (talk_mode && (SW_OK != rv));
+    }
+
     *(fal_pppoe_session_t*)val = entry;
     return SW_OK;
 }
@@ -7469,12 +7593,53 @@ cmd_data_print_pppoe(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     fal_pppoe_session_t *entry;
 
     entry = (fal_pppoe_session_t *) buf;
-    dprintf("[EntryID]:0x%x  [SessionID]:0x%x  [MultiSession]:%s  [UniSession]:%s  [Vrf_ID]:0x%x",
+    dprintf("[EntryID]:0x%x  [SessionID]:0x%x  [MultiSession]:%s  [UniSession]:%s  [Vrf_ID]:0x%x\n",
             entry->entry_id,
             entry->session_id,
             entry->multi_session ? "YES":"NO",
             entry->uni_session ?   "YES":"NO",
             entry->vrf_id);
+    cmd_data_print_portmap("[Port]:", entry->port_bitmap, sizeof (fal_pbmp_t));
+    dprintf("  [L3InterfaceIndex]:0x%x  [L3InterfaceIndexValid]:%s\n",
+            entry->l3_if_index, entry->l3_if_valid ? "YES":"NO");
+    cmd_data_print_macaddr("[SmacAddr]:", (a_uint32_t *) & (entry->smac_addr), sizeof (fal_mac_addr_t));
+    dprintf("  [SmacValid]:%s", entry->smac_valid ? "YES":"NO");
+}
+
+sw_error_t
+cmd_data_check_pppoe_less(char *cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    sw_error_t rv;
+    fal_pppoe_session_t entry;
+
+    aos_mem_zero(&entry, sizeof (fal_pppoe_session_t));
+
+    do
+    {
+        cmd = get_sub_cmd("sessionid", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: the range is 0 -- 65535\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &entry.session_id, sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: the range is 0 -- 65535\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    *(fal_pppoe_session_t*)val = entry;
+    return SW_OK;
 }
 
 sw_error_t

@@ -180,42 +180,6 @@ fal_bc_to_cpu_port_get(a_uint32_t dev_id, a_bool_t * enable)
 }
 
 sw_error_t
-fal_pppoe_cmd_set(a_uint32_t dev_id, fal_fwd_cmd_t cmd)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PPPOE_CMD_SET, dev_id, (a_uint32_t) cmd);
-    return rv;
-}
-
-sw_error_t
-fal_pppoe_cmd_get(a_uint32_t dev_id, fal_fwd_cmd_t * cmd)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PPPOE_CMD_GET, dev_id, (a_uint32_t) cmd);
-    return rv;
-}
-
-sw_error_t
-fal_pppoe_status_set(a_uint32_t dev_id, a_bool_t enable)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PPPOE_STATUS_SET, dev_id, (a_uint32_t) enable);
-    return rv;
-}
-
-sw_error_t
-fal_pppoe_status_get(a_uint32_t dev_id, a_bool_t * enable)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PPPOE_STATUS_GET, dev_id, (a_uint32_t) enable);
-    return rv;
-}
-
-sw_error_t
 fal_port_dhcp_set(a_uint32_t dev_id, fal_port_t port_id, a_bool_t enable)
 {
     sw_error_t rv;
@@ -266,33 +230,6 @@ fal_eapol_cmd_get(a_uint32_t dev_id, fal_fwd_cmd_t * cmd)
     sw_error_t rv;
 
     rv = sw_uk_exec(SW_API_EAPOL_CMD_GET, dev_id, (a_uint32_t)cmd);
-    return rv;
-}
-
-sw_error_t
-fal_pppoe_session_add(a_uint32_t dev_id, a_uint32_t session_id, a_bool_t strip_hdr)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PPPOE_SESSION_ADD, dev_id, session_id, (a_uint32_t)strip_hdr);
-    return rv;
-}
-
-sw_error_t
-fal_pppoe_session_del(a_uint32_t dev_id, a_uint32_t session_id)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PPPOE_SESSION_DEL, dev_id, session_id);
-    return rv;
-}
-
-sw_error_t
-fal_pppoe_session_get(a_uint32_t dev_id, a_uint32_t session_id, a_bool_t * strip_hdr)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PPPOE_SESSION_GET, dev_id, session_id, (a_uint32_t)strip_hdr);
     return rv;
 }
 
@@ -368,53 +305,6 @@ fal_port_arp_ack_status_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *ena
     sw_error_t rv;
 
     rv = sw_uk_exec(SW_API_PT_ARP_ACK_STATUS_GET, dev_id, port_id, (a_uint32_t)enable);
-    return rv;
-}
-
-sw_error_t
-fal_pppoe_session_table_add(a_uint32_t dev_id, fal_pppoe_session_t * session_tbl)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PPPOE_SESSION_TABLE_ADD, dev_id, (a_uint32_t)session_tbl);
-    return rv;
-}
-
-sw_error_t
-fal_pppoe_session_table_del(a_uint32_t dev_id, fal_pppoe_session_t * session_tbl)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PPPOE_SESSION_TABLE_DEL, dev_id, (a_uint32_t)session_tbl);
-    return rv;
-}
-
-sw_error_t
-fal_pppoe_session_table_get(a_uint32_t dev_id, fal_pppoe_session_t * session_tbl)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PPPOE_SESSION_TABLE_GET, dev_id, (a_uint32_t)session_tbl);
-    return rv;
-}
-
-sw_error_t
-fal_pppoe_session_id_set(a_uint32_t dev_id, a_uint32_t index,
-                         a_uint32_t id)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PPPOE_SESSION_ID_SET, dev_id, index, id);
-    return rv;
-}
-
-sw_error_t
-fal_pppoe_session_id_get(a_uint32_t dev_id, a_uint32_t index,
-                         a_uint32_t * id)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PPPOE_SESSION_ID_GET, dev_id, index, (a_uint32_t)id);
     return rv;
 }
 
@@ -524,24 +414,6 @@ fal_cpu_vid_en_get(a_uint32_t dev_id, a_bool_t *enable)
     sw_error_t rv;
 
     rv = sw_uk_exec(SW_API_CPU_VID_EN_GET, dev_id, (a_uint32_t) enable);
-    return rv;
-}
-
-sw_error_t
-fal_rtd_pppoe_en_set(a_uint32_t dev_id, a_bool_t  enable)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_RTD_PPPOE_EN_SET, dev_id, (a_uint32_t) enable);
-    return rv;
-}
-
-sw_error_t
-fal_rtd_pppoe_en_get(a_uint32_t dev_id, a_bool_t *enable)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_RTD_PPPOE_EN_GET, dev_id, (a_uint32_t) enable);
     return rv;
 }
 

@@ -106,6 +106,10 @@ ifeq (TRUE, $(IN_FLOW))
   SRC_LIST += fal_flow.c
 endif
 
+ifeq (TRUE, $(IN_PPPOE))
+  SRC_LIST += fal_pppoe.c
+endif
+
 include $(PRJ_PATH)/make/components.mk
 include $(PRJ_PATH)/make/defs.mk
 include $(PRJ_PATH)/make/target.mk

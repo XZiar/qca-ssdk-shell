@@ -609,6 +609,8 @@ struct cmd_des_t gcmd_des[] =
             {"cpuVid", "get", "get to_cpu vid status", "", SW_API_CPU_VID_EN_GET, NULL},
             {"rtdPppoe", "set", "set RM_RTD_PPPOE_EN status", "<enable|disable>", SW_API_RTD_PPPOE_EN_SET, NULL},
             {"rtdPppoe", "get", "get RM_RTD_PPPOE_EN status", "", SW_API_RTD_PPPOE_EN_GET, NULL},
+            {"pppoeen", "set", "set a l3 interface pppoe status", "<l3_interface_index> <enable|disable>", SW_API_PPPOE_EN_SET, NULL},
+            {"pppoeen", "get", "get a l3 interface pppoe status", "<l3_interface_index>", SW_API_PPPOE_EN_GET, NULL},
 			{"glomacaddr", "set", "set global macaddr", "<macaddr>", SW_API_GLOBAL_MACADDR_SET, NULL},
 			{"glomacaddr", "get", "get global macaddr", "", SW_API_GLOBAL_MACADDR_GET, NULL},
 			{"lldp", "set", "set lldp frames hardware identification status", "<enable|disable>", SW_API_LLDP_STATUS_SET, NULL},

@@ -50,6 +50,7 @@ extern "C" {
 #include "fal_flow.h"
 #include "fal_ctrlpkt.h"
 #include "fal_servcode.h"
+#include "fal_pppoe.h"
 
 #ifdef __cplusplus
 }
