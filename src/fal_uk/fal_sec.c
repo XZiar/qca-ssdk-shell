@@ -37,3 +37,58 @@ fal_sec_norm_item_get(a_uint32_t dev_id, fal_norm_item_t item, void * value)
     return rv;
 }
 
+sw_error_t
+fal_sec_l3_excep_ctrl_set(a_uint32_t dev_id, a_uint32_t excep_type, fal_l3_excep_ctrl_t *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_EXP_CTRL_SET, dev_id, excep_type, (a_uint32_t)ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_l3_excep_ctrl_get(a_uint32_t dev_id, a_uint32_t excep_type, fal_l3_excep_ctrl_t *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_EXP_CTRL_GET, dev_id, excep_type, (a_uint32_t)ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_l4_excep_parser_ctrl_get(a_uint32_t dev_id, fal_l4_excep_parser_ctrl *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_L4_PARSER_CTRL_GET, dev_id, (a_uint32_t)ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_l4_excep_parser_ctrl_set(a_uint32_t dev_id, fal_l4_excep_parser_ctrl *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_L4_PARSER_CTRL_SET, dev_id, (a_uint32_t)ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_l3_excep_parser_ctrl_set(a_uint32_t dev_id, fal_l3_excep_parser_ctrl *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_L3_PARSER_CTRL_SET, dev_id, (a_uint32_t)ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_l3_excep_parser_ctrl_get(a_uint32_t dev_id, fal_l3_excep_parser_ctrl *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_L3_PARSER_CTRL_GET, dev_id, (a_uint32_t)ctrl);
+    return rv;
+}
+
+

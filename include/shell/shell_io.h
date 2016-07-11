@@ -515,6 +515,24 @@ void
 cmd_data_print_flow_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
+cmd_data_check_l3_parser(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_l3_parser(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_l4_parser(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
 cmd_data_check_flow_cookie(char *cmd_str, void * val, a_uint32_t size);
 
 sw_error_t

@@ -470,6 +470,12 @@ struct cmd_des_t gcmd_des[] =
             {"icmp4", "get", "get ICMP4 related security", "<ping_pl_exceed/ping_frag/ping_max_pl>", SW_API_SEC_ICMP4_GET, NULL},
             {"icmp6", "set", "set ICMP6 related security", "<ping_pl_exceed/ping_frag/ping_max_pl> <value>", SW_API_SEC_ICMP6_SET, NULL},
             {"icmp6", "get", "get ICMP6 related security", "<ping_pl_exceed/ping_frag/ping_max_pl>", SW_API_SEC_ICMP6_GET, NULL},
+            {"l3parser", "get", "get l3 parser ctrl", "<ttl> <hop>", SW_API_SEC_L3_PARSER_CTRL_GET, NULL},
+	      {"l3parser", "set", "set l3 parser ctrl", "<ttl> <hop>", SW_API_SEC_L3_PARSER_CTRL_SET, NULL},
+		{"l4parser", "get", "get l4 parser ctrl", "<tcp_flag> <tcp_flag_mask>", SW_API_SEC_L4_PARSER_CTRL_GET, NULL},
+		{"l4parser", "set", "set l4 parser ctrl", "<tcp_flag> <tcp_flag_mask>", SW_API_SEC_L4_PARSER_CTRL_SET, NULL},
+		{"expctrl", "get", "get l3 exp ctrl", "", SW_API_SEC_EXP_CTRL_GET, NULL},
+		{"expctrl", "set", "set l3 exp ctrl", "", SW_API_SEC_EXP_CTRL_SET, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },
