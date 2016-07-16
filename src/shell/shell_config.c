@@ -725,6 +725,9 @@ struct cmd_des_t gcmd_des[] =
 		{"entry", "add", "add flow entry", "", SW_API_FLOW_ENTRY_ADD, NULL},
 		{"entry", "del", "del flow entry", "", SW_API_FLOW_ENTRY_DEL, NULL},
 		{"entry", "get", "get flow entry", "", SW_API_FLOW_ENTRY_GET, NULL},
+		{"host", "add", "add flow host entry", "", SW_API_FLOW_HOST_ADD, NULL},
+		{"host", "del", "del flow host entry", "", SW_API_FLOW_HOST_DEL, NULL},
+		{"host", "get", "get flow host entry", "", SW_API_FLOW_HOST_GET, NULL},
 		{"global", "get", "get flow global cfg", "", SW_API_FLOW_GLOBAL_CFG_GET, NULL},
 		{"global", "set", "set flow global cfg", "", SW_API_FLOW_GLOBAL_CFG_SET, NULL},
 	      {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/

@@ -140,3 +140,39 @@ fal_flow_global_cfg_set(
     return rv;
 }
 
+sw_error_t
+fal_flow_host_add(
+		a_uint32_t dev_id,
+		a_uint32_t add_mode, /*index or hash*/
+		fal_flow_host_entry_t *flow_host_entry)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FLOW_HOST_ADD, dev_id, add_mode, flow_host_entry);
+    return rv;
+}
+
+sw_error_t
+fal_flow_host_del(
+		a_uint32_t dev_id,
+		a_uint32_t del_mode,
+		fal_flow_host_entry_t *flow_host_entry)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FLOW_HOST_DEL, dev_id, del_mode, flow_host_entry);
+    return rv;
+}
+
+sw_error_t
+fal_flow_host_get(
+		a_uint32_t dev_id,
+		a_uint32_t get_mode,
+		fal_flow_host_entry_t *flow_host_entry)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FLOW_HOST_GET, dev_id, get_mode, flow_host_entry);
+    return rv;
+}
+
