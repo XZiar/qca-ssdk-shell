@@ -503,6 +503,12 @@ void
 cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
+cmd_data_check_flow_host(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_flow_host(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
 cmd_data_check_ip_global(char *cmd_str, void * val, a_uint32_t size);
 
 void

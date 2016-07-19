@@ -250,6 +250,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_UCAST_HASH, cmd_data_check_ucast_hash, cmd_data_print_ucast_hash),
     SW_TYPE_DEF(SW_MCAST_QUEUE_MAP, cmd_data_check_mcast_queue_map, cmd_data_print_mcast_queue_map),
     SW_TYPE_DEF(SW_FLOW_ENTRY, cmd_data_check_flow, cmd_data_print_flow),
+    SW_TYPE_DEF(SW_FLOW_HOST, cmd_data_check_flow_host, cmd_data_print_flow_host),
     SW_TYPE_DEF(SW_IP_GLOBAL, cmd_data_check_ip_global, cmd_data_print_ip_global),
     SW_TYPE_DEF(SW_FLOW_GLOBAL, cmd_data_check_flow_global, cmd_data_print_flow_global),
     SW_TYPE_DEF(SW_GLOBAL_QINQMODE, cmd_data_check_global_qinqmode, cmd_data_print_global_qinqmode),
@@ -16351,6 +16352,28 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
                                sizeof (fal_ip6_addr_t));
     }
     dprintf("\n[pkt]:0x%x [byte]:0x%x ", entry->pkt_count, entry->byte_count);
+}
+
+sw_error_t
+cmd_data_check_flow_host(char *cmd_str, void * val, a_uint32_t size)
+{
+	fal_flow_host_entry_t *flow_host = (fal_flow_host_entry_t *)val;
+	fal_flow_entry_t *flow_entry = &(flow_host->flow_entry);
+	fal_host_entry_t *host_entry = &(flow_host->host_entry);
+
+	cmd_data_check_flow(cmd_str, flow_entry, size);
+	cmd_data_check_host_entry(cmd_str, host_entry, size);
+}
+
+void
+cmd_data_print_flow_host(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_flow_host_entry_t *flow_host = (fal_flow_host_entry_t *) buf;
+	fal_flow_entry_t *flow_entry = &(flow_host->flow_entry);
+	fal_host_entry_t *host_entry = &(flow_host->host_entry);
+
+	cmd_data_print_flow(param_name, flow_entry, size);
+	cmd_data_print_host_entry(param_name, host_entry, size);
 }
 
 sw_error_t
