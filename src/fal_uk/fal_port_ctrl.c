@@ -799,3 +799,25 @@ fal_port_mru_get(a_uint32_t dev_id, fal_port_t port_id,
     return rv;
 }
 
+sw_error_t
+fal_port_source_filter_set(a_uint32_t dev_id, fal_port_t port_id,
+                       a_bool_t enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_SOURCE_FILTER_SET, dev_id, port_id,
+                    (a_uint32_t) enable);
+    return rv;
+}
+
+sw_error_t
+fal_port_source_filter_get(a_uint32_t dev_id, fal_port_t port_id,
+                       a_bool_t * enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_SOURCE_FILTER_GET, dev_id, port_id,
+                    (a_uint32_t) enable);
+    return rv;
+}
+

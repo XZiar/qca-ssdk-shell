@@ -39,7 +39,7 @@ extern "C" {
 #define SW_CMD_HOST_IPV6M_SHOW       (SW_API_MAX + 14)
 #define SW_CMD_MAX             (SW_API_MAX + 15)
 
-#define MAX_SUB_CMD_DES_NUM  80
+#define MAX_SUB_CMD_DES_NUM  120
 
     struct sub_cmd_des_t
     {
