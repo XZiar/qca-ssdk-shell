@@ -23,7 +23,14 @@
 static char **full_cmdstrp;
 static int talk_mode = 1;
 
+char g_aclcmd[2000] = "\0";
+a_uint32_t g_aclcmd_len = 0;;
 
+void append_acl_cmd(char * cmd)
+{
+        g_aclcmd_len += sprintf(g_aclcmd+g_aclcmd_len, cmd);
+        g_aclcmd_len += sprintf(g_aclcmd+g_aclcmd_len, " ");
+}
 
 int
 get_talk_mode(void)
@@ -2794,6 +2801,8 @@ cmd_data_print_fdbentry(a_uint8_t * param_name, a_uint32_t * buf,
             ret = chk_func param; \
             if (SW_OK != ret)\
                 dprintf("%s", usage);\
+            else\
+            append_acl_cmd(cmd);\
         }\
     } while (talk_mode && (SW_OK != ret));\
 }
@@ -3375,6 +3384,69 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry)
     char *cmd;
     a_uint32_t tmpdata = 0;
 
+    /* get fake mac header field configuration */
+    cmd_data_check_element("Fake mac header field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if(tmpdata)
+    {
+            entry->is_fake_mac_header_mask = 1;
+	        cmd_data_check_element("Is fake mac header", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_fake_mac_header_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_FAKE_MAC_HEADER);
+    }
+
+    /* get SNAP field configuration */
+    cmd_data_check_element("SNAP/LLC other field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if(tmpdata)
+    {
+            entry->is_snap_mask= 1;
+	        cmd_data_check_element("Is SNAP packet", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_snap_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_SNAP);
+    }
+
+    /* get ethernet field configuration */
+    cmd_data_check_element("ethernet/other field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if(tmpdata)
+    {
+            entry->is_ethernet_mask = 1;
+	    cmd_data_check_element("Is ethernet packet", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ethernet_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ETHERNET);
+    }
+
+    /* get IP/NON-IP field configuration */
+    cmd_data_check_element("IP/NON-IP field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if(tmpdata)
+    {
+            entry->is_ip_mask = 1;
+	    cmd_data_check_element("Is IP packet", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ip_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP);
+    }
+    /* get IPv4/IPv6 field configuration */
+    cmd_data_check_element("IPv4/IPv6 field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if(tmpdata)
+    {
+            entry->is_ipv6_mask = 1;
+	    cmd_data_check_element("Is IPv6 packet", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ipv6_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IPV6);
+    }
     /* get destination mac address field configuration */
     cmd_data_check_element("mac dst addr field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
@@ -3800,6 +3872,62 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry)
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_CTAG_CFI);
     }
 
+    /* get vsi valid field configuration */
+    cmd_data_check_element("vsi valid field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if(tmpdata)
+    {
+            entry->vsi_valid_mask = 1;
+	    cmd_data_check_element("is vsi valid", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->vsi_valid,
+	                                   sizeof (a_bool_t)));
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_VSI_VALID);
+    }
+
+    /* get vsi field configuration */
+    cmd_data_check_element("vsi field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+
+    if (tmpdata)
+    {
+        cmd_data_check_element("vsi", "0x0",
+                               "usage: the format is 0x0-0x1f or 0-31 \n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x1f,
+                                       0x0));
+        entry->vsi = tmpdata & 0x1f;
+
+        cmd_data_check_element("vsi mask", NULL,
+                               "usage: the format is 0x0-0x1f or 0-31 \n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x1f,
+                                       0x0));
+        entry->vsi_mask = tmpdata & 0x1f;
+
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_VSI);
+    }
+
+    /* get vsi field configuration */
+    cmd_data_check_element("pppoe session id field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+
+    if (tmpdata)
+    {
+        cmd_data_check_element("pppoe session id", "0x0",
+                               "usage: the format is 0x0-0xffff or 0-65535 \n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
+                                       0x0));
+        entry->pppoe_sessionid = tmpdata & 0xffff;
+
+        cmd_data_check_element("pppoe session id mask", NULL,
+                               "usage: the format is 0x0-0xffff or 0-65535 \n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
+                                       0x0));
+        entry->pppoe_sessionid_mask = tmpdata & 0xffff;
+
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_PPPOE_SESSIONID);
+    }
     return SW_OK;
 }
 
@@ -3893,6 +4021,20 @@ cmd_data_check_ip4_field(fal_acl_rule_t * entry)
         entry->dhcpv4_mask = tmpdata & 0x1;
 
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_DHCPV4);
+    }
+
+    /* get ipv4 option field configuration */
+    cmd_data_check_element("ipv4 option field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+
+    if (tmpdata)
+    {
+            entry->is_ipv4_option_mask = 1;
+	    cmd_data_check_element("Is ipv4 option", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ipv4_option_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IPV4_OPTION);
     }
 
     return SW_OK;
@@ -3992,6 +4134,76 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_DHCPV6);
     }
 
+    /* get ah header field configuration */
+    cmd_data_check_element("ah header field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+
+    if (tmpdata)
+    {
+            entry->is_ah_header_mask = 1;
+	    cmd_data_check_element("Is AH header", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ah_header_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_AH_HEADER);
+    }
+
+    /* get esp header field configuration */
+    cmd_data_check_element("esp header field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+
+    if (tmpdata)
+    {
+            entry->is_esp_header_mask = 1;
+	    cmd_data_check_element("Is ESP header", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_esp_header_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ESP_HEADER);
+    }
+
+    /* get mobility header field configuration */
+    cmd_data_check_element("mobility header field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+
+    if (tmpdata)
+    {
+            entry->is_mobility_header_mask = 1;
+	    cmd_data_check_element("Is mobility header", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_mobility_header_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MOBILITY_HEADER);
+    }
+
+    /* get fragment header field configuration */
+    cmd_data_check_element("fragment header field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+
+    if (tmpdata)
+    {
+            entry->is_fragment_header_mask = 1;
+	    cmd_data_check_element("Is fragment header", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_fragment_header_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_FRAGMENT_HEADER);
+    }
+
+    /* get other header field configuration */
+    cmd_data_check_element("other header field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+
+    if (tmpdata)
+    {
+            entry->is_other_header_mask = 1;
+	    cmd_data_check_element("Is other header", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_other_header_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_OTHER_EXT_HEADER);
+    }
+
     return SW_OK;
 }
 
@@ -4054,8 +4266,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
         cmd_data_check_element("ip l4 dst port opration", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
-                                       &(entry->
-                                         dest_l4port_op)));
+                                       &(entry->dest_l4port_op)));
 
         if (FAL_ACL_FIELD_MASK == entry->dest_l4port_op)
         {
@@ -4172,48 +4383,208 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TCP_FLAG);
     }
 
-    /* get icmp type field configuration */
-    cmd_data_check_element("icmp type field", "no", "usage: <yes/no/y/n>\n",
+
+    /* get icmp type/code field configuration */
+    cmd_data_check_element("icmp type code field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
 
     if (tmpdata)
     {
-        cmd_data_check_element("icmp type", NULL,
-                               "usage: the format is 0x0-0xff or 0-255 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
-                                       0x0));
-        entry->icmp_type_val = tmpdata & 0xff;
+        cmd_data_check_element("icmp type code operation", "mask",
+                               "usage: <mask/range/le/ge/ne> \n",
+                               cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
+                                       &(entry->icmp_type_code_op)));
 
-        cmd_data_check_element("icmp type mask", NULL,
-                               "usage: the format is 0x0-0xff or 0-255 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
-                                       0x0));
-        entry->icmp_type_mask = tmpdata & 0xff;
+        if (FAL_ACL_FIELD_MASK == entry->icmp_type_code_op)
+        {
+	    /* get icmp type field configuration */
+	    cmd_data_check_element("icmp type field", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+	                                   sizeof (a_bool_t)));
 
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_TYPE);
+	    if (tmpdata)
+	    {
+	        cmd_data_check_element("icmp type", NULL,
+	                               "usage: the format is 0x0-0xff or 0-255 \n",
+	                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+	                                       0x0));
+	        entry->icmp_type_val = tmpdata & 0xff;
+
+	        cmd_data_check_element("icmp type mask", NULL,
+	                               "usage: the format is 0x0-0xff or 0-255 \n",
+	                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+	                                       0x0));
+	        entry->icmp_type_mask = tmpdata & 0xff;
+
+	        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_TYPE);
+	    }
+
+	    /* get icmp code field configuration */
+	    cmd_data_check_element("icmp code field", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+	                                   sizeof (a_bool_t)));
+
+	    if (tmpdata)
+	    {
+	        cmd_data_check_element("icmp code", NULL,
+	                               "usage: the format is 0x0-0xff or 0-255 \n",
+	                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+	                                       0x0));
+	        entry->icmp_code_val = tmpdata & 0xff;
+
+	        cmd_data_check_element("icmp code mask", NULL,
+	                               "usage: the format is 0x0-0xff or 0-255 \n",
+	                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+	                                       0x0));
+	        entry->icmp_code_mask = tmpdata & 0xff;
+
+	        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_CODE);
+	    }
+        }
+        else if (FAL_ACL_FIELD_RANGE == entry->icmp_type_code_op)
+        {
+            cmd_data_check_element("icmp type code low", NULL,
+                                   "usage: the format is 0x0-0xffff or 0-65535 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->icmp_type_val= (tmpdata>>8) & 0xff;
+            entry->icmp_code_val= tmpdata & 0xff;
+
+            cmd_data_check_element("icmp type code high", NULL,
+                                   "usage: the format is 0x0-0xffff or 0-65535 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->icmp_type_mask = (tmpdata>>8) & 0xff;
+            entry->icmp_code_mask= tmpdata & 0xff;
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_TYPE);
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_CODE);
+        }
+        else
+        {
+            cmd_data_check_element("icmp type code", NULL,
+                                   "usage: the format is 0x0-0xffff or 0-65535 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->icmp_type_val= (tmpdata>>8) & 0xff;
+            entry->icmp_code_val= tmpdata & 0xff;
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_TYPE);
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_CODE);
+        }
     }
 
-    /* get icmp code field configuration */
-    cmd_data_check_element("icmp code field", "no", "usage: <yes/no/y/n>\n",
+    /* get fragment field configuration */
+    cmd_data_check_element("fragment field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
 
     if (tmpdata)
     {
-        cmd_data_check_element("icmp code", NULL,
-                               "usage: the format is 0x0-0xff or 0-255 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
-                                       0x0));
-        entry->icmp_code_val = tmpdata & 0xff;
+            entry->is_fragement_mask = 1;
+	    cmd_data_check_element("Is fragment packet", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_fragement_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_L3_FRAGMENT);
+    }
 
-        cmd_data_check_element("icmp code mask", NULL,
-                               "usage: the format is 0x0-0xff or 0-255 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
-                                       0x0));
-        entry->icmp_code_mask = tmpdata & 0xff;
+    /* get first fragment field configuration */
+    cmd_data_check_element("first fragment field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
 
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_CODE);
+    if (tmpdata)
+    {
+            entry->is_first_frag_mask = 1;
+	    cmd_data_check_element("Is first fragment packet", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_first_frag_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_FIRST_FRAGMENT);
+    }
+
+    /* get L3 TTL field configuration */
+    cmd_data_check_element("l3 ttl field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+
+    if (tmpdata)
+    {
+            entry->l3_ttl_mask = 0x3;
+            cmd_data_check_element("l3 ttl", "0",
+                               "usage: 0-ttl/hoplimit is 0, 1-ttl/hoplimit is 1, 2-ttl/hoplimit is 255, 3-ttl/hoplimit is other \n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x3,
+                                       0x0));
+            entry->l3_ttl = tmpdata & 0x3;
+
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_L3_TTL);
+    }
+
+    /* get l3 length field configuration */
+    cmd_data_check_element("l3 length field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+
+    if (tmpdata)
+    {
+        cmd_data_check_element("l3 length operation", "mask",
+                               "usage: <mask/range/le/ge/ne> \n",
+                               cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
+                                       &(entry->l3_length_op)));
+
+        if (FAL_ACL_FIELD_MASK == entry->l3_length_op)
+        {
+            cmd_data_check_element("l3 length", NULL,
+                                   "usage: the format is 0x0-0xffff or 0-65535 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->l3_length = tmpdata & 0xffff;
+
+            cmd_data_check_element("l3 length mask", NULL,
+                                   "usage: the format is 0x0-0xffff or 0-65535 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->l3_length_mask = tmpdata & 0xffff;
+        }
+        else if (FAL_ACL_FIELD_RANGE == entry->l3_length_op)
+        {
+            cmd_data_check_element("l3 length low", NULL,
+                                   "usage: the format is 0x0-0xffff or 0-65535 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->l3_length = tmpdata & 0xffff;
+
+            cmd_data_check_element("l3 length high", NULL,
+                                   "usage: the format is 0x0-0xffff or 0-65535 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->l3_length_mask = tmpdata & 0xffff;
+        }
+        else
+        {
+            cmd_data_check_element("l3 length", NULL,
+                                   "usage: the format is 0x0-0xffff or 0-65535 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->l3_length = tmpdata & 0xffff;
+        }
+
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_L3_LENGTH);
+    }
+
+    /* get L3 packet type field configuration */
+    cmd_data_check_element("l3 packet type field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+
+    if (tmpdata)
+    {
+            entry->l3_pkt_type_mask = 0x7;
+            cmd_data_check_element("l3 packet type", "0",
+                               "usage: 0-TCP, 1-UDP, 3-UDP-Lite, 5-ARP, 7-ICMP \n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x3,
+                                       0x0));
+            entry->l3_pkt_type = tmpdata & 0x7;
+
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP_PKT_TYPE);
     }
 
     return SW_OK;
@@ -4595,6 +4966,11 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
     if (A_TRUE == tmpdata)
     {
         FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_REMARK_STAG_VID);
+        cmd_data_check_element("stag format", NULL,
+                               "usage: 0-untaged, 1-pritagged or tagged\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                                       0x0));
+        entry->stag_fmt = tmpdata & 0x1;
     }
 
     /* chang stag pri action configuration */
@@ -4634,6 +5010,13 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
     if (A_TRUE == tmpdata)
     {
         FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_REMARK_CTAG_VID);
+
+        cmd_data_check_element("ctag format", NULL,
+                               "usage: 0-untaged, 1-pritagged or tagged\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                                       0x0));
+        entry->ctag_fmt = tmpdata & 0x1;
+
     }
 
 
@@ -4763,6 +5146,99 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
         FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_MATCH_TRIGGER_INTR);
     }
 
+    /* by pass action configuration */
+    cmd_data_check_element("bypass bitmap change", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("bypass bitmap", NULL,
+                               "usage: the format is HEX \n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xffffffff,
+                                       0x0));
+        entry->bypass_bitmap = tmpdata;
+
+        FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_BYPASS_BITMAP);
+    }
+
+    /*enqueue priority action configuration */
+    cmd_data_check_element("enqueue priority change", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("enqueue priority", NULL,
+                               "usage: the format is integer, 0-15\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xf,
+                                       0x0));
+        entry->enqueue_pri = tmpdata & 0xf;
+
+        FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_ENQUEUE_PRI);
+    }
+
+    /*internal dp action configuration */
+    cmd_data_check_element("internal dp change", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("internal dp", NULL,
+                               "usage: integer value, 0-3\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x3,
+                                       0x0));
+        entry->int_dp = tmpdata & 0x3;
+
+        FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_INT_DP);
+    }
+
+    /*service code action configuration */
+    cmd_data_check_element("service code change", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("service code", NULL,
+                               "usage: 0-255\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+                                       0x0));
+        entry->service_code = tmpdata & 0xff;
+
+        FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_SERVICE_CODE);
+    }
+
+    /*cpu code action configuration */
+    cmd_data_check_element("cpu code change", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("cpu code", NULL,
+                               "usage: 0-255\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+                                       0x0));
+        entry->cpu_code = tmpdata & 0xff;
+
+        FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_CPU_CODE);
+    }
+
+    /*sync toggle action configuration */
+    cmd_data_check_element("sync toggle", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_SYN_TOGGLE);
+    }
+
+    /*meta data action configuration */
+    cmd_data_check_element("meta data enable", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_METADATA_EN);
+    }
+
     return SW_OK;
 }
 
@@ -4777,6 +5253,20 @@ cmd_data_check_aclrule(char *info, void *val, a_uint32_t size)
     memset(&entry, 0, sizeof (fal_acl_rule_t));
 
     dprintf("\n");
+    g_aclcmd_len = sprintf(g_aclcmd, "ssdk_sh acl rule add 11 3 1 ");
+
+    cmd_data_check_element("post routing enable", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.post_routing, sizeof (a_bool_t)));
+
+    cmd_data_check_element("priority", "0x0",
+                       "usage: the format is 0x0-0x7 or 0-7 \n",
+                       cmd_data_check_integer, (cmd, &entry.pri, 0x7,
+                               0x0));
+    cmd_data_check_element("resouce chain", "0x0",
+                       "usage: the format is 0x0-0x1 or 0-1 \n",
+                       cmd_data_check_integer, (cmd, &entry.res_chain, 0x1,
+                               0x0));
 
     /* get rule type configuration */
     cmd_data_check_element("rule type", NULL, "usage: <mac/ip4/ip6/udf> \n",
@@ -4835,6 +5325,7 @@ cmd_data_check_aclrule(char *info, void *val, a_uint32_t size)
         }
     }
 
+
     rv = cmd_data_check_udf_field(&entry);
     if (SW_OK != rv)
     {
@@ -4856,7 +5347,8 @@ cmd_data_check_aclrule(char *info, void *val, a_uint32_t size)
     {
         return rv;
     }
-
+printf("\n %s \n", g_aclcmd);
+sleep(1);
     *(fal_acl_rule_t *) val = entry;
     return SW_OK;
 }
@@ -4872,6 +5364,26 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
     cmd_data_print_ruletype("\n[rule_type]:",
                             (a_uint32_t *) & (rule->rule_type),
                             sizeof (fal_acl_rule_type_t));
+
+    dprintf("\n[priority]:0x%x", rule->pri);
+    dprintf("\n[post_routing_en]:0x%x", rule->post_routing);
+    dprintf("\n[res_chain]:0x%x", rule->res_chain);
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_FAKE_MAC_HEADER))
+    {
+        dprintf("\n[fake_mac_header]:0x%x", rule->is_fake_mac_header_val);
+        dprintf("  [fake_mac_header_mask]:0x%x", rule->is_fake_mac_header_mask);
+    }
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_SNAP))
+    {
+        dprintf("\n[snap]:0x%x", rule->is_snap_val);
+        dprintf("  [snap_mask]:0x%x", rule->is_snap_mask);
+    }
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_ETHERNET))
+    {
+        dprintf("\n[ethernet]:0x%x", rule->is_ethernet_val);
+        dprintf("  [ethernet_mask]:0x%x", rule->is_ethernet_mask);
+    }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_DA))
     {
@@ -5004,6 +5516,36 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
         }
     }
 
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_VSI_VALID))
+    {
+        dprintf("\n[vsi_valid]:0x%x", rule->vsi_valid);
+        dprintf("  [vsi_valid_mask]:0x%x", rule->vsi_valid_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_VSI))
+    {
+        dprintf("\n[vsi]:0x%x", rule->vsi);
+        dprintf("  [vsi_mask]:0x%x", rule->vsi_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_PPPOE_SESSIONID))
+    {
+        dprintf("\n[pppoe_session_id]:0x%x", rule->pppoe_sessionid);
+        dprintf("  [pppoe_session_id_mask]:0x%x", rule->pppoe_sessionid_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP))
+    {
+        dprintf("\n[ip]:0x%x", rule->is_ip_val);
+        dprintf("  [ip_mask]:0x%x", rule->is_ip_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IPV6))
+    {
+        dprintf("\n[ipv6]:0x%x", rule->is_ipv6_val);
+        dprintf("  [ipv6_mask]:0x%x", rule->is_ipv6_mask);
+    }
+
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP4_DIP))
     {
         cmd_data_print_ip4addr("\n[ip4_dst_addr]:",
@@ -5068,6 +5610,66 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
         dprintf("  [ip6_dhcpv6_mask]:0x%x", rule->dhcpv6_mask);
     }
 
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_AH_HEADER))
+    {
+        dprintf("\n[ah_header]:0x%x", rule->is_ah_header_val);
+        dprintf("  [ah_header_mask]:0x%x", rule->is_ah_header_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_ESP_HEADER))
+    {
+        dprintf("\n[esp_header]:0x%x", rule->is_esp_header_val);
+        dprintf("  [esp_header_mask]:0x%x", rule->is_esp_header_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MOBILITY_HEADER))
+    {
+        dprintf("\n[mobility_header]:0x%x", rule->is_mobility_header_val);
+        dprintf("  [mobility_header_mask]:0x%x", rule->is_mobility_header_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_FRAGMENT_HEADER))
+    {
+        dprintf("\n[fragment_header]:0x%x", rule->is_fragment_header_val);
+        dprintf("  [fragment_header_mask]:0x%x", rule->is_fragment_header_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_OTHER_EXT_HEADER))
+    {
+        dprintf("\n[other_header]:0x%x", rule->is_other_header_val);
+        dprintf("  [other_header_mask]:0x%x", rule->is_other_header_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L3_TTL))
+    {
+        dprintf("\n[l3_ttl]:0x%x", rule->l3_ttl);
+        dprintf("  [l3_ttl_mask]:0x%x", rule->l3_ttl_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IPV4_OPTION))
+    {
+        dprintf("\n[ipv4_option]:0x%x", rule->is_ipv4_option_val);
+        dprintf("  [ipv4_option_mask]:0x%x", rule->is_ipv4_option_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_FIRST_FRAGMENT))
+    {
+        dprintf("\n[first_fragment]:0x%x", rule->is_first_frag_val);
+        dprintf("  [first_fragment_mask]:0x%x", rule->is_first_frag_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L3_LENGTH))
+    {
+        dprintf("\n[l3_length]:0x%x", rule->l3_length);
+        dprintf("  [l3_length_mask]:0x%x", rule->l3_length_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP_PKT_TYPE))
+    {
+        dprintf("\n[l3_packet_type]:0x%x", rule->l3_pkt_type);
+        dprintf("  [l3_packet_type_mask]:0x%x", rule->l3_pkt_type_mask);
+    }
+
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP_PROTO))
     {
         dprintf("\n[ip_proto]:0x%x", rule->ip_proto_val);
@@ -5078,6 +5680,12 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
     {
         dprintf("\n[ip_dscp]:0x%x", rule->ip_dscp_val);
         dprintf("  [ip_dscp_mask]:0x%x", rule->ip_dscp_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L3_FRAGMENT))
+    {
+        dprintf("\n[l3_fragment]:0x%x", rule->is_fragement_val);
+        dprintf("  [l3_fragment_mask]:0x%x", rule->is_fragement_mask);
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L4_DPORT))
@@ -5307,6 +5915,49 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_MATCH_TRIGGER_INTR))
     {
         dprintf("\n[trigger_intr]:yes");
+    }
+
+    if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_BYPASS_BITMAP))
+    {
+        dprintf("\n[bypass_bitmap]:0x%x", rule->bypass_bitmap);
+    }
+
+    if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_ENQUEUE_PRI))
+    {
+        dprintf("\n[enqueue_priority]:0x%x", rule->enqueue_pri);
+    }
+
+    if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_INT_DP))
+    {
+        dprintf("\n[int_dp]:0x%x", rule->int_dp);
+    }
+
+    if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_SERVICE_CODE))
+    {
+        dprintf("\n[service_code]:0x%x", rule->service_code);
+    }
+
+    if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_CPU_CODE))
+    {
+        dprintf("\n[cpu_code]:0x%x", rule->cpu_code);
+    }
+
+    if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_SYN_TOGGLE))
+    {
+        dprintf("\n[syn_toggle]:yes");
+    }
+    else
+    {
+        dprintf("\n[syn_toggle]:no");
+    }
+
+    if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_METADATA_EN))
+    {
+        dprintf("\n[meta_data]:yes");
+    }
+    else
+    {
+        dprintf("\n[meta_data]:no");
     }
 
     dprintf("\n[match_counter]:%d", rule->match_cnt);
@@ -7724,14 +8375,14 @@ cmd_data_check_host_entry(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if ((FAL_IP_IP4_ADDR & (entry.flags)) == FAL_IP_IP4_ADDR || 
+    if ((FAL_IP_IP4_ADDR & (entry.flags)) == FAL_IP_IP4_ADDR ||
 		(FAL_IP_IP4_ADDR_MCAST& (entry.flags)) == FAL_IP_IP4_ADDR_MCAST)
     {
         cmd_data_check_element("ip4 addr", NULL,
                                "usage: the format is xx.xx.xx.xx \n",
                                cmd_data_check_ip4addr, (cmd, &(entry.ip4_addr), 4));
     }
-    else if ((FAL_IP_IP6_ADDR & (entry.flags)) == FAL_IP_IP6_ADDR || 
+    else if ((FAL_IP_IP6_ADDR & (entry.flags)) == FAL_IP_IP6_ADDR ||
 		(FAL_IP_IP6_ADDR_MCAST& (entry.flags)) == FAL_IP_IP6_ADDR_MCAST)
     {
         cmd_data_check_element("ip6 addr", NULL,
@@ -7990,7 +8641,7 @@ cmd_data_check_host_entry(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if ((FAL_IP_IP4_ADDR_MCAST & (entry.flags)) == FAL_IP_IP4_ADDR_MCAST || 
+    if ((FAL_IP_IP4_ADDR_MCAST & (entry.flags)) == FAL_IP_IP4_ADDR_MCAST ||
 		(FAL_IP_IP6_ADDR_MCAST& (entry.flags)) == FAL_IP_IP6_ADDR_MCAST)
     {
         do
@@ -14005,7 +14656,7 @@ cmd_data_check_uqueue_ac(char *cmd_str, void * val, a_uint32_t size)
         }
     }
     while (talk_mode && (SW_OK != rv));
-	
+
     *(fal_uni_queue_ac_cfg_t *)val = entry;
     return SW_OK;
 }
@@ -14273,7 +14924,7 @@ cmd_data_check_mqueue_ac(char *cmd_str, void * val, a_uint32_t size)
         }
     }
     while (talk_mode && (SW_OK != rv));
-	
+
     *(fal_multi_queue_ac_cfg_t *)val = entry;
     return SW_OK;
 }
@@ -14682,7 +15333,7 @@ cmd_data_print_ip_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
     fal_ip_global_cfg_t *entry;
 
     entry = (fal_ip_global_cfg_t *) buf;
-    
+
     dprintf("\n[mru_fail]:0x%x [mru_de_acce]:0x%x [mtu_fail]:0x%x [mtu_de_acce]:0x%x [mtu_df_fail]:0x%x ",
 			entry->mru_fail, entry->mru_de_acce, entry->mtu_fail, entry->mtu_de_acce, entry->mtu_df_fail);
     dprintf("\n[mtu_df_de_acce]:0x%x [prefix_bc]:0x%x [prefix_de_acce]:0x%x [icmp_rdt]:0x%x [icmp_rdt_de_acce]:0x%x ",
@@ -14763,7 +15414,7 @@ cmd_data_print_l3_parser(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
     fal_l3_excep_parser_ctrl *entry;
 
     entry = (fal_l3_excep_parser_ctrl *) buf;
-    
+
     dprintf("\n[small_ttl]:0x%x [small_hop_limit]:0x%x ",
 			entry->small_ttl, entry->small_hop_limit);
 }
