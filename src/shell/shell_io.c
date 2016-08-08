@@ -275,6 +275,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_L3_PARSER, cmd_data_check_l3_parser, cmd_data_print_l3_parser),
     SW_TYPE_DEF(SW_L4_PARSER, cmd_data_check_l4_parser, cmd_data_print_l4_parser),
     SW_TYPE_DEF(SW_EXP_CTRL, cmd_data_check_exp_ctrl, cmd_data_print_exp_ctrl),
+    SW_TYPE_DEF(SW_ACL_UDF_PKT_TYPE, cmd_data_check_udf_pkt_type, cmd_data_print_udf_pkt_type),
 };
 
 sw_data_type_t *
@@ -2917,6 +2918,78 @@ cmd_data_print_ruletype(char * param_name, a_uint32_t * buf,
         dprintf("unknow");
     }
 }
+sw_error_t
+cmd_data_check_ip_packet_type(char *cmd_str, a_uint32_t * arg_val,
+                        a_uint32_t size)
+{
+    if (NULL == cmd_str)
+    {
+        return SW_BAD_VALUE;
+    }
+
+    if (!strcasecmp(cmd_str, "tcp"))
+    {
+        *arg_val = 0;
+    }
+    else if (!strcasecmp(cmd_str, "udp"))
+    {
+        *arg_val = 1;
+    }
+    else if (!strcasecmp(cmd_str, "udp-lite"))
+    {
+        *arg_val = 3;
+    }
+    else if (!strcasecmp(cmd_str, "arp"))
+    {
+        *arg_val = 5;
+    }
+    else if (!strcasecmp(cmd_str, "icmp"))
+    {
+        *arg_val = 7;
+    }
+    else
+    {
+        return SW_BAD_VALUE;
+    }
+
+    return SW_OK;
+}
+
+
+void
+cmd_data_print_ip_packet_type(char * param_name, a_uint16_t * buf,
+                        a_uint32_t size)
+{
+    a_uint32_t *val;
+
+    val =  buf;
+    dprintf("%s", param_name);
+
+    if (0 == *val)
+    {
+        dprintf("tcp");
+    }
+    else if (1 == *val)
+    {
+        dprintf("udp");
+    }
+    else if (3 == *val)
+    {
+        dprintf("udp-lite");
+    }
+    else if (5 == *val)
+    {
+        dprintf("arp");
+    }
+    else if (7 == *val)
+    {
+        dprintf("icmp");
+    }
+    else
+    {
+        dprintf("unknow");
+    }
+}
 
 sw_error_t
 cmd_data_check_fieldop(char *cmdstr, fal_acl_field_op_t def,
@@ -4580,8 +4653,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
             entry->l3_pkt_type_mask = 0x7;
             cmd_data_check_element("l3 packet type", "0",
                                "usage: 0-TCP, 1-UDP, 3-UDP-Lite, 5-ARP, 7-ICMP \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x3,
-                                       0x0));
+                               cmd_data_check_ip_packet_type, (cmd, &tmpdata,sizeof(tmpdata)));
             entry->l3_pkt_type = tmpdata & 0x7;
 
             FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP_PKT_TYPE);
@@ -4634,7 +4706,7 @@ cmd_data_print_udf_type(char * param_name, a_uint32_t * buf,
     fal_acl_udf_type_t *val;
 
     val = (fal_acl_udf_type_t *) buf;
-    dprintf("%s", param_name);
+    dprintf("[%s]:", param_name);
 
     if (FAL_ACL_UDF_TYPE_L2 == *val)
     {
@@ -4655,6 +4727,61 @@ cmd_data_print_udf_type(char * param_name, a_uint32_t * buf,
     else if (FAL_ACL_UDF_TYPE_L4 == *val)
     {
         dprintf("l4");
+    }
+    else
+    {
+        dprintf("unknow");
+    }
+}
+
+sw_error_t
+cmd_data_check_udf_pkt_type(char *cmdstr, fal_acl_udf_pkt_type_t * arg_val, a_uint32_t size)
+{
+    if (NULL == cmdstr)
+    {
+        return SW_BAD_VALUE;
+    }
+
+    if (!strcasecmp(cmdstr, "non-ip"))
+    {
+        *arg_val = FAL_ACL_UDF_NON_IP;
+    }
+    else if (!strcasecmp(cmdstr, "ipv4"))
+    {
+        *arg_val = FAL_ACL_UDF_IP4;
+    }
+    else if (!strcasecmp(cmdstr, "ipv6"))
+    {
+        *arg_val = FAL_ACL_UDF_IP6;
+    }
+    else
+    {
+        return SW_BAD_VALUE;
+    }
+
+    return SW_OK;
+}
+
+void
+cmd_data_print_udf_pkt_type(char * param_name, a_uint32_t * buf,
+                        a_uint32_t size)
+{
+    fal_acl_udf_pkt_type_t *val;
+
+    val = (fal_acl_udf_pkt_type_t *) buf;
+    dprintf("%s", param_name);
+
+    if (FAL_ACL_UDF_NON_IP== *val)
+    {
+        dprintf("non-ip");
+    }
+    else if (FAL_ACL_UDF_IP4 == *val)
+    {
+        dprintf("ipv4");
+    }
+    else if (FAL_ACL_UDF_IP6== *val)
+    {
+        dprintf("ipv6");
     }
     else
     {
@@ -4778,6 +4905,168 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry)
 
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF);
     }
+
+    /* get udf0 field configuration */
+    cmd_data_check_element("udf0", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (tmpdata)
+    {
+        cmd_data_check_element("udf0 opration", "mask",
+                               "usage: <mask/range/le/ge/ne> \n",
+                               cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
+                                       &(entry->udf0_op)));
+
+        if (FAL_ACL_FIELD_MASK == entry->udf0_op)
+        {
+            cmd_data_check_element("udf0", NULL,
+                                   "usage: the format is 0x0-0xffff\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf0_val = tmpdata & 0xffff;
+
+            cmd_data_check_element("udf0 mask", NULL,
+                                   "usage: the format is 0x0-0xffff\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf0_mask = tmpdata & 0xffff;
+        }
+        else if (FAL_ACL_FIELD_RANGE == entry->udf0_op)
+        {
+            cmd_data_check_element("udf0 low", NULL,
+                                   "usage: the format is 0x0-0xffff or\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf0_val= tmpdata & 0xffff;
+
+            cmd_data_check_element("udf0 high", NULL,
+                                   "usage: the format is 0x0-0xffff\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf0_mask = tmpdata & 0xffff;
+        }
+        else
+        {
+            cmd_data_check_element("udf0", NULL,
+                                   "usage: the format is 0x0-0xffff\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf0_val = tmpdata & 0xffff;
+        }
+
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF0);
+    }
+
+        /* get udf1 field configuration */
+    cmd_data_check_element("udf1", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (tmpdata)
+    {
+        cmd_data_check_element("udf1 opration", "mask",
+                               "usage: <mask/range/le/ge/ne> \n",
+                               cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
+                                       &(entry->udf1_op)));
+
+        if (FAL_ACL_FIELD_MASK == entry->udf1_op)
+        {
+            cmd_data_check_element("udf1", NULL,
+                                   "usage: the format is 0x0-0xffff\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf1_val = tmpdata & 0xffff;
+
+            cmd_data_check_element("udf1 mask", NULL,
+                                   "usage: the format is 0x0-0xffff\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf1_mask = tmpdata & 0xffff;
+        }
+        else if (FAL_ACL_FIELD_RANGE == entry->udf1_op)
+        {
+            cmd_data_check_element("udf1 low", NULL,
+                                   "usage: the format is 0x0-0xffff or\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf1_val= tmpdata & 0xffff;
+
+            cmd_data_check_element("udf1 high", NULL,
+                                   "usage: the format is 0x0-0xffff\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf1_mask = tmpdata & 0xffff;
+        }
+        else
+        {
+            cmd_data_check_element("udf1", NULL,
+                                   "usage: the format is 0x0-0xffff\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf1_val = tmpdata & 0xffff;
+        }
+
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF1);
+    }
+
+    /* get udf2 field configuration */
+    cmd_data_check_element("udf2", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (tmpdata)
+    {
+
+	cmd_data_check_element("udf2", NULL,
+	                   "usage: the format is 0x0-0xffff\n",
+	                   cmd_data_check_integer, (cmd, &tmpdata,
+	                           0xffff, 0x0));
+	entry->udf2_val = tmpdata & 0xffff;
+
+	cmd_data_check_element("udf2 mask", NULL,
+	                   "usage: the format is 0x0-0xffff\n",
+	                   cmd_data_check_integer, (cmd, &tmpdata,
+	                           0xffff, 0x0));
+	entry->udf2_mask = tmpdata & 0xffff;
+
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF2);
+    }
+    /* get udf3 field configuration */
+    cmd_data_check_element("udf3", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (tmpdata)
+    {
+
+	cmd_data_check_element("udf3", NULL,
+	                   "usage: the format is 0x0-0xffff\n",
+	                   cmd_data_check_integer, (cmd, &tmpdata,
+	                           0xffff, 0x0));
+	entry->udf3_val = tmpdata & 0xffff;
+
+	cmd_data_check_element("udf3 mask", NULL,
+	                   "usage: the format is 0x0-0xffff\n",
+	                   cmd_data_check_integer, (cmd, &tmpdata,
+	                           0xffff, 0x0));
+	entry->udf3_mask = tmpdata & 0xffff;
+
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF3);
+    }
+
+    if(entry->rule_type == FAL_ACL_RULE_UDF)
+    {
+	/* get IP/NON-IP field configuration */
+	entry->is_ip_mask = 1;
+	cmd_data_check_element("Is IP packet", "no", "usage: <yes/no/y/n>\n",
+	                   cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ip_val,
+	                           sizeof (a_bool_t)));
+	FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP);
+	/* get IPv4/IPv6 field configuration */
+	entry->is_ipv6_mask = 1;
+	cmd_data_check_element("Is IPv6 packet", "no", "usage: <yes/no/y/n>\n",
+	                   cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ipv6_val,
+	                           sizeof (a_bool_t)));
+	FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IPV6);
+    }
+
     return SW_OK;
 }
 
@@ -5371,18 +5660,15 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_FAKE_MAC_HEADER))
     {
-        dprintf("\n[fake_mac_header]:0x%x", rule->is_fake_mac_header_val);
-        dprintf("  [fake_mac_header_mask]:0x%x", rule->is_fake_mac_header_mask);
+    	cmd_data_print_confirm("\n[fake_mac_header]:", rule->is_fake_mac_header_val, sizeof(a_uint32_t));
     }
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_SNAP))
     {
-        dprintf("\n[snap]:0x%x", rule->is_snap_val);
-        dprintf("  [snap_mask]:0x%x", rule->is_snap_mask);
+    	cmd_data_print_confirm("\n[snap]:", rule->is_snap_val, sizeof(a_uint32_t));
     }
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_ETHERNET))
     {
-        dprintf("\n[ethernet]:0x%x", rule->is_ethernet_val);
-        dprintf("  [ethernet_mask]:0x%x", rule->is_ethernet_mask);
+    	cmd_data_print_confirm("\n[ethernet]:", rule->is_ethernet_val, sizeof(a_uint32_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_DA))
@@ -5518,8 +5804,7 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_VSI_VALID))
     {
-        dprintf("\n[vsi_valid]:0x%x", rule->vsi_valid);
-        dprintf("  [vsi_valid_mask]:0x%x", rule->vsi_valid_mask);
+    	cmd_data_print_confirm("\n[vsi_valid]:", rule->vsi_valid, sizeof(a_uint32_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_VSI))
@@ -5536,14 +5821,12 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP))
     {
-        dprintf("\n[ip]:0x%x", rule->is_ip_val);
-        dprintf("  [ip_mask]:0x%x", rule->is_ip_mask);
+    	cmd_data_print_confirm("\n[is_ip]:", rule->is_ip_val, sizeof(a_uint32_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IPV6))
     {
-        dprintf("\n[ipv6]:0x%x", rule->is_ipv6_val);
-        dprintf("  [ipv6_mask]:0x%x", rule->is_ipv6_mask);
+    	cmd_data_print_confirm("\n[is_ipv6]:", rule->is_ipv6_val, sizeof(a_uint32_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP4_DIP))
@@ -5612,32 +5895,27 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_AH_HEADER))
     {
-        dprintf("\n[ah_header]:0x%x", rule->is_ah_header_val);
-        dprintf("  [ah_header_mask]:0x%x", rule->is_ah_header_mask);
+    	cmd_data_print_confirm("\n[is_ah_header]:", rule->is_ah_header_val, sizeof(a_uint32_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_ESP_HEADER))
     {
-        dprintf("\n[esp_header]:0x%x", rule->is_esp_header_val);
-        dprintf("  [esp_header_mask]:0x%x", rule->is_esp_header_mask);
+    	cmd_data_print_confirm("\n[is_esp_header]:", rule->is_esp_header_val, sizeof(a_uint32_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MOBILITY_HEADER))
     {
-        dprintf("\n[mobility_header]:0x%x", rule->is_mobility_header_val);
-        dprintf("  [mobility_header_mask]:0x%x", rule->is_mobility_header_mask);
+    	cmd_data_print_confirm("\n[is_mobility_header]:", rule->is_mobility_header_val, sizeof(a_uint32_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_FRAGMENT_HEADER))
     {
-        dprintf("\n[fragment_header]:0x%x", rule->is_fragment_header_val);
-        dprintf("  [fragment_header_mask]:0x%x", rule->is_fragment_header_mask);
+    	cmd_data_print_confirm("\n[is_fragment_header]:", rule->is_fragment_header_val, sizeof(a_uint32_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_OTHER_EXT_HEADER))
     {
-        dprintf("\n[other_header]:0x%x", rule->is_other_header_val);
-        dprintf("  [other_header_mask]:0x%x", rule->is_other_header_mask);
+    	cmd_data_print_confirm("\n[is_other_header]:", rule->is_other_header_val, sizeof(a_uint32_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L3_TTL))
@@ -5648,14 +5926,12 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IPV4_OPTION))
     {
-        dprintf("\n[ipv4_option]:0x%x", rule->is_ipv4_option_val);
-        dprintf("  [ipv4_option_mask]:0x%x", rule->is_ipv4_option_mask);
+    	cmd_data_print_confirm("\n[is_ipv4_option]:", rule->is_ipv4_option_val, sizeof(a_uint32_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_FIRST_FRAGMENT))
     {
-        dprintf("\n[first_fragment]:0x%x", rule->is_first_frag_val);
-        dprintf("  [first_fragment_mask]:0x%x", rule->is_first_frag_mask);
+    	cmd_data_print_confirm("\n[is_first_fragment]:", rule->is_first_frag_val, sizeof(a_uint32_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L3_LENGTH))
@@ -5666,8 +5942,7 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP_PKT_TYPE))
     {
-        dprintf("\n[l3_packet_type]:0x%x", rule->l3_pkt_type);
-        dprintf("  [l3_packet_type_mask]:0x%x", rule->l3_pkt_type_mask);
+    	cmd_data_print_ip_packet_type("\n[l3_packet_type]:", &rule->l3_pkt_type, sizeof(a_uint16_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP_PROTO))
@@ -5684,8 +5959,7 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L3_FRAGMENT))
     {
-        dprintf("\n[l3_fragment]:0x%x", rule->is_fragement_val);
-        dprintf("  [l3_fragment_mask]:0x%x", rule->is_fragement_mask);
+    	cmd_data_print_confirm("\n[is_l3_fragment]:", rule->is_fragement_val, sizeof(a_uint32_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L4_DPORT))
@@ -5755,6 +6029,52 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
         cmd_data_print_udf_element("\n[udf_mask]:",
                                    (a_uint32_t *) & (rule->udf_mask[0]),
                                    rule->udf_len);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF0))
+    {
+        cmd_data_print_fieldop("\n[udf0_op]:",
+                               (a_uint32_t *) & (rule->udf0_op),
+                               sizeof (fal_acl_field_op_t));
+        if (FAL_ACL_FIELD_MASK == rule->udf0_op)
+        {
+            dprintf("  [udf0]:0x%x", rule->udf0_val);
+            dprintf("  [udf0_mask]:0x%x", rule->udf0_mask);
+        }
+        else
+        {
+            dprintf("  [udf0_low]:0x%x", rule->udf0_val);
+            dprintf("  [udf0_high]:0x%x", rule->udf0_mask);
+        }
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF1))
+    {
+        cmd_data_print_fieldop("\n[udf1_op]:",
+                               (a_uint32_t *) & (rule->udf1_op),
+                               sizeof (fal_acl_field_op_t));
+        if (FAL_ACL_FIELD_MASK == rule->udf1_op)
+        {
+            dprintf("  [udf1]:0x%x", rule->udf1_val);
+            dprintf("  [udf1_mask]:0x%x", rule->udf1_mask);
+        }
+        else
+        {
+            dprintf("  [udf1_low]:0x%x", rule->udf1_val);
+            dprintf("  [udf1_high]:0x%x", rule->udf1_mask);
+        }
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF2))
+    {
+	dprintf("  [udf2]:0x%x", rule->udf2_val);
+	dprintf("  [udf2_mask]:0x%x", rule->udf2_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF3))
+    {
+	dprintf("  [udf3]:0x%x", rule->udf3_val);
+	dprintf("  [udf3_mask]:0x%x", rule->udf3_mask);
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_INVERSE_ALL))
@@ -16042,7 +16362,7 @@ cmd_data_print_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
     fal_l3_excep_ctrl_t *entry;
 
     entry = (fal_l3_excep_ctrl_t *) buf;
-    
+
     dprintf("\n[cmd]:0x%x [de_acce_en]:0x%x [l3_only_en]:0x%x [l2_only_en]:0x%x ",
 			entry->cmd, entry->de_acce_en, entry->l3_only_en, entry->l2_only_en);
     dprintf("\n[l3_flow_en]:0x%x [l2_flow_en]:0x%x [multicast_en]:0x%x ",
@@ -16320,7 +16640,7 @@ cmd_data_print_flow_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
     fal_flow_global_cfg_t *entry;
 
     entry = (fal_flow_global_cfg_t *) buf;
-    
+
     dprintf("\n[src_if_check]:0x%x [src_if_check_de_acce]:0x%x [service_loop_en]:0x%x [service_loop]:0x%x [service_loop_de_acce]:0x%x ",
 			entry->src_if_check, entry->src_if_check_de_acce, entry->service_loop_en, entry->service_loop, entry->service_loop_de_acce);
     dprintf("\n[flow_de_acce]:0x%x [sync_mismatch]:0x%x [sync_mismatch_de_acce]:0x%x [hash_mode_0]:0x%x [hash_mode_1]:0x%x ",

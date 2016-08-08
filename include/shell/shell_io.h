@@ -191,6 +191,13 @@ cmd_data_print_udf_type(char * param_name, a_uint32_t * buf,
                         a_uint32_t size);
 
 sw_error_t
+cmd_data_check_udf_pkt_type(char *cmdstr, fal_acl_udf_pkt_type_t * arg_val, a_uint32_t size);
+
+void
+cmd_data_print_udf_pkt_type(char * param_name, a_uint32_t * buf,
+                        a_uint32_t size);
+
+sw_error_t
 cmd_data_check_host_entry(char *cmd_str, void * val, a_uint32_t size);
 
 void

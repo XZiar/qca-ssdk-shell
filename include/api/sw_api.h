@@ -177,7 +177,8 @@ extern "C" {
         SW_L3_PARSER,
         SW_L4_PARSER,
         SW_EXP_CTRL,
-    } sw_data_type_e;
+	SW_ACL_UDF_PKT_TYPE,
+} sw_data_type_e;
 
     typedef struct
     {
