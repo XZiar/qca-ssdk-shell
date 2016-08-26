@@ -30,6 +30,8 @@ typedef struct
 void  set_talk_mode(int mode);
 int get_talk_mode(void);
 void set_full_cmdstrp(char **cmdstrp);
+int
+get_jump(void);
 sw_data_type_t * cmd_data_type_find(sw_data_type_e type);
 void  cmd_strtol(char *str, a_uint32_t * arg_val);
 
@@ -357,21 +359,6 @@ sw_error_t
 cmd_data_check_u_qmap(char *cmd_str, void * val, a_uint32_t size);
 
 void
-cmd_data_print_u_qmap(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
-sw_error_t
-cmd_data_check_u_priclass(char *cmd_str, void * val, a_uint32_t size);
-
-void
-cmd_data_print_u_priclass(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
-sw_error_t
-cmd_data_check_m_priclass(char *cmd_str, void * val, a_uint32_t size);
-
-void
-cmd_data_print_m_priclass(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
-void
 cmd_data_print_default_route_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
@@ -411,34 +398,34 @@ void
 cmd_data_print_queue_flush(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
-cmd_data_check_uqueue_ac(char *cmd_str, void * val, a_uint32_t size);
+cmd_data_check_ac_static_thresh(char *cmd_str, void * val, a_uint32_t size);
 
 void
-cmd_data_print_uqueue_ac(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+cmd_data_print_ac_static_thresh(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
-cmd_data_check_mqueue_ac(char *cmd_str, void * val, a_uint32_t size);
+cmd_data_check_ac_dynamic_thresh(char *cmd_str, void * val, a_uint32_t size);
 
 void
-cmd_data_print_mqueue_ac(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+cmd_data_print_ac_dynamic_thresh(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
-cmd_data_check_group_ac(char *cmd_str, void * val, a_uint32_t size);
+cmd_data_check_ac_group_buff(char *cmd_str, void * val, a_uint32_t size);
 
 void
-cmd_data_print_group_ac(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+cmd_data_print_ac_group_buff(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
-cmd_data_check_ucast_hash(char *cmd_str, void * val, a_uint32_t size);
+cmd_data_check_ac_ctrl(char *cmd_str, void * val, a_uint32_t size);
 
 void
-cmd_data_print_ucast_hash(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+cmd_data_print_ac_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
-cmd_data_check_mcast_queue_map(char *cmd_str, void * val, a_uint32_t size);
+cmd_data_check_ac_obj(char *cmd_str, void * val, a_uint32_t size);
 
 void
-cmd_data_print_mcast_queue_map(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+cmd_data_print_ac_obj(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
 cmd_data_check_vsi_intf(char *cmd_str, void * val, a_uint32_t size);
@@ -544,6 +531,42 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size);
 
 void
 cmd_data_print_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_port_group(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_port_group(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_port_pri(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_port_pri(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_port_remark(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_port_remark(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_cosmap(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_cosmap(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_queue_scheduler(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_queue_scheduler(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_ring_queue(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_ring_queue(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
 cmd_data_check_flow_cookie(char *cmd_str, void * val, a_uint32_t size);

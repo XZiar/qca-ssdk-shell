@@ -19,16 +19,260 @@
 #include "fal_qm.h"
 #include "fal_uk_if.h"
 
+sw_error_t
+fal_ac_ctrl_set(
+		a_uint32_t dev_id,
+		fal_ac_obj_t *obj,
+		fal_ac_ctrl_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_AC_CTRL_SET, dev_id, obj, cfg);
+    return rv;
+}
+
+sw_error_t
+fal_ac_ctrl_get(
+		a_uint32_t dev_id,
+		fal_ac_obj_t *obj,
+		fal_ac_ctrl_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_AC_CTRL_GET, dev_id, obj, cfg);
+    return rv;
+}
+
+sw_error_t
+fal_ac_prealloc_buffer_set(
+		a_uint32_t dev_id,
+		fal_ac_obj_t *obj,
+		a_uint16_t num)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_AC_PRE_BUFFER_SET, dev_id, obj, num);
+    return rv;
+}
+
+sw_error_t
+fal_ac_prealloc_buffer_get(
+		a_uint32_t dev_id,
+		fal_ac_obj_t *obj,
+		a_uint16_t *num)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_AC_PRE_BUFFER_GET, dev_id, obj, num);
+    return rv;
+}
+
+sw_error_t
+fal_ac_queue_group_set(
+		a_uint32_t dev_id,
+		a_uint32_t queue_id,
+		a_uint8_t group_id)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QUEUE_GROUP_SET, dev_id, queue_id, group_id);
+    return rv;
+}
+
+sw_error_t
+fal_ac_queue_group_get(
+		a_uint32_t dev_id,
+		a_uint32_t queue_id,
+		a_uint8_t *group_id)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QUEUE_GROUP_GET, dev_id, queue_id, group_id);
+    return rv;
+}
+
+sw_error_t
+fal_ac_static_threshold_set(
+		a_uint32_t dev_id,
+		fal_ac_obj_t *obj,
+		fal_ac_static_threshold_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_STATIC_THRESH_SET, dev_id, obj, cfg);
+    return rv;
+}
+
+sw_error_t
+fal_ac_static_threshold_get(
+		a_uint32_t dev_id,
+		fal_ac_obj_t *obj,
+		fal_ac_static_threshold_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_STATIC_THRESH_GET, dev_id, obj, cfg);
+    return rv;
+}
+
+sw_error_t
+fal_ac_dynamic_threshold_set(
+		a_uint32_t dev_id,
+		a_uint32_t queue_id,
+		fal_ac_dynamic_threshold_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_DYNAMIC_THRESH_SET, dev_id, queue_id, cfg);
+    return rv;
+}
+
+sw_error_t
+fal_ac_dynamic_threshold_get(
+		a_uint32_t dev_id,
+		a_uint32_t queue_id,
+		fal_ac_dynamic_threshold_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_DYNAMIC_THRESH_GET, dev_id, queue_id, cfg);
+    return rv;
+}
+
+sw_error_t
+fal_ac_group_buffer_set(
+		a_uint32_t dev_id,
+		a_uint8_t group_id,
+		fal_ac_group_buffer_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_GOURP_BUFFER_SET, dev_id, group_id, cfg);
+    return rv;
+}
+
+sw_error_t
+fal_ac_group_buffer_get(
+		a_uint32_t dev_id,
+		a_uint8_t group_id,
+		fal_ac_group_buffer_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_GOURP_BUFFER_GET, dev_id, group_id, cfg);
+    return rv;
+}
+
+sw_error_t
+fal_ucast_queue_base_profile_set(
+		a_uint32_t dev_id,
+		fal_ucast_queue_dest_t *queue_dest,
+		a_uint32_t queue_base, a_uint8_t profile)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_UCAST_QUEUE_BASE_PROFILE_SET, dev_id, queue_dest, queue_base, profile);
+    return rv;
+}
+
+sw_error_t
+fal_ucast_queue_base_profile_get(
+		a_uint32_t dev_id,
+		fal_ucast_queue_dest_t *queue_dest,
+		a_uint32_t *queue_base, a_uint8_t *profile)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_UCAST_QUEUE_BASE_PROFILE_GET, dev_id, queue_dest, queue_base, profile);
+    return rv;
+}
+
+sw_error_t
+fal_ucast_priority_class_set(
+		a_uint32_t dev_id,
+		a_uint8_t profile,
+		a_uint8_t priority,
+		a_uint8_t class)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_UCAST_PRIORITY_CLASS_SET, dev_id, profile, priority, class);
+    return rv;
+}
+
+sw_error_t
+fal_ucast_priority_class_get(
+		a_uint32_t dev_id,
+		a_uint8_t profile,
+		a_uint8_t priority,
+		a_uint8_t *class)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_UCAST_PRIORITY_CLASS_GET, dev_id, profile, priority, class);
+    return rv;
+}
+
+sw_error_t
+fal_ucast_hash_map_set(
+		a_uint32_t dev_id,
+		a_uint8_t profile,
+		a_uint8_t rss_hash,
+		a_int8_t queue_hash)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_UCAST_HASH_MAP_SET, dev_id, profile, rss_hash, queue_hash);
+    return rv;
+}
+
+sw_error_t
+fal_ucast_hash_map_get(
+		a_uint32_t dev_id,
+		a_uint8_t profile,
+		a_uint8_t rss_hash,
+		a_int8_t *queue_hash)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_UCAST_HASH_MAP_GET, dev_id, profile, rss_hash, queue_hash);
+    return rv;
+}
+
+sw_error_t
+fal_mcast_cpu_code_class_set(
+		a_uint32_t dev_id,
+		a_uint8_t cpu_code,
+		a_uint8_t queue_class)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_MCAST_CPUCODE_CLASS_SET, dev_id, cpu_code, queue_class);
+    return rv;
+}
+
+sw_error_t
+fal_mcast_cpu_code_class_get(
+		a_uint32_t dev_id,
+		a_uint8_t cpu_code,
+		a_uint8_t *queue_class)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_MCAST_CPUCODE_CLASS_GET, dev_id, cpu_code, queue_class);
+    return rv;
+}
 
 sw_error_t
 fal_port_mcast_priority_class_set(
 		a_uint32_t dev_id,
 		fal_port_t port,
-		fal_mcast_priority_map_t *pri_map)
+		a_uint8_t priority,
+		a_uint8_t queue_class)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_MCAST_PRIORITY_CLASS_SET, dev_id, port, (a_uint32_t) pri_map);
+    rv = sw_uk_exec(SW_API_MCAST_PRIORITY_CLASS_SET, dev_id, port, priority, queue_class);
     return rv;
 }
 
@@ -36,55 +280,12 @@ sw_error_t
 fal_port_mcast_priority_class_get(
 		a_uint32_t dev_id,
 		fal_port_t port,
-		fal_mcast_priority_map_t *pri_map)
+		a_uint8_t priority,
+		a_uint8_t *queue_class)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_MCAST_PRIORITY_CLASS_GET, dev_id, port, (a_uint32_t) pri_map);
-    return rv;
-}
-
-sw_error_t
-fal_ucast_queue_map_set(
-		a_uint32_t dev_id,
-		fal_ucast_queue_map_t *queue_map)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_UCAST_QUEUE_MAP_SET, dev_id, (a_uint32_t) queue_map);
-    return rv;
-}
-
-sw_error_t
-fal_ucast_queue_map_get(
-		a_uint32_t dev_id,
-		fal_ucast_queue_map_t *queue_map)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_UCAST_QUEUE_MAP_GET, dev_id, (a_uint32_t) queue_map);
-    return rv;
-}
-
-sw_error_t
-fal_ucast_priority_map_set(
-		a_uint32_t dev_id,
-		fal_ucast_priority_map_t *priority_map)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_UCAST_PRIORITY_MAP_SET, dev_id, (a_uint32_t) priority_map);
-    return rv;
-}
-
-sw_error_t
-fal_ucast_priority_map_get(
-		a_uint32_t dev_id,
-		fal_ucast_priority_map_t *priority_map)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_UCAST_PRIORITY_MAP_GET, dev_id, (a_uint32_t) priority_map);
+    rv = sw_uk_exec(SW_API_MCAST_PRIORITY_CLASS_GET, dev_id, port, priority, queue_class);
     return rv;
 }
 
@@ -101,107 +302,13 @@ fal_queue_flush(
 }
 
 sw_error_t
-fal_unicast_queue_ac_cfg_set(
-		a_uint32_t dev_id,
-		a_uint32_t queue_id,
-		fal_uni_queue_ac_cfg_t *cfg)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_UNI_QUEUE_AC_SET, dev_id, queue_id, cfg);
-    return rv;
-}
-
-sw_error_t
-fal_unicast_queue_ac_cfg_get(
-		a_uint32_t dev_id,
-		a_uint32_t queue_id,
-		fal_uni_queue_ac_cfg_t *cfg)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_UNI_QUEUE_AC_GET, dev_id, queue_id, cfg);
-    return rv;
-}
-
-sw_error_t
-fal_multicast_queue_ac_cfg_set(
-		a_uint32_t dev_id,
-		a_uint32_t queue_id,
-		fal_multi_queue_ac_cfg_t *cfg)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_MULTI_QUEUE_AC_SET, dev_id, queue_id, cfg);
-    return rv;
-}
-
-sw_error_t
-fal_multicast_queue_ac_cfg_get(
-		a_uint32_t dev_id,
-		a_uint32_t queue_id,
-		fal_multi_queue_ac_cfg_t *cfg)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_MULTI_QUEUE_AC_GET, dev_id, queue_id, cfg);
-    return rv;
-}
-
-sw_error_t
-fal_group_ac_cfg_set(
-		a_uint32_t dev_id,
-		a_uint8_t group_id,
-		fal_group_ac_cfg_t *cfg)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_GROUP_AC_SET, dev_id, group_id, cfg);
-    return rv;
-}
-
-sw_error_t
-fal_group_ac_cfg_get(
-		a_uint32_t dev_id,
-		a_uint8_t group_id,
-		fal_group_ac_cfg_t *cfg)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_GROUP_AC_GET, dev_id, group_id, cfg);
-    return rv;
-}
-
-sw_error_t
-fal_ucast_hash_map_set(
-		a_uint32_t dev_id,
-		fal_ucast_hash_map_t *hash_map)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_UCAST_HASH_MAP_SET, dev_id, hash_map);
-    return rv;
-}
-
-sw_error_t
-fal_ucast_hash_map_get(
-		a_uint32_t dev_id,
-		fal_ucast_hash_map_t *hash_map)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_UCAST_HASH_MAP_GET, dev_id, hash_map);
-    return rv;
-}
-
-sw_error_t
 fal_ucast_default_hash_set(
 		a_uint32_t dev_id,
 		a_uint8_t hash_value)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_UCAST_DFLT_HASH_MAP_SET, (a_uint32_t)hash_value);
+    rv = sw_uk_exec(SW_API_UCAST_DFLT_HASH_MAP_SET, dev_id, hash_value);
     return rv;
 }
 
@@ -212,29 +319,7 @@ fal_ucast_default_hash_get(
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_UCAST_DFLT_HASH_MAP_GET, hash_value);
-    return rv;
-}
-
-sw_error_t
-fal_mcast_queue_map_set(
-		a_uint32_t dev_id,
-		fal_mcast_queue_map_t *queue_map)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_MCAST_QUEUE_MAP_SET, queue_map);
-    return rv;
-}
-
-sw_error_t
-fal_mcast_queue_map_get(
-		a_uint32_t dev_id,
-		fal_mcast_queue_map_t *queue_map)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_MCAST_QUEUE_MAP_GET, queue_map);
+    rv = sw_uk_exec(SW_API_UCAST_DFLT_HASH_MAP_GET, dev_id, hash_value);
     return rv;
 }
 

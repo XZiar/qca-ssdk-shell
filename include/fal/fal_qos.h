@@ -52,12 +52,62 @@ extern "C" {
         FAL_QOS_MODE_BUTT
     } fal_qos_mode_t;
 
+typedef struct {
+	a_uint8_t pcp_group; /* 0: group 0 1: group 1*/
+	a_uint8_t dscp_group;
+	a_int8_t flow_group;
+} fal_qos_group_t;
+
+typedef struct {
+	a_uint8_t pcp_pri;
+	a_uint8_t dscp_pri;
+	a_int8_t preheader_pri;
+	a_uint8_t flow_pri;
+	a_uint8_t acl_pri;
+} fal_qos_pri_precedence_t;
+
+typedef struct {
+	a_bool_t pcp_change_en;
+	a_bool_t dei_chage_en;
+	a_bool_t dscp_change_en;
+} fal_qos_remark_enable_t;
+
+typedef struct {
+	a_uint8_t internal_pcp;
+	a_uint8_t internal_dei;
+	a_uint8_t internal_pri;
+	a_uint8_t internal_dscp;
+	a_uint8_t internal_dp;
+} fal_qos_cosmap_t;
+
+typedef struct {
+	a_uint8_t sp_id; /* SP id L0:0~63 L1:0~7 */
+	a_uint8_t e_pri; /*SP priority for E path:0~7 low to high */
+	a_uint8_t c_pri; /* SP priority for C path: 0~7 low to high */
+	a_uint8_t c_drr_id; /*C DRR ID L0:0~159 L1:0~35*/
+	a_uint8_t e_drr_id; /*E DRR ID L0:0~159 L1:0~35*/
+	a_uint16_t e_drr_wt; /* DRR weight in E DRR: 0~1023 */
+	a_uint16_t c_drr_wt; /* DRR weight in C DRR: 0~1023 */
+	a_uint8_t c_drr_unit; /* 0:byte based; 1:packet based */
+	a_uint8_t e_drr_unit; /* 0:byte based; 1:packet based */
+} fal_qos_scheduler_cfg_t;
+
+typedef enum {
+	FAL_QUEUE_SCHEDULER_LEVEL0 = 0,
+	FAL_QUEUE_SCHEDULER_LEVEL1,
+} fal_queue_scheduler_level_t;
+
+
+typedef struct {
+	a_uint32_t bmp[10];
+} fal_queue_bmp_t;
+
+
 #define FAL_DOT1P_MIN    0
 #define FAL_DOT1P_MAX    7
 
 #define FAL_DSCP_MIN     0
 #define FAL_DSCP_MAX     63
-
 
     sw_error_t
     fal_qos_sch_mode_set(a_uint32_t dev_id,
@@ -246,6 +296,77 @@ extern "C" {
     sw_error_t
     fal_qos_queue_remark_table_get(a_uint32_t dev_id, fal_port_t port_id,
                                    fal_queue_t queue_id, a_uint32_t * tbl_id, a_bool_t * enable);
+
+sw_error_t
+fal_qos_port_group_set(a_uint32_t dev_id, fal_port_t port_id,
+					fal_qos_group_t *group);
+
+sw_error_t
+fal_qos_port_group_get(a_uint32_t dev_id, fal_port_t port_id,
+					fal_qos_group_t *group);
+
+sw_error_t
+fal_qos_port_pri_precedence_set(a_uint32_t dev_id, fal_port_t port_id,
+					fal_qos_pri_precedence_t *pri);
+
+sw_error_t
+fal_qos_port_pri_precedence_get(a_uint32_t dev_id, fal_port_t port_id,
+					fal_qos_pri_precedence_t *pri);
+
+sw_error_t
+fal_qos_port_remark_set(a_uint32_t dev_id, fal_port_t port_id,
+					fal_qos_remark_enable_t *remark);
+
+sw_error_t
+fal_qos_port_remark_get(a_uint32_t dev_id, fal_port_t port_id,
+					fal_qos_remark_enable_t *remark);
+
+sw_error_t
+fal_qos_cosmap_pcp_set(a_uint32_t dev_id, a_uint8_t group_id,
+					a_uint8_t pcp, fal_qos_cosmap_t *cosmap);
+
+sw_error_t
+fal_qos_cosmap_pcp_get(a_uint32_t dev_id, a_uint8_t group_id,
+					a_uint8_t pcp, fal_qos_cosmap_t *cosmap);
+
+sw_error_t
+fal_qos_cosmap_flow_set(a_uint32_t dev_id, a_uint8_t group_id,
+					a_uint8_t flow, fal_qos_cosmap_t *cosmap);
+
+sw_error_t
+fal_qos_cosmap_flow_get(a_uint32_t dev_id, a_uint8_t group_id,
+					a_uint8_t flow, fal_qos_cosmap_t *cosmap);
+
+sw_error_t
+fal_qos_cosmap_dscp_set(a_uint32_t dev_id, a_uint8_t group_id,
+					a_uint8_t dscp, fal_qos_cosmap_t *cosmap);
+
+sw_error_t
+fal_qos_cosmap_dscp_get(a_uint32_t dev_id, a_uint8_t group_id,
+					a_uint8_t dscp, fal_qos_cosmap_t *cosmap);
+
+
+sw_error_t
+fal_queue_scheduler_set(a_uint32_t dev_id, a_uint32_t node_id,
+					fal_queue_scheduler_level_t level, fal_port_t port_id,
+					fal_qos_scheduler_cfg_t *scheduler_cfg);
+
+sw_error_t
+fal_queue_scheduler_get(a_uint32_t dev_id, a_uint32_t node_id,
+					fal_queue_scheduler_level_t level, fal_port_t *port_id,
+					fal_qos_scheduler_cfg_t *scheduler_cfg);
+
+sw_error_t
+fal_edma_ring_queue_map_get(a_uint32_t dev_id, 
+					a_uint32_t ring_id, fal_queue_bmp_t *queue_bmp);
+
+sw_error_t
+fal_edma_ring_queue_map_set(a_uint32_t dev_id, 
+					a_uint32_t ring_id, fal_queue_bmp_t *queue_bmp);
+
+sw_error_t
+fal_port_queues_get(a_uint32_t dev_id, 
+				fal_port_t port_id, fal_queue_bmp_t *queue_bmp);
 
 
 #ifdef __cplusplus
