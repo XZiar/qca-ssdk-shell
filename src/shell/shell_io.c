@@ -2960,7 +2960,7 @@ void
 cmd_data_print_ip_packet_type(char * param_name, a_uint16_t * buf,
                         a_uint32_t size)
 {
-    a_uint32_t *val;
+    a_uint16_t *val;
 
     val =  buf;
     dprintf("%s", param_name);
@@ -3716,16 +3716,16 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry)
     if (tmpdata)
     {
         cmd_data_check_element("stagged", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                               "usage: the format is 0x0-0x7\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x7,
                                        0x0));
-        entry->stagged_val = tmpdata & 0x1;
+        entry->stagged_val = tmpdata & 0x7;
 
         cmd_data_check_element("stagged mask", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                               "usage: the format is 0x0-0x7\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x7,
                                        0x0));
-        entry->stagged_mask = tmpdata & 0x1;
+        entry->stagged_mask = tmpdata & 0x7;
 
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_STAGGED);
     }
@@ -3741,7 +3741,6 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry)
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
                                        &(entry->stag_vid_op)));
-
         if (FAL_ACL_FIELD_MASK == entry->stag_vid_op)
         {
             cmd_data_check_element("stag vid", NULL,
@@ -3778,7 +3777,6 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry)
                                            0xfff, 0x0));
             entry->stag_vid_val = tmpdata & 0xfff;
         }
-
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_STAG_VID);
     }
 
@@ -3835,16 +3833,16 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry)
     if (tmpdata)
     {
         cmd_data_check_element("ctagged", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                               "usage: the format is 0x0-0x7\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x7,
                                        0x0));
-        entry->ctagged_val = tmpdata & 0x1;
+        entry->ctagged_val = tmpdata & 0x7;
 
         cmd_data_check_element("ctagged mask", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                               "usage: the format is 0x0-0x7\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x7,
                                        0x0));
-        entry->ctagged_mask = tmpdata & 0x1;
+        entry->ctagged_mask = tmpdata & 0x7;
 
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_CTAGGED);
     }
@@ -4013,7 +4011,7 @@ cmd_data_check_ip4_field(fal_acl_rule_t * entry)
     /* get ip4 source address field configuration */
     cmd_data_check_element("ip4 src address field", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4033,7 +4031,7 @@ cmd_data_check_ip4_field(fal_acl_rule_t * entry)
     /* get ip4 destination address field configuration */
     cmd_data_check_element("ip4 dst address field", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4055,7 +4053,7 @@ cmd_data_check_ip4_field(fal_acl_rule_t * entry)
     /* get ripv1 field configuration */
     cmd_data_check_element("ripv1 field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4077,7 +4075,7 @@ cmd_data_check_ip4_field(fal_acl_rule_t * entry)
     /* get dhcpv4 field configuration */
     cmd_data_check_element("dhcpv4 field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4099,7 +4097,7 @@ cmd_data_check_ip4_field(fal_acl_rule_t * entry)
     /* get ipv4 option field configuration */
     cmd_data_check_element("ipv4 option field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4122,7 +4120,7 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
     /* get ip6 source address field configuration */
     cmd_data_check_element("ip6 src address field", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4143,7 +4141,7 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
     /* get ip6 destination address field configuration */
     cmd_data_check_element("ip6 dst address field", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4165,7 +4163,7 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
     /* get ip6 flow label field configuration */
     cmd_data_check_element("ip6 flow label field", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4188,7 +4186,7 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
     /* get dhcpv6 field configuration */
     cmd_data_check_element("dhcpv6 field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4210,7 +4208,7 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
     /* get ah header field configuration */
     cmd_data_check_element("ah header field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4224,7 +4222,7 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
     /* get esp header field configuration */
     cmd_data_check_element("esp header field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4238,7 +4236,7 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
     /* get mobility header field configuration */
     cmd_data_check_element("mobility header field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4252,7 +4250,7 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
     /* get fragment header field configuration */
     cmd_data_check_element("fragment header field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4266,7 +4264,7 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
     /* get other header field configuration */
     cmd_data_check_element("other header field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4289,7 +4287,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     /* get ip protocol field configuration */
     cmd_data_check_element("ip protocol field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4311,7 +4309,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     /* get ip dscp field configuration */
     cmd_data_check_element("ip dscp field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
     if (tmpdata)
     {
         cmd_data_check_element("ip dscp", NULL,
@@ -4332,7 +4330,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     /* get ip l4 destination port field configuration */
     cmd_data_check_element("ip l4 dst port field", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4384,15 +4382,14 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     /* get ip l4 source port field configuration */
     cmd_data_check_element("ip l4 src port field", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
     {
         cmd_data_check_element("ip l4 src port opration", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
-                                       &(entry->
-                                         src_l4port_op)));
+                                       &(entry->src_l4port_op)));
 
         if (FAL_ACL_FIELD_MASK == entry->src_l4port_op)
         {
@@ -4437,7 +4434,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     /* get tcp flags field configuration */
     cmd_data_check_element("tcp flags field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4460,7 +4457,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     /* get icmp type/code field configuration */
     cmd_data_check_element("icmp type code field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4474,7 +4471,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
 	    /* get icmp type field configuration */
 	    cmd_data_check_element("icmp type field", "no", "usage: <yes/no/y/n>\n",
 	                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-	                                   sizeof (a_bool_t)));
+	                                   sizeof (tmpdata)));
 
 	    if (tmpdata)
 	    {
@@ -4496,7 +4493,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
 	    /* get icmp code field configuration */
 	    cmd_data_check_element("icmp code field", "no", "usage: <yes/no/y/n>\n",
 	                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-	                                   sizeof (a_bool_t)));
+	                                   sizeof (tmpdata)));
 
 	    if (tmpdata)
 	    {
@@ -4549,7 +4546,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     /* get fragment field configuration */
     cmd_data_check_element("fragment field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4563,7 +4560,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     /* get first fragment field configuration */
     cmd_data_check_element("first fragment field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4577,7 +4574,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     /* get L3 TTL field configuration */
     cmd_data_check_element("l3 ttl field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4594,7 +4591,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     /* get l3 length field configuration */
     cmd_data_check_element("l3 length field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4646,13 +4643,13 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     /* get L3 packet type field configuration */
     cmd_data_check_element("l3 packet type field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
+                                   sizeof (tmpdata)));
 
     if (tmpdata)
     {
             entry->l3_pkt_type_mask = 0x7;
-            cmd_data_check_element("l3 packet type", "0",
-                               "usage: 0-TCP, 1-UDP, 3-UDP-Lite, 5-ARP, 7-ICMP \n",
+            cmd_data_check_element("l3 packet type", "tcp",
+                               "usage: TCP, UDP, UDP-Lite, ARP, ICMP \n",
                                cmd_data_check_ip_packet_type, (cmd, &tmpdata,sizeof(tmpdata)));
             entry->l3_pkt_type = tmpdata & 0x7;
 
@@ -4873,7 +4870,7 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry)
     /* get udf field configuration */
     cmd_data_check_element("user define field", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
     {
@@ -4909,7 +4906,7 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry)
     /* get udf0 field configuration */
     cmd_data_check_element("udf0", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if (tmpdata)
     {
         cmd_data_check_element("udf0 opration", "mask",
@@ -4960,7 +4957,7 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry)
         /* get udf1 field configuration */
     cmd_data_check_element("udf1", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if (tmpdata)
     {
         cmd_data_check_element("udf1 opration", "mask",
@@ -5011,7 +5008,7 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry)
     /* get udf2 field configuration */
     cmd_data_check_element("udf2", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if (tmpdata)
     {
 
@@ -5032,7 +5029,7 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry)
     /* get udf3 field configuration */
     cmd_data_check_element("udf3", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if (tmpdata)
     {
 
@@ -5613,7 +5610,6 @@ cmd_data_check_aclrule(char *info, void *val, a_uint32_t size)
             return rv;
         }
     }
-
 
     rv = cmd_data_check_udf_field(&entry);
     if (SW_OK != rv)
