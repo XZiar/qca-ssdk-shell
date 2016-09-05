@@ -1625,6 +1625,56 @@ extern "C" {
 #define SERVCODE_API_PARAM
 #endif
 
+#ifdef IN_SHAPER
+#define SHAPER_API \
+    SW_API_DEF(SW_API_PORT_SHAPER_TIMESLOT_SET, fal_port_shaper_time_slot_set), \
+    SW_API_DEF(SW_API_PORT_SHAPER_TIMESLOT_GET, fal_port_shaper_time_slot_get), \
+    SW_API_DEF(SW_API_FLOW_SHAPER_TIMESLOT_SET, fal_flow_shaper_time_slot_set), \
+    SW_API_DEF(SW_API_FLOW_SHAPER_TIMESLOT_GET, fal_flow_shaper_time_slot_get), \
+    SW_API_DEF(SW_API_QUEUE_SHAPER_TIMESLOT_SET, fal_queue_shaper_time_slot_set), \
+    SW_API_DEF(SW_API_QUEUE_SHAPER_TIMESLOT_GET, fal_queue_shaper_time_slot_get), \
+    SW_API_DEF(SW_API_PORT_SHAPER_TOKEN_NUMBER_SET, fal_port_shaper_token_number_set), \
+    SW_API_DEF(SW_API_PORT_SHAPER_TOKEN_NUMBER_GET, fal_port_shaper_token_number_get), \
+    SW_API_DEF(SW_API_FLOW_SHAPER_TOKEN_NUMBER_SET, fal_flow_shaper_token_number_set), \
+    SW_API_DEF(SW_API_FLOW_SHAPER_TOKEN_NUMBER_GET, fal_flow_shaper_token_number_get), \
+    SW_API_DEF(SW_API_QUEUE_SHAPER_TOKEN_NUMBER_SET, fal_queue_shaper_token_number_set), \
+    SW_API_DEF(SW_API_QUEUE_SHAPER_TOKEN_NUMBER_GET, fal_queue_shaper_token_number_get), \
+    SW_API_DEF(SW_API_PORT_SHAPER_SET, fal_port_shaper_set), \
+    SW_API_DEF(SW_API_PORT_SHAPER_GET,fal_port_shaper_get), \
+    SW_API_DEF(SW_API_FLOW_SHAPER_SET, fal_flow_shaper_set), \
+    SW_API_DEF(SW_API_FLOW_SHAPER_GET,fal_flow_shaper_get), \
+    SW_API_DEF(SW_API_QUEUE_SHAPER_SET, fal_queue_shaper_set), \
+    SW_API_DEF(SW_API_QUEUE_SHAPER_GET,fal_queue_shaper_get), \
+    SW_API_DEF(SW_API_SHAPER_IPG_PRE_SET, fal_shaper_ipg_preamble_length_set), \
+    SW_API_DEF(SW_API_SHAPER_IPG_PRE_GET,fal_shaper_ipg_preamble_length_get),
+
+
+#define SHAPER_API_PARAM \
+    SW_API_DESC(SW_API_PORT_SHAPER_TIMESLOT_SET)  \
+    SW_API_DESC(SW_API_PORT_SHAPER_TIMESLOT_GET)  \
+    SW_API_DESC(SW_API_FLOW_SHAPER_TIMESLOT_SET)  \
+    SW_API_DESC(SW_API_FLOW_SHAPER_TIMESLOT_GET)  \
+    SW_API_DESC(SW_API_QUEUE_SHAPER_TIMESLOT_SET)  \
+    SW_API_DESC(SW_API_QUEUE_SHAPER_TIMESLOT_GET)  \
+    SW_API_DESC(SW_API_PORT_SHAPER_TOKEN_NUMBER_SET) \
+    SW_API_DESC(SW_API_PORT_SHAPER_TOKEN_NUMBER_GET) \
+    SW_API_DESC(SW_API_FLOW_SHAPER_TOKEN_NUMBER_SET) \
+    SW_API_DESC(SW_API_FLOW_SHAPER_TOKEN_NUMBER_GET) \
+    SW_API_DESC(SW_API_QUEUE_SHAPER_TOKEN_NUMBER_SET) \
+    SW_API_DESC(SW_API_QUEUE_SHAPER_TOKEN_NUMBER_GET) \
+    SW_API_DESC(SW_API_PORT_SHAPER_SET) \
+    SW_API_DESC(SW_API_PORT_SHAPER_GET) \
+    SW_API_DESC(SW_API_FLOW_SHAPER_SET) \
+    SW_API_DESC(SW_API_FLOW_SHAPER_GET) \
+    SW_API_DESC(SW_API_QUEUE_SHAPER_SET) \
+    SW_API_DESC(SW_API_QUEUE_SHAPER_GET) \
+    SW_API_DESC(SW_API_SHAPER_IPG_PRE_SET) \
+    SW_API_DESC(SW_API_SHAPER_IPG_PRE_GET)
+
+#else
+#define SHAPER_API
+#define SHAPER_API_PARAM
+#endif
 
 #define SSDK_API \
     SW_API_DEF(SW_API_SWITCH_RESET, fal_reset), \
@@ -1656,6 +1706,7 @@ extern "C" {
     REG_API \
     CTRLPKT_API \
     SERVCODE_API \
+    SHAPER_API \
     SW_API_DEF(SW_API_MAX, NULL),
 
 
@@ -1690,6 +1741,7 @@ extern "C" {
     REG_API_PARAM \
     CTRLPKT_API_PARAM \
     SERVCODE_API_PARAM \
+    SHAPER_API_PARAM \
     SW_PARAM_DEF(SW_API_MAX, SW_UINT32, 4, SW_PARAM_IN, "Dev ID"),
 
 

@@ -51,6 +51,7 @@ extern "C" {
 #include "fal_ctrlpkt.h"
 #include "fal_servcode.h"
 #include "fal_pppoe.h"
+#include "fal_shaper.h"
 
 #ifdef __cplusplus
 }

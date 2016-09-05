@@ -289,6 +289,10 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_COSMAP, cmd_data_check_cosmap, cmd_data_print_cosmap),
     SW_TYPE_DEF(SW_SCHEDULER, cmd_data_check_queue_scheduler, cmd_data_print_queue_scheduler),
     SW_TYPE_DEF(SW_QUEUEBMP, cmd_data_check_ring_queue, cmd_data_print_ring_queue),
+    SW_TYPE_DEF(SW_PORT_SHAPER_TOKEN_CONFIG, cmd_data_check_port_shaper_token_config, cmd_data_print_port_shaper_token_config),
+    SW_TYPE_DEF(SW_SHAPER_TOKEN_CONFIG, cmd_data_check_shaper_token_config, cmd_data_print_shaper_token_config),
+    SW_TYPE_DEF(SW_PORT_SHAPER_CONFIG, cmd_data_check_port_shaper_config, cmd_data_print_port_shaper_config),
+    SW_TYPE_DEF(SW_SHAPER_CONFIG, cmd_data_check_shaper_config, cmd_data_print_shaper_config),
 };
 
 sw_data_type_t *
@@ -21628,4 +21632,660 @@ cmd_data_print_flow_host(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
 
         cmd_data_print_flow(param_name, flow_entry, size);
         cmd_data_print_host_entry(param_name, host_entry, size);
+}
+
+sw_error_t
+cmd_data_check_port_shaper_token_config(char *cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    sw_error_t rv;
+    a_bool_t bool = A_FALSE;
+    fal_shaper_token_number_t entry;
+
+    aos_mem_zero(&entry, sizeof (fal_shaper_token_number_t));
+
+    do
+    {
+        cmd = get_sub_cmd("c_token_negative_en", "no");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.c_token_number_negative_en),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("c_token_number", "0-0x3FFFFFFF");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.c_token_number), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    *(fal_shaper_token_number_t *)val = entry;
+    return SW_OK;
+}
+
+
+sw_error_t
+cmd_data_check_shaper_token_config(char *cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    sw_error_t rv;
+    a_bool_t bool = A_FALSE;
+    fal_shaper_token_number_t entry;
+
+    aos_mem_zero(&entry, sizeof (fal_shaper_token_number_t));
+
+    do
+    {
+        cmd = get_sub_cmd("c_token_negative_en", "no");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.c_token_number_negative_en),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("c_token_number", "0-0x3FFFFFFF");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.c_token_number), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("e_token_negative_en", "no");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.e_token_number_negative_en),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+
+    do
+    {
+        cmd = get_sub_cmd("e_token_number", "0-0x3FFFFFFF");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.e_token_number), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    *(fal_shaper_token_number_t *)val = entry;
+    return SW_OK;
+}
+
+
+sw_error_t
+cmd_data_check_port_shaper_config(char *cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    sw_error_t rv;
+    a_bool_t bool = A_FALSE;
+    fal_shaper_config_t entry;
+
+    aos_mem_zero(&entry, sizeof (fal_shaper_config_t));
+
+    do
+    {
+        cmd = get_sub_cmd("meter_unit", "0-1");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.meter_unit), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("c_shaper_enable", "no");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.c_shaper_en),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("cir", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.cir), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("cbs", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.cbs), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+     do
+    {
+        cmd = get_sub_cmd("shaper_frame_mode", "0-2");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.shaper_frame_mode), sizeof (fal_shaper_frame_mode_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    *(fal_shaper_config_t *)val = entry;
+    return SW_OK;
+}
+
+
+sw_error_t
+cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    sw_error_t rv;
+    a_bool_t bool = A_FALSE;
+    fal_shaper_config_t entry;
+
+    aos_mem_zero(&entry, sizeof (fal_shaper_config_t));
+
+    do
+    {
+        cmd = get_sub_cmd("couple_enable", "no");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.couple_en),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("meter_unit", "0-1");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.meter_unit), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("c_shaper_enable", "no");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.c_shaper_en),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("cir", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.cir), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("cbs", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.cbs), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("e_shaper_enable", "no");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.e_shaper_en),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("eir", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.eir), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("ebs", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.ebs), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("shaper_frame_mode", "0-2");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.shaper_frame_mode), sizeof (fal_shaper_frame_mode_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    *(fal_shaper_config_t *)val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_shaper_token_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_shaper_token_number_t *entry;
+	entry = (fal_shaper_token_number_t *) buf;
+
+	if (A_TRUE == entry->c_token_number_negative_en)
+	{
+		dprintf("\n[shaper_c_token_negative_enable]:yes  ");
+	}
+	else
+	{
+		dprintf("\n[shaper_c_token_negative_enable]:no  ");
+	}
+	dprintf("\n[shaper_c_token_number]:0x%x", entry->c_token_number);
+
+	if (A_TRUE == entry->e_token_number_negative_en)
+	{
+		dprintf("\n[shaper_e_token_negative_enable]:yes  ");
+	}
+	else
+	{
+		dprintf("\n[shaper_e_token_negative_enable]:no  ");
+	}
+
+	dprintf("\n[shaper_e_token_number]:0x%x", entry->e_token_number);
+
+	return;
+}
+
+void
+cmd_data_print_port_shaper_token_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_shaper_token_number_t *entry;
+	entry = (fal_shaper_token_number_t *) buf;
+
+	if (A_TRUE == entry->c_token_number_negative_en)
+	{
+		dprintf("\n[shaper_c_token_negative_enable]:yes  ");
+	}
+	else
+	{
+		dprintf("\n[shaper_c_token_negative_enable]:no  ");
+	}
+	dprintf("\n[shaper_c_token_number]:0x%x", entry->c_token_number);
+
+	return;
+}
+
+void
+cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_shaper_config_t *entry;
+
+    entry = (fal_shaper_config_t *) buf;
+
+    if (A_TRUE == entry->couple_en)
+    {
+        dprintf("\n[shaper_couple_enable]:yes  ");
+    }
+    else
+    {
+        dprintf("\n[shaper_couple_enable]:no  ");
+    }
+
+    dprintf("\n[shaper_meter_unit]:0x%x", entry->meter_unit);
+
+    if (A_TRUE == entry->c_shaper_en)
+    {
+        dprintf("\n[shaper_c_shaper_enable]:yes  ");
+    }
+    else
+    {
+        dprintf("\n[shaper_c_shaper_enable]:no  ");
+    }
+
+    dprintf("\n[shaper_cir]:0x%x", entry->cir);
+    dprintf("\n[shaper_cbs]:0x%x", entry->cbs);
+
+    if (A_TRUE == entry->e_shaper_en)
+    {
+        dprintf("\n[shaper_e_shaper_enable]:yes  ");
+    }
+    else
+    {
+        dprintf("\n[shaper_e_shaper_enable]:no  ");
+    }
+
+    dprintf("\n[shaper_eir]:0x%x", entry->eir);
+    dprintf("\n[shaper_ebs]:0x%x", entry->ebs);
+
+    dprintf("\n[shaper_frame_mode]:0x%x", entry->shaper_frame_mode);
+
+    return;
+}
+
+void
+cmd_data_print_port_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_shaper_config_t *entry;
+
+    entry = (fal_shaper_config_t *) buf;
+
+    dprintf("\n[shaper_meter_unit]:0x%x", entry->meter_unit);
+
+    if (A_TRUE == entry->c_shaper_en)
+    {
+        dprintf("\n[shaper_c_shaper_enable]:yes  ");
+    }
+    else
+    {
+        dprintf("\n[shaper_c_shaper_enable]:no  ");
+    }
+
+    dprintf("\n[shaper_cir]:0x%x", entry->cir);
+    dprintf("\n[shaper_cbs]:0x%x", entry->cbs);
+
+    dprintf("\n[shaper_frame_mode]:0x%x", entry->shaper_frame_mode);
+
+    return;
 }

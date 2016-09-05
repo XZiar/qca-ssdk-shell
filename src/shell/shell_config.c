@@ -940,6 +940,35 @@ struct cmd_des_t gcmd_des[] =
     },
 #endif
 
+#ifdef IN_SHAPER
+    {
+	"shaper", "config shaper",
+	{
+	    {"PortTimeslot", "set", "Set port shaper timeslot value", " <value>", SW_API_PORT_SHAPER_TIMESLOT_SET, NULL},
+	    {"PortTimeslot", "get", "Get port shaper timeslot value", "", SW_API_PORT_SHAPER_TIMESLOT_GET, NULL},
+	    {"FlowTimeslot", "set", "Set flow shaper timeslot value", " <value>", SW_API_FLOW_SHAPER_TIMESLOT_SET, NULL},
+	    {"FlowTimeslot", "get", "Get flow shaper timeslot value", "", SW_API_FLOW_SHAPER_TIMESLOT_GET, NULL},
+	    {"QueueTimeslot", "set", "Set queue shaper timeslot value", " <value>", SW_API_QUEUE_SHAPER_TIMESLOT_SET, NULL},
+	    {"QueueTimeslot", "get", "Get queue shaper timeslot value", "", SW_API_QUEUE_SHAPER_TIMESLOT_GET, NULL},
+	    {"PortToken", "set", "Set port shaper token value", " <port_id> <token value>", SW_API_PORT_SHAPER_TOKEN_NUMBER_SET, NULL}, 
+	    {"PortToken", "get", "Get port shaper token value", "<port_id>", SW_API_PORT_SHAPER_TOKEN_NUMBER_GET, NULL},
+	    {"FlowToken", "set", "Set flow shaper token value", " <flow_id> <token value>", SW_API_FLOW_SHAPER_TOKEN_NUMBER_SET, NULL},
+	    {"FlowToken", "get", "Get flow shaper token value", "<flow_id>", SW_API_FLOW_SHAPER_TOKEN_NUMBER_GET, NULL},
+	    {"QueueToken", "set", "Set queue shaper token value", " <queue_id> <token value>", SW_API_QUEUE_SHAPER_TOKEN_NUMBER_SET, NULL},
+	    {"QueueToken", "get", "Get queue shaper token value", "<queue_id>", SW_API_QUEUE_SHAPER_TOKEN_NUMBER_GET, NULL},
+	    {"PortShaper", "set", "Set port shaper entry", " <port_id>", SW_API_PORT_SHAPER_SET, NULL},
+	    {"PortShaper", "get", "Get port shaper entry", " <port_id>", SW_API_PORT_SHAPER_GET, NULL},
+	    {"FlowShaper", "set", "Set flow shaper entry", " <flow_id>", SW_API_FLOW_SHAPER_SET, NULL},
+	    {"FlowShaper", "get", "Get flow shaper entry", " <flow_id>", SW_API_FLOW_SHAPER_GET, NULL},
+	    {"QueueShaper", "set", "Set queue shaper entry", " <queue_id>", SW_API_QUEUE_SHAPER_SET, NULL},
+	    {"QueueShaper", "get", "Get queue shaper entry", " <queue_id>", SW_API_QUEUE_SHAPER_GET, NULL},
+	    {"Ipg", "set", "Set shaper IPG and Preamble value", " <value>", SW_API_SHAPER_IPG_PRE_SET, NULL},
+	    {"Ipg", "get", "Get port shaper IPG and Preamble value", "", SW_API_SHAPER_IPG_PRE_GET, NULL},
+	    {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
+	},
+    },
+#endif
+
     /* debug */
     {
         "debug", "read/write register",
