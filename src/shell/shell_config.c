@@ -969,6 +969,28 @@ struct cmd_des_t gcmd_des[] =
     },
 #endif
 
+/*BM*/
+#ifdef IN_BM
+    {
+        "bm", "config bm",
+        {
+	{"bmctrl", "set", "set flowctrl mode", "", SW_API_BM_CTRL_SET, NULL},
+	{"bmctrl", "get", "get flowctrl mode", "", SW_API_BM_CTRL_GET, NULL},
+	{"portgroupmap", "set", "set port group mapping", "", SW_API_BM_PORTGROUP_MAP_SET, NULL},
+	{"portgroupmap", "get", "get port group mapping", "", SW_API_BM_PORTGROUP_MAP_GET, NULL},
+	{"groupbuff", "set", "set group buffer", "", SW_API_BM_GROUP_BUFFER_SET, NULL},
+	{"groupbuff", "get", "get group buffer", "", SW_API_BM_GROUP_BUFFER_GET, NULL},
+	{"portrsvbuff", "set", "set port reserved buffer", "", SW_API_BM_PORT_RSVBUFFER_SET, NULL},
+	{"portrsvbuff", "get", "get port reserved buffer", "", SW_API_BM_PORT_RSVBUFFER_GET, NULL},
+	{"portsthresh", "set", "set port static threshold", "", SW_API_BM_STATIC_THRESH_SET, NULL},
+	{"portsthresh", "get", "get port static threshold", "", SW_API_BM_STATIC_THRESH_GET, NULL},
+	{"portdthresh", "set", "set port dynamic threshold", "", SW_API_BM_DYNAMIC_THRESH_SET, NULL},
+	{"portdthresh", "get", "get port dynamic threshold", "", SW_API_BM_DYNAMIC_THRESH_GET, NULL},
+	{NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
+        },
+    },
+#endif
+
     /* debug */
     {
         "debug", "read/write register",

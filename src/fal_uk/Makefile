@@ -110,6 +110,10 @@ ifeq (TRUE, $(IN_PPPOE))
   SRC_LIST += fal_pppoe.c
 endif
 
+ifeq (TRUE, $(IN_BM))
+  SRC_LIST += fal_bm.c
+endif
+
 ifeq (TRUE, $(IN_SHAPER))
   SRC_LIST += fal_shaper.c
 endif

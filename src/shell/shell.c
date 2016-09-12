@@ -287,7 +287,8 @@ cmd_parse_api(char **cmd_str, a_uint32_t * arg_val)
                 if (data_type->param_check(tmp_str, pentry, pptmp->data_size) != SW_OK)
                     return SW_BAD_PARAM;
 	    if(!get_talk_mode() && (pptmp->param_type & SW_PARAM_PTR)) {
-	    	jump += get_jump() -1;
+	    	if (get_jump())
+	    		jump += get_jump() -1;
 	    }
 	    
             }

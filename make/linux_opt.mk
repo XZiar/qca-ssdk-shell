@@ -82,6 +82,10 @@ ifeq (TRUE, $(IN_QM))
   MODULE_CFLAG += -DIN_QM
 endif
 
+ifeq (TRUE, $(IN_BM))
+  MODULE_CFLAG += -DIN_BM
+endif
+
 ifeq (TRUE, $(IN_FLOW))
   MODULE_CFLAG += -DIN_FLOW
 endif
