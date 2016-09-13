@@ -379,7 +379,7 @@ extern "C" {
 
 	/*new add match fields for hawkeye*/
         a_uint8_t pri; /*rule priority 0-7*/
-        a_uint8_t post_routing;
+        a_bool_t post_routing;
         a_uint8_t res_chain;
 
 	a_bool_t is_ip_val;
