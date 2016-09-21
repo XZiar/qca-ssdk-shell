@@ -499,7 +499,7 @@ fal_global_qinq_mode_get(a_uint32_t dev_id, fal_global_qinq_mode_t *mode)
 }
 
 sw_error_t
-fal_port_qinq_mode_set(a_uint32_t dev_id, fal_port_t port_id, fal_port_qinq_mode_t *mode)
+fal_port_qinq_mode_set(a_uint32_t dev_id, fal_port_t port_id, fal_port_qinq_role_t *mode)
 {
     sw_error_t rv;
 
@@ -508,7 +508,7 @@ fal_port_qinq_mode_set(a_uint32_t dev_id, fal_port_t port_id, fal_port_qinq_mode
 }
 
 sw_error_t
-fal_port_qinq_mode_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_qinq_mode_t *mode)
+fal_port_qinq_mode_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_qinq_role_t *mode)
 {
     sw_error_t rv;
 
@@ -553,100 +553,64 @@ fal_egress_tpid_get(a_uint32_t dev_id, fal_tpid_t *tpid)
 }
 
 sw_error_t
-fal_port_ingress_filter_set(a_uint32_t dev_id, fal_port_t port_id, fal_ingress_filter_t *filter)
+fal_port_ingress_vlan_filter_set(a_uint32_t dev_id, fal_port_t port_id, fal_ingress_vlan_filter_t *filter)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_INGRESS_FILTER_SET, dev_id, port_id, (a_uint32_t) filter);
+    rv = sw_uk_exec(SW_API_PT_INGRESS_VLAN_FILTER_SET, dev_id, port_id, (a_uint32_t) filter);
     return rv;
 }
 
 sw_error_t
-fal_port_ingress_filter_get(a_uint32_t dev_id, fal_port_t port_id, fal_ingress_filter_t *filter)
+fal_port_ingress_vlan_filter_get(a_uint32_t dev_id, fal_port_t port_id, fal_ingress_vlan_filter_t *filter)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_INGRESS_FILTER_GET, dev_id, port_id, (a_uint32_t) filter);
+    rv = sw_uk_exec(SW_API_PT_INGRESS_VLAN_FILTER_GET, dev_id, port_id, (a_uint32_t) filter);
     return rv;
 }
 
 sw_error_t
-fal_port_ingress_default_tag_set(a_uint32_t dev_id, fal_port_t port_id,
-                             fal_port_ingress_default_tag_t *default_tag)
+fal_port_default_vlantag_set(a_uint32_t dev_id, fal_port_t port_id,
+                             fal_port_vlan_direction_t direction, fal_port_default_vid_enable_t *default_vid_en,
+                             fal_port_vlan_tag_t *default_tag)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_INGRESS_DEFAULT_TAG_SET, dev_id, port_id, (a_uint32_t) default_tag);
+    rv = sw_uk_exec(SW_API_PT_DEFAULT_VLANTAG_SET, dev_id, port_id, (a_uint32_t) direction,
+			(a_uint32_t) default_vid_en, (a_uint32_t) default_tag);
     return rv;
 }
 
 sw_error_t
-fal_port_ingress_default_tag_get(a_uint32_t dev_id, fal_port_t port_id,
-                             fal_port_ingress_default_tag_t *default_tag)
+fal_port_default_vlantag_get(a_uint32_t dev_id, fal_port_t port_id,
+                             fal_port_vlan_direction_t direction, fal_port_default_vid_enable_t *default_vid_en,
+                             fal_port_vlan_tag_t *default_tag)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_INGRESS_DEFAULT_TAG_GET, dev_id, port_id, (a_uint32_t) default_tag);
+    rv = sw_uk_exec(SW_API_PT_DEFAULT_VLANTAG_GET, dev_id, port_id, (a_uint32_t) direction, 
+			(a_uint32_t) default_vid_en, (a_uint32_t) default_tag);
     return rv;
 }
 
 sw_error_t
-fal_port_tag_propagation_set(a_uint32_t dev_id, fal_port_t port_id,
-                             fal_tag_propagation_t *prop)
+fal_port_tag_propagation_set(a_uint32_t dev_id, fal_port_t port_id, fal_port_vlan_direction_t direction,
+                             fal_vlantag_propagation_t *prop)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_TAG_PROPOGATION_SET, dev_id, port_id, (a_uint32_t) prop);
+    rv = sw_uk_exec(SW_API_PT_TAG_PROPAGATION_SET, dev_id, port_id, (a_uint32_t) direction, (a_uint32_t) prop);
     return rv;
 }
 
 sw_error_t
-fal_port_tag_propagation_get(a_uint32_t dev_id, fal_port_t port_id,
-                             fal_tag_propagation_t *prop)
+fal_port_tag_propagation_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_vlan_direction_t direction,
+                             fal_vlantag_propagation_t *prop)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_TAG_PROPOGATION_GET, dev_id, port_id, (a_uint32_t) prop);
-    return rv;
-}
-
-sw_error_t
-fal_port_egress_tag_propagation_set(a_uint32_t dev_id, fal_port_t port_id,
-                             fal_tag_propagation_t *eg_prop)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PT_EGRESS_TAG_PROPOGATION_SET, dev_id, port_id, (a_uint32_t) eg_prop);
-    return rv;
-}
-
-sw_error_t
-fal_port_egress_tag_propagation_get(a_uint32_t dev_id, fal_port_t port_id,
-                             fal_tag_propagation_t *eg_prop)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PT_EGRESS_TAG_PROPOGATION_GET, dev_id, port_id, (a_uint32_t) eg_prop);
-    return rv;
-}
-
-sw_error_t
-fal_port_egress_default_vid_set(a_uint32_t dev_id, fal_port_t port_id,
-                             fal_port_egress_default_vid_t *default_vid)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PT_EGRESS_DEFAULT_VID_SET, dev_id, port_id, (a_uint32_t) default_vid);
-    return rv;
-}
-
-sw_error_t
-fal_port_egress_default_vid_get(a_uint32_t dev_id, fal_port_t port_id,
-                             fal_port_egress_default_vid_t *default_vid)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PT_EGRESS_DEFAULT_VID_GET, dev_id, port_id, (a_uint32_t) default_vid);
+    rv = sw_uk_exec(SW_API_PT_TAG_PROPAGATION_GET, dev_id, port_id, (a_uint32_t) direction, (a_uint32_t) prop);
     return rv;
 }
 
@@ -671,22 +635,57 @@ fal_port_vlan_xlt_miss_cmd_get(a_uint32_t dev_id, fal_port_t port_id,
 }
 
 sw_error_t
-fal_port_tag_egvlanmode_set(a_uint32_t dev_id, fal_port_t port_id,
-                        fal_egressmode_t *port_egvlanmode)
+fal_port_vlantag_egmode_set(a_uint32_t dev_id, fal_port_t port_id,
+                        fal_vlantag_egress_mode_t *port_egvlanmode)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_TAG_EGVLANMODE_SET, dev_id, port_id, (a_uint32_t) port_egvlanmode);
+    rv = sw_uk_exec(SW_API_PT_VLANTAG_EGMODE_SET, dev_id, port_id, (a_uint32_t) port_egvlanmode);
     return rv;
 }
 
 sw_error_t
-fal_port_tag_egvlanmode_get(a_uint32_t dev_id, fal_port_t port_id,
-                        fal_egressmode_t *port_egvlanmode)
+fal_port_vlantag_egmode_get(a_uint32_t dev_id, fal_port_t port_id,
+                        fal_vlantag_egress_mode_t *port_egvlanmode)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_TAG_EGVLANMODE_GET, dev_id, port_id, (a_uint32_t) port_egvlanmode);
+    rv = sw_uk_exec(SW_API_PT_VLANTAG_EGMODE_GET, dev_id, port_id, (a_uint32_t) port_egvlanmode);
     return rv;
 }
 
+sw_error_t
+fal_port_vsi_egmode_set(a_uint32_t dev_id, a_uint32_t vsi, a_uint32_t port_id, fal_pt_1q_egmode_t egmode)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VSI_EGMODE_SET, dev_id, vsi, port_id, (a_uint32_t) egmode);
+    return rv;
+}
+
+sw_error_t
+fal_port_vsi_egmode_get(a_uint32_t dev_id, a_uint32_t vsi, a_uint32_t port_id, fal_pt_1q_egmode_t * egmode)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VSI_EGMODE_GET, dev_id, vsi, port_id, (a_uint32_t) egmode);
+    return rv;
+}
+
+sw_error_t
+fal_port_vlantag_vsi_egmode_enable(a_uint32_t dev_id, fal_port_t port_id, a_bool_t enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLANTAG_VSI_EGMODE_EN_SET, dev_id, port_id, (a_uint32_t) enable);
+    return rv;
+}
+
+sw_error_t
+fal_port_vlantag_vsi_egmode_status_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t * enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLANTAG_VSI_EGMODE_EN_GET, dev_id, port_id, (a_uint32_t) enable);
+    return rv;
+}

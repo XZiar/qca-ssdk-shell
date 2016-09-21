@@ -25,11 +25,11 @@ fal_port_vsi_get(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t *vsi_id)
 }
 
 sw_error_t
-fal_port_vlan_vsi_set(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t vlan_id, a_uint32_t vsi_id)
+fal_port_vlan_vsi_set(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t stag_vid, a_uint32_t ctag_vid, a_uint32_t vsi_id)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PORT_VLAN_VSI_SET, dev_id, port_id, vlan_id, vsi_id);
+    rv = sw_uk_exec(SW_API_PORT_VLAN_VSI_SET, dev_id, port_id, stag_vid, ctag_vid, vsi_id);
     return rv;
 }
 
@@ -43,11 +43,11 @@ fal_vsi_free(a_uint32_t dev_id, a_uint32_t vsi)
 }
 
 sw_error_t
-fal_port_vlan_vsi_get(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t vlan_id, a_uint32_t *vsi_id)
+fal_port_vlan_vsi_get(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t stag_vid, a_uint32_t ctag_vid, a_uint32_t *vsi_id)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PORT_VLAN_VSI_GET, dev_id, port_id, vlan_id, (a_uint32_t)vsi_id);
+    rv = sw_uk_exec(SW_API_PORT_VLAN_VSI_GET, dev_id, port_id, stag_vid, ctag_vid, (a_uint32_t)vsi_id);
     return rv;
 }
 

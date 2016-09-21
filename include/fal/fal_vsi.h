@@ -28,22 +28,23 @@ extern "C" {
 #include "fal/fal_type.h"
 
 #define FAL_VSI_INVALID 0xffff
+#define FAL_VLAN_INVALID 0xffff
 
 typedef struct{
-	a_uint32_t lrn_en;
-	a_uint32_t action;
+	a_uint32_t lrn_en; /*0: disable new address learn, 1: enable new address learn*/
+	a_uint32_t action;/*0:forward, 1:drop, 2: copy to CPU, 3: redirect to CPU*/
 }fal_vsi_newaddr_lrn_t;
 
 typedef struct{
-	a_uint32_t stamove_en;
-	a_uint32_t action;
+	a_uint32_t stamove_en;/*0:disable station move, 1: enable station move*/
+	a_uint32_t action;/*0:forward, 1:drop, 2: copy to CPU, 3: redirect to CPU*/
 }fal_vsi_stamove_t;
 
 typedef struct{
-	a_uint32_t member_ports;
-	a_uint32_t uuc_ports;
-	a_uint32_t umc_ports;
-	a_uint32_t bc_ports;
+	a_uint32_t member_ports;/*VSI member ports for known unicast and multicast*/
+	a_uint32_t uuc_ports;/*VSI member ports for unknown unicast*/
+	a_uint32_t umc_ports;/*VSI member ports for unknown multicast*/
+	a_uint32_t bc_ports;/*VSI member ports for broadcast*/
 }fal_vsi_member_t;
 
 sw_error_t
@@ -59,10 +60,10 @@ sw_error_t fal_port_vsi_get(a_uint32_t dev_id,
 				fal_port_t port_id, a_uint32_t *vsi_id);
 
 sw_error_t
-fal_port_vlan_vsi_set(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t vlan_id, a_uint32_t vsi_id);
+fal_port_vlan_vsi_set(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t stag_vid, a_uint32_t ctag_vid, a_uint32_t vsi_id);
 
 sw_error_t
-fal_port_vlan_vsi_get(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t vlan_id, a_uint32_t *vsi_id);
+fal_port_vlan_vsi_get(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t stag_vid, a_uint32_t ctag_vid, a_uint32_t *vsi_id);
 
 sw_error_t
 fal_vsi_tbl_dump(a_uint32_t dev_id);

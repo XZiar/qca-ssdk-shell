@@ -682,22 +682,34 @@ sw_error_t
 cmd_data_print_ingress_filter(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
-cmd_data_check_ptingress_tag(char *info, void *val, a_uint32_t size);
+cmd_data_check_port_default_vid_en(char *info, void *val, a_uint32_t size);
 
 sw_error_t
-cmd_data_print_ptingress_tag(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+cmd_data_print_port_default_vid_en(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
-cmd_data_check_tag_propogation(char *info, void *val, a_uint32_t size);
+cmd_data_check_port_vlan_tag(char *info, void *val, a_uint32_t size);
 
 sw_error_t
-cmd_data_print_tag_propogation(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+cmd_data_print_port_vlan_tag(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
-cmd_data_check_egress_default_vid(char *info, void *val, a_uint32_t size);
+cmd_data_check_port_vlan_direction(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
 
 sw_error_t
-cmd_data_print_egress_default_vid(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+cmd_data_print_port_vlan_direction(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tag_propagation(char *info, void *val, a_uint32_t size);
+
+sw_error_t
+cmd_data_print_tag_propagation(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_egress_vsi_tag(char *info, void *val, a_uint32_t size);
+
+sw_error_t
+cmd_data_print_egress_vsi_tag(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
 cmd_data_check_egress_mode(char *info, void *val, a_uint32_t size);
