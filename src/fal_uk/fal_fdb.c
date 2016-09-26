@@ -290,7 +290,7 @@ fal_fdb_entry_update_byport(a_uint32_t dev_id, fal_port_t old_port, fal_port_t n
 }
 
 sw_error_t
-fal_port_fdb_learn_counter_get(a_uint32_t dev_id, fal_port_t port_id,
+fal_fdb_port_learned_mac_counter_get(a_uint32_t dev_id, fal_port_t port_id,
                                a_uint32_t * cnt)
 {
     sw_error_t rv;
@@ -463,6 +463,24 @@ fal_fdb_rfs_del(a_uint32_t dev_id, fal_fdb_rfs_t *rfs)
     sw_error_t rv;
 
     rv = sw_uk_exec(SW_API_FDB_RFS_DEL, dev_id, (a_uint32_t)rfs);
+    return rv;
+}
+
+sw_error_t
+fal_fdb_port_maclimit_ctrl_set(a_uint32_t dev_id, fal_port_t port_id, fal_maclimit_ctrl_t * maclimit_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FDB_PT_MACLIMIT_CTRL_SET, dev_id, port_id, (a_uint32_t)maclimit_ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_fdb_port_maclimit_ctrl_get(a_uint32_t dev_id, fal_port_t port_id, fal_maclimit_ctrl_t * maclimit_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FDB_PT_MACLIMIT_CTRL_GET, dev_id, port_id, (a_uint32_t)maclimit_ctrl);
     return rv;
 }
 

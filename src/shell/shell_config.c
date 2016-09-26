@@ -267,6 +267,8 @@ struct cmd_des_t gcmd_des[] =
             {"port", "del", "del one port from a FDB entry", "<fid> <macaddr> <port_id>", SW_API_FDB_PORT_DEL, NULL},
             {"fdbrfs", "set", "add a FDB rfs", "", SW_API_FDB_RFS_SET, NULL},
             {"fdbrfs", "del", "delete a FDB rfs", "", SW_API_FDB_RFS_DEL, NULL},
+            {"ptmaclimitctrl", "set", "set port maclimit ctrl", "<port_id>", SW_API_FDB_PT_MACLIMIT_CTRL_SET, NULL},
+            {"ptmaclimitctrl", "get", "get port maclimit ctrl", "<port_id>", SW_API_FDB_PT_MACLIMIT_CTRL_GET, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },

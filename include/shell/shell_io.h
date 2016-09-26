@@ -61,6 +61,7 @@ sw_error_t cmd_data_check_egmode(char *cmd_str, a_uint32_t * arg_val,
 sw_error_t cmd_data_check_capable(char *cmd_str, a_uint32_t * arg_val,
                                   a_uint32_t size);
 sw_error_t cmd_data_check_fdbentry(char *cmdstr, void *val, a_uint32_t size);
+sw_error_t cmd_data_check_maclimit_ctrl(char *cmdstr, void *val, a_uint32_t size);
 sw_error_t cmd_data_check_macaddr(char *cmdstr, void *val, a_uint32_t size);
 
 void cmd_data_print_uint32(a_uint8_t * param_name, a_uint32_t * buf,
@@ -89,6 +90,8 @@ void cmd_data_print_egmode(a_uint8_t * param_name, a_uint32_t * buf,
 void cmd_data_print_capable(a_uint8_t * param_name, a_uint32_t * buf,
                             a_uint32_t size);
 void cmd_data_print_fdbentry(a_uint8_t * param_name, a_uint32_t * buf,
+                             a_uint32_t size);
+void cmd_data_print_maclimit_ctrl(a_uint8_t * param_name, a_uint32_t * buf,
                              a_uint32_t size);
 void cmd_data_print_macaddr(char * param_name, a_uint32_t * buf,
                             a_uint32_t size);
