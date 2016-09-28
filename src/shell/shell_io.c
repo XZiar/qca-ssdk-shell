@@ -2396,6 +2396,10 @@ cmd_data_check_fdbentry(char *info, void *val, a_uint32_t size)
             if (cmd_find == NULL)
             {
                 rv = cmd_data_check_portid(cmd, &entry.port.id, sizeof (fal_port_t));
+                if (entry.port.id == 32 || entry.port.id == 33)
+                    entry.port.id = FAL_PORT_ID(FAL_PORT_TYPE_TRUNK, entry.port.id);
+                else if (entry.port.id >= 64)
+                    entry.port.id = FAL_PORT_ID(FAL_PORT_TYPE_VPORT, entry.port.id);
                 entry.portmap_en = A_FALSE;
             }
             else
@@ -2682,7 +2686,7 @@ void
 cmd_data_print_fdbentry(a_uint8_t * param_name, a_uint32_t * buf,
                         a_uint32_t size)
 {
-    a_uint32_t tmp;
+    a_uint32_t tmp, port_type;
     fal_fdb_entry_t *entry;
 
     entry = (fal_fdb_entry_t *) buf;
@@ -2697,10 +2701,14 @@ cmd_data_print_fdbentry(a_uint8_t * param_name, a_uint32_t * buf,
     if (entry->portmap_en == A_TRUE)
         cmd_data_print_portmap("[dest_port]:", entry->port.map, sizeof (fal_pbmp_t));
     else {
-        if (entry->port.id == 32)
-            dprintf("[dest_port]:trunk0");
-        else if (entry->port.id == 33)
-            dprintf("[dest_port]:trunk1");
+        port_type = FAL_PORT_ID_TYPE(entry->port.id);
+        entry->port.id = FAL_PORT_ID_VALUE(entry->port.id);
+        if (port_type == 1 && entry->port.id == 32)
+            dprintf("[dest_port]:32(trunk0)");
+        else if (port_type == 1 && entry->port.id == 33)
+            dprintf("[dest_port]:33(trunk1)");
+        else if (port_type == 2)
+            dprintf("[dest_port]:%d(virtual port)", entry->port.id);
         else
             dprintf("[dest_port]:%d", entry->port.id);
     }
