@@ -9138,6 +9138,31 @@ cmd_data_check_host_entry(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
+        cmd = get_sub_cmd("dst info", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: dst info\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+           rv = cmd_data_check_uint32(cmd, &(entry.dst_info), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: dst info\n");
+        }
+
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
         cmd = get_sub_cmd("sync toggle", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
@@ -9288,7 +9313,7 @@ cmd_data_print_host_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t s
     {
         dprintf("\n[pppoe]:Disable   ");
     }
-    dprintf("\n[lan_wan]:0x%x  [sync_toggle]:0x%x  ", entry->lan_wan, entry->syn_toggle);
+    dprintf("\n[lan_wan]:0x%x  [sync_toggle]:0x%x  [dst_info]:0x%x ", entry->lan_wan, entry->syn_toggle, entry->dst_info);
     dprintf("\n[vsi]:0x%x ", entry->mcast_info.vsi);
 
     if ((FAL_IP_IP4_ADDR_MCAST & entry->flags) == FAL_IP_IP4_ADDR_MCAST)
@@ -19980,7 +20005,7 @@ cmd_data_check_network_route(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint32(cmd, &(entry.port), sizeof (fal_port_t));
+            rv = cmd_data_check_uint32(cmd, &(entry.dst_info), sizeof (a_uint32_t));
             if (SW_OK != rv)
                 dprintf("usage: dst info \n");
         }
@@ -20023,8 +20048,8 @@ cmd_data_print_network_route(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
     dprintf("\n[valid]:0x%x  [type]:0x%x ",
             entry->valid, entry->type);
     
-    dprintf("\n[port]:0x%x  [lan_wan]:0x%x [fwd_cmd]:0x%x",
-            entry->port, entry->lan_wan, entry->fwd_cmd);
+    dprintf("\n[dst_info]:0x%x  [lan_wan]:0x%x [fwd_cmd]:0x%x",
+            entry->dst_info, entry->lan_wan, entry->fwd_cmd);
 
     if (entry->type == 0) {
         cmd_data_print_ip4addr("\n[ip_addr]:",
