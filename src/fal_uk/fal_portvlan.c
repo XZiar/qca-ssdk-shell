@@ -517,7 +517,7 @@ fal_port_qinq_mode_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_qinq_role
 }
 
 sw_error_t
-fal_tpid_set(a_uint32_t dev_id, fal_tpid_t *tpid)
+fal_ingress_tpid_set(a_uint32_t dev_id, fal_tpid_t *tpid)
 {
     sw_error_t rv;
 
@@ -526,7 +526,7 @@ fal_tpid_set(a_uint32_t dev_id, fal_tpid_t *tpid)
 }
 
 sw_error_t
-fal_tpid_get(a_uint32_t dev_id, fal_tpid_t *tpid)
+fal_ingress_tpid_get(a_uint32_t dev_id, fal_tpid_t *tpid)
 {
     sw_error_t rv;
 
@@ -689,3 +689,48 @@ fal_port_vlantag_vsi_egmode_status_get(a_uint32_t dev_id, fal_port_t port_id, a_
     rv = sw_uk_exec(SW_API_PT_VLANTAG_VSI_EGMODE_EN_GET, dev_id, port_id, (a_uint32_t) enable);
     return rv;
 }
+
+sw_error_t
+fal_port_vlan_trans_adv_add(a_uint32_t dev_id, fal_port_t port_id, fal_port_vlan_direction_t direction,
+			fal_vlan_trans_adv_rule_t * rule, fal_vlan_trans_adv_action_t * action)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_TRANS_ADV_ADD, dev_id, port_id, (a_uint32_t) direction,
+		(a_uint32_t) rule, (a_uint32_t) action);
+    return rv;
+}
+
+sw_error_t
+fal_port_vlan_trans_adv_del(a_uint32_t dev_id, fal_port_t port_id, fal_port_vlan_direction_t direction,
+			fal_vlan_trans_adv_rule_t * rule, fal_vlan_trans_adv_action_t * action)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_TRANS_ADV_DEL, dev_id, port_id, (a_uint32_t) direction,
+		(a_uint32_t) rule, (a_uint32_t) action);
+    return rv;
+}
+
+sw_error_t
+fal_port_vlan_trans_adv_getfirst(a_uint32_t dev_id, fal_port_t port_id, fal_port_vlan_direction_t direction,
+			fal_vlan_trans_adv_rule_t * rule, fal_vlan_trans_adv_action_t * action)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_TRANS_ADV_GETFIRST, dev_id, port_id, (a_uint32_t) direction,
+		(a_uint32_t) rule, (a_uint32_t) action);
+    return rv;
+}
+
+sw_error_t
+fal_port_vlan_trans_adv_getnext(a_uint32_t dev_id, fal_port_t port_id, fal_port_vlan_direction_t direction,
+			fal_vlan_trans_adv_rule_t * rule, fal_vlan_trans_adv_action_t * action)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_TRANS_ADV_GETNEXT, dev_id, port_id, (a_uint32_t) direction,
+		(a_uint32_t) rule, (a_uint32_t) action);
+    return rv;
+}
+

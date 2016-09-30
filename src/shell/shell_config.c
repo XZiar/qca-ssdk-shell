@@ -207,6 +207,10 @@ struct cmd_des_t gcmd_des[] =
             {"ptvsiegmode", "get", "get a vsi port egress tag", "<vsi> <port_id>", SW_API_PT_VSI_EGMODE_GET, NULL},
             {"ptvlantagvsiegmodeen", "set", "set port vlan tag vsi egress mode enable or not", "<port_id> <enable|disable>", SW_API_PT_VLANTAG_VSI_EGMODE_EN_SET, NULL},
             {"ptvlantagvsiegmodeen", "get", "get port vlan tag vsi egress mode enable or not", "<port_id>", SW_API_PT_VLANTAG_VSI_EGMODE_EN_GET, NULL},
+            {"translationAdv", "add", "add a vlan advanced translation entry based on port and direction", "<port_id> <ingress|egress>", SW_API_PT_VLAN_TRANS_ADV_ADD, NULL},
+            {"translationAdv", "del", "del a vlan advanced translation entry based on port and direction", "<port_id> <ingress|egress>", SW_API_PT_VLAN_TRANS_ADV_DEL, NULL},
+            {"translationAdv", "getfirst", "get vlan advanced translation first entry based on port and direction", "<port_id> <ingress|egress>", SW_API_PT_VLAN_TRANS_ADV_GETFIRST, NULL},
+            {"translationAdv", "getnext", "get vlan advanced translation next entry based on port and direction", "<port_id> <ingress|egress>", SW_API_PT_VLAN_TRANS_ADV_GETNEXT, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },
