@@ -4284,6 +4284,34 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_DHCPV6);
     }
 
+    /* get ah header field configuration */
+    cmd_data_check_element("ah header field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (tmpdata)));
+
+    if (tmpdata)
+    {
+            entry->is_ah_header_mask = 1;
+	    cmd_data_check_element("Is AH header", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ah_header_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_AH_HEADER);
+    }
+
+    /* get esp header field configuration */
+    cmd_data_check_element("esp header field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (tmpdata)));
+
+    if (tmpdata)
+    {
+            entry->is_esp_header_mask = 1;
+	    cmd_data_check_element("Is ESP header", "no", "usage: <yes/no/y/n>\n",
+	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_esp_header_val,
+	                                   sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ESP_HEADER);
+    }
+
     /* get mobility header field configuration */
     cmd_data_check_element("mobility header field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
@@ -4705,34 +4733,6 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
             entry->l3_pkt_type = tmpdata & 0x7;
 
             FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP_PKT_TYPE);
-    }
-
-    /* get ah header field configuration */
-    cmd_data_check_element("ah header field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (tmpdata)));
-
-    if (tmpdata)
-    {
-            entry->is_ah_header_mask = 1;
-	    cmd_data_check_element("Is AH header", "no", "usage: <yes/no/y/n>\n",
-	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ah_header_val,
-	                                   sizeof (a_bool_t)));
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_AH_HEADER);
-    }
-
-    /* get esp header field configuration */
-    cmd_data_check_element("esp header field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (tmpdata)));
-
-    if (tmpdata)
-    {
-            entry->is_esp_header_mask = 1;
-	    cmd_data_check_element("Is ESP header", "no", "usage: <yes/no/y/n>\n",
-	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_esp_header_val,
-	                                   sizeof (a_bool_t)));
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ESP_HEADER);
     }
 
     return SW_OK;
@@ -5256,10 +5256,10 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
     if (tmpdata)
     {
         cmd_data_check_element("queue", NULL,
-                               "usage: the format is 0x0-0x7 or 0-7 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x7,
+                               "usage: the format is 0x0-0xff or 0-255 \n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
                                        0x0));
-        entry->queue = tmpdata & 0x7;
+        entry->queue = tmpdata & 0xff;
 
         FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_REMARK_QUEUE);
     }
@@ -6183,7 +6183,7 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
         dprintf("\n[mirror]:yes");
     }
 
-    if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_REDPT))
+    if ((FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_REDPT)) && (rule->ports != 0))
     {
         dprintf("\n[rdt_to_port]:yes");
         cmd_data_print_portmap("  [dest_port]:", rule->ports,
@@ -6225,7 +6225,9 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
         dprintf("  [queue]:%d", rule->queue);
     }
 
+    dprintf("\n[stag_fmt]:%d", rule->stag_fmt);
     dprintf("\n[stag_vid]:%d", rule->stag_vid);
+    dprintf("\n[ctag_fmt]:%d", rule->ctag_fmt);
     dprintf("\n[ctag_vid]:%d", rule->ctag_vid);
 
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_REMARK_LOOKUP_VID))
