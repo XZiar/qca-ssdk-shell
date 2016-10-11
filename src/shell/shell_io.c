@@ -258,7 +258,6 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_IP_MCMODE, cmd_data_check_ip_mcmode, cmd_data_print_ip_mcmode),
     SW_TYPE_DEF(SW_FLOW_AGE, cmd_data_check_flow_age, cmd_data_print_flow_age),
     SW_TYPE_DEF(SW_FLOW_CTRL, cmd_data_check_flow_ctrl, cmd_data_print_flow_ctrl),
-    SW_TYPE_DEF(SW_QUEUE_FLUSH, cmd_data_check_queue_flush, cmd_data_print_queue_flush),
     SW_TYPE_DEF(SW_STATIC_THRESH, cmd_data_check_ac_static_thresh, cmd_data_print_ac_static_thresh),
     SW_TYPE_DEF(SW_DYNAMIC_THRESH, cmd_data_check_ac_dynamic_thresh, cmd_data_print_ac_dynamic_thresh),
     SW_TYPE_DEF(SW_GROUP_BUFFER, cmd_data_check_ac_group_buff, cmd_data_print_ac_group_buff),
@@ -14546,88 +14545,6 @@ cmd_data_check_flow_age(char *cmd_str, void * val, a_uint32_t size)
     return SW_OK;
 }
 
-sw_error_t
-cmd_data_check_queue_flush(char *cmd_str, void * val, a_uint32_t size)
-{
-	char *cmd;
-    a_uint32_t tmp;
-    sw_error_t rv;
-    fal_queue_flush_dst_t entry;
-
-    aos_mem_zero(&entry, sizeof (fal_queue_flush_dst_t));
-
-    do
-    {
-        cmd = get_sub_cmd("flush mode", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: flush mode \n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint8(cmd, &(entry.flush_mode), sizeof (a_uint8_t));
-            if (SW_OK != rv)
-                dprintf("usage: flush mode \n");
-        }
-    }
-    while (talk_mode && (SW_OK != rv));
-
-    do
-    {
-        cmd = get_sub_cmd("status", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: status \n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint8(cmd, &(entry.status), sizeof (a_uint8_t));
-            if (SW_OK != rv)
-                dprintf("usage: status \n");
-        }
-    }
-    while (talk_mode && (SW_OK != rv));
-
-    do
-    {
-        cmd = get_sub_cmd("queue id", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: queue id \n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint16(cmd, &(entry.queue_id), sizeof (a_uint16_t));
-            if (SW_OK != rv)
-                dprintf("usage: queue id \n");
-        }
-    }
-    while (talk_mode && (SW_OK != rv));
-
-    *(fal_queue_flush_dst_t *)val = entry;
-    return SW_OK;
-}
 
 sw_error_t
 cmd_data_check_ac_dynamic_thresh(char *cmd_str, void * val, a_uint32_t size)
@@ -18406,17 +18323,6 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     dprintf("\n[pkt]:0x%x [byte]:0x%x ", entry->pkt_count, entry->byte_count);
 }
 
-
-void
-cmd_data_print_queue_flush(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
-{
-    fal_queue_flush_dst_t *entry;
-
-    entry = (fal_queue_flush_dst_t *) buf;
-    
-    dprintf("\n[flush_mode]:0x%x [status]:0x%x [queue_id]:0x%x ",
-			entry->flush_mode, entry->status, entry->queue_id);
-}
 
 void
 cmd_data_print_ac_static_thresh(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)

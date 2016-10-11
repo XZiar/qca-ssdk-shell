@@ -293,11 +293,11 @@ sw_error_t
 fal_queue_flush(
 		a_uint32_t dev_id,
 		fal_port_t port,
-		fal_queue_flush_dst_t *flush_dst)
+		a_uint16_t queue_id)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_QUEUE_FLUSH, dev_id, port, flush_dst);
+    rv = sw_uk_exec(SW_API_QUEUE_FLUSH, dev_id, port, queue_id);
     return rv;
 }
 

@@ -395,12 +395,6 @@ void
 cmd_data_print_flow_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
-cmd_data_check_queue_flush(char *cmd_str, void * val, a_uint32_t size);
-
-void
-cmd_data_print_queue_flush(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
-sw_error_t
 cmd_data_check_ac_static_thresh(char *cmd_str, void * val, a_uint32_t size);
 
 void

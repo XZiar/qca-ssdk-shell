@@ -153,7 +153,6 @@ extern "C" {
         SW_IP_MCMODE,
         SW_FLOW_AGE,
         SW_FLOW_CTRL,
-        SW_QUEUE_FLUSH,
         SW_AC_CTRL,
         SW_AC_OBJ,
         SW_STATIC_THRESH,
