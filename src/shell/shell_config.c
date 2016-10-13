@@ -952,7 +952,7 @@ struct cmd_des_t gcmd_des[] =
 	    {"FlowTimeslot", "get", "Get flow shaper timeslot value", "", SW_API_FLOW_SHAPER_TIMESLOT_GET, NULL},
 	    {"QueueTimeslot", "set", "Set queue shaper timeslot value", " <value>", SW_API_QUEUE_SHAPER_TIMESLOT_SET, NULL},
 	    {"QueueTimeslot", "get", "Get queue shaper timeslot value", "", SW_API_QUEUE_SHAPER_TIMESLOT_GET, NULL},
-	    {"PortToken", "set", "Set port shaper token value", " <port_id> <token value>", SW_API_PORT_SHAPER_TOKEN_NUMBER_SET, NULL}, 
+	    {"PortToken", "set", "Set port shaper token value", " <port_id> <token value>", SW_API_PORT_SHAPER_TOKEN_NUMBER_SET, NULL},
 	    {"PortToken", "get", "Get port shaper token value", "<port_id>", SW_API_PORT_SHAPER_TOKEN_NUMBER_GET, NULL},
 	    {"FlowToken", "set", "Set flow shaper token value", " <flow_id> <token value>", SW_API_FLOW_SHAPER_TOKEN_NUMBER_SET, NULL},
 	    {"FlowToken", "get", "Get flow shaper token value", "<flow_id>", SW_API_FLOW_SHAPER_TOKEN_NUMBER_GET, NULL},
@@ -1010,6 +1010,8 @@ struct cmd_des_t gcmd_des[] =
             {"aclList", "dump", "dump all acl list", "", SW_API_ACL_LIST_DUMP, NULL},
             {"aclRule", "dump", "dump all acl rule", "", SW_API_ACL_RULE_DUMP, NULL},
             {"device",  "reset", "reset device",     "", SW_API_SWITCH_RESET, NULL},
+            {"module_func",  "set", "set the module function bitmap", "<module>", SW_API_MODULE_FUNC_CTRL_SET, NULL},
+            {"module_func",  "get", "set the module function bitmap", "<module>", SW_API_MODULE_FUNC_CTRL_GET, NULL},
             {"ssdk",  "config", "show ssdk configuration",     "", SW_API_SSDK_CFG, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },

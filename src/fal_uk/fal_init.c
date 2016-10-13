@@ -37,3 +37,24 @@ fal_ssdk_cfg(a_uint32_t dev_id, ssdk_cfg_t *ssdk_cfg)
     rv = sw_uk_exec(SW_API_SSDK_CFG, dev_id, ssdk_cfg);
     return rv;
 }
+
+sw_error_t
+fal_module_func_ctrl_set(a_uint32_t dev_id, a_uint32_t module, fal_func_ctrl_t *func_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_MODULE_FUNC_CTRL_SET, dev_id, module, func_ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_module_func_ctrl_get(a_uint32_t dev_id, a_uint32_t module, fal_func_ctrl_t *func_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_MODULE_FUNC_CTRL_GET, dev_id, module, func_ctrl);
+    return rv;
+}
+
+
+

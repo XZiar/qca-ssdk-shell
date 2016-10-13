@@ -35,6 +35,10 @@ get_jump(void);
 sw_data_type_t * cmd_data_type_find(sw_data_type_e type);
 void  cmd_strtol(char *str, a_uint32_t * arg_val);
 
+sw_error_t __cmd_data_check_complex(char *info, char *defval, char *usage,
+				sw_error_t(*chk_func)(), void *arg_val,
+				a_uint32_t size);
+
 sw_error_t cmd_data_check_portid(char *cmdstr, fal_port_t * val, a_uint32_t size);
 
 sw_error_t cmd_data_check_portmap(char *cmdstr, fal_pbmp_t * val, a_uint32_t size);
@@ -760,5 +764,18 @@ cmd_data_print_port_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 
 void
 cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_module(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
+
+void
+cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_func_ctrl(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_func_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
 #endif
 

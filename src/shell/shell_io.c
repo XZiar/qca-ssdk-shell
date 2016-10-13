@@ -296,6 +296,8 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_SHAPER_CONFIG, cmd_data_check_shaper_config, cmd_data_print_shaper_config),
     SW_TYPE_DEF(SW_BMSTHRESH, cmd_data_check_bm_static_thresh, cmd_data_print_bm_static_thresh),
     SW_TYPE_DEF(SW_BMDTHRESH, cmd_data_check_bm_dynamic_thresh, cmd_data_print_bm_dynamic_thresh),
+    SW_TYPE_DEF(SW_MODULE, cmd_data_check_module, cmd_data_print_module),
+    SW_TYPE_DEF(SW_FUNC_CTRL, cmd_data_check_func_ctrl, cmd_data_print_func_ctrl),
 };
 
 sw_data_type_t *
@@ -5516,13 +5518,158 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                                    sizeof (a_bool_t)));
     if (A_TRUE == tmpdata)
     {
-        cmd_data_check_element("bypass bitmap", NULL,
-                               "usage: the format is HEX \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0xffffffff,
-                                       0x0));
-        entry->bypass_bitmap = tmpdata;
+	cmd_data_check_element("bypass in vlan miss", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_IN_VLAN_MISS);
+	}
 
-        FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_BYPASS_BITMAP);
+	cmd_data_check_element("bypass source guard", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_SOUCE_GUARD);
+	}
+
+	cmd_data_check_element("bypass MRU/MTU check", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_MRU_MTU_CHECK);
+	}
+
+	cmd_data_check_element("bypass egress VSI member check", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_VSI_MEMBER_CHECK);
+	}
+
+	cmd_data_check_element("bypass egress vlan translation", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_VLAN_TRANSLATION);
+	}
+
+	cmd_data_check_element("bypass egress vlan tag control", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_VLAN_TAG_CTRL);
+	}
+
+	cmd_data_check_element("bypass fdb learning", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_FDB_LEARNING);
+	}
+
+	cmd_data_check_element("bypass fdb refresh", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_FDB_REFRESH);
+	}
+
+	cmd_data_check_element("bypass L2 security", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L2_SECURITY);
+	}
+
+	cmd_data_check_element("bypass management forward", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_MANAGEMENT_FWD);
+	}
+
+	cmd_data_check_element("bypass L2 forward", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L2_FWD);
+	}
+
+
+	cmd_data_check_element("bypass ingress STP check", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_IN_STP_CHECK);
+	}
+
+	cmd_data_check_element("bypass egress STP check", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_STP_CHECK);
+	}
+
+	cmd_data_check_element("bypass source filter", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_SOURCE_FILTER);
+	}
+
+	cmd_data_check_element("bypass policer", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_POLICYER);
+	}
+
+	cmd_data_check_element("bypass L2 edit", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L2_EDIT);
+	}
+
+	cmd_data_check_element("bypass L3 edit", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L3_EDIT);
+	}
+
+	cmd_data_check_element("bypass post acl routing check", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_POST_ACL_CHECK_ROUTING);
+	}
+
+	cmd_data_check_element("bypass port isolation", "no", "usage: <yes/no/y/n>\n",
+			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+			   sizeof (a_bool_t)));
+	if (tmpdata)
+	{
+		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_PORT_ISOLATION);
+	}
     }
 
     /*enqueue priority action configuration */
@@ -5717,6 +5864,29 @@ sleep(1);
     return SW_OK;
 }
 
+static void cmd_data_print_acl_bypass_bitmap(a_uint32_t bitmap)
+{
+        dprintf("\t[bypass_in_vlan_miss]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_IN_VLAN_MISS)&0x1);
+        dprintf("\t[bypass_source_guard]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_SOUCE_GUARD)&0x1);
+        dprintf("\t[bypass_mru_mtu_check]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_MRU_MTU_CHECK)&0x1);
+        dprintf("\t[bypass_eg_vsi_member_check]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_EG_VSI_MEMBER_CHECK)&0x1);
+        dprintf("\t[bypass_eg_vlan_translation]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_EG_VLAN_TRANSLATION)&0x1);
+        dprintf("\t[bypass_eg_vlan_tag_ctrl]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_EG_VLAN_TAG_CTRL)&0x1);
+        dprintf("\t[bypass_fdb_learning]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_FDB_LEARNING)&0x1);
+        dprintf("\t[bypass_fdb_refresh]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_FDB_REFRESH)&0x1);
+        dprintf("\t[bypass_l2_security]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_L2_SECURITY)&0x1);
+        dprintf("\t[bypass_management_fwd]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_MANAGEMENT_FWD)&0x1);
+        dprintf("\t[bypass_l2_fwd]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_L2_FWD)&0x1);
+        dprintf("\t[bypass_in_stp_check]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_IN_STP_CHECK)&0x1);
+        dprintf("\t[bypass_eg_stp_check]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_EG_STP_CHECK)&0x1);
+        dprintf("\t[bypass_source_filter]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_SOURCE_FILTER)&0x1);
+        dprintf("\t[bypass_policer]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_POLICYER)&0x1);
+        dprintf("\t[bypass_l2_edit]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_L2_EDIT)&0x1);
+        dprintf("\t[bypass_l3_edit]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_L3_EDIT)&0x1);
+        dprintf("\t[bypass_post_acl_check_routing]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_POST_ACL_CHECK_ROUTING)&0x1);
+        dprintf("\t[bypass_port_isolation]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_PORT_ISOLATION)&0x1);
+	return;
+}
 void
 cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
                        a_uint32_t size)
@@ -6314,9 +6484,10 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
         dprintf("\n[trigger_intr]:yes");
     }
 
-    if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_BYPASS_BITMAP))
+    if (rule->bypass_bitmap != 0)
     {
-        dprintf("\n[bypass_bitmap]:0x%x", rule->bypass_bitmap);
+        dprintf("\n[bypass_bitmap]:0x%x\n", rule->bypass_bitmap);
+        cmd_data_print_acl_bypass_bitmap(rule->bypass_bitmap);
     }
 
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_ENQUEUE_PRI))

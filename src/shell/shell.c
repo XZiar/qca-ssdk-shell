@@ -196,6 +196,10 @@ cmd_api_output(sw_api_param_t *pp, a_uint32_t nr_param, a_uint32_t * args)
                 if (data_type->show_func)
                 {
                     data_type->show_func(pptmp->param_name, pbuf, pptmp->data_size);
+                    if(strcmp(pptmp->param_name, "Function bitmap") == 0)
+                    {
+			cmd_data_print_module_func_ctrl(args[3], (fal_func_ctrl_t *)pbuf);
+                    }
                 }
                 else
                 {
@@ -290,7 +294,7 @@ cmd_parse_api(char **cmd_str, a_uint32_t * arg_val)
 	    	if (get_jump())
 	    		jump += get_jump() -1;
 	    }
-	    
+
             }
         }
     }
