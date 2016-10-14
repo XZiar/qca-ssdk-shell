@@ -28,6 +28,14 @@ extern "C" {
 #include "fal/fal_type.h"
 
 
+enum {
+	FUNC_PPPOE_SESSION_TABLE_ADD = 0,
+	FUNC_PPPOE_SESSION_TABLE_DEL,
+	FUNC_PPPOE_SESSION_TABLE_GET,
+	FUNC_PPPOE_EN_SET,
+	FUNC_PPPOE_EN_GET,
+};
+
 typedef struct
 {
 	a_uint32_t entry_id;

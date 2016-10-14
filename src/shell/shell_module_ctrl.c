@@ -78,6 +78,10 @@ cmd_data_check_module(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
         *arg_val = FAL_MODULE_QOS;
     } else if (!strcasecmp(cmd_str, "bm")) {
         *arg_val = FAL_MODULE_BM;
+    } else if (!strcasecmp(cmd_str, "servcode")) {
+        *arg_val = FAL_MODULE_SERVCODE;
+    } else if (!strcasecmp(cmd_str, "pppoe")) {
+        *arg_val = FAL_MODULE_PPPOE;
     }
     else
     {
@@ -105,6 +109,10 @@ cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
         dprintf("qos");
     } else if (*(a_uint32_t *) buf == FAL_MODULE_BM) {
         dprintf("bm");
+    } else if (*(a_uint32_t *) buf == FAL_MODULE_SERVCODE) {
+        dprintf("servcode");
+    } else if (*(a_uint32_t *) buf == FAL_MODULE_PPPOE) {
+        dprintf("pppoe");
     }
 }
 
@@ -351,6 +359,57 @@ static void cmd_data_print_bm_func_ctrl(fal_func_ctrl_t *p)
 	return;
 }
 
+static void cmd_data_print_servcode_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_EGRESS_SERVICE_PROFILE_GET+1] ={
+		"FUNC_PARSE_SERVICE_PROFILE_SET",
+		"FUNC_PARSE_SERVICE_PROFILE_GET",
+		"FUNC_INGRESS_SERVICE_PROFILE_SET",
+		"FUNC_INGRESS_SERVICE_PROFILE_GET",
+		"FUNC_EGRESS_SERVICE_PROFILE_SET",
+		"FUNC_EGRESS_SERVICE_PROFILE_GET",
+	};
+
+	for(func = FUNC_PARSE_SERVICE_PROFILE_SET; func <= FUNC_EGRESS_SERVICE_PROFILE_GET; func++)
+	{
+		if(p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
+static void cmd_data_print_pppoe_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_PPPOE_EN_GET+1] ={
+		"FUNC_PPPOE_SESSION_TABLE_ADD",
+		"FUNC_PPPOE_SESSION_TABLE_DEL",
+		"FUNC_PPPOE_SESSION_TABLE_GET",
+		"FUNC_PPPOE_EN_SET",
+		"FUNC_PPPOE_EN_GET"
+	};
+
+	for(func = FUNC_PPPOE_SESSION_TABLE_ADD; func <= FUNC_PPPOE_EN_GET; func++)
+	{
+		if(p->bitmap[0] & (1 << func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
 
 void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 {
@@ -367,6 +426,10 @@ void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 		cmd_data_print_qos_func_ctrl(p);
 	} else if (module == FAL_MODULE_BM) {
 		cmd_data_print_bm_func_ctrl(p);
+	} else if (module == FAL_MODULE_SERVCODE) {
+		cmd_data_print_servcode_func_ctrl(p);
+	} else if (module == FAL_MODULE_PPPOE) {
+		cmd_data_print_pppoe_func_ctrl(p);
 	}
 
 	return;
