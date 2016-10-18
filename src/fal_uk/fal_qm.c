@@ -323,3 +323,42 @@ fal_ucast_default_hash_get(
     return rv;
 }
 
+sw_error_t
+fal_queue_counter_ctrl_set(a_uint32_t dev_id, a_bool_t cnt_en)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QUEUE_CNT_CTRL_SET, dev_id, cnt_en);
+    return rv;
+}
+
+sw_error_t
+fal_queue_counter_ctrl_get(a_uint32_t dev_id, a_bool_t *cnt_en)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QUEUE_CNT_CTRL_GET, dev_id, cnt_en);
+    return rv;
+}
+
+sw_error_t
+fal_queue_counter_get(
+		a_uint32_t dev_id,
+		a_uint32_t queue_id,
+		fal_queue_stats_t *info)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QUEUE_CNT_GET, dev_id, queue_id, info);
+    return rv;
+}
+
+sw_error_t
+fal_queue_counter_cleanup(a_uint32_t dev_id, a_uint32_t queue_id)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QUEUE_CNT_CLEANUP, dev_id, queue_id);
+    return rv;
+}
+

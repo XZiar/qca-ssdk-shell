@@ -300,6 +300,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_BMDTHRESH, cmd_data_check_bm_dynamic_thresh, cmd_data_print_bm_dynamic_thresh),
     SW_TYPE_DEF(SW_MODULE, cmd_data_check_module, cmd_data_print_module),
     SW_TYPE_DEF(SW_FUNC_CTRL, cmd_data_check_func_ctrl, cmd_data_print_func_ctrl),
+    SW_TYPE_DEF(SW_QM_CNT, NULL, cmd_data_print_queue_cnt),
 };
 
 sw_data_type_t *
@@ -17361,6 +17362,17 @@ cmd_data_print_bm_static_thresh(a_uint8_t * param_name, a_uint32_t * buf, a_uint
 
     dprintf("\n[max_thresh]:0x%x [resume_off]:0x%x ",
 			entry->max_thresh, entry->resume_off);
+}
+
+sw_error_t
+cmd_data_print_queue_cnt(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_queue_stats_t *entry;
+
+    entry = (fal_queue_stats_t *) buf;
+
+    dprintf("\n[tx_packets]:0x%x [tx_bytes]:0x%llx [pending_buff_num]:0x%x ",
+			entry->tx_packets, entry->tx_bytes, entry->pending_buff_num);
 }
 
 sw_error_t

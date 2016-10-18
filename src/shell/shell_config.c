@@ -909,6 +909,10 @@ struct cmd_des_t gcmd_des[] =
 	    {"acdthresh", "get", "get ac dynamic thresh", "", SW_API_DYNAMIC_THRESH_GET, NULL},
 	    {"acgbuff", "set", "set ac group buffer", "", SW_API_GOURP_BUFFER_SET, NULL},
 	    {"acgbuff", "get", "get ac group buffer", "", SW_API_GOURP_BUFFER_GET, NULL},
+	    {"cntctrl", "get", "get queue counter enable flag", "", SW_API_QUEUE_CNT_CTRL_GET, NULL},
+	    {"cntctrl", "set", "set queue counter enable flag", "", SW_API_QUEUE_CNT_CTRL_SET, NULL},
+	    {"cnt", "get", "get queue counter", "", SW_API_QUEUE_CNT_GET, NULL},
+	    {"cnt", "cleanup", "cleanup queue counter", "", SW_API_QUEUE_CNT_CLEANUP, NULL},
 	    {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },

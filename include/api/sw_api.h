@@ -196,6 +196,7 @@ extern "C" {
         SW_BMDTHRESH,
         SW_MODULE,
         SW_FUNC_CTRL,
+        SW_QM_CNT,
 } sw_data_type_e;
 
     typedef struct

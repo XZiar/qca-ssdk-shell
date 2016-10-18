@@ -274,7 +274,7 @@ static void cmd_data_print_flow_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_qm_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_AC_GROUP_BUFFER_SET+1] ={
+	char *func_name[FUNC_QUEUE_COUNTER_CTRL_SET+1] ={
 		"FUNC_UCAST_HASH_MAP_SET",
 		"FUNC_AC_DYNAMIC_THRESHOLD_GET",
 		"FUNC_UCAST_QUEUE_BASE_PROFILE_GET",
@@ -299,10 +299,14 @@ static void cmd_data_print_qm_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_UCAST_PRIORITY_CLASS_SET",
 		"FUNC_AC_STATIC_THRESHOLD_GET",
 		"FUNC_UCAST_QUEUE_BASE_PROFILE_SET",
-		"FUNC_AC_GROUP_BUFFER_SET"
+		"FUNC_AC_GROUP_BUFFER_SET",
+		"FUNC_QUEUE_COUNTER_CLEANUP",
+		"FUNC_QUEUE_COUNTER_GET",
+		"FUNC_QUEUE_COUNTER_CTRL_GET",
+		"FUNC_QUEUE_COUNTER_CTRL_SET"
 	};
 
-	for(func = FUNC_UCAST_HASH_MAP_SET; func <= FUNC_AC_GROUP_BUFFER_SET; func++)
+	for(func = FUNC_UCAST_HASH_MAP_SET; func <= FUNC_QUEUE_COUNTER_CTRL_SET; func++)
 	{
 		if(p->bitmap[0] & (1 << func))
 		{

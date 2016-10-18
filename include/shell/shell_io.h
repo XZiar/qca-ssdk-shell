@@ -576,6 +576,9 @@ void
 cmd_data_print_bm_static_thresh(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
+cmd_data_print_queue_cnt(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
 cmd_data_check_bm_dynamic_thresh(char *cmd_str, void * val, a_uint32_t size);
 
 void
