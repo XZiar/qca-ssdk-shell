@@ -6531,6 +6531,7 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
     }
 
     dprintf("\n[match_counter]:%d", rule->match_cnt);
+    dprintf("\n[match_bytes]:%lld", rule->match_bytes);
 
     return;
 }

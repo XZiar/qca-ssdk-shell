@@ -65,9 +65,10 @@ cmd_data_check_module(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
     if (cmd_str == NULL)
         return SW_BAD_PARAM;
 
-    if (!strcasecmp(cmd_str, "acl"))
-    {
+    if (!strcasecmp(cmd_str, "acl")){
         *arg_val = FAL_MODULE_ACL;
+    } else if (!strcasecmp(cmd_str, "vsi")) {
+        *arg_val = FAL_MODULE_VSI;
     } else if (!strcasecmp(cmd_str, "ip")) {
         *arg_val = FAL_MODULE_IP;
     } else if (!strcasecmp(cmd_str, "flow")) {
@@ -96,10 +97,11 @@ cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 {
     dprintf("[%s]:", param_name);
 
-    if (*(a_uint32_t *) buf == FAL_MODULE_ACL)
-    {
+    if (*(a_uint32_t *) buf == FAL_MODULE_ACL){
         dprintf("acl");
-    } else if (*(a_uint32_t *) buf == FAL_MODULE_IP) {
+    } else if (*(a_uint32_t *) buf == FAL_MODULE_VSI) {
+        dprintf("vsi");
+    }else if (*(a_uint32_t *) buf == FAL_MODULE_IP) {
         dprintf("ip");
     } else if (*(a_uint32_t *) buf == FAL_MODULE_FLOW) {
         dprintf("flow");
@@ -134,6 +136,36 @@ static void cmd_data_print_acl_func_ctrl(fal_func_ctrl_t *p)
 	};
 
 	for(func = FUNC_ACL_LIST_CREAT; func <= FUNC_ACL_UDF_PROFILE_GET; func++)
+	{
+		if(p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
+static void cmd_data_print_vsi_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_VSI_MEMBER_GET+1] ={
+		"FUNC_PORT_VLAN_VSI_SET",
+		"FUNC_PORT_VLAN_VSI_GET",
+		"FUNC_PORT_VSI_SET",
+		"FUNC_PORT_VSI_GET",
+		"FUNC_VSI_STAMOVE_SET",
+		"FUNC_VSI_STAMOVE_GET",
+		"FUNC_VSI_NEWADDR_LRN_SET",
+		"FUNC_VSI_NEWADDR_LRN_GET",
+		"FUNC_VSI_MEMBER_SET",
+		"FUNC_VSI_MEMBER_GET",
+	};
+
+	for(func = FUNC_PORT_VLAN_VSI_SET; func <= FUNC_VSI_MEMBER_GET; func++)
 	{
 		if(p->bitmap[0] & (1<<func))
 		{
@@ -413,12 +445,13 @@ static void cmd_data_print_pppoe_func_ctrl(fal_func_ctrl_t *p)
 
 void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 {
-	if(module == FAL_MODULE_ACL)
-	{
+	if(module == FAL_MODULE_ACL){
 		cmd_data_print_acl_func_ctrl(p);
 	} else if (module == FAL_MODULE_IP) {
 		cmd_data_print_ip_func_ctrl(p);
-	} else if (module == FAL_MODULE_FLOW) {
+	} else if (module == FAL_MODULE_VSI) {
+		cmd_data_print_vsi_func_ctrl(p);
+	}else if (module == FAL_MODULE_FLOW) {
 		cmd_data_print_flow_func_ctrl(p);
 	} else if (module == FAL_MODULE_QM) {
 		cmd_data_print_qm_func_ctrl(p);

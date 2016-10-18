@@ -47,6 +47,19 @@ typedef struct{
 	a_uint32_t bc_ports;/*VSI member ports for broadcast*/
 }fal_vsi_member_t;
 
+enum{
+	FUNC_PORT_VLAN_VSI_SET,
+	FUNC_PORT_VLAN_VSI_GET,
+	FUNC_PORT_VSI_SET,
+	FUNC_PORT_VSI_GET,
+	FUNC_VSI_STAMOVE_SET,
+	FUNC_VSI_STAMOVE_GET,
+	FUNC_VSI_NEWADDR_LRN_SET,
+	FUNC_VSI_NEWADDR_LRN_GET,
+	FUNC_VSI_MEMBER_SET,
+	FUNC_VSI_MEMBER_GET,
+};
+
 sw_error_t
 fal_vsi_alloc(a_uint32_t dev_id, a_uint32_t *vsi);
 
@@ -56,8 +69,8 @@ fal_vsi_free(a_uint32_t dev_id, a_uint32_t vsi);
 sw_error_t
 fal_port_vsi_set(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t vsi_id);
 
-sw_error_t fal_port_vsi_get(a_uint32_t dev_id,
-				fal_port_t port_id, a_uint32_t *vsi_id);
+sw_error_t
+fal_port_vsi_get(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t *vsi_id);
 
 sw_error_t
 fal_port_vlan_vsi_set(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t stag_vid, a_uint32_t ctag_vid, a_uint32_t vsi_id);
@@ -81,10 +94,10 @@ sw_error_t
 fal_vsi_stamove_get(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_stamove_t *stamove);
 
 sw_error_t
-fal_vsi_member_get(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_member_t *vsi_member);
+fal_vsi_member_set(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_member_t *vsi_member);
 
 sw_error_t
-fal_vsi_member_set(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_member_t *vsi_member);
+fal_vsi_member_get(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_member_t *vsi_member);
 
 
 #ifdef __cplusplus

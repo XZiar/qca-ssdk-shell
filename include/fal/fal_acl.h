@@ -500,6 +500,7 @@ enum{
         a_uint8_t             int_dp;
         a_uint8_t             service_code;
         a_uint8_t             cpu_code;
+        a_uint64_t            match_bytes;
     } fal_acl_rule_t;
 
 
@@ -578,7 +579,7 @@ fal_acl_rule_dump(a_uint32_t dev_id);
 sw_error_t
 fal_acl_port_udf_profile_set(a_uint32_t dev_id, fal_port_t port_id, fal_acl_udf_type_t udf_type, a_uint32_t offset, a_uint32_t length);
 sw_error_t
-fal_acl_port_udf_profile_get(a_uint32_t dev_id, fal_port_t port_id,	 fal_acl_udf_type_t udf_type, a_uint32_t * offset, a_uint32_t * length);
+fal_acl_port_udf_profile_get(a_uint32_t dev_id, fal_port_t port_id, fal_acl_udf_type_t udf_type, a_uint32_t * offset, a_uint32_t * length);
 
 sw_error_t
 fal_acl_udf_profile_set(a_uint32_t dev_id, fal_acl_udf_pkt_type_t pkt_type,a_uint32_t udf_idx, fal_acl_udf_type_t udf_type, a_uint32_t offset);
