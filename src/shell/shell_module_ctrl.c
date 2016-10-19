@@ -83,7 +83,11 @@ cmd_data_check_module(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
         *arg_val = FAL_MODULE_SERVCODE;
     } else if (!strcasecmp(cmd_str, "pppoe")) {
         *arg_val = FAL_MODULE_PPPOE;
-    }
+    } else if (!strcasecmp(cmd_str, "portctrl")) {
+		*arg_val = FAL_MODULE_PORTCTRL;
+	} else if (!strcasecmp(cmd_str, "shaper")) {
+		*arg_val = FAL_MODULE_SHAPER;
+	}
     else
     {
         return SW_BAD_VALUE;
@@ -115,7 +119,11 @@ cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
         dprintf("servcode");
     } else if (*(a_uint32_t *) buf == FAL_MODULE_PPPOE) {
         dprintf("pppoe");
-    }
+    } else if (*(a_uint32_t *) buf == FAL_MODULE_PORTCTRL) {
+		dprintf("portctrl");
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_SHAPER) {
+		dprintf("shaper");
+	}
 }
 
 static void cmd_data_print_acl_func_ctrl(fal_func_ctrl_t *p)
@@ -442,6 +450,143 @@ static void cmd_data_print_pppoe_func_ctrl(fal_func_ctrl_t *p)
 	return;
 }
 
+static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_ADPT_PORT_SOURCE_FILTER_SET+1] ={
+		"FUNC_ADPT_PORT_LOCAL_LOOPBACK_GET",
+		"FUNC_ADPT_PORT_AUTONEG_RESTART",
+		"FUNC_ADPT_PORT_DUPLEX_SET",
+		"FUNC_ADPT_PORT_RXMAC_STATUS_GET",
+		"FUNC_ADPT_PORT_CDT",
+		"FUNC_ADPT_PORT_TXMAC_STATUS_SET",
+		"FUNC_ADPT_PORT_COMBO_FIBER_MODE_SET",
+		"FUNC_ADPT_PORT_COMBO_MEDIUM_STATUS_GET",
+		"FUNC_ADPT_PORT_MAGIC_FRAME_MAC_SET",
+		"FUNC_ADPT_PORT_POWERSAVE_SET",
+		"FUNC_ADPT_PORT_HIBERNATE_SET",
+		"FUNC_ADPT_PORT_8023AZ_GET",
+		"FUNC_ADPT_PORT_RXFC_STATUS_GET",
+		"FUNC_ADPT_PORT_TXFC_STATUS_GET",
+		"FUNC_ADPT_PORT_REMOTE_LOOPBACK_SET",
+		"FUNC_ADPT_PORT_FLOWCTRL_SET",
+		"FUNC_ADPT_PORT_MRU_SET",
+		"FUNC_ADPT_PORT_AUTONEG_STATUS_GET",
+		"FUNC_ADPT_PORT_TXMAC_STATUS_GET",
+		"FUNC_ADPT_PORT_MDIX_GET",
+		"FUNC_ADPT_PORTS_LINK_STATUS_GET",
+		"FUNC_ADPT_PORT_MAC_LOOPBACK_SET",
+		"FUNC_ADPT_PORT_PHY_ID_GET",
+		"FUNC_ADPT_PORT_MRU_GET",
+		"FUNC_ADPT_PORT_POWER_ON",
+		"FUNC_ADPT_PORT_SPEED_SET",
+		"FUNC_ADPT_PORT_INTERFACE_MODE_GET",
+		"FUNC_ADPT_PORT_DUPLEX_GET",
+		"FUNC_ADPT_PORT_AUTONEG_ADV_GET",
+		"FUNC_ADPT_PORT_MDIX_STATUS_GET",
+		"FUNC_ADPT_PORT_MTU_SET",
+		"FUNC_ADPT_PORT_LINK_STATUS_GET",
+		"FUNC_ADPT_PORT_8023AZ_SET",
+		"FUNC_ADPT_PORT_POWERSAVE_GET",
+		"FUNC_ADPT_PORT_COMBO_PREFER_MEDIUM_GET",
+		"FUNC_ADPT_PORT_COMBO_PREFER_MEDIUM_SET",
+		"FUNC_ADPT_PORT_POWER_OFF",
+		"FUNC_ADPT_PORT_TXFC_STATUS_SET",
+		"FUNC_ADPT_PORT_COUNTER_SET",
+		"FUNC_ADPT_PORT_COMBO_FIBER_MODE_GET",
+		"FUNC_ADPT_PORT_LOCAL_LOOPBACK_SET",
+		"FUNC_ADPT_PORT_WOL_STATUS_SET",
+		"FUNC_ADPT_PORT_MAGIC_FRAME_MAC_GET",
+		"FUNC_ADPT_PORT_FLOWCTRL_GET",
+		"FUNC_ADPT_PORT_RXMAC_STATUS_SET",
+		"FUNC_ADPT_PORT_COUNTER_GET",
+		"FUNC_ADPT_PORT_INTERFACE_MODE_SET",
+		"FUNC_ADPT_PORT_MAC_LOOPBACK_GET",
+		"FUNC_ADPT_PORT_HIBERNATE_GET",
+		"FUNC_ADPT_PORT_AUTONEG_ADV_SET",
+		"FUNC_ADPT_PORT_REMOTE_LOOPBACK_GET",
+		"FUNC_ADPT_PORT_COUNTER_SHOW",
+		"FUNC_ADPT_PORT_AUTONEG_ENABLE",
+		"FUNC_ADPT_PORT_MTU_GET",
+		"FUNC_ADPT_PORT_INTERFACE_MODE_STATUS_GET",
+		"FUNC_ADPT_PORT_RESET",
+		"FUNC_ADPT_PORT_RXFC_STATUS_SET",
+		"FUNC_ADPT_PORT_SPEED_GET",
+		"FUNC_ADPT_PORT_MDIX_SET",
+		"FUNC_ADPT_PORT_WOL_STATUS_GET",
+		"FUNC_ADPT_PORT_MAX_FRAME_SIZE_SET",
+		"FUNC_ADPT_PORT_MAX_FRAME_SIZE_GET",
+		"FUNC_ADPT_PORT_SOURCE_FILTER_GET",
+		"FUNC_ADPT_PORT_SOURCE_FILTER_SET",
+	};
+
+	for(func = FUNC_ADPT_PORT_LOCAL_LOOPBACK_GET; func <= FUNC_ADPT_PORT_LINK_STATUS_GET; func++)
+	{
+		if(p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+
+	for(func = FUNC_ADPT_PORT_8023AZ_SET; func <= FUNC_ADPT_PORT_SOURCE_FILTER_SET; func++)
+	{
+		if(p->bitmap[1] & (1<< (func % 32)))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+
+	return;
+}
+
+static void cmd_data_print_shaper_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_ADPT_SHAPER_IPG_PREAMBLE_LENGTH_GET+1] ={
+		"FUNC_ADPT_FLOW_SHAPER_SET",
+		"FUNC_ADPT_QUEUE_SHAPER_GET",
+		"FUNC_ADPT_QUEUE_SHAPER_TOKEN_NUMBER_SET",
+		"FUNC_ADPT_PORT_SHAPER_GET",
+		"FUNC_ADPT_FLOW_SHAPER_TIME_SLOT_GET",
+		"FUNC_ADPT_PORT_SHAPER_TIME_SLOT_GET",
+		"FUNC_ADPT_FLOW_SHAPER_TIME_SLOT_SET",
+		"FUNC_ADPT_PORT_SHAPER_TOKEN_NUMBER_SET",
+		"FUNC_ADPT_QUEUE_SHAPER_TOKEN_NUMBER_GET",
+		"FUNC_ADPT_QUEUE_SHAPER_TIME_SLOT_GET",
+		"FUNC_ADPT_PORT_SHAPER_TOKEN_NUMBER_GET",
+		"FUNC_ADPT_FLOW_SHAPER_TOKEN_NUMBER_SET",
+		"FUNC_ADPT_FLOW_SHAPER_TOKEN_NUMBER_GET",
+		"FUNC_ADPT_PORT_SHAPER_SET",
+		"FUNC_ADPT_PORT_SHAPER_TIME_SLOT_SET",
+		"FUNC_ADPT_FLOW_SHAPER_GET",
+		"FUNC_ADPT_QUEUE_SHAPER_SET",
+		"FUNC_ADPT_QUEUE_SHAPER_TIME_SLOT_SET",
+		"FUNC_ADPT_SHAPER_IPG_PREAMBLE_LENGTH_SET",
+		"FUNC_ADPT_SHAPER_IPG_PREAMBLE_LENGTH_GET",
+
+	};
+
+	for(func = FUNC_ADPT_FLOW_SHAPER_SET; func <= FUNC_ADPT_SHAPER_IPG_PREAMBLE_LENGTH_GET; func++)
+	{
+		if(p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
 
 void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 {
@@ -463,6 +608,10 @@ void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 		cmd_data_print_servcode_func_ctrl(p);
 	} else if (module == FAL_MODULE_PPPOE) {
 		cmd_data_print_pppoe_func_ctrl(p);
+	} else if (module == FAL_MODULE_PORTCTRL) {
+		cmd_data_print_port_ctrl_func_ctrl(p);
+	} else if (module == FAL_MODULE_SHAPER) {
+		cmd_data_print_shaper_func_ctrl(p);
 	}
 
 	return;
