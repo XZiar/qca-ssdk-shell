@@ -87,7 +87,9 @@ cmd_data_check_module(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
 		*arg_val = FAL_MODULE_PORTCTRL;
 	} else if (!strcasecmp(cmd_str, "shaper")) {
 		*arg_val = FAL_MODULE_SHAPER;
-	}
+	} else if (!strcasecmp(cmd_str, "mib")){
+		*arg_val = FAL_MODULE_MIB;
+    }
     else
     {
         return SW_BAD_VALUE;
@@ -123,7 +125,9 @@ cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		dprintf("portctrl");
 	} else if (*(a_uint32_t *) buf == FAL_MODULE_SHAPER) {
 		dprintf("shaper");
-	}
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_MIB) {
+		dprintf("mib");
+    }
 }
 
 static void cmd_data_print_acl_func_ctrl(fal_func_ctrl_t *p)
@@ -268,6 +272,34 @@ static void cmd_data_print_flow_func_ctrl(fal_func_ctrl_t *p)
 	for(func = FUNC_FLOW_HOST_ADD; func <= FUNC_FLOW_GLOBAL_CFG_SET; func++)
 	{
 		if(p->bitmap[0] & (1 << func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
+static void cmd_data_print_mib_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_MIB_CPUKEEP_GET+1] ={
+		"FUNC_GET_MIB_INFO",
+		"FUNC_GET_RX_MIB_INFO",
+		"FUNC_GET_TX_MIB_INFO",
+		"FUNC_MIB_STATUS_SET",
+		"FUNC_MIB_STATUS_GET",
+		"FUNC_MIB_PORT_FLUSH_COUNTERS",
+		"FUNC_MIB_CPUKEEP_SET",
+		"FUNC_MIB_CPUKEEP_GET",
+	};
+
+	for(func = FUNC_GET_MIB_INFO; func <= FUNC_MIB_CPUKEEP_GET; func++)
+	{
+		if(p->bitmap[0] & (1<<func))
 		{
 			dprintf("%d  %s  registered\n", func, func_name[func]);
 		}
@@ -616,6 +648,8 @@ void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 		cmd_data_print_port_ctrl_func_ctrl(p);
 	} else if (module == FAL_MODULE_SHAPER) {
 		cmd_data_print_shaper_func_ctrl(p);
+	} else if (module == FAL_MODULE_MIB){
+		cmd_data_print_mib_func_ctrl(p);
 	}
 
 	return;
