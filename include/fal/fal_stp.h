@@ -42,6 +42,10 @@ extern "C" {
     }
     fal_stp_state_t;
 
+enum {
+	FUNC_STP_PORT_STATE_SET = 0,
+	FUNC_STP_PORT_STATE_GET,
+};
 
 
     sw_error_t

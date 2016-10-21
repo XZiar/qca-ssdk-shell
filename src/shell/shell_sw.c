@@ -164,6 +164,39 @@ cmd_show_fdb(a_uint32_t *arg_val)
 }
 
 sw_error_t
+cmd_show_ctrlpkt(a_uint32_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t cnt = 0;
+	fal_ctrlpkt_profile_t *ctrlpkt = (fal_ctrlpkt_profile_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+
+	aos_mem_zero(ctrlpkt, sizeof (fal_ctrlpkt_profile_t));
+	arg_val[0] = SW_API_MGMTCTRL_CTRLPKT_PROFILE_GETFIRST;
+
+	while (1)
+	{
+		arg_val[1] = (a_uint32_t) ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = (a_uint32_t) ctrlpkt;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
+		{
+			break;
+		}
+		arg_val[0] = SW_API_MGMTCTRL_CTRLPKT_PROFILE_GETNEXT;
+		cnt++;
+	}
+
+	if((rtn != SW_OK) && (rtn != SW_NO_MORE))
+		cmd_print_error(rtn);
+	else
+		dprintf("\ntotal %d entries\n", cnt);
+
+	return SW_OK;
+}
+
+sw_error_t
 cmd_show_vlan(a_uint32_t *arg_val)
 {
     if (ssdk_cfg.init_cfg.chip_type == CHIP_ISIS) {

@@ -923,12 +923,15 @@ struct cmd_des_t gcmd_des[] =
     {
         "ctrlpkt", "config control packet",
         {
-            {"ethertype", "set", "set ethernet type profile", "<profile_id> <ethernet_type> <enable/disable>", SW_API_ETHERNET_TYPE_PROFILE_SET, NULL},
-            {"ethertype", "get", "get ethernet type profile", "<profile_id>", SW_API_ETHERNET_TYPE_PROFILE_GET, NULL},
-            {"rfdb", "set", "set rfdb profile", "<profile_id> <mac_addr> <enable/disable>", SW_API_RFDB_PROFILE_SET, NULL},
-            {"rfdb", "get", "get rfdb profile", "<profile_id>", SW_API_RFDB_PROFILE_GET, NULL},
-            {"appprofile", "set", "set app profile", "<profile_id> <app_entry>", SW_API_APP_PROFILE_SET, NULL},
-            {"appprofile", "get", "get app profile", "<profile_id>", SW_API_APP_PROFILE_GET, NULL},
+            {"ethertype", "set", "set ethernet type profile", "<profile_id> <ethernet_type>", SW_API_MGMTCTRL_ETHTYPE_PROFILE_SET, NULL},
+            {"ethertype", "get", "get ethernet type profile", "<profile_id>", SW_API_MGMTCTRL_ETHTYPE_PROFILE_GET, NULL},
+            {"rfdb", "set", "set rfdb profile", "<profile_id> <mac_addr>", SW_API_MGMTCTRL_RFDB_PROFILE_SET, NULL},
+            {"rfdb", "get", "get rfdb profile", "<profile_id>", SW_API_MGMTCTRL_RFDB_PROFILE_GET, NULL},
+            {"appprofile", "add", "add app profile entry", "<app_entry>", SW_API_MGMTCTRL_CTRLPKT_PROFILE_ADD, NULL},
+            {"appprofile", "del", "del app profile entry", "<app_entry>", SW_API_MGMTCTRL_CTRLPKT_PROFILE_DEL, NULL},
+            {"appprofile", "getfirst", "get first app profile entry", "", SW_API_MGMTCTRL_CTRLPKT_PROFILE_GETFIRST, NULL},
+            {"appprofile", "getnext", "get next app profile entry", "<app_entry>", SW_API_MGMTCTRL_CTRLPKT_PROFILE_GETNEXT, NULL},
+            {"appprofile", "show", "show whole app profile entries", "", SW_CMD_CTRLPKT_SHOW, cmd_show_ctrlpkt},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },

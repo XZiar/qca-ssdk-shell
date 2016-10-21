@@ -20,64 +20,77 @@
 #include "fal_uk_if.h"
 
 sw_error_t
-fal_ethernet_type_profile_set(a_uint32_t dev_id, a_uint32_t profile_id,
-							a_uint32_t ethernet_type, a_bool_t enable)
+fal_mgmtctrl_ethtype_profile_set(a_uint32_t dev_id, a_uint32_t profile_id, a_uint32_t ethtype)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_ETHERNET_TYPE_PROFILE_SET, dev_id, profile_id,
-                    (a_uint32_t) ethernet_type, (a_uint32_t) enable);
+    rv = sw_uk_exec(SW_API_MGMTCTRL_ETHTYPE_PROFILE_SET, dev_id, profile_id,
+                    (a_uint32_t) ethtype);
     return rv;
 }
 
 sw_error_t
-fal_ethernet_type_profile_get(a_uint32_t dev_id, a_uint32_t profile_id,
-							a_uint32_t *ethernet_type, a_bool_t *enable)
+fal_mgmtctrl_ethtype_profile_get(a_uint32_t dev_id, a_uint32_t profile_id, a_uint32_t * ethtype)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_ETHERNET_TYPE_PROFILE_GET, dev_id, profile_id,
-                    (a_uint32_t) ethernet_type, (a_uint32_t) enable);
+    rv = sw_uk_exec(SW_API_MGMTCTRL_ETHTYPE_PROFILE_GET, dev_id, profile_id,
+                    (a_uint32_t) ethtype);
     return rv;
 }
 
-sw_error_t fal_rfdb_profile_set(a_uint32_t dev_id, a_uint32_t profile_id,
-							fal_mac_addr_t *addr, a_bool_t enable)
+sw_error_t
+fal_mgmtctrl_rfdb_profile_set(a_uint32_t dev_id, a_uint32_t profile_id, fal_mac_addr_t *addr)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_RFDB_PROFILE_SET, dev_id, profile_id,
-                    (a_uint32_t) addr, (a_uint32_t) enable);
+    rv = sw_uk_exec(SW_API_MGMTCTRL_RFDB_PROFILE_SET, dev_id, profile_id,
+                    (a_uint32_t) addr);
     return rv;
 }
 
-sw_error_t fal_rfdb_profile_get(a_uint32_t dev_id, a_uint32_t profile_id,
-							fal_mac_addr_t *addr, a_bool_t *enable)
+sw_error_t
+fal_mgmtctrl_rfdb_profile_get(a_uint32_t dev_id, a_uint32_t profile_id, fal_mac_addr_t *addr)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_RFDB_PROFILE_GET, dev_id, profile_id,
-                    (a_uint32_t) addr, (a_uint32_t) enable);
+    rv = sw_uk_exec(SW_API_MGMTCTRL_RFDB_PROFILE_GET, dev_id, profile_id,
+                    (a_uint32_t) addr);
     return rv;
 }
 
-sw_error_t fal_ctrlpkt_profile_set(a_uint32_t dev_id, a_uint32_t profile_id,
-							fal_ctrlpkt_profile_t *ctrlpkt)
+sw_error_t
+fal_mgmtctrl_ctrlpkt_profile_add(a_uint32_t dev_id, fal_ctrlpkt_profile_t *ctrlpkt)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_APP_PROFILE_SET, dev_id, profile_id,
-							(a_uint32_t) ctrlpkt);
+    rv = sw_uk_exec(SW_API_MGMTCTRL_CTRLPKT_PROFILE_ADD, dev_id, (a_uint32_t) ctrlpkt);
     return rv;
 }
 
-sw_error_t fal_ctrlpkt_profile_get(a_uint32_t dev_id, a_uint32_t profile_id,
-							fal_ctrlpkt_profile_t *ctrlpkt)
+sw_error_t
+fal_mgmtctrl_ctrlpkt_profile_del(a_uint32_t dev_id, fal_ctrlpkt_profile_t *ctrlpkt)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_APP_PROFILE_GET, dev_id, profile_id,
-							(a_uint32_t) ctrlpkt);
+    rv = sw_uk_exec(SW_API_MGMTCTRL_CTRLPKT_PROFILE_DEL, dev_id, (a_uint32_t) ctrlpkt);
     return rv;
 }
 
+sw_error_t
+fal_mgmtctrl_ctrlpkt_profile_getfirst(a_uint32_t dev_id, fal_ctrlpkt_profile_t *ctrlpkt)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_MGMTCTRL_CTRLPKT_PROFILE_GETFIRST, dev_id, (a_uint32_t) ctrlpkt);
+    return rv;
+}
+
+sw_error_t
+fal_mgmtctrl_ctrlpkt_profile_getnext(a_uint32_t dev_id, fal_ctrlpkt_profile_t *ctrlpkt)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_MGMTCTRL_CTRLPKT_PROFILE_GETNEXT, dev_id, (a_uint32_t) ctrlpkt);
+    return rv;
+}

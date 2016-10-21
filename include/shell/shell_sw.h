@@ -36,6 +36,7 @@ extern "C" {
     sw_error_t cmd_show_intfmac(a_uint32_t *arg_val);
     sw_error_t cmd_show_pubaddr(a_uint32_t *arg_val);
 	sw_error_t cmd_show_flow(a_uint32_t *arg_val);
+    sw_error_t cmd_show_ctrlpkt(a_uint32_t *arg_val);
 
 #ifdef __cplusplus
 }

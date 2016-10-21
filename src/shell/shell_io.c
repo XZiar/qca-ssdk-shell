@@ -22214,34 +22214,6 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
 
     memset(pEntry, 0, sizeof(fal_ctrlpkt_profile_t));
 
-    /* get valid field */
-    do
-    {
-        cmd = get_sub_cmd("valid", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->valid),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
-                dprintf("usage: <yes/no/y/n>\n");
-        }
-    }
-    while (talk_mode && (SW_OK != rv));
-
-    if (pEntry->valid == A_FALSE)
-		return SW_OK;
-
     /* get port bitmap */
     do
     {
@@ -22334,7 +22306,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_type.mgt_eapol),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_types.mgt_eapol),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22359,7 +22331,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_type.mgt_pppoe),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_types.mgt_pppoe),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22384,7 +22356,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_type.mgt_igmp),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_types.mgt_igmp),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22409,7 +22381,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_type.mgt_arp_req),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_types.mgt_arp_req),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22434,7 +22406,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_type.mgt_arp_rep),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_types.mgt_arp_rep),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22459,7 +22431,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_type.mgt_dhcp4),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_types.mgt_dhcp4),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22484,7 +22456,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_type.mgt_dhcp6),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_types.mgt_dhcp6),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22509,7 +22481,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_type.mgt_mld),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_types.mgt_mld),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22535,7 +22507,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_type.mgt_ns),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_types.mgt_ns),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22560,7 +22532,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_type.mgt_na),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_types.mgt_na),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22571,7 +22543,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get forward command */
     do
     {
-        cmd = get_sub_cmd("fwd cmd", "forward");
+        cmd = get_sub_cmd("forward action", "forward");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22585,7 +22557,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_maccmd(cmd, &(pEntry->cmd.cmd), sizeof(a_uint32_t));
+            rv = cmd_data_check_maccmd(cmd, &(pEntry->action.action), sizeof(a_uint32_t));
             if (SW_OK != rv)
                 dprintf("usage: forward/drop/rdtcpu/cpycpu\n");
         }
@@ -22594,7 +22566,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get sg_byp */
     do
     {
-        cmd = get_sub_cmd("check sg_byp", "no");
+        cmd = get_sub_cmd("check sg_bypass", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22608,7 +22580,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->cmd.in_stg_byp),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->action.sg_bypass),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22619,7 +22591,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get l2_filter_byp */
     do
     {
-        cmd = get_sub_cmd("check l2_filter_byp", "no");
+        cmd = get_sub_cmd("check l2_filter_bypass", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22633,7 +22605,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->cmd.l2_filter_byp),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->action.l2_filter_bypass),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22641,10 +22613,10 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    /* get in_stg_byp */
+    /* get in_stp_byp */
     do
     {
-        cmd = get_sub_cmd("check in_stg_byp", "no");
+        cmd = get_sub_cmd("check in_stp_bypass", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22658,7 +22630,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->cmd.in_stg_byp),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->action.in_stp_bypass),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22669,7 +22641,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get in_vlan_fltr_byp */
     do
     {
-        cmd = get_sub_cmd("check in_vlan_fltr_byp", "no");
+        cmd = get_sub_cmd("check in_vlan_fltr_bypass", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22683,7 +22655,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->cmd.in_vlan_fltr_byp),
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->action.in_vlan_fltr_bypass),
                                         sizeof (a_bool_t));
             if (SW_OK != rv)
                 dprintf("usage: <yes/no/y/n>\n");
@@ -22701,29 +22673,42 @@ cmd_data_print_ctrlpkt_profile(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 
     entry = (fal_ctrlpkt_profile_t *) buf;
     dprintf("\n");
-    cmd_data_print_enable("valid", (a_uint32_t *) & (entry->valid), 4);
 
     cmd_data_print_uint32("port_map", (a_uint32_t *) & (entry->port_map), 4);
+    dprintf(" ");
     cmd_data_print_uint32("ethtype_map", (a_uint32_t *) & (entry->ethtype_profile_bitmap), 4);
+    dprintf(" ");
     cmd_data_print_uint32("rfdb_map", (a_uint32_t *) & (entry->rfdb_profile_bitmap), 4);
     dprintf("\n");
-    cmd_data_print_enable("mgt_eapol", (a_uint32_t *) & (entry->protocol_type.mgt_eapol), 4);
-    cmd_data_print_enable("mgt_pppoe", (a_uint32_t *) & (entry->protocol_type.mgt_pppoe), 4);
-    cmd_data_print_enable("mgt_igmp", (a_uint32_t *) & (entry->protocol_type.mgt_igmp), 4);
-    cmd_data_print_enable("mgt_arp_req", (a_uint32_t *) & (entry->protocol_type.mgt_arp_req), 4);
-    cmd_data_print_enable("mgt_arp_rep", (a_uint32_t *) & (entry->protocol_type.mgt_arp_rep), 4);
+    cmd_data_print_enable("mgt_eapol", (a_uint32_t *) & (entry->protocol_types.mgt_eapol), 4);
+    dprintf(" ");
+    cmd_data_print_enable("mgt_pppoe", (a_uint32_t *) & (entry->protocol_types.mgt_pppoe), 4);
+    dprintf(" ");
+    cmd_data_print_enable("mgt_igmp", (a_uint32_t *) & (entry->protocol_types.mgt_igmp), 4);
+    dprintf(" ");
+    cmd_data_print_enable("mgt_arp_req", (a_uint32_t *) & (entry->protocol_types.mgt_arp_req), 4);
+    dprintf(" ");
+    cmd_data_print_enable("mgt_arp_rep", (a_uint32_t *) & (entry->protocol_types.mgt_arp_rep), 4);
     dprintf("\n");
-    cmd_data_print_enable("mgt_dhcp4", (a_uint32_t *) & (entry->protocol_type.mgt_dhcp4), 4);
-    cmd_data_print_enable("mgt_mld", (a_uint32_t *) & (entry->protocol_type.mgt_mld), 4);
-    cmd_data_print_enable("mgt_ns", (a_uint32_t *) & (entry->protocol_type.mgt_ns), 4);
-    cmd_data_print_enable("mgt_na", (a_uint32_t *) & (entry->protocol_type.mgt_na), 4);
-    cmd_data_print_enable("mgt_dhcp6", (a_uint32_t *) & (entry->protocol_type.mgt_dhcp6), 4);
+    cmd_data_print_enable("mgt_dhcp4", (a_uint32_t *) & (entry->protocol_types.mgt_dhcp4), 4);
+    dprintf(" ");
+    cmd_data_print_enable("mgt_mld", (a_uint32_t *) & (entry->protocol_types.mgt_mld), 4);
+    dprintf(" ");
+    cmd_data_print_enable("mgt_ns", (a_uint32_t *) & (entry->protocol_types.mgt_ns), 4);
+    dprintf(" ");
+    cmd_data_print_enable("mgt_na", (a_uint32_t *) & (entry->protocol_types.mgt_na), 4);
+    dprintf(" ");
+    cmd_data_print_enable("mgt_dhcp6", (a_uint32_t *) & (entry->protocol_types.mgt_dhcp6), 4);
     dprintf("\n");
-    cmd_data_print_maccmd("fwd cmd", (a_uint32_t *) & (entry->cmd.cmd), 4);
-    cmd_data_print_enable("sg_byp", (a_uint32_t *) & (entry->cmd.sg_byp), 4);
-    cmd_data_print_enable("l2_filter_byp", (a_uint32_t *) & (entry->cmd.l2_filter_byp), 4);
-    cmd_data_print_enable("in_stg_byp", (a_uint32_t *) & (entry->cmd.in_stg_byp), 4);
-    cmd_data_print_enable("in_vlan_fltr_byp", (a_uint32_t *) & (entry->cmd.in_vlan_fltr_byp), 4);
+    cmd_data_print_maccmd("fwd cmd", (a_uint32_t *) & (entry->action.action), 4);
+    dprintf(" ");
+    cmd_data_print_enable("sg_bypass", (a_uint32_t *) & (entry->action.sg_bypass), 4);
+    dprintf(" ");
+    cmd_data_print_enable("l2_filter_bypass", (a_uint32_t *) & (entry->action.l2_filter_bypass), 4);
+    dprintf(" ");
+    cmd_data_print_enable("in_stp_bypass", (a_uint32_t *) & (entry->action.in_stp_bypass), 4);
+    dprintf(" ");
+    cmd_data_print_enable("in_vlan_fltr_bypass", (a_uint32_t *) & (entry->action.in_vlan_fltr_bypass), 4);
     dprintf("\n");
 
     return SW_OK;

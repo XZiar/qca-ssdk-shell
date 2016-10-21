@@ -89,6 +89,18 @@ cmd_data_check_module(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
 		*arg_val = FAL_MODULE_SHAPER;
 	} else if (!strcasecmp(cmd_str, "mib")){
 		*arg_val = FAL_MODULE_MIB;
+	} else if (!strcasecmp(cmd_str, "fdb")){
+		*arg_val = FAL_MODULE_FDB;
+	} else if (!strcasecmp(cmd_str, "stp")){
+		*arg_val = FAL_MODULE_STP;
+	} else if (!strcasecmp(cmd_str, "sec")){
+		*arg_val = FAL_MODULE_SEC;
+	} else if (!strcasecmp(cmd_str, "trunk")){
+		*arg_val = FAL_MODULE_TRUNK;
+	} else if (!strcasecmp(cmd_str, "portvlan")){
+		*arg_val = FAL_MODULE_PORTVLAN;
+	} else if (!strcasecmp(cmd_str, "ctrlpkt")){
+		*arg_val = FAL_MODULE_CTRLPKT;
     }
     else
     {
@@ -127,6 +139,18 @@ cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		dprintf("shaper");
 	} else if (*(a_uint32_t *) buf == FAL_MODULE_MIB) {
 		dprintf("mib");
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_FDB) {
+		dprintf("fdb");
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_STP) {
+		dprintf("stp");
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_SEC) {
+		dprintf("sec");
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_TRUNK) {
+		dprintf("trunk");
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_PORTVLAN) {
+		dprintf("portvlan");
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_CTRLPKT) {
+		dprintf("ctrlpkt");
     }
 }
 
@@ -624,6 +648,242 @@ static void cmd_data_print_shaper_func_ctrl(fal_func_ctrl_t *p)
 	return;
 }
 
+static void cmd_data_print_fdb_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_FDB_PORT_MACLIMIT_CTRL_GET+1] ={
+		"FUNC_FDB_ENTRY_ADD",
+		"FUNC_FDB_ENTRY_FLUSH",
+		"FUNC_FDB_ENTRY_DEL_BYPORT",
+		"FUNC_FDB_ENTRY_DEL_BYMAC",
+		"FUNC_FDB_ENTRY_GETFIRST",
+		"FUNC_FDB_ENTRY_GETNEXT",
+		"FUNC_FDB_ENTRY_SEARCH",
+		"FUNC_FDB_PORT_LEARN_SET",
+		"FUNC_FDB_PORT_LEARN_GET",
+		"FUNC_FDB_PORT_LEARNING_CTRL_SET",
+		"FUNC_FDB_PORT_LEARNING_CTRL_GET",
+		"FUNC_FDB_PORT_STAMOVE_CTRL_SET",
+		"FUNC_FDB_PORT_STAMOVE_CTRL_GET",
+		"FUNC_FDB_AGING_CTRL_SET",
+		"FUNC_FDB_AGING_CTRL_GET",
+		"FUNC_FDB_AGING_MODE_SET",
+		"FUNC_FDB_AGING_MODE_GET",
+		"FUNC_FDB_LEARNING_CTRL_SET",
+		"FUNC_FDB_LEARNING_CTRL_GET",
+		"FUNC_FDB_LEARNING_MODE_SET",
+		"FUNC_FDB_LEARNING_MODE_GET",
+		"FUNC_FDB_AGING_TIME_SET",
+		"FUNC_FDB_AGING_TIME_GET",
+		"FUNC_FDB_ENTRY_GETNEXT_BYINDEX",
+		"FUNC_FDB_ENTRY_EXTEND_GETNEXT",
+		"FUNC_FDB_ENTRY_EXTEND_GETFIRST",
+		"FUNC_FDB_ENTRY_UPDATE_BYPORT",
+		"FUNC_PORT_FDB_LEARN_LIMIT_SET",
+		"FUNC_PORT_FDB_LEARN_LIMIT_GET",
+		"FUNC_PORT_FDB_LEARN_EXCEED_CMD_SET",
+		"FUNC_PORT_FDB_LEARN_EXCEED_CMD_GET",
+		"FUNC_FDB_PORT_LEARNED_MAC_COUNTER_GET",
+		"FUNC_FDB_PORT_ADD",
+		"FUNC_FDB_PORT_DEL",
+		"FUNC_FDB_PORT_MACLIMIT_CTRL_SET",
+		"FUNC_FDB_PORT_MACLIMIT_CTRL_GET"
+	};
+
+	for(func = FUNC_FDB_ENTRY_ADD; func <= FUNC_FDB_PORT_LEARNED_MAC_COUNTER_GET; func++)
+	{
+		if (p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	for(func = FUNC_FDB_PORT_ADD; func <= FUNC_FDB_PORT_MACLIMIT_CTRL_GET; func++)
+	{
+		if (p->bitmap[1] & (1<<(func % 32)))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
+static void cmd_data_print_stp_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_STP_PORT_STATE_GET+1] ={
+		"FUNC_STP_PORT_STATE_SET",
+		"FUNC_STP_PORT_STATE_GET"
+	};
+
+	for(func = FUNC_STP_PORT_STATE_SET; func <= FUNC_STP_PORT_STATE_GET; func++)
+	{
+		if (p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
+static void cmd_data_print_sec_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_SEC_L4_EXCEP_PARSER_CTRL_GET+1] ={
+		"FUNC_SEC_L3_EXCEP_CTRL_SET",
+		"FUNC_SEC_L3_EXCEP_CTRL_GET",
+		"FUNC_SEC_L3_EXCEP_PARSER_CTRL_SET",
+		"FUNC_SEC_L3_EXCEP_PARSER_CTRL_GET",
+		"FUNC_SEC_L4_EXCEP_PARSER_CTRL_SET",
+		"FUNC_SEC_L4_EXCEP_PARSER_CTRL_GET"
+	};
+
+	for(func = FUNC_SEC_L3_EXCEP_CTRL_SET; func <= FUNC_SEC_L4_EXCEP_PARSER_CTRL_GET; func++)
+	{
+		if (p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
+static void cmd_data_print_trunk_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_TRUNK_FAILOVER_STATUS_GET+1] ={
+		"FUNC_TRUNK_GROUP_SET",
+		"FUNC_TRUNK_GROUP_GET",
+		"FUNC_TRUNK_HASH_MODE_SET",
+		"FUNC_TRUNK_HASH_MODE_GET",
+		"FUNC_TRUNK_FAILOVER_ENABLE",
+		"FUNC_TRUNK_FAILOVER_STATUS_GET"
+	};
+
+	for(func = FUNC_TRUNK_GROUP_SET; func <= FUNC_TRUNK_FAILOVER_STATUS_GET; func++)
+	{
+		if (p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
+static void cmd_data_print_portvlan_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_PORT_VLAN_TRANS_ADV_GETNEXT+1] ={
+		"FUNC_PORT_INVLAN_MODE_SET",
+		"FUNC_PORT_INVLAN_MODE_GET",
+		"FUNC_PORT_VLAN_TRANS_ADD",
+		"FUNC_PORT_VLAN_TRANS_DEL",
+		"FUNC_PORT_VLAN_TRANS_GET",
+		"FUNC_QINQ_MODE_SET",
+		"FUNC_QINQ_MODE_GET",
+		"FUNC_PORT_QINQ_ROLE_SET",
+		"FUNC_PORT_QINQ_ROLE_GET",
+		"FUNC_PORT_VLAN_TRANS_ITERATE",
+		"FUNC_GLOBAL_QINQ_MODE_SET",
+		"FUNC_GLOBAL_QINQ_MODE_GET",
+		"FUNC_PORT_QINQ_MODE_SET",
+		"FUNC_PORT_QINQ_MODE_GET",
+		"FUNC_INGRESS_TPID_SET",
+		"FUNC_INGRESS_TPID_GET",
+		"FUNC_EGRESS_TPID_SET",
+		"FUNC_EGRESS_TPID_GET",
+		"FUNC_PORT_INGRESS_VLAN_FILTER_SET",
+		"FUNC_PORT_INGRESS_VLAN_FILTER_GET",
+		"FUNC_PORT_DEFAULT_VLANTAG_SET",
+		"FUNC_PORT_DEFAULT_VLANTAG_GET",
+		"FUNC_PORT_TAG_PROPAGATION_SET",
+		"FUNC_PORT_TAG_PROPAGATION_GET",
+		"FUNC_PORT_VLANTAG_EGMODE_SET",
+		"FUNC_PORT_VLANTAG_EGMODE_GET",
+		"FUNC_PORT_VLAN_XLT_MISS_CMD_SET",
+		"FUNC_PORT_VLAN_XLT_MISS_CMD_GET",
+		"FUNC_PORT_VSI_EGMODE_SET",
+		"FUNC_PORT_VSI_EGMODE_GET",
+		"FUNC_PORT_VLANTAG_VSI_EGMODE_ENABLE_SET",
+		"FUNC_PORT_VLANTAG_VSI_EGMODE_ENABLE_GET",
+		"FUNC_PORT_VLAN_TRANS_ADV_ADD",
+		"FUNC_PORT_VLAN_TRANS_ADV_DEL",
+		"FUNC_PORT_VLAN_TRANS_ADV_GETFIRST",
+		"FUNC_PORT_VLAN_TRANS_ADV_GETNEXT"
+	};
+
+	for(func = FUNC_PORT_INVLAN_MODE_SET; func <= FUNC_PORT_VLANTAG_VSI_EGMODE_ENABLE_GET; func++)
+	{
+		if (p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	for(func = FUNC_PORT_VLAN_TRANS_ADV_ADD; func <= FUNC_PORT_VLAN_TRANS_ADV_GETNEXT; func++)
+	{
+		if (p->bitmap[1] & (1<<(func % 32)))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
+static void cmd_data_print_ctrlpkt_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_MGMTCTRL_CTRLPKT_PROFILE_GETNEXT+1] ={
+		"FUNC_MGMTCTRL_ETHTYPE_PROFILE_SET",
+		"FUNC_MGMTCTRL_ETHTYPE_PROFILE_GET",
+		"FUNC_MGMTCTRL_RFDB_PROFILE_SET",
+		"FUNC_MGMTCTRL_RFDB_PROFILE_GET",
+		"FUNC_MGMTCTRL_CTRLPKT_PROFILE_ADD",
+		"FUNC_MGMTCTRL_CTRLPKT_PROFILE_DEL",
+		"FUNC_MGMTCTRL_CTRLPKT_PROFILE_GETFIRST",
+		"FUNC_MGMTCTRL_CTRLPKT_PROFILE_GETNEXT"
+	};
+
+	for(func = FUNC_MGMTCTRL_ETHTYPE_PROFILE_SET; func <= FUNC_MGMTCTRL_CTRLPKT_PROFILE_GETNEXT; func++)
+	{
+		if (p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
 void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 {
 	if(module == FAL_MODULE_ACL){
@@ -650,6 +910,18 @@ void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 		cmd_data_print_shaper_func_ctrl(p);
 	} else if (module == FAL_MODULE_MIB){
 		cmd_data_print_mib_func_ctrl(p);
+	} else if (module == FAL_MODULE_FDB){
+		cmd_data_print_fdb_func_ctrl(p);
+	} else if (module == FAL_MODULE_STP){
+		cmd_data_print_stp_func_ctrl(p);
+	} else if (module == FAL_MODULE_SEC){
+		cmd_data_print_sec_func_ctrl(p);
+	} else if (module == FAL_MODULE_TRUNK){
+		cmd_data_print_trunk_func_ctrl(p);
+	} else if (module == FAL_MODULE_PORTVLAN){
+		cmd_data_print_portvlan_func_ctrl(p);
+	} else if (module == FAL_MODULE_CTRLPKT){
+		cmd_data_print_ctrlpkt_func_ctrl(p);
 	}
 
 	return;
