@@ -950,6 +950,25 @@ struct cmd_des_t gcmd_des[] =
     },
 #endif
 
+#ifdef IN_POLICER
+	{
+		"policer", "config policer",
+		{
+			{"timeslot", "set", "Set timeslot value", " <value>", SW_API_POLICER_TIMESLOT_SET, NULL},
+			{"timeslot", "get", "Get timeslot value", "", SW_API_POLICER_TIMESLOT_GET, NULL},
+			{"portcounter", "get", "Get port policer statistics", "<port_id>", SW_API_POLICER_PORT_COUNTER_GET, NULL},
+			{"aclcounter", "get", "Get acl policer statistics", "<index>", SW_API_POLICER_ACL_COUNTER_GET, NULL},
+			{"compensation", "set", "Set port policer compensation byte", "<port_id> <value>", SW_API_POLICER_COMPENSATION_SET, NULL},
+			{"compensation", "get", "Get port policer compensation byte", "<port_id>", SW_API_POLICER_COMPENSATION_GET, NULL},
+			{"portentry", "set", "Set port policer entry", "<port_id>", SW_API_POLICER_PORT_ENTRY_SET, NULL},
+			{"portentry", "get", "Get port policer entry", "<port_id>", SW_API_POLICER_PORT_ENTRY_GET, NULL},
+			{"aclentry", "set", "Set acl policer entry", "<index>", SW_API_POLICER_ACL_ENTRY_SET, NULL},
+			{"aclentry", "get", "Get acl policer entry", "<index>", SW_API_POLICER_ACL_ENTRY_GET, NULL},
+			{NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
+		},
+	},
+#endif
+
 #ifdef IN_SHAPER
     {
 	"shaper", "config shaper",

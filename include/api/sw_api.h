@@ -197,6 +197,10 @@ extern "C" {
         SW_MODULE,
         SW_FUNC_CTRL,
         SW_QM_CNT,
+	SW_POLICER_COUNTER,
+	SW_POLICER_PORT_CONFIG,
+	SW_POLICER_ACL_CONFIG,
+	SW_POLICER_CMD_CONFIG,
 } sw_data_type_e;
 
     typedef struct

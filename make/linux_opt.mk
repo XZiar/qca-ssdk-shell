@@ -114,9 +114,14 @@ ifeq (TRUE, $(IN_VSI))
   MODULE_CFLAG += -DIN_VSI
 endif
 
+ifeq (TRUE, $(IN_POLICER))
+  MODULE_CFLAG += -DIN_POLICER
+endif
+
 ifeq (TRUE, $(IN_SHAPER))
   MODULE_CFLAG += -DIN_SHAPER
 endif
+
 ifeq (TRUE, $(IN_PPPOE))
   MODULE_CFLAG += -DIN_PPPOE
 endif
