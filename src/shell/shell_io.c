@@ -164,6 +164,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_1QMODE, cmd_data_check_1qmode, cmd_data_print_1qmode),
     SW_TYPE_DEF(SW_EGMODE, cmd_data_check_egmode, cmd_data_print_egmode),
     SW_TYPE_DEF(SW_MIB, NULL, cmd_data_print_mib),
+     SW_TYPE_DEF(SW_XGMIB, NULL, cmd_data_print_xgmib),
     SW_TYPE_DEF(SW_VLAN, cmd_data_check_vlan, cmd_data_print_vlan),
     SW_TYPE_DEF(SW_PBMP, cmd_data_check_pbmp, cmd_data_print_pbmp),
     SW_TYPE_DEF(SW_ENABLE, cmd_data_check_enable, cmd_data_print_enable),
@@ -565,6 +566,57 @@ static char *mib_regname[] =
     "RxJmFcsErr",
     "RxJmAligErr"
 };
+static char *xgmib_regname[] =
+{
+   "RxFrame",
+   "RxByte",
+   "RxByteGood",
+   "RxBroadGood",
+   "RxMultiGood",
+   "RxFcsErr",
+   "RxRunt",
+   "RxJabberError",
+   "RxUndersizeGood",
+   "RxOversizeGood",
+   "Rx64Byte",
+   "Rx128Byte",
+   "Rx256Byte",
+   "Rx512Byte",
+   "Rx1024Byte",
+   "RxMaxByte",
+   "RxUnicastGood",
+   "RxLengthError",
+   "RxOutOfRangeError",
+   "RxPause",
+   "RxOverFlow",
+   "RxVLANFrameGoodBad",
+   "RxWatchDogError",
+   "RxLPIUsec",
+   "RxLPITran",
+   "RxDropFrameGoodBad",
+   "RxDropByteGoodBad",
+   "TxByte" ,
+   "TxFrame" ,
+   "TxBroadGood",
+   "TxMultiGood",
+   "Tx64Byte" ,
+   "Tx128Byte",
+   "Tx256Byte",
+   "Tx512Byte",
+   "Tx1024Byte",
+   "TxMaxByte",
+   "TxUnicast",
+   "TxMulti" ,
+   "TxBroad",
+   "TxUnderFlowError",
+   "TxByteGood",
+   "TxFrameGood",
+   "TxPause",
+   "TxVLANFrameGood",
+   "TxLPIUsec" ,
+   "TxLPITran"
+};
+
 
 void
 cmd_data_print_mib(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
@@ -576,6 +628,22 @@ cmd_data_print_mib(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     {
 
         dprintf("%-12s<0x%08x>  ", mib_regname[offset], *(buf + offset));
+        if ((offset + 1) % 3 == 0)
+            dprintf("\n");
+    }
+}
+
+void
+cmd_data_print_xgmib(a_uint8_t * param_name, a_uint64_t * buf, a_uint64_t size)
+{
+    dprintf("\n[%s] \n", param_name);
+    a_uint64_t offset = 0, number;
+
+    number = sizeof (fal_xgmib_info_t) / sizeof (a_uint64_t);
+    for (offset = 0; offset < number; offset++)
+    {
+        dprintf("%-20s<0x%016llx> ", xgmib_regname[offset], *(buf + offset));
+
         if ((offset + 1) % 3 == 0)
             dprintf("\n");
     }
@@ -2142,10 +2210,7 @@ cmd_data_check_portid(char *cmdstr, fal_port_t * val, a_uint32_t size)
         return SW_OK;
     }
 
-    if (strstr(cmdstr, "0x") == NULL)
-        sscanf(cmdstr, "%d", val);
-    else
-        sscanf(cmdstr, "%x", val);
+    sscanf(cmdstr, "%d", val);
 
     return SW_OK;
 }
