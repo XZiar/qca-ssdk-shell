@@ -148,6 +148,14 @@ cmd_data_print_ledpattern(a_uint8_t * param_name, a_uint32_t * buf,
                           a_uint32_t size);
 
 sw_error_t
+cmd_data_check_mirr_analy_cfg(char *info, void *val, a_uint32_t size);
+void
+cmd_data_print_mirr_analy_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_mirr_direction(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
+void
+cmd_data_print_mirr_direction(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+sw_error_t
 cmd_data_check_invlan_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
 void
 cmd_data_print_invlan_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);

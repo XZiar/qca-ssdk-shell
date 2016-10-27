@@ -148,7 +148,7 @@ fal_rtd_pppoe_en_get(a_uint32_t dev_id, a_bool_t *enable)
 }
 
 sw_error_t
-fal_pppoe_en_set(a_uint32_t dev_id, a_uint32_t l3_if, a_uint32_t enable)
+fal_pppoe_l3intf_enable(a_uint32_t dev_id, a_uint32_t l3_if, a_uint32_t enable)
 {
     sw_error_t rv;
 
@@ -157,7 +157,7 @@ fal_pppoe_en_set(a_uint32_t dev_id, a_uint32_t l3_if, a_uint32_t enable)
 }
 
 sw_error_t
-fal_pppoe_en_get(a_uint32_t dev_id, a_uint32_t l3_if, a_uint32_t *enable)
+fal_pppoe_l3intf_status_get(a_uint32_t dev_id, a_uint32_t l3_if, a_uint32_t *enable)
 {
     sw_error_t rv;
 

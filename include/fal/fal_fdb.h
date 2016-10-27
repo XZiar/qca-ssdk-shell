@@ -105,12 +105,8 @@ enum {
 	FUNC_FDB_PORT_STAMOVE_CTRL_GET,
 	FUNC_FDB_AGING_CTRL_SET,
 	FUNC_FDB_AGING_CTRL_GET,
-	FUNC_FDB_AGING_MODE_SET,
-	FUNC_FDB_AGING_MODE_GET,
 	FUNC_FDB_LEARNING_CTRL_SET,
 	FUNC_FDB_LEARNING_CTRL_GET,
-	FUNC_FDB_LEARNING_MODE_SET,
-	FUNC_FDB_LEARNING_MODE_GET,
 	FUNC_FDB_AGING_TIME_SET,
 	FUNC_FDB_AGING_TIME_GET,
 	FUNC_FDB_ENTRY_GETNEXT_BYINDEX,
@@ -212,14 +208,6 @@ enum {
 
 
     sw_error_t
-    fal_fdb_aging_mode_set(a_uint32_t dev_id, a_uint32_t age_mode);
-
-
-    sw_error_t
-    fal_fdb_aging_mode_get(a_uint32_t dev_id, a_uint32_t * age_mode);
-
-
-    sw_error_t
     fal_fdb_aging_ctrl_set(a_uint32_t dev_id, a_bool_t enable);
 
 
@@ -233,14 +221,6 @@ enum {
 
     sw_error_t
     fal_fdb_learning_ctrl_get(a_uint32_t dev_id, a_bool_t * enable);
-
-
-    sw_error_t
-    fal_fdb_learning_mode_set(a_uint32_t dev_id, a_uint32_t learn_mode);
-
-
-    sw_error_t
-    fal_fdb_learning_mode_get(a_uint32_t dev_id, a_uint32_t * learn_mode);
 
 
     sw_error_t

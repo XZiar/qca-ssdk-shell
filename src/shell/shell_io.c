@@ -181,6 +181,8 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_UINT_A, cmd_data_check_uinta, cmd_data_print_uinta),
     SW_TYPE_DEF(SW_ACLRULE, cmd_data_check_aclrule, cmd_data_print_aclrule),
     SW_TYPE_DEF(SW_LEDPATTERN, cmd_data_check_ledpattern, cmd_data_print_ledpattern),
+    SW_TYPE_DEF(SW_MIRR_ANALYSIS_CONFIG, cmd_data_check_mirr_analy_cfg, cmd_data_print_mirr_analy_cfg),
+    SW_TYPE_DEF(SW_MIRR_DIRECTION, cmd_data_check_mirr_direction, cmd_data_print_mirr_direction),
     SW_TYPE_DEF(SW_INVLAN, cmd_data_check_invlan_mode, cmd_data_print_invlan_mode),
     SW_TYPE_DEF(SW_VLANPROPAGATION, cmd_data_check_vlan_propagation, cmd_data_print_vlan_propagation),
     SW_TYPE_DEF(SW_VLANTRANSLATION, cmd_data_check_vlan_translation, cmd_data_print_vlan_translation),
@@ -2139,7 +2141,10 @@ cmd_data_check_portid(char *cmdstr, fal_port_t * val, a_uint32_t size)
         return SW_OK;
     }
 
-    sscanf(cmdstr, "%d", val);
+    if (strstr(cmdstr, "0x") == NULL)
+        sscanf(cmdstr, "%d", val);
+    else
+        sscanf(cmdstr, "%x", val);
 
     return SW_OK;
 }
@@ -2411,10 +2416,6 @@ cmd_data_check_fdbentry(char *info, void *val, a_uint32_t size)
             if (cmd_find == NULL)
             {
                 rv = cmd_data_check_portid(cmd, &entry.port.id, sizeof (fal_port_t));
-                if (entry.port.id == 32 || entry.port.id == 33)
-                    entry.port.id = FAL_PORT_ID(FAL_PORT_TYPE_TRUNK, entry.port.id);
-                else if (entry.port.id >= 64)
-                    entry.port.id = FAL_PORT_ID(FAL_PORT_TYPE_VPORT, entry.port.id);
                 entry.portmap_en = A_FALSE;
             }
             else
@@ -2717,13 +2718,12 @@ cmd_data_print_fdbentry(a_uint8_t * param_name, a_uint32_t * buf,
         cmd_data_print_portmap("[dest_port]:", entry->port.map, sizeof (fal_pbmp_t));
     else {
         port_type = FAL_PORT_ID_TYPE(entry->port.id);
-        entry->port.id = FAL_PORT_ID_VALUE(entry->port.id);
-        if (port_type == 1 && entry->port.id == 32)
-            dprintf("[dest_port]:32(trunk0)");
-        else if (port_type == 1 && entry->port.id == 33)
-            dprintf("[dest_port]:33(trunk1)");
+        if (port_type == 1 && entry->port.id == 0x1000020)
+            dprintf("[dest_port]:0x%x(trunk0)", entry->port.id);
+        else if (port_type == 1 && entry->port.id == 0x1000021)
+            dprintf("[dest_port]:0x%x(trunk1)", entry->port.id);
         else if (port_type == 2)
-            dprintf("[dest_port]:%d(virtual port)", entry->port.id);
+            dprintf("[dest_port]:0x%x(virtual port)", entry->port.id);
         else
             dprintf("[dest_port]:%d", entry->port.id);
     }
@@ -6820,6 +6820,122 @@ cmd_data_print_ledpattern(a_uint8_t * param_name, a_uint32_t * buf,
         {
             dprintf("[blink_frequency]:TXRX\n");
         }
+    }
+}
+
+sw_error_t
+cmd_data_check_mirr_analy_cfg(char *info, void *val, a_uint32_t size)
+{
+    char *cmd;
+    sw_error_t rv;
+    fal_mirr_analysis_config_t *pEntry = (fal_mirr_analysis_config_t *)val;
+
+    memset(pEntry, 0, sizeof(fal_mirr_analysis_config_t));
+
+    do
+    {
+        cmd = get_sub_cmd("port_id", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: port id\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(pEntry->port_id), sizeof(a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: port id\n");
+        }
+    }while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("priority", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: priority range 0x0-0xf\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(pEntry->priority), sizeof(a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: priority range 0x0-0xf\n");
+        }
+    }while (talk_mode && (SW_OK != rv));
+
+    return SW_OK;
+}
+
+void
+cmd_data_print_mirr_analy_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_mirr_analysis_config_t *entry;
+
+    entry = (fal_mirr_analysis_config_t *) buf;
+    dprintf("\n");
+    dprintf("[port_id]:0x%x\n", entry->port_id);
+    dprintf("[priority]:0x%x\n", entry->priority);
+}
+
+sw_error_t
+cmd_data_check_mirr_direction(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
+{
+    if (cmd_str == NULL)
+        return SW_BAD_PARAM;
+
+    if (!strcasecmp(cmd_str, "both"))
+    {
+        *arg_val = FAL_MIRR_BOTH;
+    }
+    else if (!strcasecmp(cmd_str, "ingress"))
+    {
+        *arg_val = FAL_MIRR_INGRESS;
+    }
+    else if (!strcasecmp(cmd_str, "egress"))
+    {
+        *arg_val = FAL_MIRR_EGRESS;
+    }
+    else
+    {
+        //dprintf("input error \n");
+        return SW_BAD_VALUE;
+    }
+
+    return SW_OK;
+}
+
+void
+cmd_data_print_mirr_direction(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    dprintf("[%s]:", param_name);
+    if (*(a_uint32_t *) buf == FAL_MIRR_BOTH)
+    {
+        dprintf("BOTH");
+    }
+    else if (*(a_uint32_t *) buf == FAL_MIRR_INGRESS)
+    {
+        dprintf("INGRESS");
+    }
+    else if (*(a_uint32_t *) buf == FAL_MIRR_EGRESS)
+    {
+        dprintf("EGRESS");
+    }
+    else
+    {
+        dprintf("UNKNOWN VALUE");
     }
 }
 

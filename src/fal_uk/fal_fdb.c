@@ -143,24 +143,6 @@ fal_fdb_port_stamove_ctrl_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *e
 }
 
 sw_error_t
-fal_fdb_aging_mode_set(a_uint32_t dev_id, a_uint32_t age_mode)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_FDB_AGE_MODE_SET, dev_id, age_mode);
-    return rv;
-}
-
-sw_error_t
-fal_fdb_aging_mode_get(a_uint32_t dev_id, a_uint32_t * age_mode)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_FDB_AGE_MODE_GET, dev_id, age_mode);
-    return rv;
-}
-
-sw_error_t
 fal_fdb_aging_ctrl_set(a_uint32_t dev_id, a_bool_t enable)
 {
     sw_error_t rv;
@@ -193,24 +175,6 @@ fal_fdb_learning_ctrl_get(a_uint32_t dev_id, a_bool_t * enable)
     sw_error_t rv;
 
     rv = sw_uk_exec(SW_API_FDB_LEARN_CTRL_GET, dev_id, (a_uint32_t) enable);
-    return rv;
-}
-
-sw_error_t
-fal_fdb_learning_mode_set(a_uint32_t dev_id, a_uint32_t learn_mode)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_FDB_LEARN_MODE_SET, dev_id, learn_mode);
-    return rv;
-}
-
-sw_error_t
-fal_fdb_learning_mode_get(a_uint32_t dev_id, a_uint32_t * learn_mode)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_FDB_LEARN_MODE_GET, dev_id, learn_mode);
     return rv;
 }
 

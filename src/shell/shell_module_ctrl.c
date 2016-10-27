@@ -89,6 +89,8 @@ cmd_data_check_module(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
 		*arg_val = FAL_MODULE_SHAPER;
 	} else if (!strcasecmp(cmd_str, "mib")){
 		*arg_val = FAL_MODULE_MIB;
+	} else if (!strcasecmp(cmd_str, "mirror")){
+		*arg_val = FAL_MODULE_MIRROR;
 	} else if (!strcasecmp(cmd_str, "fdb")){
 		*arg_val = FAL_MODULE_FDB;
 	} else if (!strcasecmp(cmd_str, "stp")){
@@ -141,6 +143,8 @@ cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		dprintf("shaper");
 	} else if (*(a_uint32_t *) buf == FAL_MODULE_MIB) {
 		dprintf("mib");
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_MIRROR) {
+		dprintf("mirror");
 	} else if (*(a_uint32_t *) buf == FAL_MODULE_FDB) {
 		dprintf("fdb");
 	} else if (*(a_uint32_t *) buf == FAL_MODULE_STP) {
@@ -652,6 +656,34 @@ static void cmd_data_print_shaper_func_ctrl(fal_func_ctrl_t *p)
 	return;
 }
 
+static void cmd_data_print_mirror_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_MIRR_ANALYSIS_CONFIG_GET+1] ={
+		"FUNC_MIRR_ANALYSIS_PORT_SET",
+		"FUNC_MIRR_ANALYSIS_PORT_GET",
+		"FUNC_MIRR_PORT_IN_SET",
+		"FUNC_MIRR_PORT_IN_GET",
+		"FUNC_MIRR_PORT_EG_SET",
+		"FUNC_MIRR_PORT_EG_GET",
+		"FUNC_MIRR_ANALYSIS_CONFIG_SET",
+		"FUNC_MIRR_ANALYSIS_CONFIG_GET"
+	};
+
+	for(func = FUNC_MIRR_ANALYSIS_PORT_SET; func <= FUNC_MIRR_ANALYSIS_CONFIG_GET; func++)
+	{
+		if (p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
 static void cmd_data_print_fdb_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
@@ -671,12 +703,8 @@ static void cmd_data_print_fdb_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_FDB_PORT_STAMOVE_CTRL_GET",
 		"FUNC_FDB_AGING_CTRL_SET",
 		"FUNC_FDB_AGING_CTRL_GET",
-		"FUNC_FDB_AGING_MODE_SET",
-		"FUNC_FDB_AGING_MODE_GET",
 		"FUNC_FDB_LEARNING_CTRL_SET",
 		"FUNC_FDB_LEARNING_CTRL_GET",
-		"FUNC_FDB_LEARNING_MODE_SET",
-		"FUNC_FDB_LEARNING_MODE_GET",
 		"FUNC_FDB_AGING_TIME_SET",
 		"FUNC_FDB_AGING_TIME_GET",
 		"FUNC_FDB_ENTRY_GETNEXT_BYINDEX",
@@ -694,20 +722,9 @@ static void cmd_data_print_fdb_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_FDB_PORT_MACLIMIT_CTRL_GET"
 	};
 
-	for(func = FUNC_FDB_ENTRY_ADD; func <= FUNC_FDB_PORT_LEARNED_MAC_COUNTER_GET; func++)
+	for(func = FUNC_FDB_ENTRY_ADD; func <= FUNC_FDB_PORT_MACLIMIT_CTRL_GET; func++)
 	{
 		if (p->bitmap[0] & (1<<func))
-		{
-			dprintf("%d  %s  registered\n", func, func_name[func]);
-		}
-		else
-		{
-			dprintf("%d  %s  unregistered\n", func, func_name[func]);
-		}
-	}
-	for(func = FUNC_FDB_PORT_ADD; func <= FUNC_FDB_PORT_MACLIMIT_CTRL_GET; func++)
-	{
-		if (p->bitmap[1] & (1<<(func % 32)))
 		{
 			dprintf("%d  %s  registered\n", func, func_name[func]);
 		}
@@ -945,6 +962,8 @@ void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 		cmd_data_print_shaper_func_ctrl(p);
 	} else if (module == FAL_MODULE_MIB){
 		cmd_data_print_mib_func_ctrl(p);
+	} else if (module == FAL_MODULE_MIRROR){
+		cmd_data_print_mirror_func_ctrl(p);
 	} else if (module == FAL_MODULE_FDB){
 		cmd_data_print_fdb_func_ctrl(p);
 	} else if (module == FAL_MODULE_STP){
