@@ -2141,7 +2141,10 @@ cmd_data_check_portid(char *cmdstr, fal_port_t * val, a_uint32_t size)
         return SW_OK;
     }
 
-    sscanf(cmdstr, "%d", val);
+    if (strstr(cmdstr, "0x") == NULL)
+        sscanf(cmdstr, "%d", val);
+    else
+        sscanf(cmdstr, "%x", val);
 
     return SW_OK;
 }
@@ -2715,12 +2718,12 @@ cmd_data_print_fdbentry(a_uint8_t * param_name, a_uint32_t * buf,
         cmd_data_print_portmap("[dest_port]:", entry->port.map, sizeof (fal_pbmp_t));
     else {
         port_type = FAL_PORT_ID_TYPE(entry->port.id);
-        if (port_type == 1 && entry->port.id == 32)
-            dprintf("[dest_port]:%x(trunk0)", entry->port.id);
-        else if (port_type == 1 && entry->port.id == 33)
-            dprintf("[dest_port]:%x(trunk1)", entry->port.id);
+        if (port_type == 1 && entry->port.id == 0x1000020)
+            dprintf("[dest_port]:0x%x(trunk0)", entry->port.id);
+        else if (port_type == 1 && entry->port.id == 0x1000021)
+            dprintf("[dest_port]:0x%x(trunk1)", entry->port.id);
         else if (port_type == 2)
-            dprintf("[dest_port]:%x(virtual port)", entry->port.id);
+            dprintf("[dest_port]:0x%x(virtual port)", entry->port.id);
         else
             dprintf("[dest_port]:%d", entry->port.id);
     }
