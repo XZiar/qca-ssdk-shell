@@ -5425,7 +5425,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
     }
 
     /* police action configuration */
-    cmd_data_check_element("police en", "no", "usage: <yes/no/y/n>\n",
+    cmd_data_check_element("policer en", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
     if (A_TRUE == tmpdata)
@@ -6448,7 +6448,7 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
 
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_POLICER_EN))
     {
-        dprintf("\n[police_en]:yes");
+        dprintf("\n[policer_en]:yes");
         dprintf("  [policer_ptr]:%d", rule->policer_ptr);
     }
 
