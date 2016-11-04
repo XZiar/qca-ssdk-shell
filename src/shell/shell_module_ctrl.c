@@ -813,7 +813,7 @@ static void cmd_data_print_trunk_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_portvlan_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_PORT_VLAN_TRANS_ADV_GETNEXT+1] ={
+	char *func_name[FUNC_PORT_VLAN_COUNTER_CLEANUP+1] ={
 		"FUNC_PORT_INVLAN_MODE_SET",
 		"FUNC_PORT_INVLAN_MODE_GET",
 		"FUNC_PORT_VLAN_TRANS_ADD",
@@ -849,7 +849,11 @@ static void cmd_data_print_portvlan_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_PORT_VLAN_TRANS_ADV_ADD",
 		"FUNC_PORT_VLAN_TRANS_ADV_DEL",
 		"FUNC_PORT_VLAN_TRANS_ADV_GETFIRST",
-		"FUNC_PORT_VLAN_TRANS_ADV_GETNEXT"
+		"FUNC_PORT_VLAN_TRANS_ADV_GETNEXT",
+		"FUNC_PORT_VLAN_COUNTER_ENABLE",
+		"FUNC_PORT_VLAN_COUNTER_STATUS_GET",
+		"FUNC_PORT_VLAN_COUNTER_GET",
+		"FUNC_PORT_VLAN_COUNTER_CLEANUP"
 	};
 
 	for(func = FUNC_PORT_INVLAN_MODE_SET; func <= FUNC_PORT_VLANTAG_VSI_EGMODE_ENABLE_GET; func++)
@@ -863,7 +867,7 @@ static void cmd_data_print_portvlan_func_ctrl(fal_func_ctrl_t *p)
 			dprintf("%d  %s  unregistered\n", func, func_name[func]);
 		}
 	}
-	for(func = FUNC_PORT_VLAN_TRANS_ADV_ADD; func <= FUNC_PORT_VLAN_TRANS_ADV_GETNEXT; func++)
+	for(func = FUNC_PORT_VLAN_TRANS_ADV_ADD; func <= FUNC_PORT_VLAN_COUNTER_CLEANUP; func++)
 	{
 		if (p->bitmap[1] & (1<<(func % 32)))
 		{

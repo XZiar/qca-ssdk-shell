@@ -734,3 +734,39 @@ fal_port_vlan_trans_adv_getnext(a_uint32_t dev_id, fal_port_t port_id, fal_port_
     return rv;
 }
 
+sw_error_t
+fal_port_vlan_counter_enable(a_uint32_t dev_id, fal_port_t port_id, fal_port_vlan_counter_en_t * cnt_en)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_COUNTER_ENABLE, dev_id, port_id, (a_uint32_t) cnt_en);
+    return rv;
+}
+
+sw_error_t
+fal_port_vlan_counter_status_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_vlan_counter_en_t * cnt_en)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_COUNTER_STATUS_GET, dev_id, port_id, (a_uint32_t) cnt_en);
+    return rv;
+}
+
+sw_error_t
+fal_port_vlan_counter_get(a_uint32_t dev_id, a_uint32_t cnt_index, fal_port_vlan_counter_t * counter)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_COUNTER_GET, dev_id, cnt_index, (a_uint32_t) counter);
+    return rv;
+}
+
+sw_error_t
+fal_port_vlan_counter_cleanup(a_uint32_t dev_id, a_uint32_t cnt_index)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_COUNTER_CLEANUP, dev_id, cnt_index);
+    return rv;
+}
+

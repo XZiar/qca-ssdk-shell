@@ -211,6 +211,10 @@ struct cmd_des_t gcmd_des[] =
             {"translationAdv", "del", "del a vlan advanced translation entry based on port and direction", "<port_id> <ingress|egress>", SW_API_PT_VLAN_TRANS_ADV_DEL, NULL},
             {"translationAdv", "getfirst", "get vlan advanced translation first entry based on port and direction", "<port_id> <ingress|egress>", SW_API_PT_VLAN_TRANS_ADV_GETFIRST, NULL},
             {"translationAdv", "getnext", "get vlan advanced translation next entry based on port and direction", "<port_id> <ingress|egress>", SW_API_PT_VLAN_TRANS_ADV_GETNEXT, NULL},
+            {"ptvlancounterstatus", "set", "set port vlan counter status", "<port_id>", SW_API_PT_VLAN_COUNTER_ENABLE, NULL},
+            {"ptvlancounterstatus", "get", "get port vlan counter status", "<port_id>", SW_API_PT_VLAN_COUNTER_STATUS_GET, NULL},
+            {"ptvlancounter", "set", "clean up port vlan counter", "<cnt_index>", SW_API_PT_VLAN_COUNTER_CLEANUP, NULL},
+            {"ptvlancounter", "get", "get port vlan counter", "<cnt_index>", SW_API_PT_VLAN_COUNTER_GET, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },
