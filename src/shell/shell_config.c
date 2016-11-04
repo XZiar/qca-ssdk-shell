@@ -363,6 +363,8 @@ struct cmd_des_t gcmd_des[] =
 	{"ringqueue", "set", "set ring queue map", "<ring_id> <queue_bmp>", SW_API_QOS_RING_QUEUE_MAP_SET, NULL},
 	{"ringqueue", "get", "get ring queue map", "<ring_id>", SW_API_QOS_RING_QUEUE_MAP_GET, NULL},
 	{"portqueues", "get", "get queues belong to port", "<port_id>", SW_API_QOS_PORT_QUEUES_GET, NULL},
+	{"dequeue", "get", "dequeue control get", "", SW_API_QOS_SCHEDULER_DEQUEU_CTRL_GET, NULL},
+	{"dequeue", "set", "dequeue control set", "", SW_API_QOS_SCHEDULER_DEQUEU_CTRL_SET, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },
@@ -911,6 +913,8 @@ struct cmd_des_t gcmd_des[] =
 	    {"cntctrl", "set", "set queue counter enable flag", "", SW_API_QUEUE_CNT_CTRL_SET, NULL},
 	    {"cnt", "get", "get queue counter", "", SW_API_QUEUE_CNT_GET, NULL},
 	    {"cnt", "cleanup", "cleanup queue counter", "", SW_API_QUEUE_CNT_CLEANUP, NULL},
+	    {"enqueue", "set", "set enqueue control", "<enable/disable>", SW_API_QM_ENQUEUE_CTRL_SET, NULL},
+	    {"enqueue", "get", "get enqueue control", "", SW_API_QM_ENQUEUE_CTRL_GET, NULL},
 	    {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },

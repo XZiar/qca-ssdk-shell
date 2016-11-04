@@ -571,3 +571,21 @@ fal_port_queues_get(a_uint32_t dev_id,
     rv = sw_uk_exec(SW_API_QOS_PORT_QUEUES_GET, dev_id, port_id, queue_bmp);
     return rv;
 }
+
+sw_error_t
+fal_scheduler_dequeue_ctrl_set(a_uint32_t dev_id, a_uint32_t queue_id, a_bool_t enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QOS_SCHEDULER_DEQUEU_CTRL_SET, dev_id, queue_id, enable);
+    return rv;
+}
+
+sw_error_t
+fal_scheduler_dequeue_ctrl_get(a_uint32_t dev_id, a_uint32_t queue_id, a_bool_t *enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QOS_SCHEDULER_DEQUEU_CTRL_GET, dev_id, queue_id, enable);
+    return rv;
+}

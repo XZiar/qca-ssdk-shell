@@ -362,3 +362,21 @@ fal_queue_counter_cleanup(a_uint32_t dev_id, a_uint32_t queue_id)
     return rv;
 }
 
+sw_error_t
+fal_qm_enqueue_ctrl_set(a_uint32_t dev_id, a_uint32_t queue_id, a_bool_t enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_ENQUEUE_CTRL_SET, dev_id, queue_id, enable);
+    return rv;
+}
+
+sw_error_t
+fal_qm_enqueue_ctrl_get(a_uint32_t dev_id, a_uint32_t queue_id, a_bool_t *enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_ENQUEUE_CTRL_GET, dev_id, queue_id, enable);
+    return rv;
+}
+

@@ -346,7 +346,7 @@ static void cmd_data_print_mib_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_qm_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_QUEUE_COUNTER_CTRL_SET+1] ={
+	char *func_name[FUNC_QM_ENQUEUE_CTRL_SET+1] ={
 		"FUNC_UCAST_HASH_MAP_SET",
 		"FUNC_AC_DYNAMIC_THRESHOLD_GET",
 		"FUNC_UCAST_QUEUE_BASE_PROFILE_GET",
@@ -375,10 +375,12 @@ static void cmd_data_print_qm_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_QUEUE_COUNTER_CLEANUP",
 		"FUNC_QUEUE_COUNTER_GET",
 		"FUNC_QUEUE_COUNTER_CTRL_GET",
-		"FUNC_QUEUE_COUNTER_CTRL_SET"
+		"FUNC_QUEUE_COUNTER_CTRL_SET",
+		"FUNC_QM_ENQUEUE_CTRL_GET",
+		"FUNC_QM_ENQUEUE_CTRL_SET"
 	};
 
-	for(func = FUNC_UCAST_HASH_MAP_SET; func <= FUNC_QUEUE_COUNTER_CTRL_SET; func++)
+	for(func = FUNC_UCAST_HASH_MAP_SET; func <= FUNC_QM_ENQUEUE_CTRL_SET; func++)
 	{
 		if(p->bitmap[0] & (1 << func))
 		{
@@ -395,7 +397,7 @@ static void cmd_data_print_qm_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_qos_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_PORT_SCHEDULER_CFG_GET+1] ={
+	char *func_name[FUNC_SCHEDULER_DEQUEUE_CTRL_SET+1] ={
 		"FUNC_QOS_PORT_PRI_SET",
 		"FUNC_QOS_PORT_PRI_GET",
 		"FUNC_QOS_COSMAP_PCP_GET",
@@ -416,10 +418,12 @@ static void cmd_data_print_qos_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_TDM_TICK_NUM_SET",
 		"FUNC_TDM_TICK_NUM_GET",
 		"FUNC_PORT_SCHEDULER_CFG_SET",
-		"FUNC_PORT_SCHEDULER_CFG_GET"
+		"FUNC_PORT_SCHEDULER_CFG_GET",
+		"FUNC_SCHEDULER_DEQUEUE_CTRL_GET",
+		"FUNC_SCHEDULER_DEQUEUE_CTRL_SET"
 	};
 
-	for(func = FUNC_QOS_PORT_PRI_SET; func <= FUNC_PORT_SCHEDULER_CFG_GET; func++)
+	for(func = FUNC_QOS_PORT_PRI_SET; func <= FUNC_SCHEDULER_DEQUEUE_CTRL_SET; func++)
 	{
 		if(p->bitmap[0] & (1 << func))
 		{
