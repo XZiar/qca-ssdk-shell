@@ -284,9 +284,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_TAG_PROPAGATION, cmd_data_check_tag_propagation, cmd_data_print_tag_propagation),
     SW_TYPE_DEF(SW_EGRESS_MODE, cmd_data_check_egress_mode, cmd_data_print_egress_mode),
     SW_TYPE_DEF(SW_CTRLPKT_PROFILE, cmd_data_check_ctrlpkt_profile, cmd_data_print_ctrlpkt_profile),
-    SW_TYPE_DEF(SW_PARSE_SERVICE, cmd_data_check_parse_service, cmd_data_print_parse_service),
-    SW_TYPE_DEF(SW_INGRESS_SERVICE, cmd_data_check_ingress_service, cmd_data_print_ingress_service),
-    SW_TYPE_DEF(SW_EGRESS_SERVICE, cmd_data_check_egress_service, cmd_data_print_egress_service),
+    SW_TYPE_DEF(SW_SERVCODE_CONFIG, cmd_data_check_servcode_config, cmd_data_print_servcode_config),
     SW_TYPE_DEF(SW_L3_PARSER, cmd_data_check_l3_parser, cmd_data_print_l3_parser),
     SW_TYPE_DEF(SW_L4_PARSER, cmd_data_check_l4_parser, cmd_data_print_l4_parser),
     SW_TYPE_DEF(SW_EXP_CTRL, cmd_data_check_exp_ctrl, cmd_data_print_exp_ctrl),
@@ -22938,419 +22936,266 @@ cmd_data_print_ctrlpkt_profile(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 }
 
 sw_error_t
-cmd_data_check_parse_service(char *info, void *val, a_uint32_t size)
+cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_t size)
 {
-    char *cmd;
-    sw_error_t rv;
-    fal_parse_service_entry_t *pEntry = (fal_parse_service_entry_t *)val;
-    a_uint32_t tmp = 0;
+	char *cmd = NULL;
+	sw_error_t rv;
+	fal_servcode_config_t entry;
 
-    memset(pEntry, 0, sizeof(fal_parse_service_entry_t));
+	memset(&entry, 0, sizeof (fal_servcode_config_t));
 
-    /* get rx_counting_en */
-    do
-    {
-        cmd = get_sub_cmd("rx counting enable", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
+	do
+	{
+		cmd = get_sub_cmd("dest_port_valid", "yes");
+		SW_RTN_ON_NULL_PARAM(cmd);
 
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->rx_counting_en),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
-                dprintf("usage: <yes/no/y/n>\n");
-        }
-    }
-    while (talk_mode && (SW_OK != rv));
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_confirm(cmd, A_TRUE, &entry.dest_port_valid,
+					sizeof (a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
 
-    /* get bypass bitmap */
-    do
-    {
-        cmd = get_sub_cmd("bypass bitmap", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
+	do
+	{
+		cmd = get_sub_cmd("dest_port_id", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
 
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: refer to service spec\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: refer to service spec\n");
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("physical port id: 0 - 7\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = rv = cmd_data_check_uint32(cmd, &entry.dest_port_id, sizeof (a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("physical port id: 0 - 7\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
 
-	     pEntry->bypass_bitmap = tmp;
-        }
-    }while (talk_mode && (SW_OK != rv));
+	do
+	{
+		cmd = get_sub_cmd("bypass_bitmap[0]", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
 
-    return SW_OK;
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: refer to service spec\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = rv = cmd_data_check_uint32(cmd, &entry.bypass_bitmap[0], sizeof (a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: refer to service spec\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("bypass_bitmap[1]", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: refer to service spec\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = rv = cmd_data_check_uint32(cmd, &entry.bypass_bitmap[1], sizeof (a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: refer to service spec\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("bypass_bitmap[2]", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: refer to service spec\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = rv = cmd_data_check_uint32(cmd, &entry.bypass_bitmap[2], sizeof (a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: refer to service spec\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("direction", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: 0:dest, 1:src \n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = rv = cmd_data_check_uint32(cmd, &entry.direction, sizeof (a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: 0:dest, 1:src \n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("field_update_bitmap", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: refer to service spec\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = rv = cmd_data_check_uint32(cmd, &entry.field_update_bitmap, sizeof (a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: refer to service spec\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("next_service_code", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: refer to service spec\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = rv = cmd_data_check_uint32(cmd, &entry.next_service_code, sizeof (a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: refer to service spec\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("hw_services", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: refer to service spec\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = rv = cmd_data_check_uint32(cmd, &entry.hw_services, sizeof (a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: refer to service spec\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("offset_sel", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: refer to service spec\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = rv = cmd_data_check_uint32(cmd, &entry.offset_sel, sizeof (a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: refer to service spec\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	*val = entry;
+	return SW_OK;
 }
 
-sw_error_t
-cmd_data_print_parse_service(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+void
+cmd_data_print_servcode_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 {
-    fal_parse_service_entry_t *entry;
+	fal_servcode_config_t *entry;
 
-    entry = (fal_parse_service_entry_t *) buf;
-    dprintf("\n");
+	entry = (fal_servcode_config_t *) buf;
 
-    cmd_data_print_uint32("bypass_bitmap", (a_uint32_t *) & (entry->bypass_bitmap), 4);
-    cmd_data_print_enable("rx_counting_en", (a_uint32_t *) & (entry->rx_counting_en), 4);
-    dprintf("\n");
-
-    return SW_OK;
-}
-
-sw_error_t
-cmd_data_check_ingress_service(char *info, void *val, a_uint32_t size)
-{
-    char *cmd;
-    sw_error_t rv;
-    fal_ingress_service_entry_t *pEntry = (fal_ingress_service_entry_t *)val;
-    a_uint32_t tmp = 0;
-
-    memset(pEntry, 0, sizeof(fal_ingress_service_entry_t));
-
-    /* get rx_counting_en */
-    do
-    {
-        cmd = get_sub_cmd("rx counting enable", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->rx_cnt_en),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
-                dprintf("usage: <yes/no/y/n>\n");
-        }
-    }
-    while (talk_mode && (SW_OK != rv));
-
-    /* get tx_counting_en */
-    do
-    {
-        cmd = get_sub_cmd("tx counting enable", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->tx_cnt_en),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
-                dprintf("usage: <yes/no/y/n>\n");
-        }
-    }
-    while (talk_mode && (SW_OK != rv));
-
-    /* get dst_port_id_valid */
-    do
-    {
-        cmd = get_sub_cmd("dst_port_id_valid", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->dst_port_id_valid),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
-                dprintf("usage: <yes/no/y/n>\n");
-        }
-    }
-    while (talk_mode && (SW_OK != rv));
-
-    /* get dst_port_id  */
-    do
-    {
-        cmd = get_sub_cmd("dst_port_id", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: refer to service spec\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: refer to service spec\n");
-
-	     pEntry->dst_port_id = tmp;
-        }
-    }while (talk_mode && (SW_OK != rv));
-
-    /* get direction */
-    do
-    {
-        cmd = get_sub_cmd("direction", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: refer to service spec\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: refer to service spec\n");
-
-	     pEntry->direction = tmp;
-        }
-    }while (talk_mode && (SW_OK != rv));
-
-    /* get bypass bitmap */
-    do
-    {
-        cmd = get_sub_cmd("bypass bitmap", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: refer to service spec\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: refer to service spec\n");
-
-	     pEntry->bypass_bitmap = tmp;
-        }
-    }while (talk_mode && (SW_OK != rv));
-
-    return SW_OK;
-}
-
-sw_error_t
-cmd_data_print_ingress_service(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
-{
-    fal_ingress_service_entry_t *entry;
-
-    entry = (fal_ingress_service_entry_t *) buf;
-    dprintf("\n");
-
-    cmd_data_print_enable("dst_port_id_valid", (a_uint32_t *) & (entry->dst_port_id_valid), 4);
-    cmd_data_print_uint32("dst_port_id", (a_uint32_t *) & (entry->dst_port_id), 4);
-    cmd_data_print_uint32("direction", (a_uint32_t *) & (entry->direction), 4);
-    cmd_data_print_uint32("bypass_map", (a_uint32_t *) & (entry->bypass_bitmap), 4);
-    cmd_data_print_enable("rx_cnt_en", (a_uint32_t *) & (entry->rx_cnt_en), 4);
-    cmd_data_print_enable("tx_cnt_en", (a_uint32_t *) & (entry->tx_cnt_en), 4);
-    dprintf("\n");
-
-    return SW_OK;
-}
-
-sw_error_t
-cmd_data_check_egress_service(char *info, void *val, a_uint32_t size)
-{
-    char *cmd;
-    sw_error_t rv;
-    fal_egress_service_entry_t *pEntry = (fal_egress_service_entry_t *)val;
-    a_uint32_t tmp = 0;
-
-    memset(pEntry, 0, sizeof(fal_egress_service_entry_t));
-
-    /* get tx_counting_en */
-    do
-    {
-        cmd = get_sub_cmd("tx counting enable", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->tx_counting_en),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
-                dprintf("usage: <yes/no/y/n>\n");
-        }
-    }
-    while (talk_mode && (SW_OK != rv));
-
-    /* get field_update_action  */
-    do
-    {
-        cmd = get_sub_cmd("field_update_action", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: refer to service spec\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: refer to service spec\n");
-
-	     pEntry->field_update_action = tmp;
-        }
-    }while (talk_mode && (SW_OK != rv));
-
-    /* get next_service_code */
-    do
-    {
-        cmd = get_sub_cmd("next_service_code", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: refer to service spec\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: refer to service spec\n");
-
-	     pEntry->next_service_code = tmp;
-        }
-    }while (talk_mode && (SW_OK != rv));
-
-    /* get hw_services */
-    do
-    {
-        cmd = get_sub_cmd("hw_services", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: refer to service spec\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: refer to service spec\n");
-
-	     pEntry->hw_services = tmp;
-        }
-    }while (talk_mode && (SW_OK != rv));
-
-    /* get offset_sel */
-    do
-    {
-        cmd = get_sub_cmd("offset_sel", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: refer to service spec\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: refer to service spec\n");
-
-	     pEntry->offset_sel = tmp;
-        }
-    }while (talk_mode && (SW_OK != rv));
-
-    return SW_OK;
-}
-
-sw_error_t
-cmd_data_print_egress_service(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
-{
-    fal_egress_service_entry_t *entry;
-
-    entry = (fal_egress_service_entry_t *) buf;
-    dprintf("\n");
-
-    cmd_data_print_uint32("field_update_action", (a_uint32_t *) & (entry->field_update_action), 4);
-    cmd_data_print_uint32("next_service_code", (a_uint32_t *) & (entry->next_service_code), 4);
-    cmd_data_print_uint32("hw_services", (a_uint32_t *) & (entry->hw_services), 4);
-    cmd_data_print_uint32("offset_sel", (a_uint32_t *) & (entry->offset_sel), 4);
-    cmd_data_print_enable("tx_cnt_en", (a_uint32_t *) & (entry->tx_counting_en), 4);
-    dprintf("\n");
-
-    return SW_OK;
+	dprintf("\ndest_port_valid:%s  dest_port_id:%d\n",
+				entry->dest_port_valid? "ENABLE" : "DISABLE",
+				entry->dest_port_id);
+	dprintf("bypass_bitmap[0]:0x%x  bypass_bitmap[1]:0x%x  bypass_bitmap[2]:0x%x\n",
+				entry->bypass_bitmap[0], entry->bypass_bitmap[1], entry->bypass_bitmap[2]);
+	dprintf("direction:%d\n", entry->direction);
+	dprintf("field_update_bitmap:0x%x  next_service_code:%d\n",
+				entry->field_update_bitmap, entry->next_service_code);
+	dprintf("hw_services:%d  offset_sel:%d\n",
+				entry->hw_services, entry->offset_sel);
 }
 
 sw_error_t

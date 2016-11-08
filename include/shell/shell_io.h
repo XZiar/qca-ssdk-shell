@@ -760,21 +760,10 @@ sw_error_t
 cmd_data_print_ctrlpkt_profile(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
-cmd_data_check_parse_service(char *info, void *val, a_uint32_t size);
+cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_t size);
 
-sw_error_t
-cmd_data_print_parse_service(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
-sw_error_t
-cmd_data_check_ingress_service(char *info, void *val, a_uint32_t size);
-sw_error_t
-cmd_data_print_ingress_service(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
-sw_error_t
-cmd_data_check_egress_service(char *info, void *val, a_uint32_t size);
-
-sw_error_t
-cmd_data_print_egress_service(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+void
+cmd_data_print_servcode_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
 cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size);

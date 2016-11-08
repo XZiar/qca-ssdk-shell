@@ -946,12 +946,10 @@ struct cmd_des_t gcmd_des[] =
     {
         "servcode", "config service profile",
         {
-            {"parseservice", "set", "set parse service profile", "<profile_id> <parse service entry>", SW_API_PARSE_SERVICE_PROFILE_SET, NULL},
-            {"parseservice", "get", "get parse service profile", "<profile_id>", SW_API_PARSE_SERVICE_PROFILE_GET, NULL},
-            {"ingressservice", "set", "set ingress service profile", "<profile_id> <ingress service entry>", SW_API_INGRESS_SERVICE_PROFILE_SET, NULL},
-            {"ingressservice", "get", "get ingress service profile", "<profile_id>", SW_API_INGRESS_SERVICE_PROFILE_GET, NULL},
-            {"egressservice", "set", "set egress service profile", "<profile_id> <egress service entry>", SW_API_EGRESS_SERVICE_PROFILE_SET, NULL},
-            {"egressservice", "get", "get egress service profile", "<profile_id>", SW_API_EGRESS_SERVICE_PROFILE_GET, NULL},
+            {"servcodeConfig", "set", "set a servcode config by index", "<servcode_index>", SW_API_SERVCODE_CONFIG_SET, NULL},
+            {"servcodeConfig", "get", "get a servcode config by index", "<servcode_index>", SW_API_SERVCODE_CONFIG_GET, NULL},
+            {"servcodeLoopcheck", "set", "set servcode loopcheck status", "<enable|disable>", SW_API_SERVCODE_LOOPCHECK_EN, NULL},
+            {"servcodeLoopcheck", "get", "get servcode loopcheck status", "", SW_API_SERVCODE_LOOPCHECK_STATUS_GET, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },

@@ -19,65 +19,39 @@
 #include "fal_servcode.h"
 #include "fal_uk_if.h"
 
-sw_error_t
-fal_parse_service_profile_set(a_uint32_t dev_id,a_uint32_t profile_id,
-							fal_parse_service_entry_t *entry)
+sw_error_t fal_servcode_config_set(a_uint32_t dev_id, a_uint32_t servcode_index,
+					fal_servcode_config_t *entry)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PARSE_SERVICE_PROFILE_SET, dev_id, profile_id,
+    rv = sw_uk_exec(SW_API_SERVCODE_CONFIG_SET, dev_id, servcode_index,
                     (a_uint32_t) entry);
     return rv;
 }
 
-sw_error_t
-fal_parse_service_profile_get(a_uint32_t dev_id, a_uint32_t profile_id,
-							fal_parse_service_entry_t *entry)
+sw_error_t fal_servcode_config_get(a_uint32_t dev_id, a_uint32_t servcode_index,
+					fal_servcode_config_t *entry)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PARSE_SERVICE_PROFILE_GET, dev_id, profile_id,
+    rv = sw_uk_exec(SW_API_SERVCODE_CONFIG_GET, dev_id, servcode_index,
                     (a_uint32_t) entry);
     return rv;
 }
 
-sw_error_t fal_ingress_service_profile_set(a_uint32_t dev_id, a_uint32_t profile_id,
-							fal_ingress_service_entry_t *entry)
+sw_error_t fal_servcode_loopcheck_en(a_uint32_t dev_id, a_bool_t enable)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_INGRESS_SERVICE_PROFILE_SET, dev_id, profile_id,
-                    (a_uint32_t) entry);
+    rv = sw_uk_exec(SW_API_SERVCODE_LOOPCHECK_EN, dev_id, (a_uint32_t) enable);
     return rv;
 }
 
-sw_error_t fal_ingress_service_profile_get(a_uint32_t dev_id, a_uint32_t profile_id,
-							fal_ingress_service_entry_t *entry)
+sw_error_t fal_servcode_loopcheck_status_get(a_uint32_t dev_id, a_bool_t *enable)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_INGRESS_SERVICE_PROFILE_GET, dev_id, profile_id,
-                    (a_uint32_t) entry);
-    return rv;
-}
-
-sw_error_t fal_egress_service_profile_set(a_uint32_t dev_id, a_uint32_t profile_id,
-							fal_egress_service_entry_t *entry)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_EGRESS_SERVICE_PROFILE_SET, dev_id, profile_id,
-                    (a_uint32_t) entry);
-    return rv;
-}
-
-sw_error_t fal_egress_service_profile_get(a_uint32_t dev_id, a_uint32_t profile_id,
-							fal_egress_service_entry_t *entry)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_EGRESS_SERVICE_PROFILE_GET, dev_id, profile_id,
-                    (a_uint32_t) entry);
+    rv = sw_uk_exec(SW_API_SERVCODE_LOOPCHECK_STATUS_GET, dev_id, (a_uint32_t) enable);
     return rv;
 }
 
