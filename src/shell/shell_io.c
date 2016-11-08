@@ -244,6 +244,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_VSI_NEWADDR_LRN, cmd_data_check_newadr_lrn, cmd_data_print_newaddr_lrn_entry),
     SW_TYPE_DEF(SW_VSI_STAMOVE, cmd_data_check_stamove, cmd_data_print_stamove_entry),
     SW_TYPE_DEF(SW_VSI_MEMBER, cmd_data_check_vsi_member, cmd_data_print_vsi_member_entry),
+    SW_TYPE_DEF(SW_VSI_COUNTER, NULL, cmd_data_print_vsi_counter),
     SW_TYPE_DEF(SW_MTU_INFO, NULL, cmd_data_print_mtu_info),
     SW_TYPE_DEF(SW_MRU_INFO, NULL, cmd_data_print_mru_info),
     SW_TYPE_DEF(SW_MTU_ENTRY, cmd_data_check_mtu_entry, NULL),
@@ -14507,6 +14508,25 @@ cmd_data_print_vsi_member_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint
     dprintf("[uuc_ports]:0x%x\n", entry->uuc_ports);
     dprintf("[umc_ports]:0x%x\n", entry->umc_ports);
     dprintf("[bc_ports]:0x%x\n", entry->bc_ports);
+    return;
+}
+
+void
+cmd_data_print_vsi_counter(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_vsi_counter_t *entry;
+
+    entry = (fal_vsi_counter_t *) buf;
+    dprintf("\n");
+    dprintf("[rx_bytes]:%lld\n", entry->rx_byte_counter);
+    dprintf("[rx_packets]:%d\n", entry->rx_packet_counter);
+    dprintf("[tx_bytes]:%lld\n", entry->tx_byte_counter);
+    dprintf("[tx_packets]:%d\n", entry->tx_packet_counter);
+    dprintf("[fwd_bytes]:%lld\n", entry->fwd_byte_counter);
+    dprintf("[fwd_packets]:%d\n", entry->fwd_packet_counter);
+    dprintf("[drop_bytes]:%lld\n", entry->drop_byte_counter);
+    dprintf("[drop_packets]:%d\n", entry->drop_packet_counter);
+    
     return;
 }
 

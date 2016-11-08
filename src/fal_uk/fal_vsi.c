@@ -127,3 +127,22 @@ fal_vsi_member_set(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_member_t *vsi_m
     return rv;
 }
 
+sw_error_t
+fal_vsi_counter_get(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_counter_t *counter)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_VSI_COUNTER_GET, dev_id, vsi_id, counter);
+    return rv;
+}
+
+sw_error_t
+fal_vsi_counter_cleanup(a_uint32_t dev_id, a_uint32_t vsi_id)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_VSI_COUNTER_CLEANUP, dev_id, vsi_id);
+    return rv;
+}
+
+
