@@ -874,6 +874,8 @@ struct cmd_des_t gcmd_des[] =
             {"stamove", "get", "Get vsi based station move", "<vsi>", SW_API_VSI_STAMOVE_GET, NULL},
             {"member", "set", "Set vsi based member ports", "<vsi> <member_ports>", SW_API_VSI_MEMBER_SET, NULL},
             {"member", "get", "Get vsi based member ports", "<vsi>", SW_API_VSI_MEMBER_GET, NULL},
+            {"counter", "get", "Get vsi based counter", "<vsi>", SW_API_VSI_COUNTER_GET, NULL},
+            {"counter", "cleanup", "Cleanup vsi based counter", "<vsi>", SW_API_VSI_COUNTER_CLEANUP, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },
