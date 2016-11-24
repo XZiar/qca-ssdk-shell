@@ -461,13 +461,13 @@ fal_ip_vsi_arp_sg_cfg_get(a_uint32_t dev_id, a_uint32_t vsi,
 }
 
 sw_error_t
-fal_ip_network_route_set(a_uint32_t dev_id,
+fal_ip_network_route_add(a_uint32_t dev_id,
 			a_uint32_t index,
 			fal_network_route_entry_t *entry)
 {
 	sw_error_t rv;
 
-	rv = sw_uk_exec(SW_API_IP_NETWORK_ROUTE_SET, dev_id, index, (a_uint32_t)entry);
+	rv = sw_uk_exec(SW_API_IP_NETWORK_ROUTE_ADD, dev_id, index, (a_uint32_t)entry);
 	return rv;
 }
 
@@ -603,29 +603,30 @@ fal_ip_vsi_sg_cfg_set(a_uint32_t dev_id, a_uint32_t vsi,
 }
 
 sw_error_t
-fal_ip_pub_addr_add(a_uint32_t dev_id, fal_ip_pub_addr_t *entry)
+fal_ip_pub_addr_set(a_uint32_t dev_id, a_uint32_t index,
+			fal_ip_pub_addr_t *entry)
 {
 	sw_error_t rv;
 
-	rv = sw_uk_exec(SW_API_IP_PUB_IP_ADD, dev_id, (a_uint32_t)entry);
+	rv = sw_uk_exec(SW_API_IP_PUB_IP_SET, dev_id, index, (a_uint32_t)entry);
 	return rv;
 }
 
 sw_error_t
-fal_ip_pub_addr_del(a_uint32_t dev_id, a_uint32_t entry_id)
+fal_ip_network_route_del(a_uint32_t dev_id, a_uint32_t index, a_uint8_t type)
 {
 	sw_error_t rv;
 
-	rv = sw_uk_exec(SW_API_IP_PUB_IP_DEL, dev_id, entry_id);
+	rv = sw_uk_exec(SW_API_IP_NETWORK_ROUTE_DEL, dev_id, index, type);
 	return rv;
 }
 
 sw_error_t
-fal_ip_pub_addr_get(a_uint32_t dev_id, fal_ip_pub_addr_t *entry)
+fal_ip_pub_addr_get(a_uint32_t dev_id, a_uint32_t index, fal_ip_pub_addr_t *entry)
 {
 	sw_error_t rv;
 
-	rv = sw_uk_exec(SW_API_IP_PUB_IP_GET, dev_id, (a_uint32_t)entry);
+	rv = sw_uk_exec(SW_API_IP_PUB_IP_GET, dev_id, index, (a_uint32_t)entry);
 	return rv;
 }
 
@@ -650,20 +651,20 @@ fal_ip_port_macaddr_get(a_uint32_t dev_id, fal_port_t port_id,
 }
 
 sw_error_t
-fal_ip_route_mismatch_set(a_uint32_t dev_id, fal_fwd_cmd_t cmd)
+fal_ip_route_mismatch_action_set(a_uint32_t dev_id, fal_fwd_cmd_t action)
 {
 	sw_error_t rv;
 
-	rv = sw_uk_exec(SW_API_IP_ROUTE_MISS_SET, dev_id, (a_uint32_t)cmd);
+	rv = sw_uk_exec(SW_API_IP_ROUTE_MISS_SET, dev_id, (a_uint32_t)action);
 	return rv;
 }
 
 sw_error_t
-fal_ip_route_mismatch_get(a_uint32_t dev_id, fal_fwd_cmd_t *cmd)
+fal_ip_route_mismatch_action_get(a_uint32_t dev_id, fal_fwd_cmd_t *action)
 {
 	sw_error_t rv;
 
-	rv = sw_uk_exec(SW_API_IP_ROUTE_MISS_GET, dev_id, (a_uint32_t)cmd);
+	rv = sw_uk_exec(SW_API_IP_ROUTE_MISS_GET, dev_id, (a_uint32_t)action);
 	return rv;
 }
 
