@@ -315,6 +315,14 @@ enum
 	} fal_mru_ctrl_t;
 
 	sw_error_t
+	fal_port_max_frame_size_set(a_uint32_t dev_id, fal_port_t port_id,
+			a_uint32_t max_frame);
+
+	sw_error_t
+	fal_port_max_frame_size_get(a_uint32_t dev_id, fal_port_t port_id,
+			a_uint32_t *max_frame);
+
+	sw_error_t
 	fal_port_mtu_set(a_uint32_t dev_id, fal_port_t port_id,
 			fal_mtu_ctrl_t *ctrl);
 

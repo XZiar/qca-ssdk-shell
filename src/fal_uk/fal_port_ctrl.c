@@ -821,3 +821,25 @@ fal_port_source_filter_get(a_uint32_t dev_id, fal_port_t port_id,
     return rv;
 }
 
+sw_error_t
+fal_port_max_frame_size_set(a_uint32_t dev_id, fal_port_t port_id,
+                       a_uint32_t max_frame)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_FRAME_MAX_SIZE_SET, dev_id, port_id,
+                    max_frame);
+    return rv;
+}
+
+sw_error_t
+fal_port_max_frame_size_get(a_uint32_t dev_id, fal_port_t port_id,
+                       a_uint32_t* max_frame)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_FRAME_MAX_SIZE_GET, dev_id, port_id,
+                  max_frame);
+    return rv;
+}
+
