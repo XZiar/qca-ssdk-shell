@@ -299,11 +299,14 @@ ifeq (SHELL, $(MODULE_TYPE))
    	  MODULE_CFLAG += -DKVER24
     endif
 
-    ifeq (TRUE, $(KERNEL_MODE))
-      MODULE_CFLAG += -static
-    else
-      MODULE_CFLAG += -static -DUSER_MODE
+    ifneq (TRUE, $(KERNEL_MODE))
+      MODULE_CFLAG += -DUSER_MODE
     endif
+
+    ifneq (arm64, $(ARCH))
+      MODULE_CFLAG += -static
+    endif
+ 
 endif
 
 ifneq (TRUE, $(KERNEL_MODE))
