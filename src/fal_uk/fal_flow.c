@@ -57,28 +57,28 @@ fal_flow_age_timer_get(a_uint32_t dev_id, fal_flow_age_timer_t *age_timer)
 }
 
 sw_error_t
-fal_flow_ctrl_set(
+fal_flow_mgmt_set(
 		a_uint32_t dev_id,
 		fal_flow_pkt_type_t type,
 		fal_flow_direction_t dir,
-		fal_flow_ctrl_t *ctrl)
+		fal_flow_mgmt_t *mgmt)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_FLOW_CTRL_SET, dev_id, type, dir, ctrl);
+    rv = sw_uk_exec(SW_API_FLOW_CTRL_SET, dev_id, type, dir, mgmt);
     return rv;
 }
 
 sw_error_t
-fal_flow_ctrl_get(
+fal_flow_mgmt_get(
 		a_uint32_t dev_id,
 		fal_flow_pkt_type_t type,
 		fal_flow_direction_t dir,
-		fal_flow_ctrl_t *ctrl)
+		fal_flow_mgmt_t *mgmt)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_FLOW_CTRL_GET, dev_id, type, dir, ctrl);
+    rv = sw_uk_exec(SW_API_FLOW_CTRL_GET, dev_id, type, dir, mgmt);
     return rv;
 }
 
