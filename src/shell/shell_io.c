@@ -309,7 +309,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_POLICER_PORT_CONFIG, cmd_data_check_port_policer_config, cmd_data_print_port_policer_config),
     SW_TYPE_DEF(SW_POLICER_CMD_CONFIG, cmd_data_check_policer_cmd_config, cmd_data_print_policer_cmd_config),
     SW_TYPE_DEF(SW_POLICER_COUNTER, NULL, cmd_data_print_policer_counter_infor),
-
+    SW_TYPE_DEF(SW_POLICER_GLOBAL_COUNTER, NULL, cmd_data_print_policer_global_counter_infor),
 };
 
 sw_data_type_t *
@@ -24926,3 +24926,22 @@ cmd_data_print_policer_counter_infor(a_uint8_t * param_name, a_uint32_t * buf, a
 
 	return;
 }
+
+void
+cmd_data_print_policer_global_counter_infor(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_policer_global_counter_t *entry;
+	entry = (fal_policer_global_counter_t *) buf;
+
+	dprintf("\n[policer_drop_packet_counter]:0x%x", entry->policer_drop_packet_counter);
+	dprintf("\n[policer_drop_byte_counter]:0x%llx", entry->policer_drop_byte_counter);
+
+	dprintf("\n[policer_forward_packet_counter]:0x%x", entry->policer_forward_packet_counter);
+	dprintf("\n[policer_forward_byte_counter]:0x%llx", entry->policer_forward_byte_counter);
+
+	dprintf("\n[policer_bypass_packet_counter]:0x%x", entry->policer_bypass_packet_counter);
+	dprintf("\n[policer_bypass_byte_counter]:0x%llx", entry->policer_bypass_byte_counter);
+
+	return;
+}
+

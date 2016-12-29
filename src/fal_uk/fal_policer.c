@@ -125,4 +125,14 @@ fal_acl_policer_entry_get(a_uint32_t dev_id, fal_port_t port_id,
     return rv;
 }
 
+sw_error_t
+fal_policer_global_counter_get(a_uint32_t dev_id,fal_policer_global_counter_t *counter)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_POLICER_GLOBAL_COUNTER_GET, dev_id,
+		(a_uint32_t) counter);
+    return rv;
+}
+
 
