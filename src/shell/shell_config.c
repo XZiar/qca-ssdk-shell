@@ -970,6 +970,7 @@ struct cmd_des_t gcmd_des[] =
 			{"portentry", "get", "Get port policer entry", "<port_id>", SW_API_POLICER_PORT_ENTRY_GET, NULL},
 			{"aclentry", "set", "Set acl policer entry", "<index>", SW_API_POLICER_ACL_ENTRY_SET, NULL},
 			{"aclentry", "get", "Get acl policer entry", "<index>", SW_API_POLICER_ACL_ENTRY_GET, NULL},
+			{"globalcounter", "get", "Get policer global counter", "", SW_API_POLICER_GLOBAL_COUNTER_GET, NULL},
 			{NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
 		},
 	},
