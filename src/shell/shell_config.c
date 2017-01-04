@@ -104,6 +104,8 @@ struct cmd_des_t gcmd_des[] =
             {"mru", "get", "get port mru value", "", SW_API_PT_MRU_GET, NULL},
             {"srcfilter", "set", "set port source filter bypass", "<port_id> <enable|disable>", SW_API_PT_SOURCE_FILTER_SET, NULL},
             {"srcfilter", "get", "get port source filter bypass", "<port_id>", SW_API_PT_SOURCE_FILTER_GET, NULL},
+            {"frameMaxSize", "get", "get port frame max size", "<port_id>", SW_API_PT_FRAME_MAX_SIZE_GET},
+            {"frameMaxSize", "set", "set port frame max size", "<port_id> <frame_max_size>", SW_API_PT_FRAME_MAX_SIZE_SET},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL},/*end of desc*/
         },
     },
