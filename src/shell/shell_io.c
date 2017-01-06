@@ -2209,8 +2209,10 @@ cmd_data_check_portid(char *cmdstr, fal_port_t * val, a_uint32_t size)
             return SW_BAD_VALUE;
         return SW_OK;
     }
-
-    sscanf(cmdstr, "%d", val);
+   if (strstr(cmdstr, "0x") == NULL)
+	sscanf(cmdstr, "%d", val);
+   else
+	sscanf(cmdstr, "%x", val);
 
     return SW_OK;
 }
