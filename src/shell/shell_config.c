@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2015, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2017, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -95,9 +95,6 @@ struct cmd_des_t gcmd_des[] =
             {"interfaceMode", "set", "set interface mode of phy", "<port_id> <psgmii_baset|psgmii_bx1000|psgmii_fx100|psgmii_amdet|sgmii_baset>", SW_API_PT_INTERFACE_MODE_SET, NULL},
             {"interfaceMode", "get", "get interface mode of phy", "<port_id>", SW_API_PT_INTERFACE_MODE_GET, NULL},
             {"interfaceMode", "status", "get current interface mode of phy", "<port_id>", SW_API_PT_INTERFACE_MODE_STATUS_GET, NULL},
-	        {"counter", "set", "set counter status of a port", "<port_id> <enable|disable>", SW_API_PT_COUNTER_SET, NULL},
-	        {"counter", "get", "get counter status of a port", "<port_id>", SW_API_PT_COUNTER_GET, NULL},
-	        {"counter", "show", "show counter statistics of a port", "<port_id>", SW_API_PT_COUNTER_SHOW, NULL},
             {"mtu", "set", "set port mtu value", "", SW_API_PT_MTU_SET, NULL},
             {"mtu", "get", "get port mtu value", "", SW_API_PT_MTU_GET, NULL},
             {"mru", "set", "set port mru value", "", SW_API_PT_MRU_SET, NULL},
@@ -1049,6 +1046,9 @@ struct cmd_des_t gcmd_des[] =
             {"module_func",  "set", "set the module function bitmap", "<module>", SW_API_MODULE_FUNC_CTRL_SET, NULL},
             {"module_func",  "get", "set the module function bitmap", "<module>", SW_API_MODULE_FUNC_CTRL_GET, NULL},
             {"ssdk",  "config", "show ssdk configuration",     "", SW_API_SSDK_CFG, NULL},
+            {"phycounter",  "set", "set counter status of a port",   "<port_id> <enable|disable>", SW_API_DEBUG_PHYCOUNTER_SET, NULL},
+            {"phycounter",  "get", "get counter status of a port",   "<port_id>", SW_API_DEBUG_PHYCOUNTER_GET, NULL},
+            {"phycounter",  "show", "show counter of a port",   "<port_id>", SW_API_DEBUG_PHYCOUNTER_SHOW, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },
