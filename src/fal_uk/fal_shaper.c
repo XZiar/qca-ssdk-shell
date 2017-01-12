@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -21,56 +21,56 @@
 
 
 sw_error_t
-fal_port_shaper_time_slot_set(a_uint32_t dev_id, a_uint32_t time_slot)
+fal_port_shaper_timeslot_set(a_uint32_t dev_id, a_uint32_t timeslot)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PORT_SHAPER_TIMESLOT_SET, dev_id, time_slot);
+    rv = sw_uk_exec(SW_API_PORT_SHAPER_TIMESLOT_SET, dev_id, timeslot);
     return rv;
 }
 
 sw_error_t
-fal_port_shaper_time_slot_get(a_uint32_t dev_id, a_uint32_t *time_slot)
+fal_port_shaper_timeslot_get(a_uint32_t dev_id, a_uint32_t *timeslot)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PORT_SHAPER_TIMESLOT_GET, dev_id, time_slot);
+    rv = sw_uk_exec(SW_API_PORT_SHAPER_TIMESLOT_GET, dev_id, timeslot);
     return rv;
 }
 
 sw_error_t
-fal_flow_shaper_time_slot_set(a_uint32_t dev_id, a_uint32_t time_slot)
+fal_flow_shaper_timeslot_set(a_uint32_t dev_id, a_uint32_t timeslot)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_FLOW_SHAPER_TIMESLOT_SET, dev_id, time_slot);
+    rv = sw_uk_exec(SW_API_FLOW_SHAPER_TIMESLOT_SET, dev_id, timeslot);
     return rv;
 }
 
 sw_error_t
-fal_flow_shaper_time_slot_get(a_uint32_t dev_id, a_uint32_t *time_slot)
+fal_flow_shaper_timeslot_get(a_uint32_t dev_id, a_uint32_t *timeslot)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_FLOW_SHAPER_TIMESLOT_GET, dev_id, time_slot);
+    rv = sw_uk_exec(SW_API_FLOW_SHAPER_TIMESLOT_GET, dev_id, timeslot);
     return rv;
 }
 
 sw_error_t
-fal_queue_shaper_time_slot_set(a_uint32_t dev_id, a_uint32_t time_slot)
+fal_queue_shaper_timeslot_set(a_uint32_t dev_id, a_uint32_t timeslot)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_QUEUE_SHAPER_TIMESLOT_SET, dev_id, time_slot);
+    rv = sw_uk_exec(SW_API_QUEUE_SHAPER_TIMESLOT_SET, dev_id, timeslot);
     return rv;
 }
 
 sw_error_t
-fal_queue_shaper_time_slot_get(a_uint32_t dev_id, a_uint32_t *time_slot)
+fal_queue_shaper_timeslot_get(a_uint32_t dev_id, a_uint32_t *timeslot)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_QUEUE_SHAPER_TIMESLOT_GET, dev_id, time_slot);
+    rv = sw_uk_exec(SW_API_QUEUE_SHAPER_TIMESLOT_GET, dev_id, timeslot);
     return rv;
 }
 
