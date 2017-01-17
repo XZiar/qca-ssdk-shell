@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014, 2016-2017, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -240,6 +240,10 @@ enum {
 	FUNC_PORT_VLAN_COUNTER_STATUS_GET,
 	FUNC_PORT_VLAN_COUNTER_GET,
 	FUNC_PORT_VLAN_COUNTER_CLEANUP,
+	FUNC_PORT_VLAN_MEMBER_ADD,
+	FUNC_PORT_VLAN_MEMBER_DEL,
+	FUNC_PORT_VLAN_MEMBER_UPDATE,
+	FUNC_PORT_VLAN_MEMBER_GET,
 };
 
 
