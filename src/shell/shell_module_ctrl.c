@@ -196,7 +196,7 @@ static void cmd_data_print_acl_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_vsi_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_VSI_MEMBER_GET+1] ={
+	char *func_name[FUNC_VSI_COUNTER_CLEANUP+1] ={
 		"FUNC_PORT_VLAN_VSI_SET",
 		"FUNC_PORT_VLAN_VSI_GET",
 		"FUNC_PORT_VSI_SET",
@@ -207,9 +207,11 @@ static void cmd_data_print_vsi_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_VSI_NEWADDR_LRN_GET",
 		"FUNC_VSI_MEMBER_SET",
 		"FUNC_VSI_MEMBER_GET",
+		"FUNC_VSI_COUNTER_GET",
+		"FUNC_VSI_COUNTER_CLEANUP",
 	};
 
-	for(func = FUNC_PORT_VLAN_VSI_SET; func <= FUNC_VSI_MEMBER_GET; func++)
+	for(func = FUNC_PORT_VLAN_VSI_SET; func <= FUNC_VSI_COUNTER_CLEANUP; func++)
 	{
 		if(p->bitmap[0] & (1<<func))
 		{

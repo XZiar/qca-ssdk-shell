@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -38,7 +38,7 @@ fal_vsi_free(a_uint32_t dev_id, a_uint32_t vsi)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_VSI_FREE, dev_id, (a_uint32_t)vsi);
+    rv = sw_uk_exec(SW_API_VSI_FREE, dev_id, vsi);
     return rv;
 }
 
@@ -47,7 +47,7 @@ fal_port_vlan_vsi_get(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t stag_vid
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PORT_VLAN_VSI_GET, dev_id, port_id, stag_vid, ctag_vid, (a_uint32_t)vsi_id);
+    rv = sw_uk_exec(SW_API_PORT_VLAN_VSI_GET, dev_id, port_id, stag_vid, ctag_vid, vsi_id);
     return rv;
 }
 
@@ -65,7 +65,7 @@ fal_vsi_alloc(a_uint32_t dev_id, a_uint32_t *vsi)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_VSI_ALLOC, dev_id, (a_uint32_t)vsi);
+    rv = sw_uk_exec(SW_API_VSI_ALLOC, dev_id, vsi);
     return rv;
 }
 
