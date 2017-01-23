@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2017, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -23184,7 +23184,7 @@ cmd_data_check_port_shaper_token_config(char *cmd_str, void * val, a_uint32_t si
 
     do
     {
-        cmd = get_sub_cmd("c_token_negative_en", "no");
+        cmd = get_sub_cmd("ctoken_negative_enable", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -23209,7 +23209,7 @@ cmd_data_check_port_shaper_token_config(char *cmd_str, void * val, a_uint32_t si
 
     do
     {
-        cmd = get_sub_cmd("c_token_number", "0-0x3FFFFFFF");
+        cmd = get_sub_cmd("ctoken_number", "0-0x3FFFFFFF");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -23247,7 +23247,7 @@ cmd_data_check_shaper_token_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("c_token_negative_en", "no");
+        cmd = get_sub_cmd("ctoken_negative_enable", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -23272,7 +23272,7 @@ cmd_data_check_shaper_token_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("c_token_number", "0-0x3FFFFFFF");
+        cmd = get_sub_cmd("ctoken_number", "0-0x3FFFFFFF");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -23295,7 +23295,7 @@ cmd_data_check_shaper_token_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("e_token_negative_en", "no");
+        cmd = get_sub_cmd("etoken_negative_enable", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -23321,7 +23321,7 @@ cmd_data_check_shaper_token_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("e_token_number", "0-0x3FFFFFFF");
+        cmd = get_sub_cmd("etoken_number", "0-0x3FFFFFFF");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -23382,7 +23382,7 @@ cmd_data_check_port_shaper_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("c_shaper_enable", "no");
+        cmd = get_sub_cmd("cshaper_enable", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -23539,7 +23539,7 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("c_shaper_enable", "no");
+        cmd = get_sub_cmd("cshaper_enable", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -23610,7 +23610,7 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("e_shaper_enable", "no");
+        cmd = get_sub_cmd("eshaper_enable", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -23714,24 +23714,24 @@ cmd_data_print_shaper_token_config(a_uint8_t * param_name, a_uint32_t * buf, a_u
 
 	if (A_TRUE == entry->c_token_number_negative_en)
 	{
-		dprintf("\n[shaper_c_token_negative_enable]:yes  ");
+		dprintf("\n[shaper_ctoken_negative_enable]:yes  ");
 	}
 	else
 	{
-		dprintf("\n[shaper_c_token_negative_enable]:no  ");
+		dprintf("\n[shaper_ctoken_negative_enable]:no  ");
 	}
-	dprintf("\n[shaper_c_token_number]:0x%x", entry->c_token_number);
+	dprintf("\n[shaper_ctoken_number]:0x%x", entry->c_token_number);
 
 	if (A_TRUE == entry->e_token_number_negative_en)
 	{
-		dprintf("\n[shaper_e_token_negative_enable]:yes  ");
+		dprintf("\n[shaper_etoken_negative_enable]:yes  ");
 	}
 	else
 	{
-		dprintf("\n[shaper_e_token_negative_enable]:no  ");
+		dprintf("\n[shaper_etoken_negative_enable]:no  ");
 	}
 
-	dprintf("\n[shaper_e_token_number]:0x%x", entry->e_token_number);
+	dprintf("\n[shaper_etoken_number]:0x%x", entry->e_token_number);
 
 	return;
 }
@@ -23744,13 +23744,13 @@ cmd_data_print_port_shaper_token_config(a_uint8_t * param_name, a_uint32_t * buf
 
 	if (A_TRUE == entry->c_token_number_negative_en)
 	{
-		dprintf("\n[shaper_c_token_negative_enable]:yes  ");
+		dprintf("\n[shaper_ctoken_negative_enable]:yes  ");
 	}
 	else
 	{
-		dprintf("\n[shaper_c_token_negative_enable]:no  ");
+		dprintf("\n[shaper_ctoken_negative_enable]:no  ");
 	}
-	dprintf("\n[shaper_c_token_number]:0x%x", entry->c_token_number);
+	dprintf("\n[shaper_ctoken_number]:0x%x", entry->c_token_number);
 
 	return;
 }
@@ -23775,11 +23775,11 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 
     if (A_TRUE == entry->c_shaper_en)
     {
-        dprintf("\n[shaper_c_shaper_enable]:yes  ");
+        dprintf("\n[shaper_cshaper_enable]:yes  ");
     }
     else
     {
-        dprintf("\n[shaper_c_shaper_enable]:no  ");
+        dprintf("\n[shaper_cshaper_enable]:no  ");
     }
 
     dprintf("\n[shaper_cir]:0x%x", entry->cir);
@@ -23787,11 +23787,11 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 
     if (A_TRUE == entry->e_shaper_en)
     {
-        dprintf("\n[shaper_e_shaper_enable]:yes  ");
+        dprintf("\n[shaper_eshaper_enable]:yes  ");
     }
     else
     {
-        dprintf("\n[shaper_e_shaper_enable]:no  ");
+        dprintf("\n[shaper_eshaper_enable]:no  ");
     }
 
     dprintf("\n[shaper_eir]:0x%x", entry->eir);
@@ -23813,11 +23813,11 @@ cmd_data_print_port_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 
     if (A_TRUE == entry->c_shaper_en)
     {
-        dprintf("\n[shaper_c_shaper_enable]:yes  ");
+        dprintf("\n[shaper_cshaper_enable]:yes  ");
     }
     else
     {
-        dprintf("\n[shaper_c_shaper_enable]:no  ");
+        dprintf("\n[shaper_cshaper_enable]:no  ");
     }
 
     dprintf("\n[shaper_cir]:0x%x", entry->cir);
@@ -24316,7 +24316,7 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("yellow_priority_en", "no");
+        cmd = get_sub_cmd("yellow_priority_remark", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -24341,7 +24341,7 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("yellow_drop_priority_en", "no");
+        cmd = get_sub_cmd("yellow_drop_priority_remark", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -24367,7 +24367,7 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("yellow_pcp_en", "no");
+        cmd = get_sub_cmd("yellow_pcp_remark", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -24392,7 +24392,7 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("yellow_dei_en", "no");
+        cmd = get_sub_cmd("yellow_dei_remark", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -24533,7 +24533,7 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("red_priority_en", "no");
+        cmd = get_sub_cmd("red_priority_remark", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -24558,7 +24558,7 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("red_drop_priority_en", "no");
+        cmd = get_sub_cmd("red_drop_priority_remark", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -24583,7 +24583,7 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("red_pcp_en", "no");
+        cmd = get_sub_cmd("red_pcp_remark", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -24608,7 +24608,7 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("red_dei_en", "no");
+        cmd = get_sub_cmd("red_dei_remark", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -24737,20 +24737,20 @@ cmd_data_print_port_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_u
 
     if (A_TRUE == entry->meter_en)
     {
-        dprintf("\n[meter_en]:yes  ");
+        dprintf("\n[meter_enable]:yes  ");
     }
     else
     {
-        dprintf("\n[meter_en]:no  ");
+        dprintf("\n[meter_enable]:no  ");
     }
 
     if (A_TRUE == entry->couple_en)
     {
-        dprintf("\n[couple_en]:yes  ");
+        dprintf("\n[couple_enable]:yes  ");
     }
     else
     {
-        dprintf("\n[coupler_en]:no  ");
+        dprintf("\n[coupler_enable]:no  ");
     }
 
     dprintf("\n[color_mode]:0x%x", entry->color_mode);
@@ -24782,38 +24782,38 @@ cmd_data_print_policer_cmd_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 
     if (A_TRUE == entry->yellow_priority_en)
     {
-        dprintf("\n[yellow_priority_enable]:yes  ");
+        dprintf("\n[yellow_priority_remark]:yes  ");
     }
     else
     {
-        dprintf("\n[yellow_priority_enable]:no  ");
+        dprintf("\n[yellow_priority_remark]:no  ");
     }
 
     if (A_TRUE == entry->yellow_drop_priority_en)
     {
-        dprintf("\n[yellow_drop_priority_enable]:yes  ");
+        dprintf("\n[yellow_drop_priority_remark]:yes  ");
     }
     else
     {
-        dprintf("\n[yellow_drop_priority_enable]:no  ");
+        dprintf("\n[yellow_drop_priority_remark]:no  ");
     }
 
     if (A_TRUE == entry->yellow_pcp_en)
     {
-        dprintf("\n[yellow_pcp_enable]:yes  ");
+        dprintf("\n[yellow_pcp_remark]:yes  ");
     }
     else
     {
-        dprintf("\n[yellow_pcp_enable]:no  ");
+        dprintf("\n[yellow_pcp_remark]:no  ");
     }
 
     if (A_TRUE == entry->yellow_dei_en)
     {
-        dprintf("\n[yellow_dei_enable]:yes  ");
+        dprintf("\n[yellow_dei_remark]:yes  ");
     }
     else
     {
-        dprintf("\n[yellow_dei_enable]:no  ");
+        dprintf("\n[yellow_dei_remark]:no  ");
     }
 
     dprintf("\n[yellow_priority]:0x%x", entry->yellow_priority);
@@ -24825,38 +24825,38 @@ cmd_data_print_policer_cmd_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 
     if (A_TRUE == entry->red_priority_en)
     {
-        dprintf("\n[red_priority_enable]:yes  ");
+        dprintf("\n[red_priority_remark]:yes  ");
     }
     else
     {
-        dprintf("\n[red_priority_enable]:no  ");
+        dprintf("\n[red_priority_remark]:no  ");
     }
 
     if (A_TRUE == entry->red_drop_priority_en)
     {
-        dprintf("\n[red_drop_priority_enable]:yes  ");
+        dprintf("\n[red_drop_priority_remark]:yes  ");
     }
     else
     {
-        dprintf("\n[red_drop_priority_enable]:no  ");
+        dprintf("\n[red_drop_priority_remark]:no  ");
     }
 
     if (A_TRUE == entry->red_pcp_en)
     {
-        dprintf("\n[red_pcp_enable]:yes  ");
+        dprintf("\n[red_pcp_remark]:yes  ");
     }
     else
     {
-        dprintf("\n[red_pcp_enable]:no  ");
+        dprintf("\n[red_pcp_remark]:no  ");
     }
 
     if (A_TRUE == entry->red_dei_en)
     {
-        dprintf("\n[red_dei_enable]:yes  ");
+        dprintf("\n[red_dei_remark]:yes  ");
     }
     else
     {
-        dprintf("\n[red_dei_enable]:no  ");
+        dprintf("\n[red_dei_remark]:no  ");
     }
 
     dprintf("\n[red_priority]:0x%x", entry->red_priority);
@@ -24876,20 +24876,20 @@ cmd_data_print_acl_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 
     if (A_TRUE == entry->meter_en)
     {
-        dprintf("[meter_en]:yes  ");
+        dprintf("[meter_enable]:yes  ");
     }
     else
     {
-        dprintf("\n[meter_en]:no  ");
+        dprintf("\n[meter_enable]:no  ");
     }
 
     if (A_TRUE == entry->couple_en)
     {
-        dprintf("\n[couple_en]:yes  ");
+        dprintf("\n[couple_enable]:yes  ");
     }
     else
     {
-        dprintf("\n[coupler_en]:no  ");
+        dprintf("\n[coupler_enable]:no  ");
     }
 
     dprintf("\n[color_mode]:0x%x", entry->color_mode);
