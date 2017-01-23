@@ -2847,7 +2847,7 @@ cmd_data_check_maclimit_ctrl(char *info, void *val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("enable", "yes");
+        cmd = get_sub_cmd("maclimit status", "yes");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -2871,7 +2871,7 @@ cmd_data_check_maclimit_ctrl(char *info, void *val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("limit num", "2048");
+        cmd = get_sub_cmd("maclimit counter", "2048");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -2895,7 +2895,7 @@ cmd_data_check_maclimit_ctrl(char *info, void *val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("action", "forward");
+        cmd = get_sub_cmd("maclimit exceed action", "forward");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -2931,11 +2931,11 @@ cmd_data_print_maclimit_ctrl(a_uint8_t * param_name, a_uint32_t * buf,
 
     maclimit_ctrl = (fal_maclimit_ctrl_t *) buf;
     dprintf("\n");
-    cmd_data_print_confirm("[enable]:", maclimit_ctrl->enable, sizeof (a_bool_t));
+    cmd_data_print_confirm("[maclimit status]:", maclimit_ctrl->enable, sizeof (a_bool_t));
     dprintf(" ");
-    cmd_data_print_uint32("limit num", (a_uint32_t *) & (maclimit_ctrl->limit_num), 4);
+    cmd_data_print_uint32("maclimit counter", (a_uint32_t *) & (maclimit_ctrl->limit_num), 4);
     dprintf(" ");
-    cmd_data_print_maccmd("action", (a_uint32_t *) & (maclimit_ctrl->action),
+    cmd_data_print_maccmd("maclimit exceed action", (a_uint32_t *) & (maclimit_ctrl->action),
                           sizeof (fal_fwd_cmd_t));
     dprintf("\n");
 
@@ -6902,7 +6902,7 @@ cmd_data_check_mirr_analy_cfg(char *info, void *val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("port_id", "0");
+        cmd = get_sub_cmd("analysis_port", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -6924,7 +6924,7 @@ cmd_data_check_mirr_analy_cfg(char *info, void *val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("priority", "0");
+        cmd = get_sub_cmd("analysis_priority", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -6954,8 +6954,8 @@ cmd_data_print_mirr_analy_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
 
     entry = (fal_mirr_analysis_config_t *) buf;
     dprintf("\n");
-    dprintf("[port_id]:0x%x\n", entry->port_id);
-    dprintf("[priority]:0x%x\n", entry->priority);
+    dprintf("[analysis_port]:0x%x\n", entry->port_id);
+    dprintf("[analysis_priority]:0x%x\n", entry->priority);
 }
 
 sw_error_t
@@ -9052,7 +9052,7 @@ cmd_data_check_pppoe(char *cmd_str, void * val, a_uint32_t size)
 
         do
         {
-            cmd = get_sub_cmd("l3_interface_index", "0");
+            cmd = get_sub_cmd("l3if_index", "0");
             SW_RTN_ON_NULL_PARAM(cmd);
 
             if (!strncasecmp(cmd, "quit", 4))
@@ -9075,7 +9075,7 @@ cmd_data_check_pppoe(char *cmd_str, void * val, a_uint32_t size)
 
         do
         {
-            cmd = get_sub_cmd("l3_interface_index_valid", "no");
+            cmd = get_sub_cmd("l3if_index_valid", "no");
             SW_RTN_ON_NULL_PARAM(cmd);
 
             if (!strncasecmp(cmd, "quit", 4))
@@ -9100,7 +9100,7 @@ cmd_data_check_pppoe(char *cmd_str, void * val, a_uint32_t size)
 
         do
         {
-            cmd = get_sub_cmd("smac_addr", NULL);
+            cmd = get_sub_cmd("smacaddr", NULL);
             SW_RTN_ON_NULL_PARAM(cmd);
 
             if (!strncasecmp(cmd, "quit", 4))
@@ -9124,7 +9124,7 @@ cmd_data_check_pppoe(char *cmd_str, void * val, a_uint32_t size)
 
         do
         {
-            cmd = get_sub_cmd("smac_valid", "no");
+            cmd = get_sub_cmd("smacaddr_valid", "no");
             SW_RTN_ON_NULL_PARAM(cmd);
 
             if (!strncasecmp(cmd, "quit", 4))
@@ -9165,10 +9165,10 @@ cmd_data_print_pppoe(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
             entry->uni_session ?   "YES":"NO",
             entry->vrf_id);
     cmd_data_print_portmap("[Port]:", entry->port_bitmap, sizeof (fal_pbmp_t));
-    dprintf("  [L3InterfaceIndex]:0x%x  [L3InterfaceIndexValid]:%s\n",
+    dprintf("  [l3if_index]:0x%x  [l3if_index_valid]:%s\n",
             entry->l3_if_index, entry->l3_if_valid ? "YES":"NO");
-    cmd_data_print_macaddr("[SmacAddr]:", (a_uint32_t *) & (entry->smac_addr), sizeof (fal_mac_addr_t));
-    dprintf("  [SmacValid]:%s", entry->smac_valid ? "YES":"NO");
+    cmd_data_print_macaddr("[smacaddr]:", (a_uint32_t *) & (entry->smac_addr), sizeof (fal_mac_addr_t));
+    dprintf("  [smacaddr_valid]:%s", entry->smac_valid ? "YES":"NO");
 }
 
 sw_error_t
@@ -20290,7 +20290,7 @@ cmd_data_check_global_qinqmode(char *info, void *val, a_uint32_t size)
     /* get ingress mode */
     do
     {
-        cmd = get_sub_cmd("ingress mode", "ctag");
+        cmd = get_sub_cmd("ingress_qinq_mode", "ctag");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20313,7 +20313,7 @@ cmd_data_check_global_qinqmode(char *info, void *val, a_uint32_t size)
     /* get egress mode */
     do
     {
-        cmd = get_sub_cmd("egress mode", "ctag");
+        cmd = get_sub_cmd("egress_qinq_mode", "ctag");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20345,11 +20345,11 @@ cmd_data_print_global_qinqmode(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
     dprintf("\n");
     dprintf("[mask]:%d\n", entry->mask);
 
-    cmd_data_print_qinq_mode("ingress_mode",
+    cmd_data_print_qinq_mode("ingress_qinq_mode",
 				(a_uint32_t *) & (entry->ingress_mode),
 				sizeof(a_uint32_t));
 
-    cmd_data_print_qinq_mode("egress_mode",
+    cmd_data_print_qinq_mode("egress_qinq_mode",
 				(a_uint32_t *) & (entry->egress_mode),
 				sizeof(a_uint32_t));
 
@@ -20391,7 +20391,7 @@ cmd_data_check_port_qinqmode(char *info, void *val, a_uint32_t size)
     /* get ingress mode */
     do
     {
-        cmd = get_sub_cmd("ingress mode", "edge");
+        cmd = get_sub_cmd("ingress_qinq_role", "edge");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20414,7 +20414,7 @@ cmd_data_check_port_qinqmode(char *info, void *val, a_uint32_t size)
     /* get egress mode */
     do
     {
-        cmd = get_sub_cmd("egress mode", "edge");
+        cmd = get_sub_cmd("egress_qinq_role", "edge");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20446,11 +20446,11 @@ cmd_data_print_port_qinqmode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
     dprintf("\n");
     dprintf("[mask]:%d\n", entry->mask);
 
-    cmd_data_print_qinq_role("ingress_mode",
+    cmd_data_print_qinq_role("ingress_qinq_role",
 				(a_uint32_t *) & (entry->ingress_port_role),
 				sizeof(a_uint32_t));
 
-    cmd_data_print_qinq_role("egress_mode:",
+    cmd_data_print_qinq_role("egress_qinq_role",
 				(a_uint32_t *) & (entry->egress_port_role),
 				sizeof(a_uint32_t));
 
@@ -20493,7 +20493,7 @@ cmd_data_check_tpid(char *info, void *val, a_uint32_t size)
     /* get ctpid */
     do
     {
-        cmd = get_sub_cmd("ctpid", "0x8100");
+        cmd = get_sub_cmd("ctagtpid", "0x8100");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20518,7 +20518,7 @@ cmd_data_check_tpid(char *info, void *val, a_uint32_t size)
     /* get stpid */
     do
     {
-        cmd = get_sub_cmd("stpid", "0x88a8");
+        cmd = get_sub_cmd("stagtpid", "0x88a8");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20551,8 +20551,8 @@ cmd_data_print_tpid(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     entry = (fal_tpid_t *) buf;
     dprintf("\n");
     dprintf("[mask]:%d\n", entry->mask);
-    dprintf("[ctpid]:0x%x\n", entry->ctpid);
-    dprintf("[stpid]:0x%x\n", entry->stpid);
+    dprintf("[ctagtpid]:0x%x\n", entry->ctpid);
+    dprintf("[stagtpid]:0x%x\n", entry->stpid);
 
     return SW_OK;
 }
@@ -20569,7 +20569,7 @@ cmd_data_check_ingress_filter(char *info, void *val, a_uint32_t size)
     /* get in vlan filter */
     do
     {
-        cmd = get_sub_cmd("membership filter", "disable");
+        cmd = get_sub_cmd("membership_filter_en", "disable");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20592,7 +20592,7 @@ cmd_data_check_ingress_filter(char *info, void *val, a_uint32_t size)
     /* get tag filter */
     do
     {
-        cmd = get_sub_cmd("tag filter", "disable");
+        cmd = get_sub_cmd("tagged_filter_en", "disable");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20615,7 +20615,7 @@ cmd_data_check_ingress_filter(char *info, void *val, a_uint32_t size)
     /* get untag filter */
     do
     {
-        cmd = get_sub_cmd("untag filter", "disable");
+        cmd = get_sub_cmd("untagged_filter_en", "disable");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20638,7 +20638,7 @@ cmd_data_check_ingress_filter(char *info, void *val, a_uint32_t size)
     /* get priority tag filter */
     do
     {
-        cmd = get_sub_cmd("pri tag filter", "disable");
+        cmd = get_sub_cmd("priority_tagged_filter_en", "disable");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20669,13 +20669,13 @@ cmd_data_print_ingress_filter(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     entry = (fal_ingress_vlan_filter_t *) buf;
     dprintf("\n");
 
-    cmd_data_print_enable("membership filter", (a_uint32_t *) & (entry->membership_filter), 4);
+    cmd_data_print_enable("membership_filter_en", (a_uint32_t *) & (entry->membership_filter), 4);
     dprintf("\n");
-    cmd_data_print_enable("tag filter", (a_uint32_t *) & (entry->tagged_filter), 4);
+    cmd_data_print_enable("tagged_filter_en", (a_uint32_t *) & (entry->tagged_filter), 4);
     dprintf("\n");
-    cmd_data_print_enable("untag filter", (a_uint32_t *) & (entry->untagged_filter), 4);
+    cmd_data_print_enable("untagged_filter_en", (a_uint32_t *) & (entry->untagged_filter), 4);
     dprintf("\n");
-    cmd_data_print_enable("priority filter", (a_uint32_t *) & (entry->priority_filter), 4);
+    cmd_data_print_enable("priority_tagged_filter_en", (a_uint32_t *) & (entry->priority_filter), 4);
     dprintf("\n");
 
     return SW_OK;
@@ -20693,7 +20693,7 @@ cmd_data_check_port_default_vid_en(char *info, void *val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("default cvid en", "disable");
+        cmd = get_sub_cmd("default_ctag_vid_en", "disable");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20715,7 +20715,7 @@ cmd_data_check_port_default_vid_en(char *info, void *val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("default svid en", "disable");
+        cmd = get_sub_cmd("default_stag_vid_en", "disable");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20746,9 +20746,9 @@ cmd_data_print_port_default_vid_en(a_uint8_t * param_name, a_uint32_t * buf, a_u
     entry = (fal_port_default_vid_enable_t *) buf;
     dprintf("\n");
 
-    cmd_data_print_enable("default cvid en", (a_uint32_t *) & (entry->default_cvid_en), 4);
+    cmd_data_print_enable("default_ctag_vid_en", (a_uint32_t *) & (entry->default_cvid_en), 4);
     dprintf("\n");
-    cmd_data_print_enable("default svid en", (a_uint32_t *) & (entry->default_svid_en), 4);
+    cmd_data_print_enable("default_stag_vid_en", (a_uint32_t *) & (entry->default_svid_en), 4);
     dprintf("\n");
 
     return SW_OK;
@@ -20790,7 +20790,7 @@ cmd_data_check_port_vlan_tag(char *info, void *val, a_uint32_t size)
     /* get cvid */
     do
     {
-        cmd = get_sub_cmd("cvid", "0");
+        cmd = get_sub_cmd("default_ctag_vid", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20815,7 +20815,7 @@ cmd_data_check_port_vlan_tag(char *info, void *val, a_uint32_t size)
     /* get svid */
     do
     {
-        cmd = get_sub_cmd("svid", "0");
+        cmd = get_sub_cmd("default_stag_vid", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20840,7 +20840,7 @@ cmd_data_check_port_vlan_tag(char *info, void *val, a_uint32_t size)
     /* get cpri */
     do
     {
-        cmd = get_sub_cmd("cpri", "0");
+        cmd = get_sub_cmd("default_ctag_pri", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20865,7 +20865,7 @@ cmd_data_check_port_vlan_tag(char *info, void *val, a_uint32_t size)
     /* get spri */
     do
     {
-        cmd = get_sub_cmd("spri", "0");
+        cmd = get_sub_cmd("default_stag_pri", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20890,7 +20890,7 @@ cmd_data_check_port_vlan_tag(char *info, void *val, a_uint32_t size)
     /* get cdei */
     do
     {
-        cmd = get_sub_cmd("cdei", "0");
+        cmd = get_sub_cmd("default_ctag_dei", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20915,7 +20915,7 @@ cmd_data_check_port_vlan_tag(char *info, void *val, a_uint32_t size)
     /* get sdei */
     do
     {
-        cmd = get_sub_cmd("sdei", "0");
+        cmd = get_sub_cmd("default_stag_dei", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -20950,17 +20950,17 @@ cmd_data_print_port_vlan_tag(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 
     cmd_data_print_uint32("mask", (a_uint32_t *) & (entry->mask), 4);
     dprintf("\n");
-    cmd_data_print_uint16("cvid", (a_uint32_t *) & (entry->cvid), 4);
+    cmd_data_print_uint16("default_ctag_vid", (a_uint32_t *) & (entry->cvid), 4);
     dprintf("\n");
-    cmd_data_print_uint16("svid", (a_uint32_t *) & (entry->svid), 4);
+    cmd_data_print_uint16("default_stag_vid", (a_uint32_t *) & (entry->svid), 4);
     dprintf("\n");
-    cmd_data_print_uint16("cpri", (a_uint32_t *) & (entry->cpri), 4);
+    cmd_data_print_uint16("default_ctag_pri", (a_uint32_t *) & (entry->cpri), 4);
     dprintf("\n");
-    cmd_data_print_uint16("spri", (a_uint32_t *) & (entry->spri), 4);
+    cmd_data_print_uint16("default_stag_pri", (a_uint32_t *) & (entry->spri), 4);
     dprintf("\n");
-    cmd_data_print_uint16("cdei", (a_uint32_t *) & (entry->cdei), 4);
+    cmd_data_print_uint16("default_ctag_dei", (a_uint32_t *) & (entry->cdei), 4);
     dprintf("\n");
-    cmd_data_print_uint16("sdei", (a_uint32_t *) & (entry->sdei), 4);
+    cmd_data_print_uint16("default_stag_dei", (a_uint32_t *) & (entry->sdei), 4);
     dprintf("\n");
 
     return SW_OK;
@@ -21026,7 +21026,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 	do
 	{
-		cmd = get_sub_cmd("stag_format", "0");
+		cmd = get_sub_cmd("stagformat", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21049,7 +21049,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 	do
 	{
-		cmd = get_sub_cmd("svid_enable", "yes");
+		cmd = get_sub_cmd("svid_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21102,7 +21102,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 	do
 	{
-		cmd = get_sub_cmd("spcp_enable", "yes");
+		cmd = get_sub_cmd("spcp_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21150,7 +21150,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 	do
 	{
-		cmd = get_sub_cmd("sdei_enable", "yes");
+		cmd = get_sub_cmd("sdei_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21198,7 +21198,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 	do
 	{
-		cmd = get_sub_cmd("ctag_format", "0");
+		cmd = get_sub_cmd("ctagformat", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21221,7 +21221,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 	do
 	{
-		cmd = get_sub_cmd("cvid_enable", "yes");
+		cmd = get_sub_cmd("cvid_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21274,7 +21274,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 	do
 	{
-		cmd = get_sub_cmd("cpcp_enable", "yes");
+		cmd = get_sub_cmd("cpcp_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21322,7 +21322,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 	do
 	{
-		cmd = get_sub_cmd("cdei_enable", "yes");
+		cmd = get_sub_cmd("cdei_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21370,7 +21370,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 	do
 	{
-		cmd = get_sub_cmd("frmtype_enable", "yes");
+		cmd = get_sub_cmd("frame_type_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21394,7 +21394,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 	do
 	{
-		cmd = get_sub_cmd("frmtype", "0");
+		cmd = get_sub_cmd("frametype", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21417,7 +21417,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 	do
 	{
-		cmd = get_sub_cmd("protocol_enable", "yes");
+		cmd = get_sub_cmd("protocol_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21465,7 +21465,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 	do
 	{
-		cmd = get_sub_cmd("vsi_valid", "yes");
+		cmd = get_sub_cmd("vsivalid", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21489,7 +21489,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 	do
 	{
-		cmd = get_sub_cmd("vsi_enable", "yes");
+		cmd = get_sub_cmd("vsi_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21547,20 +21547,20 @@ cmd_data_print_port_vlan_translation_adv_rule(a_uint8_t * param_name, a_uint32_t
 
 	dprintf("\n\n rule field: ");
 	dprintf("\n[port_bitmap]:0x%x", entry->port_bitmap);
-	dprintf("\n[stag_format]:0x%x", entry->s_tagged);
-	dprintf("\n[svid_enable]:%s  [svid]:%d", entry->s_vid_enable?"ENABLE":"DISABLE", entry->s_vid);
-	dprintf("\n[spcp_enable]:%s  [spcp]:%d", entry->s_pcp_enable?"ENABLE":"DISABLE", entry->s_pcp);
-	dprintf("\n[sdei_enable]:%s  [sdei]:%d", entry->s_dei_enable?"ENABLE":"DISABLE", entry->s_dei);
+	dprintf("\n[stagformat]:0x%x", entry->s_tagged);
+	dprintf("\n[svid_en]:%s  [svid]:%d", entry->s_vid_enable?"ENABLE":"DISABLE", entry->s_vid);
+	dprintf("\n[spcp_en]:%s  [spcp]:%d", entry->s_pcp_enable?"ENABLE":"DISABLE", entry->s_pcp);
+	dprintf("\n[sdei_en]:%s  [sdei]:%d", entry->s_dei_enable?"ENABLE":"DISABLE", entry->s_dei);
 
-	dprintf("\n[ctag_format]:0x%x", entry->c_tagged);
-	dprintf("\n[cvid_enable]:%s  [cvid]:%d", entry->c_vid_enable?"ENABLE":"DISABLE", entry->c_vid);
-	dprintf("\n[cpcp_enable]:%s  [cpcp]:%d", entry->c_pcp_enable?"ENABLE":"DISABLE", entry->c_pcp);
-	dprintf("\n[cdei_enable]:%s  [cdei]:%d", entry->c_dei_enable?"ENABLE":"DISABLE", entry->c_dei);
+	dprintf("\n[ctagformat]:0x%x", entry->c_tagged);
+	dprintf("\n[cvid_en]:%s  [cvid]:%d", entry->c_vid_enable?"ENABLE":"DISABLE", entry->c_vid);
+	dprintf("\n[cpcp_en]:%s  [cpcp]:%d", entry->c_pcp_enable?"ENABLE":"DISABLE", entry->c_pcp);
+	dprintf("\n[cdei_en]:%s  [cdei]:%d", entry->c_dei_enable?"ENABLE":"DISABLE", entry->c_dei);
 
-	dprintf("\n[frmtype_enable]:%s  [frmtype]:0x%x", entry->frmtype_enable?"ENABLE":"DISABLE", entry->frmtype);
-	dprintf("\n[protocol_enable]:%s  [protocol]:0x%x", entry->protocol_enable?"ENABLE":"DISABLE", entry->protocol);
+	dprintf("\n[frame_type_en]:%s  [frametype]:0x%x", entry->frmtype_enable?"ENABLE":"DISABLE", entry->frmtype);
+	dprintf("\n[protocol_en]:%s  [protocol]:0x%x", entry->protocol_enable?"ENABLE":"DISABLE", entry->protocol);
 
-	dprintf("\n[vsi_valid]:%s  [vsi_enable]:%s  [vsi]:%d\n\n", entry->vsi_valid?"ENABLE":"DISABLE",
+	dprintf("\n[vsivalid]:%s  [vsi_en]:%s  [vsi]:%d\n\n", entry->vsi_valid?"ENABLE":"DISABLE",
 			entry->vsi_enable?"ENABLE":"DISABLE", entry->vsi);
 }
 
@@ -21600,7 +21600,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("svid_xlt_cmd", "0");
+		cmd = get_sub_cmd("svid_translation_cmd", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21623,7 +21623,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("svid_xlt", "0");
+		cmd = get_sub_cmd("svidtranslation", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21646,7 +21646,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("cvid_xlt_cmd", "0");
+		cmd = get_sub_cmd("cvid_translation_cmd", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21669,7 +21669,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("cvid_xlt", "0");
+		cmd = get_sub_cmd("cvidtranslation", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21717,7 +21717,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("spcp_xlt_enable", "yes");
+		cmd = get_sub_cmd("spcp_translation_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21742,7 +21742,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("spcp_xlt", "0");
+		cmd = get_sub_cmd("spcptranslation", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21765,7 +21765,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("cpcp_xlt_enable", "yes");
+		cmd = get_sub_cmd("cpcp_translation_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21790,7 +21790,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("cpcp_xlt", "0");
+		cmd = get_sub_cmd("cpcptranslation", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21838,7 +21838,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("sdei_xlt_enable", "yes");
+		cmd = get_sub_cmd("sdei_translation_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21863,7 +21863,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("sdei_xlt", "0");
+		cmd = get_sub_cmd("sdeitranslation", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21886,7 +21886,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("cdei_xlt_enable", "yes");
+		cmd = get_sub_cmd("cdei_translation_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21911,7 +21911,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("cdei_xlt", "0");
+		cmd = get_sub_cmd("cdeitranslation", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21934,7 +21934,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("counter_enable", "yes");
+		cmd = get_sub_cmd("counter_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -21982,7 +21982,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("vsi_xlt_enable", "yes");
+		cmd = get_sub_cmd("vsi_translation_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -22007,7 +22007,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 
 	do
 	{
-		cmd = get_sub_cmd("vsi_xlt", "0");
+		cmd = get_sub_cmd("vsitranslation", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -22042,29 +22042,29 @@ cmd_data_print_port_vlan_translation_adv_action(a_uint8_t * param_name, a_uint32
 	dprintf("\n\n action field: ");
 	dprintf("\n[swap_svid_cvid]:%s  ",
 			entry->swap_svid_cvid?"ENABLE":"DISABLE");
-	dprintf("\n[svid_xlt_cmd]:%d  [svid_xlt]:%d  [cvid_xlt_cmd]:%d  [cvid_xlt]:%d  ",
+	dprintf("\n[svid_translation_cmd]:%d  [svidtranslation]:%d  [cvid_translation_cmd]:%d  [cvidtranslation]:%d  ",
 			entry->svid_xlt_cmd,
 			entry->svid_xlt,
 			entry->cvid_xlt_cmd,
 			entry->cvid_xlt);
 	dprintf("\n[swap_spcp_cpcp]:%s  ",
 			entry->swap_spcp_cpcp?"ENABLE":"DISABLE");
-	dprintf("\n[spcp_xlt_enable]:%s  [spcp_xlt]:%d  [cpcp_xlt_enable]:%s  [cpcp_xlt]:%d  ",
+	dprintf("\n[spcp_translation_en]:%s  [spcptranslation]:%d  [cpcp_translation_en]:%s  [cpcptranslation]:%d  ",
 			entry->spcp_xlt_enable?"ENABLE":"DISABLE",
 			entry->spcp_xlt,
 			entry->cpcp_xlt_enable?"ENABLE":"DISABLE",
 			entry->cpcp_xlt);
 	dprintf("\n[swap_sdei_cdei]:%s",
 			entry->swap_sdei_cdei?"ENABLE":"DISABLE");
-	dprintf("\n[sdei_xlt_enable]:%s  [sdei_xlt]:%d  [cdei_xlt_enable]:%s  [cdei_xlt]:%d  ",
+	dprintf("\n[sdei_translation_en]:%s  [sdeitranslation]:%d  [cdei_translation_en]:%s  [cdeitranslation]:%d  ",
 			entry->sdei_xlt_enable?"ENABLE":"DISABLE",
 			entry->sdei_xlt,
 			entry->cdei_xlt_enable?"ENABLE":"DISABLE",
 			entry->cdei_xlt);
-	dprintf("\n[counter_enable]:%s  [counter_id]:%d",
+	dprintf("\n[counter_en]:%s  [counter_id]:%d",
 			entry->counter_enable?"ENABLE":"DISABLE",
 			entry->counter_id);
-	dprintf("\n[vsi_action_enable]:%s  [vsi_action]:%d \n\n",
+	dprintf("\n[vsi_translation_en]:%s  [vsitranslation]:%d \n\n",
 			entry->vsi_xlt_enable?"ENABLE":"DISABLE",
 			entry->vsi_xlt);
 }
@@ -22189,7 +22189,7 @@ cmd_data_check_tag_propagation(char *info, void *val, a_uint32_t size)
     /* get vid propagation */
     do
     {
-        cmd = get_sub_cmd("vid propagation", "disable");
+        cmd = get_sub_cmd("vid_propagation_en", "disable");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22212,7 +22212,7 @@ cmd_data_check_tag_propagation(char *info, void *val, a_uint32_t size)
     /* get pri propagation */
     do
     {
-        cmd = get_sub_cmd("pri propagation", "disable");
+        cmd = get_sub_cmd("pri_propagation_en", "disable");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22235,7 +22235,7 @@ cmd_data_check_tag_propagation(char *info, void *val, a_uint32_t size)
     /* get dei propagation */
     do
     {
-        cmd = get_sub_cmd("dei propagation", "disable");
+        cmd = get_sub_cmd("dei_propagation_en", "disable");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22268,11 +22268,11 @@ cmd_data_print_tag_propagation(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 
     cmd_data_print_uint32("mask", (a_uint32_t *) & (entry->mask), 4);
     dprintf("\n");
-    cmd_data_print_vlan_propagation("vid propagation", (a_uint32_t *) & (entry->vid_propagation), 4);
+    cmd_data_print_vlan_propagation("vid_propagation_en", (a_uint32_t *) & (entry->vid_propagation), 4);
     dprintf("\n");
-    cmd_data_print_vlan_propagation("pri propagation", (a_uint32_t *) & (entry->pri_propagation), 4);
+    cmd_data_print_vlan_propagation("pri_propagation_en", (a_uint32_t *) & (entry->pri_propagation), 4);
     dprintf("\n");
-    cmd_data_print_vlan_propagation("dei propagation", (a_uint32_t *) & (entry->dei_propagation), 4);
+    cmd_data_print_vlan_propagation("dei_propagation_en", (a_uint32_t *) & (entry->dei_propagation), 4);
     dprintf("\n");
 
     return SW_OK;
@@ -22313,7 +22313,7 @@ cmd_data_check_egress_mode(char *info, void *val, a_uint32_t size)
     /* get ctag mode */
     do
     {
-        cmd = get_sub_cmd("ctag", "unmodified");
+        cmd = get_sub_cmd("ctag_egress_vlan_mode", "unmodified");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22336,7 +22336,7 @@ cmd_data_check_egress_mode(char *info, void *val, a_uint32_t size)
     /* get stag mode */
     do
     {
-        cmd = get_sub_cmd("stag", "unmodified");
+        cmd = get_sub_cmd("stag_egress_vlan_mode", "unmodified");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22369,9 +22369,9 @@ cmd_data_print_egress_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
 
     cmd_data_print_uint32("mask", (a_uint32_t *) & (entry->mask), 4);
     dprintf("\n");
-    cmd_data_print_egmode("ctag mode", (a_uint32_t *) & (entry->ctag_mode), 4);
+    cmd_data_print_egmode("ctag_egress_vlan_mode", (a_uint32_t *) & (entry->ctag_mode), 4);
     dprintf("\n");
-    cmd_data_print_egmode("stag mode", (a_uint32_t *) & (entry->stag_mode), 4);
+    cmd_data_print_egmode("stag_egress_vlan_mode", (a_uint32_t *) & (entry->stag_mode), 4);
     dprintf("\n");
 
     return SW_OK;
@@ -22390,7 +22390,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get port bitmap */
     do
     {
-        cmd = get_sub_cmd("port bitmap", "0");
+        cmd = get_sub_cmd("port_bitmap", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22415,7 +22415,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get ethernet type profile */
     do
     {
-        cmd = get_sub_cmd("ethernet type bitmap", "0");
+        cmd = get_sub_cmd("ethtype_profile_bitmap", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22440,7 +22440,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get rfdb profile */
     do
     {
-        cmd = get_sub_cmd("rfdb bitmap", "0");
+        cmd = get_sub_cmd("rfdb_profile_bitmap", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22465,7 +22465,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get mgt_eapol */
     do
     {
-        cmd = get_sub_cmd("check eapol", "no");
+        cmd = get_sub_cmd("eapol_en", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22490,7 +22490,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get mgt_eapol */
     do
     {
-        cmd = get_sub_cmd("check pppoe", "no");
+        cmd = get_sub_cmd("pppoe_en", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22515,7 +22515,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get mgt_igmp */
     do
     {
-        cmd = get_sub_cmd("check igmp", "no");
+        cmd = get_sub_cmd("igmp_en", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22540,7 +22540,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get mgt_arp_req */
     do
     {
-        cmd = get_sub_cmd("check arp_req", "no");
+        cmd = get_sub_cmd("arp_request_en", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22565,7 +22565,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get mgt_arp_rep */
     do
     {
-        cmd = get_sub_cmd("check arp_rep", "no");
+        cmd = get_sub_cmd("arp_response_en", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22590,7 +22590,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get mgt_dhcp4 */
     do
     {
-        cmd = get_sub_cmd("check dhcp4", "no");
+        cmd = get_sub_cmd("dhcp4_en", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22615,7 +22615,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get mgt_dhcp6 */
     do
     {
-        cmd = get_sub_cmd("check dhcp6", "no");
+        cmd = get_sub_cmd("dhcp6_en", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22640,7 +22640,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get mgt_mld */
     do
     {
-        cmd = get_sub_cmd("check mld", "no");
+        cmd = get_sub_cmd("mld_en", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22666,7 +22666,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get mgt_ns */
     do
     {
-        cmd = get_sub_cmd("check ns", "no");
+        cmd = get_sub_cmd("ip6ns_en", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22691,7 +22691,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get mgt_na */
     do
     {
-        cmd = get_sub_cmd("check na", "no");
+        cmd = get_sub_cmd("ip6na_en", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22716,7 +22716,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get forward command */
     do
     {
-        cmd = get_sub_cmd("forward action", "forward");
+        cmd = get_sub_cmd("ctrlpkt_profile_action", "forward");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22739,7 +22739,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get sg_byp */
     do
     {
-        cmd = get_sub_cmd("check sg_bypass", "no");
+        cmd = get_sub_cmd("sourceguard_bypass", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22764,7 +22764,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get l2_filter_byp */
     do
     {
-        cmd = get_sub_cmd("check l2_filter_bypass", "no");
+        cmd = get_sub_cmd("l2filter_bypass", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22789,7 +22789,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get in_stp_byp */
     do
     {
-        cmd = get_sub_cmd("check in_stp_bypass", "no");
+        cmd = get_sub_cmd("ingress_stp_bypass", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22814,7 +22814,7 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     /* get in_vlan_fltr_byp */
     do
     {
-        cmd = get_sub_cmd("check in_vlan_fltr_bypass", "no");
+        cmd = get_sub_cmd("ingress_vlan_filter_bypass", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -22847,41 +22847,41 @@ cmd_data_print_ctrlpkt_profile(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
     entry = (fal_ctrlpkt_profile_t *) buf;
     dprintf("\n");
 
-    cmd_data_print_uint32("port_map", (a_uint32_t *) & (entry->port_map), 4);
+    cmd_data_print_uint32("port_bitmap", (a_uint32_t *) & (entry->port_map), 4);
     dprintf(" ");
-    cmd_data_print_uint32("ethtype_map", (a_uint32_t *) & (entry->ethtype_profile_bitmap), 4);
+    cmd_data_print_uint32("ethtype_profile_bitmap", (a_uint32_t *) & (entry->ethtype_profile_bitmap), 4);
     dprintf(" ");
-    cmd_data_print_uint32("rfdb_map", (a_uint32_t *) & (entry->rfdb_profile_bitmap), 4);
+    cmd_data_print_uint32("rfdb_profile_bitmap", (a_uint32_t *) & (entry->rfdb_profile_bitmap), 4);
     dprintf("\n");
-    cmd_data_print_enable("mgt_eapol", (a_uint32_t *) & (entry->protocol_types.mgt_eapol), 4);
+    cmd_data_print_enable("eapol_en", (a_uint32_t *) & (entry->protocol_types.mgt_eapol), 4);
     dprintf(" ");
-    cmd_data_print_enable("mgt_pppoe", (a_uint32_t *) & (entry->protocol_types.mgt_pppoe), 4);
+    cmd_data_print_enable("pppoe_en", (a_uint32_t *) & (entry->protocol_types.mgt_pppoe), 4);
     dprintf(" ");
-    cmd_data_print_enable("mgt_igmp", (a_uint32_t *) & (entry->protocol_types.mgt_igmp), 4);
+    cmd_data_print_enable("igmp_en", (a_uint32_t *) & (entry->protocol_types.mgt_igmp), 4);
     dprintf(" ");
-    cmd_data_print_enable("mgt_arp_req", (a_uint32_t *) & (entry->protocol_types.mgt_arp_req), 4);
+    cmd_data_print_enable("arp_request_en", (a_uint32_t *) & (entry->protocol_types.mgt_arp_req), 4);
     dprintf(" ");
-    cmd_data_print_enable("mgt_arp_rep", (a_uint32_t *) & (entry->protocol_types.mgt_arp_rep), 4);
+    cmd_data_print_enable("arp_response_en", (a_uint32_t *) & (entry->protocol_types.mgt_arp_rep), 4);
     dprintf("\n");
-    cmd_data_print_enable("mgt_dhcp4", (a_uint32_t *) & (entry->protocol_types.mgt_dhcp4), 4);
+    cmd_data_print_enable("dhcp4_en", (a_uint32_t *) & (entry->protocol_types.mgt_dhcp4), 4);
     dprintf(" ");
-    cmd_data_print_enable("mgt_mld", (a_uint32_t *) & (entry->protocol_types.mgt_mld), 4);
+    cmd_data_print_enable("dhcp6_en", (a_uint32_t *) & (entry->protocol_types.mgt_dhcp6), 4);
     dprintf(" ");
-    cmd_data_print_enable("mgt_ns", (a_uint32_t *) & (entry->protocol_types.mgt_ns), 4);
+    cmd_data_print_enable("mld_en", (a_uint32_t *) & (entry->protocol_types.mgt_mld), 4);
     dprintf(" ");
-    cmd_data_print_enable("mgt_na", (a_uint32_t *) & (entry->protocol_types.mgt_na), 4);
+    cmd_data_print_enable("ip6ns_en", (a_uint32_t *) & (entry->protocol_types.mgt_ns), 4);
     dprintf(" ");
-    cmd_data_print_enable("mgt_dhcp6", (a_uint32_t *) & (entry->protocol_types.mgt_dhcp6), 4);
+    cmd_data_print_enable("ip6na_en", (a_uint32_t *) & (entry->protocol_types.mgt_na), 4);
     dprintf("\n");
-    cmd_data_print_maccmd("fwd cmd", (a_uint32_t *) & (entry->action.action), 4);
+    cmd_data_print_maccmd("ctrlpkt_profile_action", (a_uint32_t *) & (entry->action.action), 4);
     dprintf(" ");
-    cmd_data_print_enable("sg_bypass", (a_uint32_t *) & (entry->action.sg_bypass), 4);
+    cmd_data_print_enable("sourceguard_bypass", (a_uint32_t *) & (entry->action.sg_bypass), 4);
+    dprintf("\n");
+    cmd_data_print_enable("l2filter_bypass", (a_uint32_t *) & (entry->action.l2_filter_bypass), 4);
     dprintf(" ");
-    cmd_data_print_enable("l2_filter_bypass", (a_uint32_t *) & (entry->action.l2_filter_bypass), 4);
+    cmd_data_print_enable("ingress_stp_bypass", (a_uint32_t *) & (entry->action.in_stp_bypass), 4);
     dprintf(" ");
-    cmd_data_print_enable("in_stp_bypass", (a_uint32_t *) & (entry->action.in_stp_bypass), 4);
-    dprintf(" ");
-    cmd_data_print_enable("in_vlan_fltr_bypass", (a_uint32_t *) & (entry->action.in_vlan_fltr_bypass), 4);
+    cmd_data_print_enable("ingress_vlan_filter_bypass", (a_uint32_t *) & (entry->action.in_vlan_fltr_bypass), 4);
     dprintf("\n");
 
     return SW_OK;
@@ -22898,7 +22898,7 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 
 	do
 	{
-		cmd = get_sub_cmd("dest_port_valid", "yes");
+		cmd = get_sub_cmd("destport_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -22922,7 +22922,7 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 
 	do
 	{
-		cmd = get_sub_cmd("dest_port_id", "0");
+		cmd = get_sub_cmd("destport_id", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -22945,7 +22945,7 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 
 	do
 	{
-		cmd = get_sub_cmd("bypass_bitmap[0]", "0");
+		cmd = get_sub_cmd("bypass_bitmap_0", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -22968,7 +22968,7 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 
 	do
 	{
-		cmd = get_sub_cmd("bypass_bitmap[1]", "0");
+		cmd = get_sub_cmd("bypass_bitmap_1", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -22991,7 +22991,7 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 
 	do
 	{
-		cmd = get_sub_cmd("bypass_bitmap[2]", "0");
+		cmd = get_sub_cmd("bypass_bitmap_2", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -23060,7 +23060,7 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 
 	do
 	{
-		cmd = get_sub_cmd("next_service_code", "0");
+		cmd = get_sub_cmd("next_servicecode", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -23083,7 +23083,7 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 
 	do
 	{
-		cmd = get_sub_cmd("hw_services", "0");
+		cmd = get_sub_cmd("hardwareservices", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -23106,7 +23106,7 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 
 	do
 	{
-		cmd = get_sub_cmd("offset_sel", "0");
+		cmd = get_sub_cmd("offsetselection", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -23138,15 +23138,15 @@ cmd_data_print_servcode_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 
 	entry = (fal_servcode_config_t *) buf;
 
-	dprintf("\ndest_port_valid:%s  dest_port_id:%d\n",
+	dprintf("\ndestport_en:%s  destport_id:%d\n",
 				entry->dest_port_valid? "ENABLE" : "DISABLE",
 				entry->dest_port_id);
-	dprintf("bypass_bitmap[0]:0x%x  bypass_bitmap[1]:0x%x  bypass_bitmap[2]:0x%x\n",
+	dprintf("bypass_bitmap_0:0x%x  bypass_bitmap_1:0x%x  bypass_bitmap_2:0x%x\n",
 				entry->bypass_bitmap[0], entry->bypass_bitmap[1], entry->bypass_bitmap[2]);
 	dprintf("direction:%d\n", entry->direction);
-	dprintf("field_update_bitmap:0x%x  next_service_code:%d\n",
+	dprintf("field_update_bitmap:0x%x  next_servicecode:%d\n",
 				entry->field_update_bitmap, entry->next_service_code);
-	dprintf("hw_services:%d  offset_sel:%d\n",
+	dprintf("hardwareservices:%d  offsetselection:%d\n",
 				entry->hw_services, entry->offset_sel);
 }
 
