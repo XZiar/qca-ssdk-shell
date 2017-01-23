@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2017, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -14457,11 +14457,11 @@ cmd_data_check_newadr_lrn(char *cmd_str, void * val, a_uint32_t size)
 
 	aos_mem_zero(&entry, sizeof (fal_vsi_newaddr_lrn_t));
 
-	cmd_data_check_element("lrn_en", "1", "usage: 0-disable 1-enable\n",
-			cmd_data_check_integer, (cmd, &(entry.lrn_en), 1, 0));
+	cmd_data_check_element("learnstatus_en", "enable", "usage: enable/disable\n",
+			cmd_data_check_enable, (cmd, &(entry.lrn_en), sizeof(entry.lrn_en)));
 
-	cmd_data_check_element("action", "0", "usage: 0-Forward 1-Drop 2-Copy to CPU 3-redirect to CPU\n",
-			cmd_data_check_integer, (cmd, &(entry.action), 3, 0));
+	cmd_data_check_element("learnaction", "forward", "usage: forward/drop/cpycpu/rdtcpu\n",
+			cmd_data_check_maccmd, (cmd, &(entry.action), sizeof(entry.action)));
 
 	*(fal_vsi_newaddr_lrn_t *)val = entry;
 	return SW_OK;
@@ -14473,35 +14473,27 @@ cmd_data_print_newaddr_lrn_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uin
     fal_vsi_newaddr_lrn_t *entry;
 
     entry = (fal_vsi_newaddr_lrn_t *) buf;
-    dprintf("\n");
-    dprintf("[newaddr_lrn]:%s\n", entry->lrn_en?"enabled":"disabled");
-    dprintf("[action]:%d\n", entry->action);
+    cmd_data_print_enable("learnstatus_en", &entry->lrn_en, sizeof(entry->lrn_en));
+	dprintf("\n");
+	cmd_data_print_maccmd("learnaction", &entry->action, sizeof(entry->action));
 
     return;
 }
-
 
 sw_error_t
 cmd_data_check_stamove(char *cmd_str, void * val, a_uint32_t size)
 {
 	char *cmd;
-	a_uint32_t tmp;
 	sw_error_t rv;
 	fal_vsi_stamove_t entry;
 
 	aos_mem_zero(&entry, sizeof (fal_vsi_stamove_t));
 
-	cmd_data_check_element("stamove", "1",
-			"usage: 0-disable 1-enable\n",
-			cmd_data_check_integer, (cmd, &tmp, 0x1, 0x0));
+	cmd_data_check_element("stationmove_en", "enable", "usage: enable/disable\n",
+			cmd_data_check_enable, (cmd, &(entry.stamove_en), sizeof(entry.stamove_en)));
 
-	entry.stamove_en = tmp;
-
-	cmd_data_check_element("action", "0",
-			"usage: 0-Forward 1-Drop 2-Copy to CPU 3-redirect to CPU\n",
-			cmd_data_check_integer, (cmd, &tmp, 0x3, 0x0));
-
-	entry.action = tmp;
+	cmd_data_check_element("stationmove_action", "forward", "usage: forward/drop/cpycpu/rdtcpu\n",
+			cmd_data_check_maccmd, (cmd, &(entry.action), sizeof(entry.action)));
 
 	*(fal_vsi_stamove_t *)val = entry;
 	return SW_OK;
@@ -14513,9 +14505,9 @@ cmd_data_print_stamove_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
     fal_vsi_stamove_t *entry;
 
     entry = (fal_vsi_stamove_t *) buf;
-    dprintf("\n");
-    dprintf("[stamove]:%s\n", entry->stamove_en?"enabled":"disabled");
-    dprintf("[action]:%d\n", entry->action);
+    cmd_data_print_enable("stationmove_en", &entry->stamove_en, sizeof(entry->stamove_en));
+	dprintf("\n");
+    cmd_data_print_maccmd("stationmove_action", &entry->action, sizeof(entry->action));
 
     return;
 }
@@ -14530,28 +14522,28 @@ cmd_data_check_vsi_member(char *cmd_str, void * val, a_uint32_t size)
 
 	aos_mem_zero(&entry, sizeof (fal_vsi_member_t));
 
-	rv = __cmd_data_check_complex("member_ports", 0,
+	rv = __cmd_data_check_complex("membership", 0,
                         "usage: Bit0-port0 Bit1-port1 ....\n",
                         cmd_data_check_pbmp, &(entry.member_ports),
                         sizeof (a_uint32_t));
 	if (rv)
 		return rv;
 
-	rv = __cmd_data_check_complex("uuc_ports", 0,
+	rv = __cmd_data_check_complex("unknown_unicast_membership", 0,
                         "usage: Bit0-port0 Bit1-port1 ....\n",
                         cmd_data_check_pbmp, &(entry.uuc_ports),
                         sizeof (a_uint32_t));
 	if (rv)
 		return rv;
 
-	rv = __cmd_data_check_complex("umc_ports", 0,
+	rv = __cmd_data_check_complex("unknown_multicast_membership", 0,
                         "usage: Bit0-port0 Bit1-port1 ....\n",
                         cmd_data_check_pbmp, &(entry.umc_ports),
                         sizeof (a_uint32_t));
 	if (rv)
 		return rv;
 
-	rv = __cmd_data_check_complex("bc_ports", 0,
+	rv = __cmd_data_check_complex("broadcast_membership", 0,
                         "usage: Bit0-port0 Bit1-port1 ....\n",
                         cmd_data_check_pbmp, &(entry.bc_ports),
                         sizeof (a_uint32_t));
@@ -14569,10 +14561,10 @@ cmd_data_print_vsi_member_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint
 
     entry = (fal_vsi_member_t *) buf;
     dprintf("\n");
-    dprintf("[member_ports]:0x%x\n", entry->member_ports);
-    dprintf("[uuc_ports]:0x%x\n", entry->uuc_ports);
-    dprintf("[umc_ports]:0x%x\n", entry->umc_ports);
-    dprintf("[bc_ports]:0x%x\n", entry->bc_ports);
+    dprintf("[membership]:0x%x\n", entry->member_ports);
+    dprintf("[unknown_unicast_membership]:0x%x\n", entry->uuc_ports);
+    dprintf("[unknown_multicast_membership]:0x%x\n", entry->umc_ports);
+    dprintf("[broadcast_membership]:0x%x\n", entry->bc_ports);
     return;
 }
 
