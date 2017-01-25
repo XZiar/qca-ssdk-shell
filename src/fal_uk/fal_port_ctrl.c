@@ -800,7 +800,7 @@ fal_port_mru_get(a_uint32_t dev_id, fal_port_t port_id,
 }
 
 sw_error_t
-fal_port_source_filter_set(a_uint32_t dev_id, fal_port_t port_id,
+fal_port_source_filter_enable(a_uint32_t dev_id, fal_port_t port_id,
                        a_bool_t enable)
 {
     sw_error_t rv;
@@ -811,7 +811,7 @@ fal_port_source_filter_set(a_uint32_t dev_id, fal_port_t port_id,
 }
 
 sw_error_t
-fal_port_source_filter_get(a_uint32_t dev_id, fal_port_t port_id,
+fal_port_source_filter_status_get(a_uint32_t dev_id, fal_port_t port_id,
                        a_bool_t * enable)
 {
     sw_error_t rv;
