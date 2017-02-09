@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014, 2017, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -132,6 +132,8 @@ typedef struct
 	a_uint32_t led_source_num;
 	led_source_cfg_t led_source_cfg[14];
 	a_uint32_t      phy_id;
+	a_uint32_t      mac_mode1;
+	a_uint32_t      mac_mode2;
 } ssdk_init_cfg;
 
 #if defined ATHENA
