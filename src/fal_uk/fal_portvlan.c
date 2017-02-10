@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014, 2016-2017, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -731,24 +731,6 @@ fal_port_vlan_trans_adv_getnext(a_uint32_t dev_id, fal_port_t port_id, fal_port_
 
     rv = sw_uk_exec(SW_API_PT_VLAN_TRANS_ADV_GETNEXT, dev_id, port_id, (a_uint32_t) direction,
 		(a_uint32_t) rule, (a_uint32_t) action);
-    return rv;
-}
-
-sw_error_t
-fal_port_vlan_counter_enable(a_uint32_t dev_id, fal_port_t port_id, fal_port_vlan_counter_en_t * cnt_en)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PT_VLAN_COUNTER_ENABLE, dev_id, port_id, (a_uint32_t) cnt_en);
-    return rv;
-}
-
-sw_error_t
-fal_port_vlan_counter_status_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_vlan_counter_en_t * cnt_en)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PT_VLAN_COUNTER_STATUS_GET, dev_id, port_id, (a_uint32_t) cnt_en);
     return rv;
 }
 

@@ -210,8 +210,6 @@ struct cmd_des_t gcmd_des[] =
             {"translationAdv", "del", "del a vlan advanced translation entry based on port and direction", "<port_id> <ingress|egress>", SW_API_PT_VLAN_TRANS_ADV_DEL, NULL},
             {"translationAdv", "getfirst", "get vlan advanced translation first entry based on port and direction", "<port_id> <ingress|egress>", SW_API_PT_VLAN_TRANS_ADV_GETFIRST, NULL},
             {"translationAdv", "getnext", "get vlan advanced translation next entry based on port and direction", "<port_id> <ingress|egress>", SW_API_PT_VLAN_TRANS_ADV_GETNEXT, NULL},
-            {"counterstatus", "set", "set port vlan counter status", "<port_id>", SW_API_PT_VLAN_COUNTER_ENABLE, NULL},
-            {"counterstatus", "get", "get port vlan counter status", "<port_id>", SW_API_PT_VLAN_COUNTER_STATUS_GET, NULL},
             {"counter", "set", "clean up port vlan counter", "<cnt_index>", SW_API_PT_VLAN_COUNTER_CLEANUP, NULL},
             {"counter", "get", "get port vlan counter", "<cnt_index>", SW_API_PT_VLAN_COUNTER_GET, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
@@ -1046,6 +1044,8 @@ struct cmd_des_t gcmd_des[] =
             {"module_func",  "set", "set the module function bitmap", "<module>", SW_API_MODULE_FUNC_CTRL_SET, NULL},
             {"module_func",  "get", "set the module function bitmap", "<module>", SW_API_MODULE_FUNC_CTRL_GET, NULL},
             {"ssdk",  "config", "show ssdk configuration",     "", SW_API_SSDK_CFG, NULL},
+            {"portCounterEn", "get", "get counter status based on port", "<port_id>", SW_API_DEBUG_PORT_COUNTER_STATUS_GET, NULL},
+            {"portCounterEn", "set", "set counter status based on port", "<port_id>", SW_API_DEBUG_PORT_COUNTER_ENABLE, NULL},
             {"phycounter",  "set", "set counter status of a port",   "<port_id> <enable|disable>", SW_API_DEBUG_PHYCOUNTER_SET, NULL},
             {"phycounter",  "get", "get counter status of a port",   "<port_id>", SW_API_DEBUG_PHYCOUNTER_GET, NULL},
             {"phycounter",  "show", "show counter of a port",   "<port_id>", SW_API_DEBUG_PHYCOUNTER_SHOW, NULL},
