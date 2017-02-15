@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014, 2017, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -481,3 +481,20 @@ fal_frame_crc_reserve_get(a_uint32_t dev_id, a_bool_t * enable)
     return rv;
 }
 
+sw_error_t
+fal_debug_port_counter_enable(a_uint32_t dev_id, fal_port_t port_id, fal_counter_en_t * cnt_en)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_DEBUG_PORT_COUNTER_ENABLE, dev_id, port_id, (a_uint32_t) cnt_en);
+    return rv;
+}
+
+sw_error_t
+fal_debug_port_counter_status_get(a_uint32_t dev_id, fal_port_t port_id, fal_counter_en_t * cnt_en)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_DEBUG_PORT_COUNTER_STATUS_GET, dev_id, port_id, (a_uint32_t) cnt_en);
+    return rv;
+}

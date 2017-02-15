@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2017, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -728,12 +728,6 @@ cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_a
 void
 cmd_data_print_port_vlan_translation_adv_action(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
-sw_error_t
-cmd_data_check_port_vlan_counter_status(char *info, fal_port_vlan_counter_en_t *val, a_uint32_t size);
-
-void
-cmd_data_print_port_vlan_counter_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
 void
 cmd_data_print_port_vlan_counter(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
@@ -826,6 +820,12 @@ cmd_data_check_func_ctrl(char *cmd_str, void * val, a_uint32_t size);
 
 void
 cmd_data_print_func_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_debug_port_counter_status(char *info, fal_counter_en_t *val, a_uint32_t size);
+
+void
+cmd_data_print_debug_port_counter_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 #endif
 

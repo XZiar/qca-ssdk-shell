@@ -280,8 +280,8 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_PT_VLAN_DIRECTION, cmd_data_check_port_vlan_direction, cmd_data_print_port_vlan_direction),
     SW_TYPE_DEF(SW_PT_VLAN_TRANS_ADV_RULE, cmd_data_check_port_vlan_translation_adv_rule, cmd_data_print_port_vlan_translation_adv_rule),
     SW_TYPE_DEF(SW_PT_VLAN_TRANS_ADV_ACTION, cmd_data_check_port_vlan_translation_adv_action, cmd_data_print_port_vlan_translation_adv_action),
-    SW_TYPE_DEF(SW_PT_VLAN_COUNTER_EN, cmd_data_check_port_vlan_counter_status, cmd_data_print_port_vlan_counter_status),
     SW_TYPE_DEF(SW_PT_VLAN_COUNTER, NULL, cmd_data_print_port_vlan_counter),
+    SW_TYPE_DEF(SW_DEBUG_COUNTER_EN, cmd_data_check_debug_port_counter_status, cmd_data_print_debug_port_counter_status),
     SW_TYPE_DEF(SW_TAG_PROPAGATION, cmd_data_check_tag_propagation, cmd_data_print_tag_propagation),
     SW_TYPE_DEF(SW_EGRESS_MODE, cmd_data_check_egress_mode, cmd_data_print_egress_mode),
     SW_TYPE_DEF(SW_CTRLPKT_PROFILE, cmd_data_check_ctrlpkt_profile, cmd_data_print_ctrlpkt_profile),
@@ -22062,13 +22062,13 @@ cmd_data_print_port_vlan_translation_adv_action(a_uint8_t * param_name, a_uint32
 }
 
 sw_error_t
-cmd_data_check_port_vlan_counter_status(char *info, fal_port_vlan_counter_en_t *val, a_uint32_t size)
+cmd_data_check_debug_port_counter_status(char *info, fal_counter_en_t *val, a_uint32_t size)
 {
 	char *cmd = NULL;
 	sw_error_t rv;
-	fal_port_vlan_counter_en_t entry;
+	fal_counter_en_t entry;
 
-	memset(&entry, 0, sizeof (fal_port_vlan_counter_en_t));
+	memset(&entry, 0, sizeof (fal_counter_en_t));
 
 	do
 	{
@@ -22097,7 +22097,7 @@ cmd_data_check_port_vlan_counter_status(char *info, fal_port_vlan_counter_en_t *
 
 	do
 	{
-		cmd = get_sub_cmd("tx_counter_en", "yes");
+		cmd = get_sub_cmd("vp_uni_tx_counter_en", "yes");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -22111,7 +22111,57 @@ cmd_data_check_port_vlan_counter_status(char *info, fal_port_vlan_counter_en_t *
 		}
 		else
 		{
-			rv = cmd_data_check_confirm(cmd, A_TRUE, &entry.tx_counter_en,
+			rv = cmd_data_check_confirm(cmd, A_TRUE, &entry.vp_uni_tx_counter_en,
+					sizeof (a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("port_mc_tx_counter_en", "yes");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_confirm(cmd, A_TRUE, &entry.port_mc_tx_counter_en,
+					sizeof (a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("port_tx_counter_en", "yes");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_confirm(cmd, A_TRUE, &entry.port_tx_counter_en,
 					sizeof (a_bool_t));
 			if (SW_OK != rv)
 				dprintf("usage: <yes/no/y/n>\n");
@@ -22125,14 +22175,16 @@ cmd_data_check_port_vlan_counter_status(char *info, fal_port_vlan_counter_en_t *
 }
 
 void
-cmd_data_print_port_vlan_counter_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+cmd_data_print_debug_port_counter_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 {
-	fal_port_vlan_counter_en_t *entry;
+	fal_counter_en_t *entry;
 
-	entry = (fal_port_vlan_counter_en_t *) buf;
+	entry = (fal_counter_en_t*) buf;
 
 	dprintf("rx_counter_en:%s\n", entry->rx_counter_en?"ENABLE":"DISABLE");
-	dprintf("tx_counter_en:%s\n", entry->tx_counter_en?"ENABLE":"DISABLE");
+	dprintf("vp_uni_tx_counter_en:%s\n", entry->vp_uni_tx_counter_en?"ENABLE":"DISABLE");
+	dprintf("port_mc_tx_counter_en:%s\n", entry->port_mc_tx_counter_en?"ENABLE":"DISABLE");
+	dprintf("port_tx_counter_en:%s\n", entry->port_tx_counter_en?"ENABLE":"DISABLE");
 }
 
 void
