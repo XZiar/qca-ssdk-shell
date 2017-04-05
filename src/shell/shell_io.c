@@ -1122,7 +1122,7 @@ cmd_data_print_mtu_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 
 	dprintf("mtu_size:0x%x\n",mtu->mtu_size);
 	if(mtu->action == MRU_MTU_FORWARD)
-		dprintf("mtu_action:foward\n");
+		dprintf("mtu_action:forward\n");
 	else if(mtu->action == MRU_MTU_DROP)
 		dprintf("mtu_action:drop\n");
 	else if(mtu->action == MRU_MTU_CPYCPU)
@@ -1130,7 +1130,7 @@ cmd_data_print_mtu_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 	else if(mtu->action == MRU_MTU_RDTCPU)
 		dprintf("mtu_action:rdtcpu\n");
 	else
-		dprintf("mtu_action:unknow\n");
+		dprintf("mtu_action:unknown\n");
 }
 
 void
@@ -1143,7 +1143,7 @@ cmd_data_print_mru_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 
 	dprintf("mru_size:0x%x\n",mru->mru_size);
 	if(mru->action == MRU_MTU_FORWARD)
-		dprintf("mru_action:foward\n");
+		dprintf("mru_action:forward\n");
  	else if(mru->action == MRU_MTU_DROP)
 		dprintf("mru_action:drop\n");
 	else if(mru->action == MRU_MTU_CPYCPU)
@@ -1151,7 +1151,7 @@ cmd_data_print_mru_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 	else if(mru->action == MRU_MTU_RDTCPU)
 		dprintf("mru_action:rdtcpu\n");
 	else
-		dprintf("mru_action:unknow\n");
+		dprintf("mru_action:unknown\n");
 }
 
 
@@ -1190,7 +1190,7 @@ cmd_data_check_mtu_entry(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("mtu_action", "0");
+        cmd = get_sub_cmd("mtu_action", "forward");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -1199,14 +1199,14 @@ cmd_data_check_mtu_entry(char *cmd_str, void * val, a_uint32_t size)
         }
         else if (!strncasecmp(cmd, "help", 4))
         {
-            dprintf("usage: usage: 0:forward 1:drop 2:cpycpu 3:rdtcpu\n");
+            dprintf("usage: usage: forward/drop/cpycpu/rdtcpu\n");
             rv = SW_BAD_VALUE;
         }
         else
         {
-            rv = cmd_data_check_uint32(cmd, (a_uint32_t *)&(entry.action), sizeof (a_uint32_t));
+	    rv = cmd_data_check_maccmd(cmd, &(entry.action), sizeof (a_uint32_t));
             if (SW_OK != rv)
-                dprintf("usage: usage: 0:forward 1:drop 2:cpycpu 3:rdtcpu\n");
+                dprintf("usage: usage: forward/drop/cpycpu/rdtcpu\n");
         }
     }
     while (talk_mode && (SW_OK != rv));
@@ -1250,7 +1250,7 @@ cmd_data_check_mru_entry(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("mru_action", "0");
+        cmd = get_sub_cmd("mru_action", "forward");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -1259,14 +1259,14 @@ cmd_data_check_mru_entry(char *cmd_str, void * val, a_uint32_t size)
         }
         else if (!strncasecmp(cmd, "help", 4))
         {
-            dprintf("usage: usage: 0:forward 1:drop 2:cpycpu 3:rdtcpu\n");
+            dprintf("usage: usage: forward/drop/cpycpu/rdtcpu\n");
             rv = SW_BAD_VALUE;
         }
         else
         {
-            rv = cmd_data_check_uint32(cmd, (a_uint32_t *)&(entry.action), sizeof (a_uint32_t));
+            rv = cmd_data_check_maccmd(cmd, &(entry.action), sizeof (a_uint32_t));
             if (SW_OK != rv)
-                dprintf("usage: usage: 0:forward 1:drop 2:cpycpu 3:rdtcpu\n");
+                dprintf("usage: usage: forward/drop/cpycpu/rdtcpu\n");
         }
     }
     while (talk_mode && (SW_OK != rv));

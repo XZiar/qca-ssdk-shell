@@ -25,8 +25,7 @@ fal_get_mib_info(a_uint32_t dev_id, fal_port_t port_id,
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_MIB_GET, dev_id, port_id,
-                    (a_uint32_t) mib_Info);
+    rv = sw_uk_exec(SW_API_PT_MIB_GET, dev_id, port_id, mib_Info);
     return rv;
 }
 
@@ -35,8 +34,7 @@ fal_get_xgmib_info(a_uint32_t dev_id, fal_port_t port_id,
                  fal_xgmib_info_t * mib_Info)
 {
     sw_error_t rv;
-    rv = sw_uk_exec(SW_API_PT_XGMIB_GET, dev_id, port_id,
-                    (a_uint32_t) mib_Info);
+    rv = sw_uk_exec(SW_API_PT_XGMIB_GET, dev_id, port_id, mib_Info);
     return rv;
 }
 sw_error_t
@@ -53,7 +51,7 @@ fal_mib_status_get(a_uint32_t dev_id, a_bool_t * enable)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_MIB_STATUS_GET, dev_id, (a_uint32_t)enable);
+    rv = sw_uk_exec(SW_API_MIB_STATUS_GET, dev_id, enable);
     return rv;
 }
 
@@ -80,6 +78,6 @@ fal_mib_cpukeep_get(a_uint32_t dev_id, a_bool_t * enable)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_MIB_CPU_KEEP_GET, dev_id, (a_uint32_t)enable);
+    rv = sw_uk_exec(SW_API_MIB_CPU_KEEP_GET, dev_id, enable);
     return rv;
 }
