@@ -22,6 +22,7 @@ extern "C" {
 #include "sw.h"
 
     int get_devid(void);
+    int set_devid(int dev_id);
     sw_error_t cmd_set_devid(a_uint32_t *arg_val);
     sw_error_t cmd_show_fdb(a_uint32_t *arg_val);
     sw_error_t cmd_show_vlan(a_uint32_t *arg_val);

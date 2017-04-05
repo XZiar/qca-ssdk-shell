@@ -37,6 +37,12 @@ get_devid(void)
     return sw_devid;
 }
 
+int
+set_devid(int dev_id)
+{
+	sw_devid = dev_id;
+	return SW_OK;
+}
 
 sw_error_t
 cmd_show_fdb(a_uint32_t *arg_val)

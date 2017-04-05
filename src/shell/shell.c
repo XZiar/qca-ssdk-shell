@@ -30,6 +30,7 @@ static a_uint32_t flag = 0;
 
 static a_uint32_t *ioctl_argp;
 static FILE * out_fd;
+char dev_id_path[] = "/sys/ssdk/dev_id";
 static char *err_info[] =
 {
     "Operation succeeded",                 /*SW_OK*/
@@ -610,6 +611,18 @@ cmd_init(void)
 {
     ioctl_buf = (a_uint32_t *) malloc(IOCTL_BUF_SIZE);
     ioctl_argp = (a_uint32_t *) malloc(CMDSTR_ARGS_MAX * sizeof (a_uint32_t));
+    FILE *dev_id_fd = NULL;
+    int dev_id_value;
+
+    if((dev_id_fd = fopen(dev_id_path, "r")) != NULL)
+    {
+        fscanf(dev_id_fd, "%d", &dev_id_value);
+        set_devid(dev_id_value);
+    }
+    else
+    {
+        set_devid(0);
+    }
     cmd_socket_init();
 
     return SW_OK;
