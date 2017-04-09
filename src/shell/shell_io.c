@@ -15960,7 +15960,7 @@ cmd_data_check_l3_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("small ttl", "0");
+        cmd = get_sub_cmd("small_ip4ttl", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -15974,7 +15974,7 @@ cmd_data_check_l3_parser(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint8(cmd, &(entry.small_ttl),
+            rv = cmd_data_check_uint8(cmd, &(entry.small_ip4ttl),
                                        sizeof (a_uint8_t));
             if (SW_OK != rv)
                 dprintf("usage: small ttl value\n");
@@ -15985,7 +15985,7 @@ cmd_data_check_l3_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("small hop limit", "0");
+        cmd = get_sub_cmd("small_ip6hoplimit", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -15999,7 +15999,7 @@ cmd_data_check_l3_parser(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint8(cmd, &(entry.small_hop_limit),
+            rv = cmd_data_check_uint8(cmd, &(entry.small_ip6hoplimit),
                                        sizeof (a_uint8_t));
             if (SW_OK != rv)
                 dprintf("usage: small hop limit value\n");
@@ -16020,8 +16020,8 @@ cmd_data_print_l3_parser(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
 
     entry = (fal_l3_excep_parser_ctrl *) buf;
 
-    dprintf("\n[small_ttl]:0x%x [small_hop_limit]:0x%x ",
-			entry->small_ttl, entry->small_hop_limit);
+    dprintf("\n[small_ip4ttl]:0x%x [small_ip6hoplimit]:0x%x ",
+			entry->small_ip4ttl, entry->small_ip6hoplimit);
 }
 
 sw_error_t
@@ -16036,7 +16036,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags0", "0");
+        cmd = get_sub_cmd("tcp_flags0", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16062,7 +16062,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags0 mask", "0");
+        cmd = get_sub_cmd("tcp_flags_mask0", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16088,7 +16088,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags1", "0");
+        cmd = get_sub_cmd("tcp_flags1", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16114,7 +16114,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags1 mask", "0");
+        cmd = get_sub_cmd("tcp_flags_mask1", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16140,7 +16140,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags2", "0");
+        cmd = get_sub_cmd("tcp_flags2", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16166,7 +16166,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags2 mask", "0");
+        cmd = get_sub_cmd("tcp_flags_mask2", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16192,7 +16192,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags3", "0");
+        cmd = get_sub_cmd("tcp_flags3", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16218,7 +16218,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags3 mask", "0");
+        cmd = get_sub_cmd("tcp_flags_mask3", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16244,7 +16244,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags4", "0");
+        cmd = get_sub_cmd("tcp_flags4", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16270,7 +16270,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags4 mask", "0");
+        cmd = get_sub_cmd("tcp_flags_mask4", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16296,7 +16296,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags5", "0");
+        cmd = get_sub_cmd("tcp_flags5", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16322,7 +16322,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags5 mask", "0");
+        cmd = get_sub_cmd("tcp_flags_mask5", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16348,7 +16348,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags6", "0");
+        cmd = get_sub_cmd("tcp_flags6", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16374,7 +16374,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags6 mask", "0");
+        cmd = get_sub_cmd("tcp_flags_mask6", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16400,7 +16400,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags7", "0");
+        cmd = get_sub_cmd("tcp_flags7", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16426,7 +16426,7 @@ cmd_data_check_l4_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tcp flags7 mask", "0");
+        cmd = get_sub_cmd("tcp_flags_mask7", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16530,7 +16530,7 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("l3_only_en", "0");
+        cmd = get_sub_cmd("l3route_only_en", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16544,7 +16544,7 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint8(cmd, &(entry.l3_only_en),
+            rv = cmd_data_check_uint8(cmd, &(entry.l3route_only_en),
                                        sizeof (a_uint8_t));
             if (SW_OK != rv)
                 dprintf("usage: 0 for disable and 1 for enable\n");
@@ -16555,7 +16555,7 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("l2_onl_ en", "0");
+        cmd = get_sub_cmd("l2fwd_onl_en", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16569,7 +16569,7 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint8(cmd, &(entry.l2_only_en),
+            rv = cmd_data_check_uint8(cmd, &(entry.l2fwd_only_en),
                                        sizeof (a_uint8_t));
             if (SW_OK != rv)
                 dprintf("usage: 0 for disable and 1 for enable\n");
@@ -16580,7 +16580,7 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("l2_flow_en", "0");
+        cmd = get_sub_cmd("l2flow_en", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16594,7 +16594,7 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint8(cmd, &(entry.l2_flow_en),
+            rv = cmd_data_check_uint8(cmd, &(entry.l2flow_en),
                                        sizeof (a_uint8_t));
             if (SW_OK != rv)
                 dprintf("usage: 0 for disable and 1 for enable\n");
@@ -16605,7 +16605,7 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("l3_flow_en", "0");
+        cmd = get_sub_cmd("l3flow_en", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -16619,7 +16619,7 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint8(cmd, &(entry.l3_flow_en),
+            rv = cmd_data_check_uint8(cmd, &(entry.l3flow_en),
                                        sizeof (a_uint8_t));
             if (SW_OK != rv)
                 dprintf("usage: 0 for disable and 1 for enable\n");
@@ -16664,10 +16664,10 @@ cmd_data_print_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 
     entry = (fal_l3_excep_ctrl_t *) buf;
     
-    dprintf("\n[except_cmd]:0x%x [deacclr_en]:0x%x [l3_only_en]:0x%x [l2_only_en]:0x%x ",
-			entry->cmd, entry->deacclr_en, entry->l3_only_en, entry->l2_only_en);
-    dprintf("\n[l3_flow_en]:0x%x [l2_flow_en]:0x%x [multicast_en]:0x%x ",
-			entry->l3_flow_en, entry->l2_flow_en, entry->multicast_en);
+    dprintf("\n[except_cmd]:0x%x [deacclr_en]:0x%x [l3route_only_en]:0x%x [l2fwd_only_en]:0x%x ",
+			entry->cmd, entry->deacclr_en, entry->l3route_only_en, entry->l2fwd_only_en);
+    dprintf("\n[l3flow_en]:0x%x [l2flow_en]:0x%x [multicast_en]:0x%x ",
+			entry->l3flow_en, entry->l2flow_en, entry->multicast_en);
 }
 
 sw_error_t
@@ -17729,7 +17729,7 @@ cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("src_if_check_action", "forward");
+        cmd = get_sub_cmd("src_intf_check_action", "forward");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -17754,7 +17754,7 @@ cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("src_if_deacclr_en", "no");
+        cmd = get_sub_cmd("src_intf_deacclr_en", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -17989,7 +17989,7 @@ cmd_data_print_flow_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
 
     entry = (fal_flow_global_cfg_t *) buf;
 
-    dprintf("\n[src_if_check_action]:0x%x [src_if_check_deacclr_en]:0x%x [service_loop_en]:0x%x [service_loop_action]:0x%x [service_loop_deacclr_en]:0x%x ",
+    dprintf("\n[src_intf_check_action]:0x%x [src_intf_check_deacclr_en]:0x%x [service_loop_en]:0x%x [service_loop_action]:0x%x [service_loop_deacclr_en]:0x%x ",
 			entry->src_if_check_action, entry->src_if_check_deacclr_en, entry->service_loop_en, entry->service_loop_action, entry->service_loop_deacclr_en);
     dprintf("\n[flow_deacclr_action]:0x%x [sync_mismatch_action]:0x%x [sync_mismatch_deacclr_en]:0x%x [hash_mode_0]:0x%x [hash_mode_1]:0x%x ",
 			entry->flow_deacclr_action, entry->sync_mismatch_action, entry->sync_mismatch_deacclr_en, entry->hash_mode_0, entry->hash_mode_1);
@@ -18401,7 +18401,7 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("deaclr", "yes");
+        cmd = get_sub_cmd("deacclr", "yes");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -18584,12 +18584,12 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
     while (talk_mode && (SW_OK != rv));
 
     if (entry.entry_type & FAL_FLOW_IP4_5TUPLE_ADDR || entry.entry_type & FAL_FLOW_IP4_3TUPLE_ADDR) {
-        cmd_data_check_element("ip4 addr", NULL,
+        cmd_data_check_element("ip addr", NULL,
                                "usage: the format is xx.xx.xx.xx \n",
                                cmd_data_check_ip4addr, (cmd, &(entry.flow_ip.ipv4), 4));
 		
     } else if (entry.entry_type & FAL_FLOW_IP6_5TUPLE_ADDR || entry.entry_type & FAL_FLOW_IP6_3TUPLE_ADDR) {
-        cmd_data_check_element("ip6 addr", NULL,
+        cmd_data_check_element("ip addr", NULL,
                                "usage: the format is xxxx::xx.xx \n",
                                cmd_data_check_ip6addr, (cmd, &(entry.flow_ip.ipv6), 16));
     }
@@ -18630,11 +18630,11 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     
     dprintf("\n[entry_id]:0x%x [entry_type]:0x%x [host_addr_type]:0x%x [host_addr_index]:0x%x ",
 			entry->entry_id, entry->entry_type, entry->host_addr_type, entry->host_addr_index);
-    dprintf("\n[protocol]:0x%x [age]:0x%x [src_intf_valid]:0x%x [src_intf_index]:0x%x [fwd_type]:0x%x ",
+    dprintf("\n[protocol]:0x%x [agetime]:0x%x [src_intf_valid]:0x%x [src_intf_index]:0x%x [fwd_type]:0x%x ",
 			entry->protocol, entry->age, entry->src_intf_valid, entry->src_intf_index, entry->fwd_type);
     dprintf("\n[snat_nexthop]:0x%x [snat_srcport]:0x%x [dnat_nexthop]:0x%x [dnat_dstport]:0x%x [route_nexthop]:0x%x ",
 			entry->snat_nexthop, entry->snat_srcport, entry->dnat_nexthop, entry->dnat_dstport, entry->route_nexthop);
-    dprintf("\n[port_valid]:0x%x [route_port]:0x%x [bridge_port]:0x%x [de_acce]:0x%x [copy_tocpu]:0x%x ",
+    dprintf("\n[port_valid]:0x%x [route_port]:0x%x [bridge_port]:0x%x [de_acclr]:0x%x [copy_tocpu]:0x%x ",
 			entry->port_valid, entry->route_port, entry->bridge_port, entry->deacclr_en, entry->copy_tocpu_en);
     dprintf("\n[syn_toggle]:0x%x [pri_profile]:0x%x [sevice_code]:0x%x [ip_type]:0x%x [src_port]:0x%x [dst_port]:0x%x [tree_id]:0x%x ",
 			entry->syn_toggle, entry->pri_profile, entry->sevice_code, entry->ip_type, entry->src_port, entry->dst_port, entry->tree_id);
@@ -18643,7 +18643,7 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
                                (a_uint32_t *) & (entry->flow_ip.ipv4),
                                sizeof (fal_ip4_addr_t));
     } else {
-        cmd_data_print_ip6addr("\n[ip6_addr_mask]:",
+        cmd_data_print_ip6addr("\n[ip_addr]:",
                                (a_uint32_t *) & (entry->flow_ip.ipv6),
                                sizeof (fal_ip6_addr_t));
     }
