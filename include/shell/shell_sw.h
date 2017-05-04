@@ -32,6 +32,10 @@ extern "C" {
     sw_error_t cmd_show_host_ipv6(a_uint32_t *arg_val);
     sw_error_t cmd_show_host_ipv4M(a_uint32_t *arg_val);
     sw_error_t cmd_show_host_ipv6M(a_uint32_t *arg_val);
+    sw_error_t cmd_show_flow_ipv4_3tuple(a_uint32_t *arg_val);
+    sw_error_t cmd_show_flow_ipv4_5tuple(a_uint32_t *arg_val);
+    sw_error_t cmd_show_flow_ipv6_3tuple(a_uint32_t *arg_val);
+    sw_error_t cmd_show_flow_ipv6_5tuple(a_uint32_t *arg_val);
     sw_error_t cmd_show_nat(a_uint32_t *arg_val);
     sw_error_t cmd_show_napt(a_uint32_t *arg_val);
     sw_error_t cmd_show_intfmac(a_uint32_t *arg_val);

@@ -380,3 +380,25 @@ fal_qm_enqueue_ctrl_get(a_uint32_t dev_id, a_uint32_t queue_id, a_bool_t *enable
     return rv;
 }
 
+sw_error_t
+fal_qm_port_source_profile_set(
+	a_uint32_t dev_id, fal_port_t port,
+	a_uint32_t src_profile)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_SOURCE_PROFILE_SET, dev_id, port, src_profile);
+    return rv;
+}
+
+sw_error_t
+fal_qm_port_source_profile_get(
+	a_uint32_t dev_id, fal_port_t port,
+	a_uint32_t *src_profile)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_SOURCE_PROFILE_GET, dev_id, port, src_profile);
+    return rv;
+}
+

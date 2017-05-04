@@ -107,6 +107,18 @@ fal_flow_entry_del(
 }
 
 sw_error_t
+fal_flow_entry_next(
+		a_uint32_t dev_id,
+		a_uint32_t next_mode,
+		fal_flow_entry_t *flow_entry)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FLOWENTRY_NEXT, dev_id, next_mode, flow_entry);
+    return rv;
+}
+
+sw_error_t
 fal_flow_entry_get(
 		a_uint32_t dev_id,
 		a_uint32_t get_mode,

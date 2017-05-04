@@ -490,6 +490,62 @@ cmd_show_host_ipv6M(a_uint32_t *arg_val)
 }
 
 sw_error_t
+cmd_show_flow_entry(a_uint32_t *arg_val, a_uint32_t type)
+{
+    sw_error_t rtn;
+    a_uint32_t cnt = 0;
+    fal_flow_entry_t *flow_entry = (fal_flow_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+
+    aos_mem_zero(flow_entry, sizeof (fal_flow_entry_t));
+    flow_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
+    arg_val[0] = SW_API_FLOWENTRY_NEXT;
+
+    while (1)
+    {
+        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[2] = get_devid();
+        arg_val[3] = type;
+        arg_val[4] = (a_uint32_t) flow_entry;
+
+        rtn = cmd_exec_api(arg_val);
+        if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
+        {
+            break;
+        }
+        cnt++;
+    }
+
+    dprintf("\nflow total %d entries\n", cnt);
+
+    return SW_OK;
+}
+
+sw_error_t
+cmd_show_flow_ipv4_3tuple(a_uint32_t *arg_val)
+{
+    return cmd_show_flow_entry(arg_val, FAL_FLOW_IP4_3TUPLE_ADDR);
+}
+
+sw_error_t
+cmd_show_flow_ipv4_5tuple(a_uint32_t *arg_val)
+{
+    return cmd_show_flow_entry(arg_val, FAL_FLOW_IP4_5TUPLE_ADDR);
+}
+
+sw_error_t
+cmd_show_flow_ipv6_3tuple(a_uint32_t *arg_val)
+{
+    return cmd_show_flow_entry(arg_val, FAL_FLOW_IP6_3TUPLE_ADDR);
+}
+
+sw_error_t
+cmd_show_flow_ipv6_5tuple(a_uint32_t *arg_val)
+{
+    return cmd_show_flow_entry(arg_val, FAL_FLOW_IP6_5TUPLE_ADDR);
+}
+
+
+sw_error_t
 cmd_show_intfmac(a_uint32_t *arg_val)
 {
     sw_error_t rtn;

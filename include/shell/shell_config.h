@@ -38,7 +38,11 @@ extern "C" {
 #define SW_CMD_HOST_IPV4M_SHOW       (SW_API_MAX + 13)
 #define SW_CMD_HOST_IPV6M_SHOW       (SW_API_MAX + 14)
 #define SW_CMD_CTRLPKT_SHOW	(SW_API_MAX + 15)
-#define SW_CMD_MAX             (SW_API_MAX + 16)
+#define SW_CMD_FLOW_IPV43T_SHOW       (SW_API_MAX + 16)
+#define SW_CMD_FLOW_IPV63T_SHOW       (SW_API_MAX + 17)
+#define SW_CMD_FLOW_IPV45T_SHOW       (SW_API_MAX + 18)
+#define SW_CMD_FLOW_IPV65T_SHOW       (SW_API_MAX + 19)
+#define SW_CMD_MAX             (SW_API_MAX + 20)
 
 #define MAX_SUB_CMD_DES_NUM  120
 

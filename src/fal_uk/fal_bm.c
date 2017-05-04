@@ -146,3 +146,15 @@ fal_bm_port_static_thresh_set(a_uint32_t dev_id, fal_port_t port,
     			cfg);
     return rv;
 }
+
+sw_error_t
+fal_bm_port_counter_get(a_uint32_t dev_id, fal_port_t port,
+			fal_bm_port_counter_t *counter)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_BM_PORT_COUNTER_GET, dev_id, port,
+    			counter);
+    return rv;
+}
+

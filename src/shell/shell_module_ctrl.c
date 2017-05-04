@@ -268,7 +268,7 @@ static void cmd_data_print_ip_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_IP_GLOBAL_CTRL_SET"
 	};
 
-	for(func = FUNC_IP_NETWORK_ROUTE_GET; func <= FUNC_IP_GLOBAL_CTRL_GET; func++)
+	for(func = FUNC_IP_NETWORK_ROUTE_GET; func <= FUNC_IP_GLOBAL_CTRL_SET; func++)
 	{
 		if (p->bitmap[0] & (1<<func))
 		{
@@ -290,7 +290,7 @@ static void cmd_data_print_ip_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_flow_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_FLOW_GLOBAL_CFG_SET+1] ={
+	char *func_name[FUNC_FLOW_ENTRY_NEXT+1] ={
 		"FUNC_FLOW_HOST_ADD",
 		"FUNC_FLOW_ENTRY_GET",
 		"FUNC_FLOW_ENTRY_DEL",
@@ -304,10 +304,11 @@ static void cmd_data_print_flow_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_FLOW_AGE_TIMER_SET",
 		"FUNC_FLOW_ENTRY_ADD",
 		"FUNC_FLOW_GLOBAL_CFG_GET",
-		"FUNC_FLOW_GLOBAL_CFG_SET"
+		"FUNC_FLOW_GLOBAL_CFG_SET",
+		"FUNC_FLOW_ENTRY_NEXT"
 	};
 
-	for(func = FUNC_FLOW_HOST_ADD; func <= FUNC_FLOW_GLOBAL_CFG_SET; func++)
+	for(func = FUNC_FLOW_HOST_ADD; func <= FUNC_FLOW_ENTRY_NEXT; func++)
 	{
 		if(p->bitmap[0] & (1 << func))
 		{
@@ -355,7 +356,7 @@ static void cmd_data_print_mib_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_qm_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_QM_ENQUEUE_CTRL_SET+1] ={
+	char *func_name[FUNC_QM_SOURCE_PROFILE_SET+1] ={
 		"FUNC_UCAST_HASH_MAP_SET",
 		"FUNC_AC_DYNAMIC_THRESHOLD_GET",
 		"FUNC_UCAST_QUEUE_BASE_PROFILE_GET",
@@ -386,10 +387,12 @@ static void cmd_data_print_qm_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_QUEUE_COUNTER_CTRL_GET",
 		"FUNC_QUEUE_COUNTER_CTRL_SET",
 		"FUNC_QM_ENQUEUE_CTRL_GET",
-		"FUNC_QM_ENQUEUE_CTRL_SET"
+		"FUNC_QM_ENQUEUE_CTRL_SET",
+		"FUNC_QM_SOURCE_PROFILE_GET",
+		"FUNC_QM_SOURCE_PROFILE_SET"
 	};
 
-	for(func = FUNC_UCAST_HASH_MAP_SET; func <= FUNC_QM_ENQUEUE_CTRL_SET; func++)
+	for(func = FUNC_UCAST_HASH_MAP_SET; func <= FUNC_QM_SOURCE_PROFILE_SET; func++)
 	{
 		if(p->bitmap[0] & (1 << func))
 		{
@@ -449,7 +452,7 @@ static void cmd_data_print_qos_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_bm_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_PORT_TDM_TICK_CFG_SET+1] ={
+	char *func_name[FUNC_BM_PORT_COUNTER_GET+1] ={
 		"FUNC_PORT_BUFGROUP_MAP_GET",
 		"FUNC_BM_PORT_RESERVED_BUFFER_GET",
 		"FUNC_BM_BUFGROUP_BUFFER_GET",
@@ -463,10 +466,11 @@ static void cmd_data_print_bm_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_BM_PORT_DYNAMIC_THRESH_SET",
 		"FUNC_PORT_BM_CTRL_SET",
 		"FUNC_PORT_TDM_CTRL_SET",
-		"FUNC_PORT_TDM_TICK_CFG_SET"
+		"FUNC_PORT_TDM_TICK_CFG_SET",
+		"FUNC_BM_PORT_COUNTER_GET"
 	};
 
-	for(func = FUNC_PORT_BUFGROUP_MAP_GET; func <= FUNC_PORT_TDM_TICK_CFG_SET; func++)
+	for(func = FUNC_PORT_BUFGROUP_MAP_GET; func <= FUNC_BM_PORT_COUNTER_GET; func++)
 	{
 		if(p->bitmap[0] & (1 << func))
 		{

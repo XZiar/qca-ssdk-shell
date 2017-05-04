@@ -200,6 +200,7 @@ extern "C" {
 	SW_SHAPER_CONFIG,
 	SW_BMSTHRESH,
         SW_BMDTHRESH,
+        SW_BMPORTCNT,
         SW_MODULE,
         SW_FUNC_CTRL,
         SW_QM_CNT,

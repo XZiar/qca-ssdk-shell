@@ -334,6 +334,10 @@ cmd_parse_sw(char **cmd_str, a_uint32_t * arg_val)
                               api_id == SW_CMD_HOST_IPV6_SHOW ||
                               api_id == SW_CMD_HOST_IPV4M_SHOW ||
                               api_id == SW_CMD_HOST_IPV6M_SHOW ||
+                              api_id == SW_CMD_FLOW_IPV43T_SHOW ||
+                              api_id == SW_CMD_FLOW_IPV63T_SHOW ||
+                              api_id == SW_CMD_FLOW_IPV45T_SHOW ||
+                              api_id == SW_CMD_FLOW_IPV65T_SHOW ||
                               api_id == SW_CMD_NAT_SHOW ||
                               api_id == SW_CMD_NAPT_SHOW ||
                               api_id == SW_CMD_FLOW_SHOW ||

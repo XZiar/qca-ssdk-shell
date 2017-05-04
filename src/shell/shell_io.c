@@ -307,6 +307,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_SHAPER_CONFIG, cmd_data_check_shaper_config, cmd_data_print_shaper_config),
     SW_TYPE_DEF(SW_BMSTHRESH, cmd_data_check_bm_static_thresh, cmd_data_print_bm_static_thresh),
     SW_TYPE_DEF(SW_BMDTHRESH, cmd_data_check_bm_dynamic_thresh, cmd_data_print_bm_dynamic_thresh),
+    SW_TYPE_DEF(SW_BMPORTCNT, NULL, cmd_data_print_bm_port_counter),
     SW_TYPE_DEF(SW_MODULE, cmd_data_check_module, cmd_data_print_module),
     SW_TYPE_DEF(SW_FUNC_CTRL, cmd_data_check_func_ctrl, cmd_data_print_func_ctrl),
     SW_TYPE_DEF(SW_QM_CNT, NULL, cmd_data_print_queue_cnt),
@@ -17537,6 +17538,19 @@ cmd_data_print_queue_cnt(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
 			entry->tx_packets, entry->tx_bytes, entry->pending_buff_num);
 
     return SW_OK;
+}
+
+void
+cmd_data_print_bm_port_counter(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_bm_port_counter_t *entry;
+
+    entry = (fal_bm_port_counter_t *) buf;
+
+    dprintf("\n[drop_byte_counter]:0x%llx [drop_packet_counter]:0x%x [fc_drop_byte_counter]:0x%llx [fc_drop_packet_counter]:0x%x ",
+			entry->drop_byte_counter, entry->drop_packet_counter, entry->fc_drop_byte_counter, entry->fc_drop_packet_counter);
+    dprintf("\n[used_counter]:0x%x [react_counter]:0x%x ",
+			entry->used_counter, entry->react_counter);
 }
 
 sw_error_t
