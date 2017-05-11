@@ -71,6 +71,7 @@ extern "c" {
 #define FAL_PHY_ADV_5000T_FD    0x2000
 #define FAL_PHY_ADV_10000T_FD   0x4000
 
+#define FAL_PHY_ADV_10G_R_FD    0x8000
 
 #define FAL_PHY_ADV_FE_SPEED_ALL   \
     (FAL_PHY_ADV_10T_HD | FAL_PHY_ADV_10T_FD | FAL_PHY_ADV_100TX_HD |\
@@ -81,7 +82,7 @@ extern "c" {
      FAL_PHY_ADV_100TX_FD | FAL_PHY_ADV_1000T_FD)
 
 #define FAL_PHY_ADV_BX_SPEED_ALL   \
-    (FAL_PHY_ADV_1000BX_HD | FAL_PHY_ADV_1000BX_FD)
+    (FAL_PHY_ADV_1000BX_HD | FAL_PHY_ADV_1000BX_FD |FAL_PHY_ADV_10G_R_FD)
 
 #define FAL_PHY_ADV_PAUSE       0x10
 #define FAL_PHY_ADV_ASY_PAUSE   0x20
@@ -187,6 +188,7 @@ typedef enum {
 typedef enum {
     PHY_FIBER_100FX     = 0,    /**< 100FX fiber mode */
     PHY_FIBER_1000BX    = 1,    /**< 1000BX fiber mode */
+    PHY_FIBER_10G_R = 2,	/**< 10G-R fiber mode */
 
 } fal_port_fiber_mode_t;
 
@@ -215,6 +217,15 @@ typedef enum {
 				/**< PSGMII Auto mode */
 		PHY_SGMII_BASET = 4,
 				/**< SGMII mode */
+		PORT_QSGMII,
+				/**<QSGMII mode*/
+		PORT_SGMII_PLUS,
+				/**<PORT_SGMII_PLUS mode*/
+		PORT_USXGMII,
+				/**<PORT_USXGMII mode*/
+		PORT_10GBASE_R,
+				/**<PORT_10GBASE_R mode*/
+		PORT_INTERFACE_MODE_MAX = 0xFF
 	} fal_port_interface_mode_t;
 
 /** Phy counter information */
@@ -262,6 +273,7 @@ enum
 	FUNC_ADPT_PORT_MDIX_STATUS_GET,
 	FUNC_ADPT_PORT_MTU_SET,
 	FUNC_ADPT_PORT_LINK_STATUS_GET,
+
 	FUNC_ADPT_PORT_8023AZ_SET,
 	FUNC_ADPT_PORT_POWERSAVE_GET,
 	FUNC_ADPT_PORT_COMBO_PREFER_MEDIUM_GET,
@@ -294,6 +306,8 @@ enum
 	FUNC_ADPT_PORT_MAX_FRAME_SIZE_GET,
 	FUNC_ADPT_PORT_SOURCE_FILTER_GET,
 	FUNC_ADPT_PORT_SOURCE_FILTER_SET,
+
+	FUNC_ADPT_PORT_INTERFACE_MODE_APPLY,
 };
 
 	typedef enum {
@@ -625,6 +639,9 @@ enum
 
  sw_error_t
     fal_port_interface_mode_set(a_uint32_t dev_id, fal_port_t port_id, fal_port_interface_mode_t mode);
+
+ sw_error_t
+    fal_port_interface_mode_apply(a_uint32_t dev_id);
 
  sw_error_t
     fal_port_interface_mode_get (a_uint32_t dev_id, fal_port_t port_id,

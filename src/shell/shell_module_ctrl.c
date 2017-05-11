@@ -558,7 +558,7 @@ static void cmd_data_print_pppoe_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_ADPT_PORT_SOURCE_FILTER_SET+1] ={
+	char *func_name[FUNC_ADPT_PORT_INTERFACE_MODE_APPLY+1] ={
 		"FUNC_ADPT_PORT_LOCAL_LOOPBACK_GET",
 		"FUNC_ADPT_PORT_AUTONEG_RESTART",
 		"FUNC_ADPT_PORT_DUPLEX_SET",
@@ -591,6 +591,7 @@ static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_ADPT_PORT_MDIX_STATUS_GET",
 		"FUNC_ADPT_PORT_MTU_SET",
 		"FUNC_ADPT_PORT_LINK_STATUS_GET",
+
 		"FUNC_ADPT_PORT_8023AZ_SET",
 		"FUNC_ADPT_PORT_POWERSAVE_GET",
 		"FUNC_ADPT_PORT_COMBO_PREFER_MEDIUM_GET",
@@ -623,6 +624,8 @@ static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_ADPT_PORT_MAX_FRAME_SIZE_GET",
 		"FUNC_ADPT_PORT_SOURCE_FILTER_GET",
 		"FUNC_ADPT_PORT_SOURCE_FILTER_SET",
+
+		"FUNC_ADPT_PORT_INTERFACE_MODE_APPLY",
 	};
 
 	for(func = FUNC_ADPT_PORT_LOCAL_LOOPBACK_GET; func <= FUNC_ADPT_PORT_LINK_STATUS_GET; func++)
@@ -640,6 +643,18 @@ static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 	for(func = FUNC_ADPT_PORT_8023AZ_SET; func <= FUNC_ADPT_PORT_SOURCE_FILTER_SET; func++)
 	{
 		if(p->bitmap[1] & (1<< (func % 32)))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+
+	for(func = FUNC_ADPT_PORT_INTERFACE_MODE_APPLY; func <= FUNC_ADPT_PORT_INTERFACE_MODE_APPLY; func++)
+	{
+		if(p->bitmap[2] & (1<<(func % 32)))
 		{
 			dprintf("%d  %s  registered\n", func, func_name[func]);
 		}
