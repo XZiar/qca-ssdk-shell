@@ -5324,10 +5324,10 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
     if (A_TRUE == tmpdata)
     {
         cmd_data_check_element("dscp", NULL,
-                               "usage: the format is 0x0-0x3f or 0-63 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x3f,
+                               "usage: the format is 0x0-0xff or 0-255\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
                                        0x0));
-        entry->dscp = tmpdata & 0x3f;
+        entry->dscp = tmpdata & 0xff;
 
         FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_REMARK_DSCP);
     }
