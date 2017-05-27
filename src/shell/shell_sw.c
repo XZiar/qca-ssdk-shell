@@ -260,6 +260,8 @@ cmd_show_vlan(a_uint32_t *arg_val)
 	        cmd_print_error(rtn);
 	    else
 	        dprintf("\ntotal %d entries\n", cnt);
+    } else if (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE) {
+            return SW_NOT_SUPPORTED;
     } else {
 	    sw_error_t rtn;
 	    a_uint32_t rtn_size = 1 ,tmp_vid = 0, cnt = 0;
