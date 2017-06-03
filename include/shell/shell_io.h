@@ -87,6 +87,8 @@ void cmd_data_print_vlan(a_uint8_t * param_name, a_uint32_t * buf,
                          a_uint32_t size);
 void cmd_data_print_mib(a_uint8_t * param_name, a_uint32_t * buf,
                         a_uint32_t size);
+void cmd_data_print_mib_cntr(a_uint8_t * param_name, a_uint64_t * buf,
+                        a_uint32_t size);
 void cmd_data_print_xgmib(a_uint8_t * param_name, a_uint64_t * buf,
                         a_uint64_t size);
 void cmd_data_print_1qmode(a_uint8_t * param_name, a_uint32_t * buf,

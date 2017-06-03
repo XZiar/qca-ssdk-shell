@@ -529,6 +529,7 @@ struct cmd_des_t gcmd_des[] =
             {"cpuKeep", "set", "set cpu keep bit", "<enable|disable>",  SW_API_MIB_CPU_KEEP_SET, NULL},
             {"cpuKeep", "get", "get cpu keep bit", "",  SW_API_MIB_CPU_KEEP_GET, NULL},
             {"xgstatistics","get", "get statistics information of a xg_port", "<port_id>",SW_API_PT_XGMIB_GET},
+            {"counter", "get", "get counter information of a port", "<port_id>",  SW_API_PT_MIB_COUNTER_GET, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },

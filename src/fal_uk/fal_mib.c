@@ -81,3 +81,13 @@ fal_mib_cpukeep_get(a_uint32_t dev_id, a_bool_t * enable)
     rv = sw_uk_exec(SW_API_MIB_CPU_KEEP_GET, dev_id, enable);
     return rv;
 }
+
+sw_error_t
+fal_mib_counter_get(a_uint32_t dev_id, fal_port_t port_id,
+                 fal_mib_counter_t * mib_Info)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_MIB_COUNTER_GET, dev_id, port_id, mib_Info);
+    return rv;
+}

@@ -167,6 +167,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_EGMODE, cmd_data_check_egmode, cmd_data_print_egmode),
     SW_TYPE_DEF(SW_MIB, NULL, cmd_data_print_mib),
      SW_TYPE_DEF(SW_XGMIB, NULL, cmd_data_print_xgmib),
+    SW_TYPE_DEF(SW_MIB_CNTR, NULL, cmd_data_print_mib_cntr),
     SW_TYPE_DEF(SW_VLAN, cmd_data_check_vlan, cmd_data_print_vlan),
     SW_TYPE_DEF(SW_PBMP, cmd_data_check_pbmp, cmd_data_print_pbmp),
     SW_TYPE_DEF(SW_ENABLE, cmd_data_check_enable, cmd_data_print_enable),
@@ -572,6 +573,54 @@ static char *mib_regname[] =
     "RxJmFcsErr",
     "RxJmAligErr"
 };
+
+static char *mib_cntr_regname[] =
+{
+    "RxBroad",
+    "RxPause",
+    "RxMulti",
+    "RxFcsErr",
+    "RxAlignErr",
+    "RxRunt",
+    "RxFragment",
+    "Rx64Byte",
+    "Rx128Byte",
+    "Rx256Byte",
+    "Rx512Byte",
+    "Rx1024Byte",
+    "Rx1518Byte",
+    "RxMaxByte",
+    "RxTooLong",
+    "RxGoodByte",
+    "RxBadByte",
+    "RxOverFlow",
+    "Filtered",
+    "TxBroad",
+    "TxPause",
+    "TxMulti",
+    "TxUnderRun",
+    "Tx64Byte",
+    "Tx128Byte",
+    "Tx256Byte",
+    "Tx512Byte",
+    "Tx1024Byte",
+    "Tx1518Byte",
+    "TxMaxByte",
+    "TxOverSize",
+    "TxByte",
+    "TxCollision",
+    "TxAbortCol",
+    "TxMultiCol",
+    "TxSingleCol",
+    "TxExcDefer",
+    "TxDefer",
+    "TxLateCol",
+    "RxUniCast",
+    "TxUniCast",
+    "RxJmFcsErr",
+    "RxJmAligErr"
+};
+
 static char *xgmib_regname[] =
 {
    "RxFrame",
@@ -638,6 +687,22 @@ cmd_data_print_mib(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
             dprintf("\n");
     }
 }
+
+void
+cmd_data_print_mib_cntr(a_uint8_t * param_name, a_uint64_t * buf, a_uint32_t size)
+{
+    dprintf("\n[%s] \n", param_name);
+    a_uint32_t offset = 0;
+    for (offset = 0; offset < (sizeof (fal_mib_counter_t) / sizeof (a_uint64_t));
+            offset++)
+    {
+
+        dprintf("%-12s<0x%08x>  ", mib_cntr_regname[offset], *(buf + offset));
+        if ((offset + 1) % 3 == 0)
+            dprintf("\n");
+    }
+}
+
 
 void
 cmd_data_print_xgmib(a_uint8_t * param_name, a_uint64_t * buf, a_uint64_t size)

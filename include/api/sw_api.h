@@ -58,6 +58,7 @@ extern "C" {
         SW_VLAN,
         SW_PBMP,
         SW_MIB,
+        SW_MIB_CNTR,
         SW_XGMIB,
         SW_MACADDR,
         SW_FDBENTRY,
