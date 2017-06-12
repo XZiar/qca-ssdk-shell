@@ -27,7 +27,7 @@ struct cmd_des_t gcmd_des[] =
             {"duplex", "get", "get duplex mode of a port", "<port_id>" , SW_API_PT_DUPLEX_GET, NULL},
             {"duplex", "set", "set duplex mode of a port", "<port_id> <half|full>", SW_API_PT_DUPLEX_SET, NULL},
             {"speed", "get", "get speed mode of a port", "<port_id>",  SW_API_PT_SPEED_GET, NULL},
-            {"speed", "set", "set speed mode of a port", "<port_id> <10|100|1000>", SW_API_PT_SPEED_SET, NULL},
+            {"speed", "set", "set speed mode of a port", "<port_id> <10|100|1000|2500|5000|10000>", SW_API_PT_SPEED_SET, NULL},
             {"autoAdv", "get", "get auto-negotiation advertisement of a port", "<port_id>", SW_API_PT_AN_ADV_GET, NULL},
             {"autoAdv", "set", "set auto-negotiation advertisement of a port", "<port_id> <cap_bitmap>", SW_API_PT_AN_ADV_SET, NULL},
             {"autoNeg", "get", "get auto-negotiation status of a port", "<port_id>", SW_API_PT_AN_GET, NULL},

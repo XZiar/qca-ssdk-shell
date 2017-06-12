@@ -875,6 +875,12 @@ cmd_data_check_speed(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
         *arg_val = FAL_SPEED_100;
     else if (!strncasecmp(cmd_str, "1000", 5))
         *arg_val = FAL_SPEED_1000;
+    else if (!strncasecmp(cmd_str, "2500", 5))
+        *arg_val = FAL_SPEED_2500;
+    else if (!strncasecmp(cmd_str, "5000", 5))
+        *arg_val = FAL_SPEED_5000;
+    else if (!strncasecmp(cmd_str, "10000", 6))
+        *arg_val = FAL_SPEED_10000;
     else
     {
         //dprintf("input error \n");
@@ -899,6 +905,18 @@ cmd_data_print_speed(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     else if (*(a_uint32_t *) buf == FAL_SPEED_1000)
     {
         dprintf("1000(Mbps)");
+    }
+    else if (*(a_uint32_t *) buf == FAL_SPEED_2500)
+    {
+        dprintf("2500(Mbps)");
+    }
+    else if (*(a_uint32_t *) buf == FAL_SPEED_5000)
+    {
+        dprintf("5000(Mbps)");
+    }
+    else if (*(a_uint32_t *) buf == FAL_SPEED_10000)
+    {
+        dprintf("10000(Mbps)");
     }
     else
     {
