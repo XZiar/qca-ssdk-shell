@@ -952,6 +952,18 @@ cmd_data_print_capable(a_uint8_t * param_name, a_uint32_t * buf,
         return;
     }
 
+    if (*(a_uint32_t *) buf & FAL_PHY_ADV_10000T_FD)
+    {
+        dprintf("10000TX_FD|");
+    }
+    if (*(a_uint32_t *) buf & FAL_PHY_ADV_5000T_FD)
+    {
+        dprintf("5000TX_FD|");
+    }
+    if (*(a_uint32_t *) buf & FAL_PHY_ADV_2500T_FD)
+    {
+        dprintf("2500TX_FD|");
+    }
     if (*(a_uint32_t *) buf & FAL_PHY_ADV_1000BX_FD)
     {
         dprintf("1000BX_FD|");
