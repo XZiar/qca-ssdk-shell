@@ -14944,9 +14944,11 @@ cmd_data_check_flow_age(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint16(cmd, &(entry.age_time), sizeof (a_uint16_t));
+            rv = cmd_data_check_uint16(cmd, &tmp, sizeof (a_uint32_t));
             if (SW_OK != rv)
                 dprintf("usage: age time \n");
+            else
+                entry.age_time = tmp;
         }
     }
     while (talk_mode && (SW_OK != rv));
@@ -14967,9 +14969,11 @@ cmd_data_check_flow_age(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint16(cmd, &(entry.unit), sizeof (a_uint16_t));
+            rv = cmd_data_check_uint16(cmd, &tmp, sizeof (a_uint32_t));
             if (SW_OK != rv)
                 dprintf("usage: age unit \n");
+            else
+                entry.unit = tmp;
         }
     }
     while (talk_mode && (SW_OK != rv));
@@ -15989,10 +15993,12 @@ cmd_data_check_ip_global(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint8(cmd, &(entry.hash_mode_0),
-                                       sizeof (a_uint8_t));
+            rv = cmd_data_check_uint8(cmd, &tmp,
+                                       sizeof (a_uint32_t));
             if (SW_OK != rv)
                 dprintf("usage: hash mode\n");
+            else
+                entry.hash_mode_0 = tmp;
         }
 
     }
@@ -16014,10 +16020,12 @@ cmd_data_check_ip_global(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint8(cmd, &(entry.hash_mode_1),
-                                       sizeof (a_uint8_t));
+            rv = cmd_data_check_uint8(cmd, &tmp,
+                                       sizeof (a_uint32_t));
             if (SW_OK != rv)
                 dprintf("usage: hash mode\n");
+            else
+                entry.hash_mode_1 = tmp;
         }
 
     }
@@ -16070,10 +16078,12 @@ cmd_data_check_l3_parser(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint8(cmd, &(entry.small_ip4ttl),
-                                       sizeof (a_uint8_t));
+            rv = cmd_data_check_uint8(cmd, &tmp,
+                                       sizeof (a_uint32_t));
             if (SW_OK != rv)
                 dprintf("usage: small ttl value\n");
+            else
+                entry.small_ip4ttl = tmp;
         }
 
     }
@@ -16095,10 +16105,12 @@ cmd_data_check_l3_parser(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint8(cmd, &(entry.small_ip6hoplimit),
-                                       sizeof (a_uint8_t));
+            rv = cmd_data_check_uint8(cmd, &tmp,
+                                       sizeof (a_uint32_t));
             if (SW_OK != rv)
                 dprintf("usage: small hop limit value\n");
+            else
+                entry.small_ip6hoplimit = tmp;
         }
 
     }
@@ -18052,10 +18064,12 @@ cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint8(cmd, &(entry.hash_mode_0),
-                                       sizeof (a_uint8_t));
+            rv = cmd_data_check_uint8(cmd, &tmp,
+                                       sizeof (a_uint32_t));
             if (SW_OK != rv)
                 dprintf("usage: hash mode\n");
+            else
+                entry.hash_mode_0 = tmp;
         }
 
     }
@@ -18077,10 +18091,12 @@ cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint8(cmd, &(entry.hash_mode_1),
-                                       sizeof (a_uint8_t));
+            rv = cmd_data_check_uint8(cmd, &tmp,
+                                       sizeof (a_uint32_t));
             if (SW_OK != rv)
                 dprintf("usage: hash mode\n");
+            else
+                entry.hash_mode_1 = tmp;
         }
 
     }
@@ -18943,9 +18959,11 @@ cmd_data_check_flow_ctrl(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint8(cmd, &(entry.key_sel), sizeof (a_uint8_t));
+            rv = cmd_data_check_uint8(cmd, &tmp, sizeof (a_uint32_t));
             if (SW_OK != rv)
                 dprintf("usage: key sel \n");
+            else
+                entry.key_sel = tmp;
         }
     }
     while (talk_mode && (SW_OK != rv));
