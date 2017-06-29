@@ -629,7 +629,7 @@ static char *xgmib_regname[] =
    "RxBroadGood",
    "RxMultiGood",
    "RxFcsErr",
-   "RxRunt",
+   "RxRuntErr",
    "RxJabberError",
    "RxUndersizeGood",
    "RxOversizeGood",
