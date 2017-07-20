@@ -629,7 +629,7 @@ static char *xgmib_regname[] =
    "RxBroadGood",
    "RxMultiGood",
    "RxFcsErr",
-   "RxRunt",
+   "RxRuntErr",
    "RxJabberError",
    "RxUndersizeGood",
    "RxOversizeGood",
@@ -1126,6 +1126,8 @@ cmd_data_check_fiber_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
         *arg_val = PHY_FIBER_100FX;
     else if (!strncasecmp(cmd_str, "1000bx", 7))
         *arg_val = PHY_FIBER_1000BX;
+    else if (!strncasecmp(cmd_str, "10g_r", 7))
+        *arg_val = PHY_FIBER_10G_R;
     else
     {
         //dprintf("input error \n");
@@ -1169,6 +1171,16 @@ cmd_data_check_interface_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t si
         *arg_val = PHY_PSGMII_AMDET;
     else if (!strncasecmp(cmd_str, "sgmii_baset", 13))
         *arg_val = PHY_SGMII_BASET;
+    else if (!strncasecmp(cmd_str, "qsgmii", 13))
+	  *arg_val = PORT_QSGMII;
+    else if (!strncasecmp(cmd_str, "sgmii_plus", 13))
+	  *arg_val = PORT_SGMII_PLUS;
+    else if (!strncasecmp(cmd_str, "usxgmii", 13))
+	  *arg_val = PORT_USXGMII;
+    else if (!strncasecmp(cmd_str, "10gbase_r", 13))
+	  *arg_val = PORT_10GBASE_R;
+    else if (!strncasecmp(cmd_str, "interfacemode_max", 20))
+	  *arg_val = PORT_INTERFACE_MODE_MAX;
     else
     {
         //dprintf("input error \n");
@@ -1202,6 +1214,27 @@ cmd_data_print_interface_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     {
         dprintf("SGMII_BASET");
     }
+	else if (*(a_uint32_t *) buf == PORT_QSGMII)
+    {
+        dprintf("QSGMII");
+    }
+	else if (*(a_uint32_t *) buf == PORT_SGMII_PLUS)
+    {
+        dprintf("SGMII PLUS");
+    }
+	else if (*(a_uint32_t *) buf == PORT_USXGMII)
+    {
+        dprintf("USXGMII");
+    }
+	else if (*(a_uint32_t *) buf == PORT_10GBASE_R)
+    {
+        dprintf("10gbase_r");
+    }
+	else if (*(a_uint32_t *) buf == PORT_INTERFACE_MODE_MAX)
+    {
+        dprintf("INTERFACEMODE_MAX");
+    }
+
     else
     {
         dprintf("UNKNOWN VALUE");
@@ -1249,7 +1282,6 @@ cmd_data_print_mru_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 	else
 		dprintf("mru_action:unknown\n");
 }
-
 
 sw_error_t
 cmd_data_check_mtu_entry(char *cmd_str, void * val, a_uint32_t size)
@@ -13051,8 +13083,6 @@ cmd_data_check_sgmii_fiber_mode(char *cmd_str, a_uint32_t * arg_val)
     }
     return SW_OK;
 }
-
-
 
 sw_error_t
 cmd_data_check_fx100_config(char *cmd_str, void * val, a_uint32_t size)

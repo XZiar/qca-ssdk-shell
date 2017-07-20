@@ -695,7 +695,6 @@ fal_port_interface_mode_set (a_uint32_t dev_id, fal_port_t port_id,
 			fal_port_interface_mode_t  mode)
 {
   sw_error_t rv;
-
   rv = sw_uk_exec(SW_API_PT_INTERFACE_MODE_SET, dev_id, port_id,(a_uint32_t) mode);
   return rv;
 }
@@ -707,6 +706,15 @@ fal_port_interface_mode_get (a_uint32_t dev_id, fal_port_t port_id,
   sw_error_t rv;
 
   rv = sw_uk_exec(SW_API_PT_INTERFACE_MODE_GET, dev_id, port_id, mode);
+  return rv;
+}
+
+sw_error_t
+fal_port_interface_mode_apply (a_uint32_t dev_id)
+{
+  sw_error_t rv;
+
+  rv = sw_uk_exec(SW_API_PT_INTERFACE_MODE_APPLY, dev_id);
   return rv;
 }
 
