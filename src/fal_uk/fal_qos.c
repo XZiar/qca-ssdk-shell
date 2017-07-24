@@ -589,3 +589,12 @@ fal_scheduler_dequeue_ctrl_get(a_uint32_t dev_id, a_uint32_t queue_id, a_bool_t 
     rv = sw_uk_exec(SW_API_QOS_SCHEDULER_DEQUEU_CTRL_GET, dev_id, queue_id, enable);
     return rv;
 }
+
+sw_error_t
+fal_port_scheduler_cfg_reset(a_uint32_t dev_id, fal_port_t port_id)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QOS_PORT_SCHEDULER_CFG_RESET, dev_id, port_id);
+    return rv;
+}
