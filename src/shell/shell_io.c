@@ -8756,6 +8756,22 @@ cmd_data_print_cable_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t
     {
         dprintf("INVALID");
     }
+    else if (*(a_uint32_t *) buf == FAL_CABLE_STATUS_CROSSOVERA)
+    {
+        dprintf("CROSSOVERA");
+    }
+    else if (*(a_uint32_t *) buf == FAL_CABLE_STATUS_CROSSOVERB)
+    {
+        dprintf("CROSSOVERB");
+    }
+    else if (*(a_uint32_t *) buf == FAL_CABLE_STATUS_CROSSOVERC)
+    {
+        dprintf("CROSSOVERC");
+    }
+    else if (*(a_uint32_t *) buf == FAL_CABLE_STATUS_CROSSOVERD)
+    {
+        dprintf("CROSSOVERD");
+    }
     else
     {
         dprintf("UNKNOWN VALUE");
