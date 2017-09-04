@@ -308,6 +308,8 @@ enum
 	FUNC_ADPT_PORT_SOURCE_FILTER_SET,
 
 	FUNC_ADPT_PORT_INTERFACE_MODE_APPLY,
+	FUNC_ADPT_PORT_INTERFACE_3AZ_STATUS_SET,
+	FUNC_ADPT_PORT_INTERFACE_3AZ_STATUS_GET,
 };
 
 	typedef enum {
@@ -666,6 +668,13 @@ enum
  sw_error_t
         fal_port_source_filter_status_get(a_uint32_t dev_id,
                        fal_port_t port_id, a_bool_t * enable);
+ sw_error_t
+ fal_port_interface_3az_status_set(a_uint32_t dev_id, fal_port_t port_id,
+		 a_bool_t enable);
+ 
+ sw_error_t
+ fal_port_interface_3az_status_get(a_uint32_t dev_id, fal_port_t port_id,
+		 a_bool_t * enable);
 
 #ifdef __cplusplus
 }

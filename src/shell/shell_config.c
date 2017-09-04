@@ -96,6 +96,8 @@ struct cmd_des_t gcmd_des[] =
             {"interfaceMode", "get", "get interface mode of phy", "<port_id>", SW_API_PT_INTERFACE_MODE_GET, NULL},
             {"interfaceMode", "apply", "apply interface mode","", SW_API_PT_INTERFACE_MODE_APPLY, NULL},
             {"interfaceMode", "status", "get current interface mode of phy", "<port_id>", SW_API_PT_INTERFACE_MODE_STATUS_GET, NULL},
+            {"interface3az", "set", "set interface and phy 3az info", "<port_id> <enable/disable>", SW_API_PT_INTERFACE_3AZ_STATUS_SET, NULL},
+            {"interface3az", "get", "get interface and phy 3az info", "<port_id>", SW_API_PT_INTERFACE_3AZ_STATUS_GET, NULL},
             {"mtu", "set", "set port mtu value", "", SW_API_PT_MTU_SET, NULL},
             {"mtu", "get", "get port mtu value", "", SW_API_PT_MTU_GET, NULL},
             {"mru", "set", "set port mru value", "", SW_API_PT_MRU_SET, NULL},
