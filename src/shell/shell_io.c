@@ -6577,7 +6577,7 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
         dprintf("\n[mirror]:yes");
     }
 
-    if ((FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_REDPT)) && (rule->ports != 0))
+    if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_REDPT))
     {
         dprintf("\n[rdt_to_port]:yes");
         cmd_data_print_portmap("  [dest_port]:", rule->ports,
