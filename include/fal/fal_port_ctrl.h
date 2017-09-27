@@ -51,7 +51,13 @@ extern "c" {
         FAL_CABLE_STATUS_SHORT   = 1,
         FAL_CABLE_STATUS_OPENED  = 2,
         FAL_CABLE_STATUS_INVALID = 3,
-        FAL_CABLE_STATUS_BUTT    = 0xffff,
+        FAL_CABLE_STATUS_CROSSOVERA = 4,
+        FAL_CABLE_STATUS_CROSSOVERB = 5,
+        FAL_CABLE_STATUS_CROSSOVERC = 6,
+        FAL_CABLE_STATUS_CROSSOVERD = 7,
+        FAL_CABLE_STATUS_LOW_MISMATCH = 8,
+        FAL_CABLE_STATUS_HIGH_MISMATCH = 9,
+        FAL_CABLE_STATUS_BUTT = 0xffff,
     } fal_cable_status_t;
 
 #define FAL_ENABLE      1
