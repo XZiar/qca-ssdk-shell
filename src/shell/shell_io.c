@@ -8756,6 +8756,22 @@ cmd_data_print_cable_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t
     {
         dprintf("INVALID");
     }
+    else if (*(a_uint32_t *) buf == FAL_CABLE_STATUS_CROSSOVERA)
+    {
+        dprintf("CROSSOVERA");
+    }
+    else if (*(a_uint32_t *) buf == FAL_CABLE_STATUS_CROSSOVERB)
+    {
+        dprintf("CROSSOVERB");
+    }
+    else if (*(a_uint32_t *) buf == FAL_CABLE_STATUS_CROSSOVERC)
+    {
+        dprintf("CROSSOVERC");
+    }
+    else if (*(a_uint32_t *) buf == FAL_CABLE_STATUS_CROSSOVERD)
+    {
+        dprintf("CROSSOVERD");
+    }
     else
     {
         dprintf("UNKNOWN VALUE");
@@ -17673,6 +17689,18 @@ cmd_data_print_queue_cnt(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
 
     dprintf("\n[tx_packets]:0x%x [tx_bytes]:0x%llx [pending_buff_num]:0x%x ",
 			entry->tx_packets, entry->tx_bytes, entry->pending_buff_num);
+    dprintf("\n[green_probability_drop_packets]:0x%x ", entry->drop_packets[0]);
+    dprintf("\n[green_probability_drop_bytes]:0x%llx ", entry->drop_bytes[0]);
+    dprintf("\n[yellow_probability_drop_packets]:0x%x ", entry->drop_packets[1]);
+    dprintf("\n[yellow_probability_drop_bytes]:0x%llx ", entry->drop_bytes[1]);
+    dprintf("\n[red_probability_drop_packets]:0x%x ", entry->drop_packets[2]);
+    dprintf("\n[red_probability_drop_bytes]:0x%llx ", entry->drop_bytes[2]);
+    dprintf("\n[green_force_drop_packets]:0x%x ", entry->drop_packets[3]);
+    dprintf("\n[green_force_drop_bytes]:0x%llx ", entry->drop_bytes[3]);
+    dprintf("\n[yellow_force_drop_packets]:0x%x ", entry->drop_packets[4]);
+    dprintf("\n[yellow_force_drop_bytes]:0x%llx ", entry->drop_bytes[4]);
+    dprintf("\n[red_force_drop_packets]:0x%x ", entry->drop_packets[5]);
+    dprintf("\n[red_force_drop_bytes]:0x%llx ", entry->drop_bytes[5]);
 
     return SW_OK;
 }
