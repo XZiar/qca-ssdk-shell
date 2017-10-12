@@ -23,12 +23,12 @@
 #include "api_access.h"
 #include "fal_uk_if.h"
 
-a_uint32_t *ioctl_buf;
+a_ulong_t *ioctl_buf = NULL;
 ssdk_init_cfg init_cfg = def_init_cfg;
 ssdk_cfg_t ssdk_cfg;
 static a_uint32_t flag = 0;
 
-static a_uint32_t *ioctl_argp;
+static a_ulong_t *ioctl_argp;
 static FILE * out_fd;
 char dev_id_path[] = "/sys/ssdk/dev_id";
 static char *err_info[] =
@@ -85,10 +85,10 @@ cmd_print(char *fmt, ...)
 }
 
 static sw_error_t
-cmd_input_parser(a_uint32_t *arg_val, a_uint32_t arg_index, sw_api_param_t *pp)
+cmd_input_parser(a_ulong_t *arg_val, a_uint32_t arg_index, sw_api_param_t *pp)
 {
     a_int16_t i;
-    a_uint32_t *pbuf;
+    a_ulong_t *pbuf;
     a_uint16_t rtn_size = 1;
     sw_api_param_t *pptmp = pp;
 
@@ -107,15 +107,15 @@ cmd_input_parser(a_uint32_t *arg_val, a_uint32_t arg_index, sw_api_param_t *pp)
         return SW_NO_RESOURCE;
     }
 
-    *arg_val = (a_uint32_t) pbuf;
+    *arg_val = (a_ulong_t) pbuf;
 
     return SW_OK;
 }
 
 static sw_error_t
-cmd_api_func(sw_api_func_t *fp, a_uint32_t nr_param, a_uint32_t * args)
+cmd_api_func(sw_api_func_t *fp, a_uint32_t nr_param, a_ulong_t * args)
 {
-    a_uint32_t *p = &args[2];
+    a_ulong_t *p = &args[2];
     sw_error_t rv;
     sw_error_t(*func) ();
 
@@ -161,16 +161,16 @@ cmd_api_func(sw_api_func_t *fp, a_uint32_t nr_param, a_uint32_t * args)
             rv = SW_OUT_OF_RANGE;
     }
 
-    *(a_uint32_t *) args[1] = rv;
+    *(a_ulong_t *) args[1] = rv;
 
     return rv;
 }
 
 static sw_error_t
-cmd_api_output(sw_api_param_t *pp, a_uint32_t nr_param, a_uint32_t * args)
+cmd_api_output(sw_api_param_t *pp, a_uint32_t nr_param, a_ulong_t * args)
 {
     a_uint16_t i;
-    a_uint32_t *pbuf;
+    a_ulong_t *pbuf;
     a_uint16_t rtn_size = 1;
     sw_error_t rtn = (sw_error_t) (*ioctl_buf);
     sw_api_param_t *pptmp = NULL;
@@ -230,12 +230,12 @@ cmd_strtol(char *str, a_uint32_t * arg_val)
 }
 
 static sw_error_t
-cmd_parse_api(char **cmd_str, a_uint32_t * arg_val)
+cmd_parse_api(char **cmd_str, a_ulong_t * arg_val)
 {
     char *tmp_str;
     a_uint32_t arg_index, arg_start = 2, reserve_index = 1; /*reserve for dev_id */
     a_uint32_t last_param_in = 0;
-    a_uint32_t *temp;
+    a_ulong_t *temp;
     void *pentry;
     sw_api_param_t *pptmp = NULL;
     sw_api_t sw_api;
@@ -311,7 +311,7 @@ cmd_parse_api(char **cmd_str, a_uint32_t * arg_val)
 }
 
 static sw_error_t
-cmd_parse_sw(char **cmd_str, a_uint32_t * arg_val)
+cmd_parse_sw(char **cmd_str, a_ulong_t * arg_val)
 {
     char *tmp_str;
     a_uint32_t arg_index = 0;
@@ -348,7 +348,7 @@ cmd_parse_sw(char **cmd_str, a_uint32_t * arg_val)
 
 /*user command api*/
 sw_error_t
-cmd_exec_api(a_uint32_t *arg_val)
+cmd_exec_api(a_ulong_t *arg_val)
 {
     sw_error_t rv;
     sw_api_t sw_api;
@@ -357,7 +357,7 @@ cmd_exec_api(a_uint32_t *arg_val)
     SW_RTN_ON_ERROR(sw_api_get(&sw_api));
 
     /*save cmd return value */
-    arg_val[1] = (a_uint32_t) ioctl_buf;
+    arg_val[1] = (a_ulong_t) ioctl_buf;
     /*save set device id */
     arg_val[2] = get_devid();
 
@@ -453,17 +453,17 @@ cmd_lookup(char **cmd_str, int *cmd_index, int *cmd_index_sub)
     return cmd_deepth;
 }
 
-static a_uint32_t *
+static a_ulong_t *
 cmd_parse(char *cmd_str, int *cmd_index, int *cmd_index_sub)
 {
     int cmd_nr = 0;
-    a_uint32_t *arg_val = ioctl_argp;
+    a_ulong_t *arg_val = ioctl_argp;
     char *tmp_str[CMDSTR_ARGS_MAX], *str_save;
 
     if (cmd_str == NULL)
         return NULL;
 
-    memset(arg_val, 0, CMDSTR_ARGS_MAX * sizeof (a_uint32_t));
+    memset(arg_val, 0, CMDSTR_ARGS_MAX * sizeof (a_ulong_t));
 
     /* split string into array */
     if ((tmp_str[cmd_nr] = (void *) strtok_r(cmd_str, " ", &str_save)) == NULL)
@@ -509,7 +509,7 @@ cmd_parse(char *cmd_str, int *cmd_index, int *cmd_index_sub)
     }
 
     arg_val[0] = GCMD_SUB_API(*cmd_index, *cmd_index_sub);
-    arg_val[1] = (a_uint32_t) ioctl_buf;
+    arg_val[1] = (a_ulong_t) ioctl_buf;
 
     int rtn_code;
     if (arg_val[0] < SW_API_MAX)
@@ -543,7 +543,7 @@ cmd_parse(char *cmd_str, int *cmd_index, int *cmd_index_sub)
 }
 
 static int
-cmd_exec(a_uint32_t *arg_val, int cmd_index, int cmd_index_sub)
+cmd_exec(a_ulong_t *arg_val, int cmd_index, int cmd_index_sub)
 {
     a_uint32_t api_id = arg_val[0];
     sw_error_t rtn = SW_OK;
@@ -609,8 +609,8 @@ cmd_socket_init()
 static sw_error_t
 cmd_init(void)
 {
-    ioctl_buf = (a_uint32_t *) malloc(IOCTL_BUF_SIZE);
-    ioctl_argp = (a_uint32_t *) malloc(CMDSTR_ARGS_MAX * sizeof (a_uint32_t));
+    ioctl_buf = (a_ulong_t *) malloc(IOCTL_BUF_SIZE);
+    ioctl_argp = (a_ulong_t *) malloc(CMDSTR_ARGS_MAX * sizeof (a_ulong_t));
     FILE *dev_id_fd = NULL;
     int dev_id_value;
 
@@ -641,7 +641,7 @@ cmd_exit(void)
 static sw_error_t
 cmd_run_one(char *cmd_str)
 {
-    a_uint32_t *arg_list;
+    a_ulong_t *arg_list;
     int cmd_index = 0, cmd_index_sub = 0;
 
     if ((arg_list = cmd_parse(cmd_str, &cmd_index, &cmd_index_sub)) != NULL)

@@ -45,7 +45,7 @@ set_devid(int dev_id)
 }
 
 sw_error_t
-cmd_show_fdb(a_uint32_t *arg_val)
+cmd_show_fdb(a_ulong_t *arg_val)
 {
     if (ssdk_cfg.init_cfg.chip_type == CHIP_ISIS) {
 	    sw_error_t rtn;
@@ -59,10 +59,10 @@ cmd_show_fdb(a_uint32_t *arg_val)
 
 	    while (1)
 	    {
-	        arg_val[1] = (a_uint32_t) ioctl_buf;
+	        arg_val[1] = (a_ulong_t) ioctl_buf;
 	        arg_val[2] = get_devid();
-	        arg_val[3] = (a_uint32_t) fdb_op;
-	        arg_val[4] = (a_uint32_t) fdb_entry;
+	        arg_val[3] = (a_ulong_t) fdb_op;
+	        arg_val[4] = (a_ulong_t) fdb_entry;
 
 	        rtn = cmd_exec_api(arg_val);
 	        if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -91,10 +91,10 @@ cmd_show_fdb(a_uint32_t *arg_val)
 
 	    while (1)
 	    {
-	        arg_val[1] = (a_uint32_t) ioctl_buf;
+	        arg_val[1] = (a_ulong_t) ioctl_buf;
 	        arg_val[2] = get_devid();
-	        arg_val[3] = (a_uint32_t) fdb_op;
-	        arg_val[4] = (a_uint32_t) fdb_entry;
+	        arg_val[3] = (a_ulong_t) fdb_op;
+	        arg_val[4] = (a_ulong_t) fdb_entry;
 
 	        rtn = cmd_exec_api(arg_val);
 	        if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -120,10 +120,10 @@ cmd_show_fdb(a_uint32_t *arg_val)
 
 	    while (1)
 	    {
-	        arg_val[1] = (a_uint32_t) ioctl_buf;
+	        arg_val[1] = (a_ulong_t) ioctl_buf;
 	        arg_val[2] = get_devid();
-	        arg_val[3] = (a_uint32_t) (ioctl_buf + 1);
-	        arg_val[4] = (a_uint32_t) fdb_entry;
+	        arg_val[3] = (a_ulong_t) (ioctl_buf + 1);
+	        arg_val[4] = (a_ulong_t) fdb_entry;
 
 	        rtn = cmd_exec_api(arg_val);
 	        if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -147,9 +147,9 @@ cmd_show_fdb(a_uint32_t *arg_val)
 
 	    while (1)
 	    {
-	        arg_val[1] = (a_uint32_t) ioctl_buf;
+	        arg_val[1] = (a_ulong_t) ioctl_buf;
 	        arg_val[2] = get_devid();
-	        arg_val[3] = (a_uint32_t) fdb_entry;
+	        arg_val[3] = (a_ulong_t) fdb_entry;
 
 	        rtn = cmd_exec_api(arg_val);
 	        if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -170,7 +170,7 @@ cmd_show_fdb(a_uint32_t *arg_val)
 }
 
 sw_error_t
-cmd_show_ctrlpkt(a_uint32_t *arg_val)
+cmd_show_ctrlpkt(a_ulong_t *arg_val)
 {
 	sw_error_t rtn;
 	a_uint32_t cnt = 0;
@@ -181,9 +181,9 @@ cmd_show_ctrlpkt(a_uint32_t *arg_val)
 
 	while (1)
 	{
-		arg_val[1] = (a_uint32_t) ioctl_buf;
+		arg_val[1] = (a_ulong_t) ioctl_buf;
 		arg_val[2] = get_devid();
-		arg_val[3] = (a_uint32_t) ctrlpkt;
+		arg_val[3] = (a_ulong_t) ctrlpkt;
 
 		rtn = cmd_exec_api(arg_val);
 		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -203,7 +203,7 @@ cmd_show_ctrlpkt(a_uint32_t *arg_val)
 }
 
 sw_error_t
-cmd_show_vlan(a_uint32_t *arg_val)
+cmd_show_vlan(a_ulong_t *arg_val)
 {
     if (ssdk_cfg.init_cfg.chip_type == CHIP_ISIS) {
 	    sw_error_t rtn;
@@ -213,10 +213,10 @@ cmd_show_vlan(a_uint32_t *arg_val)
 	    while (1)
 	    {
 	        arg_val[0] = SW_API_VLAN_NEXT;
-	        arg_val[1] = (a_uint32_t) ioctl_buf;
+	        arg_val[1] = (a_ulong_t) ioctl_buf;
 	        arg_val[2] = get_devid();
 	        arg_val[3] = tmp_vid;
-	        arg_val[4] = (a_uint32_t) vlan_entry;
+	        arg_val[4] = (a_ulong_t) vlan_entry;
 
 	        rtn = cmd_exec_api(arg_val);
 	        if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -241,10 +241,10 @@ cmd_show_vlan(a_uint32_t *arg_val)
 	    while (1)
 	    {
 	        arg_val[0] = SW_API_VLAN_NEXT;
-	        arg_val[1] = (a_uint32_t) ioctl_buf;
+	        arg_val[1] = (a_ulong_t) ioctl_buf;
 	        arg_val[2] = get_devid();
 	        arg_val[3] = tmp_vid;
-	        arg_val[4] = (a_uint32_t) vlan_entry;
+	        arg_val[4] = (a_ulong_t) vlan_entry;
 
 	        rtn = cmd_exec_api(arg_val);
 	        if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -268,10 +268,10 @@ cmd_show_vlan(a_uint32_t *arg_val)
 	    while (1)
 	    {
 	        arg_val[0] = SW_API_VLAN_NEXT;
-	        arg_val[1] = (a_uint32_t) ioctl_buf;
+	        arg_val[1] = (a_ulong_t) ioctl_buf;
 	        arg_val[2] = get_devid();
 	        arg_val[3] = tmp_vid;
-	        arg_val[4] = (a_uint32_t) vlan_entry;
+	        arg_val[4] = (a_ulong_t) vlan_entry;
 
 	        rtn = cmd_exec_api(arg_val);
 	        if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -293,7 +293,7 @@ cmd_show_vlan(a_uint32_t *arg_val)
 }
 
 sw_error_t
-cmd_show_resv_fdb(a_uint32_t *arg_val)
+cmd_show_resv_fdb(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
@@ -304,10 +304,10 @@ cmd_show_resv_fdb(a_uint32_t *arg_val)
     while (1)
     {
         arg_val[0] = SW_API_FDB_RESV_ITERATE;
-        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[1] = (a_ulong_t) ioctl_buf;
         arg_val[2] = get_devid();
-        arg_val[3] = (a_uint32_t) iterator;
-        arg_val[4] = (a_uint32_t) entry;
+        arg_val[3] = (a_ulong_t) iterator;
+        arg_val[4] = (a_ulong_t) entry;
 
         rtn = cmd_exec_api(arg_val);
         if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -328,7 +328,7 @@ cmd_show_resv_fdb(a_uint32_t *arg_val)
 
 
 sw_error_t
-cmd_show_host(a_uint32_t *arg_val)
+cmd_show_host(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
@@ -340,10 +340,10 @@ cmd_show_host(a_uint32_t *arg_val)
 
     while (1)
     {
-        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[1] = (a_ulong_t) ioctl_buf;
         arg_val[2] = get_devid();
         arg_val[3] = 0;
-        arg_val[4] = (a_uint32_t) host_entry;
+        arg_val[4] = (a_ulong_t) host_entry;
 
         rtn = cmd_exec_api(arg_val);
         if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -362,7 +362,7 @@ cmd_show_host(a_uint32_t *arg_val)
 }
 
 sw_error_t
-cmd_show_host_ipv4(a_uint32_t *arg_val)
+cmd_show_host_ipv4(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
@@ -374,10 +374,10 @@ cmd_show_host_ipv4(a_uint32_t *arg_val)
 
     while (1)
     {
-        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[1] = (a_ulong_t) ioctl_buf;
         arg_val[2] = get_devid();
         arg_val[3] = FAL_IP_IP4_ADDR;
-        arg_val[4] = (a_uint32_t) host_entry;
+        arg_val[4] = (a_ulong_t) host_entry;
 
         rtn = cmd_exec_api(arg_val);
         if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -394,7 +394,7 @@ cmd_show_host_ipv4(a_uint32_t *arg_val)
 }
 
 sw_error_t
-cmd_show_host_ipv6(a_uint32_t *arg_val)
+cmd_show_host_ipv6(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
@@ -406,10 +406,10 @@ cmd_show_host_ipv6(a_uint32_t *arg_val)
 
     while (1)
     {
-        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[1] = (a_ulong_t) ioctl_buf;
         arg_val[2] = get_devid();
         arg_val[3] = FAL_IP_IP6_ADDR;
-        arg_val[4] = (a_uint32_t) host_entry;
+        arg_val[4] = (a_ulong_t) host_entry;
 
         rtn = cmd_exec_api(arg_val);
         if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -426,7 +426,7 @@ cmd_show_host_ipv6(a_uint32_t *arg_val)
 }
 
 sw_error_t
-cmd_show_host_ipv4M(a_uint32_t *arg_val)
+cmd_show_host_ipv4M(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
@@ -438,10 +438,10 @@ cmd_show_host_ipv4M(a_uint32_t *arg_val)
 
     while (1)
     {
-        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[1] = (a_ulong_t) ioctl_buf;
         arg_val[2] = get_devid();
         arg_val[3] = FAL_IP_IP4_ADDR_MCAST;
-        arg_val[4] = (a_uint32_t) host_entry;
+        arg_val[4] = (a_ulong_t) host_entry;
 
         rtn = cmd_exec_api(arg_val);
         if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -458,7 +458,7 @@ cmd_show_host_ipv4M(a_uint32_t *arg_val)
 }
 
 sw_error_t
-cmd_show_host_ipv6M(a_uint32_t *arg_val)
+cmd_show_host_ipv6M(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
@@ -470,10 +470,10 @@ cmd_show_host_ipv6M(a_uint32_t *arg_val)
 
     while (1)
     {
-        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[1] = (a_ulong_t) ioctl_buf;
         arg_val[2] = get_devid();
         arg_val[3] = FAL_IP_IP6_ADDR_MCAST;
-        arg_val[4] = (a_uint32_t) host_entry;
+        arg_val[4] = (a_ulong_t) host_entry;
 
         rtn = cmd_exec_api(arg_val);
         if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -490,7 +490,7 @@ cmd_show_host_ipv6M(a_uint32_t *arg_val)
 }
 
 sw_error_t
-cmd_show_intfmac(a_uint32_t *arg_val)
+cmd_show_intfmac(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
@@ -502,10 +502,10 @@ cmd_show_intfmac(a_uint32_t *arg_val)
 
     while (1)
     {
-        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[1] = (a_ulong_t) ioctl_buf;
         arg_val[2] = get_devid();
         arg_val[3] = 0;
-        arg_val[4] = (a_uint32_t) intfmac_entry;
+        arg_val[4] = (a_ulong_t) intfmac_entry;
 
         rtn = cmd_exec_api(arg_val);
         if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -524,7 +524,7 @@ cmd_show_intfmac(a_uint32_t *arg_val)
 }
 
 sw_error_t
-cmd_show_pubaddr(a_uint32_t *arg_val)
+cmd_show_pubaddr(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
@@ -536,10 +536,10 @@ cmd_show_pubaddr(a_uint32_t *arg_val)
 
     while (1)
     {
-        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[1] = (a_ulong_t) ioctl_buf;
         arg_val[2] = get_devid();
         arg_val[3] = 0;
-        arg_val[4] = (a_uint32_t) pubaddr_entry;
+        arg_val[4] = (a_ulong_t) pubaddr_entry;
 
         rtn = cmd_exec_api(arg_val);
         if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -559,7 +559,7 @@ cmd_show_pubaddr(a_uint32_t *arg_val)
 
 
 sw_error_t
-cmd_show_nat(a_uint32_t *arg_val)
+cmd_show_nat(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
@@ -571,10 +571,10 @@ cmd_show_nat(a_uint32_t *arg_val)
 
     while (1)
     {
-        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[1] = (a_ulong_t) ioctl_buf;
         arg_val[2] = get_devid();
         arg_val[3] = 0;
-        arg_val[4] = (a_uint32_t) nat_entry;
+        arg_val[4] = (a_ulong_t) nat_entry;
 
         rtn = cmd_exec_api(arg_val);
         if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -594,7 +594,7 @@ cmd_show_nat(a_uint32_t *arg_val)
 
 
 sw_error_t
-cmd_show_napt(a_uint32_t *arg_val)
+cmd_show_napt(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
@@ -606,10 +606,10 @@ cmd_show_napt(a_uint32_t *arg_val)
 
     while (1)
     {
-        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[1] = (a_ulong_t ) ioctl_buf;
         arg_val[2] = get_devid();
         arg_val[3] = 0;
-        arg_val[4] = (a_uint32_t) napt_entry;
+        arg_val[4] = (a_ulong_t ) napt_entry;
 
         rtn = cmd_exec_api(arg_val);
         if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
@@ -628,7 +628,7 @@ cmd_show_napt(a_uint32_t *arg_val)
 }
 
 sw_error_t
-cmd_show_flow(a_uint32_t *arg_val)
+cmd_show_flow(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
@@ -640,10 +640,10 @@ cmd_show_flow(a_uint32_t *arg_val)
 
     while (1)
     {
-        arg_val[1] = (a_uint32_t) ioctl_buf;
+        arg_val[1] = (a_ulong_t) ioctl_buf;
         arg_val[2] = get_devid();
         arg_val[3] = 0;
-        arg_val[4] = (a_uint32_t) napt_entry;
+        arg_val[4] = (a_ulong_t) napt_entry;
 
         rtn = cmd_exec_api(arg_val);
         if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
