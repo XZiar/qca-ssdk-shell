@@ -317,6 +317,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_POLICER_CMD_CONFIG, cmd_data_check_policer_cmd_config, cmd_data_print_policer_cmd_config),
     SW_TYPE_DEF(SW_POLICER_COUNTER, NULL, cmd_data_print_policer_counter_infor),
     SW_TYPE_DEF(SW_POLICER_GLOBAL_COUNTER, NULL, cmd_data_print_policer_global_counter_infor),
+    SW_TYPE_DEF(SW_RESOURCE_SCHE, NULL, cmd_data_print_port_scheduler_resource),
 };
 
 sw_data_type_t *
@@ -17334,6 +17335,23 @@ cmd_data_print_cosmap(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 			entry->internal_pcp, entry->internal_dei, entry->internal_pri);
     dprintf("\n[internal_dscp]:0x%x [internal_dp]:0x%x ",
 			entry->internal_dscp, entry->internal_dp);
+}
+
+void
+cmd_data_print_port_scheduler_resource(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_portscheduler_resource_t *entry;
+
+    entry = (fal_portscheduler_resource_t *) buf;
+    
+    dprintf("\n[ucastq_start]:0x%x [ucastq_num]:0x%x [mcastq_start]:0x%x [mcastq_num]:0x%x ",
+			entry->ucastq_start, entry->ucastq_num, entry->mcastq_start, entry->mcastq_num);
+    dprintf("\n[l0sp_start]:0x%x [l0sp_num]:0x%x [l0cdrr_start]:0x%x [l0cdrr_num]:0x%x ",
+			entry->l0sp_start, entry->l0sp_num, entry->l0cdrr_start, entry->l0cdrr_num);
+    dprintf("\n[l0edrr_start]:0x%x [l0edrr_num]:0x%x [l1sp_start]:0x%x [l1sp_num]:0x%x ",
+			entry->l0edrr_start, entry->l0edrr_num, entry->l1sp_start, entry->l1sp_num);
+    dprintf("\n[l1cdrr_start]:0x%x [l1cdrr_num]:0x%x [l1edrr_start]:0x%x [l1edrr_num]:0x%x ",
+			entry->l1cdrr_start, entry->l1cdrr_num, entry->l1edrr_start, entry->l1edrr_num);
 }
 
 sw_error_t

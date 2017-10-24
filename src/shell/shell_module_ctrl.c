@@ -409,7 +409,7 @@ static void cmd_data_print_qm_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_qos_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_QOS_PORT_SCHEDULER_CFG_RESET+1] ={
+	char *func_name[FUNC_QOS_PORT_SCHEDULER_RESOURCE_GET+1] ={
 		"FUNC_QOS_PORT_PRI_SET",
 		"FUNC_QOS_PORT_PRI_GET",
 		"FUNC_QOS_COSMAP_PCP_GET",
@@ -435,7 +435,8 @@ static void cmd_data_print_qos_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_SCHEDULER_DEQUEUE_CTRL_SET",
 		"FUNC_QOS_PORT_MODE_PRI_GET",
 		"FUNC_QOS_PORT_MODE_PRI_SET",
-		"FUNC_QOS_PORT_SCHEDULER_CFG_RESET"
+		"FUNC_QOS_PORT_SCHEDULER_CFG_RESET",
+		"FUNC_QOS_PORT_SCHEDULER_RESOURCE_GET"
 	};
 
 	for(func = FUNC_QOS_PORT_PRI_SET; func <= FUNC_QOS_PORT_SCHEDULER_CFG_RESET; func++)

@@ -598,3 +598,15 @@ fal_port_scheduler_cfg_reset(a_uint32_t dev_id, fal_port_t port_id)
     rv = sw_uk_exec(SW_API_QOS_PORT_SCHEDULER_CFG_RESET, dev_id, port_id);
     return rv;
 }
+
+sw_error_t
+fal_port_scheduler_resource_get(
+		a_uint32_t dev_id,
+		fal_port_t port_id,
+		fal_portscheduler_resource_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QOS_PORT_SCHEDULER_RESOURCE_GET, dev_id, port_id, cfg);
+    return rv;
+}

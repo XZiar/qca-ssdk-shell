@@ -210,7 +210,8 @@ extern "C" {
 	SW_POLICER_ACL_CONFIG,
 	SW_POLICER_CMD_CONFIG,
 	SW_POLICER_GLOBAL_COUNTER,
-		SW_PHY_DUMP,
+	SW_PHY_DUMP,
+	SW_RESOURCE_SCHE,
 } sw_data_type_e;
 
     typedef struct
