@@ -8772,6 +8772,14 @@ cmd_data_print_cable_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t
     {
         dprintf("CROSSOVERD");
     }
+    else if (*(a_uint32_t *) buf == FAL_CABLE_STATUS_LOW_MISMATCH)
+    {
+        dprintf("LOW_MISMATCH");
+    }
+    else if (*(a_uint32_t *) buf == FAL_CABLE_STATUS_HIGH_MISMATCH)
+    {
+        dprintf("HIGH_MISMATCH");
+    }
     else
     {
         dprintf("UNKNOWN VALUE");
