@@ -694,11 +694,11 @@ cmd_data_print_mib_cntr(a_uint8_t * param_name, a_uint64_t * buf, a_uint32_t siz
 {
     dprintf("\n[%s] \n", param_name);
     a_uint32_t offset = 0;
+
     for (offset = 0; offset < (sizeof (fal_mib_counter_t) / sizeof (a_uint64_t));
             offset++)
     {
-
-        dprintf("%-12s<0x%08x>  ", mib_cntr_regname[offset], *(buf + offset));
+        dprintf("%-12s<0x%010llx>  ", mib_cntr_regname[offset], *(buf + offset));
         if ((offset + 1) % 3 == 0)
             dprintf("\n");
     }
