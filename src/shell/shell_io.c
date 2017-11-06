@@ -728,6 +728,10 @@ static char *counter_regname[] =
     "RxBadCRC   ",
     "TxGoodFrame",
     "TxBadCRC   ",
+    "SysRxGoodFrame",
+    "SysRxBadCRC",
+    "SysTxGoodFrame",
+    "SysTxBadCRC",
 };
 
 void
