@@ -1170,6 +1170,14 @@ cmd_data_check_interface_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t si
         *arg_val = PHY_PSGMII_FX100;
     else if (!strncasecmp(cmd_str, "psgmii_amdet", 13))
         *arg_val = PHY_PSGMII_AMDET;
+    else if (!strncasecmp(cmd_str, "rgmii_amdet", 13))
+        *arg_val = PORT_RGMII_AMDET;
+    else if (!strncasecmp(cmd_str, "rgmii_baset", 13))
+        *arg_val = PORT_RGMII_BASET;
+    else if (!strncasecmp(cmd_str, "rgmii_bx1000", 13))
+        *arg_val = PORT_RGMII_BX1000;
+    else if (!strncasecmp(cmd_str, "rgmii_fx100", 13))
+        *arg_val = PORT_RGMII_FX100;
     else if (!strncasecmp(cmd_str, "sgmii_baset", 13))
         *arg_val = PHY_SGMII_BASET;
     else if (!strncasecmp(cmd_str, "qsgmii", 13))
@@ -1205,40 +1213,55 @@ cmd_data_print_interface_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     }
     else if (*(a_uint32_t *) buf == PHY_PSGMII_FX100)
     {
-        dprintf("PSGMII_FX100");
+	    dprintf("PSGMII_FX100");
     }
-        else if (*(a_uint32_t *) buf == PHY_PSGMII_AMDET)
+    else if (*(a_uint32_t *) buf == PHY_PSGMII_AMDET)
     {
-        dprintf("PSGMII_AMDET");
+	    dprintf("PSGMII_AMDET");
     }
-        else if (*(a_uint32_t *) buf == PHY_SGMII_BASET)
+    else if (*(a_uint32_t *) buf == PORT_RGMII_AMDET)
     {
-        dprintf("SGMII_BASET");
+	    dprintf("RGMII_AMDET");
     }
-	else if (*(a_uint32_t *) buf == PORT_QSGMII)
+    else if (*(a_uint32_t *) buf == PORT_RGMII_BASET)
     {
-        dprintf("QSGMII");
+	    dprintf("RGMII_BASET");
     }
-	else if (*(a_uint32_t *) buf == PORT_SGMII_PLUS)
+    else if (*(a_uint32_t *) buf == PORT_RGMII_BX1000)
     {
-        dprintf("SGMII PLUS");
+	    dprintf("RGMII_BX1000");
     }
-	else if (*(a_uint32_t *) buf == PORT_USXGMII)
+    else if (*(a_uint32_t *) buf == PORT_RGMII_FX100)
     {
-        dprintf("USXGMII");
+	    dprintf("RGMII_FX100");
     }
-	else if (*(a_uint32_t *) buf == PORT_10GBASE_R)
+    else if (*(a_uint32_t *) buf == PHY_SGMII_BASET)
     {
-        dprintf("10gbase_r");
+	    dprintf("SGMII_BASET");
     }
-	else if (*(a_uint32_t *) buf == PORT_INTERFACE_MODE_MAX)
+    else if (*(a_uint32_t *) buf == PORT_QSGMII)
     {
-        dprintf("INTERFACEMODE_MAX");
+	    dprintf("QSGMII");
     }
-
+    else if (*(a_uint32_t *) buf == PORT_SGMII_PLUS)
+    {
+	    dprintf("SGMII PLUS");
+    }
+    else if (*(a_uint32_t *) buf == PORT_USXGMII)
+    {
+	    dprintf("USXGMII");
+    }
+    else if (*(a_uint32_t *) buf == PORT_10GBASE_R)
+    {
+	    dprintf("10gbase_r");
+    }
+    else if (*(a_uint32_t *) buf == PORT_INTERFACE_MODE_MAX)
+    {
+	    dprintf("INTERFACEMODE_MAX");
+    }
     else
     {
-        dprintf("UNKNOWN VALUE");
+	    dprintf("UNKNOWN VALUE");
     }
 }
 
