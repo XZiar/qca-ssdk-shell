@@ -576,7 +576,7 @@ cmd_exec(a_ulong_t *arg_val, int cmd_index, int cmd_index_sub)
 }
 
 static sw_error_t
-cmd_socket_init()
+cmd_socket_init(int dev_id)
 {
     sw_error_t rv;
 
@@ -591,7 +591,7 @@ cmd_socket_init()
     init_cfg.reg_func.mdio_set = NULL;
     init_cfg.reg_func.mdio_get = NULL;
 
-    rv = ssdk_init(0, &init_cfg);
+    rv = ssdk_init(dev_id, &init_cfg);
     if (SW_OK == rv)
     {
         dprintf("\n SSDK Init OK!");
@@ -604,7 +604,7 @@ cmd_socket_init()
     if (flag == 0)
     {
         aos_mem_set(&ssdk_cfg, 0 ,sizeof(ssdk_cfg_t));
-        rv = sw_uk_exec(SW_API_SSDK_CFG, 0, &ssdk_cfg);
+        rv = sw_uk_exec(SW_API_SSDK_CFG, dev_id, &ssdk_cfg);
         flag = 1;
     }
     return rv;
@@ -616,18 +616,15 @@ cmd_init(void)
     ioctl_buf = (a_ulong_t *) malloc(IOCTL_BUF_SIZE);
     ioctl_argp = (a_ulong_t *) malloc(CMDSTR_ARGS_MAX * sizeof (a_ulong_t));
     FILE *dev_id_fd = NULL;
-    int dev_id_value;
+    int dev_id_value = 0;
 
     if((dev_id_fd = fopen(dev_id_path, "r")) != NULL)
     {
         fscanf(dev_id_fd, "%d", &dev_id_value);
-        set_devid(dev_id_value);
     }
-    else
-    {
-        set_devid(0);
-    }
-    cmd_socket_init();
+
+    set_devid(dev_id_value);
+    cmd_socket_init(dev_id_value);
 
     return SW_OK;
 }
