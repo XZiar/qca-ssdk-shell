@@ -694,11 +694,11 @@ cmd_data_print_mib_cntr(a_uint8_t * param_name, a_uint64_t * buf, a_uint32_t siz
 {
     dprintf("\n[%s] \n", param_name);
     a_uint32_t offset = 0;
+
     for (offset = 0; offset < (sizeof (fal_mib_counter_t) / sizeof (a_uint64_t));
             offset++)
     {
-
-        dprintf("%-12s<0x%08x>  ", mib_cntr_regname[offset], *(buf + offset));
+        dprintf("%-12s<0x%010llx>  ", mib_cntr_regname[offset], *(buf + offset));
         if ((offset + 1) % 3 == 0)
             dprintf("\n");
     }
@@ -728,6 +728,10 @@ static char *counter_regname[] =
     "RxBadCRC   ",
     "TxGoodFrame",
     "TxBadCRC   ",
+    "SysRxGoodFrame",
+    "SysRxBadCRC",
+    "SysTxGoodFrame",
+    "SysTxBadCRC",
 };
 
 void
@@ -1170,6 +1174,14 @@ cmd_data_check_interface_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t si
         *arg_val = PHY_PSGMII_FX100;
     else if (!strncasecmp(cmd_str, "psgmii_amdet", 13))
         *arg_val = PHY_PSGMII_AMDET;
+    else if (!strncasecmp(cmd_str, "rgmii_amdet", 13))
+        *arg_val = PORT_RGMII_AMDET;
+    else if (!strncasecmp(cmd_str, "rgmii_baset", 13))
+        *arg_val = PORT_RGMII_BASET;
+    else if (!strncasecmp(cmd_str, "rgmii_bx1000", 13))
+        *arg_val = PORT_RGMII_BX1000;
+    else if (!strncasecmp(cmd_str, "rgmii_fx100", 13))
+        *arg_val = PORT_RGMII_FX100;
     else if (!strncasecmp(cmd_str, "sgmii_baset", 13))
         *arg_val = PHY_SGMII_BASET;
     else if (!strncasecmp(cmd_str, "qsgmii", 13))
@@ -1205,40 +1217,55 @@ cmd_data_print_interface_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     }
     else if (*(a_uint32_t *) buf == PHY_PSGMII_FX100)
     {
-        dprintf("PSGMII_FX100");
+	    dprintf("PSGMII_FX100");
     }
-        else if (*(a_uint32_t *) buf == PHY_PSGMII_AMDET)
+    else if (*(a_uint32_t *) buf == PHY_PSGMII_AMDET)
     {
-        dprintf("PSGMII_AMDET");
+	    dprintf("PSGMII_AMDET");
     }
-        else if (*(a_uint32_t *) buf == PHY_SGMII_BASET)
+    else if (*(a_uint32_t *) buf == PORT_RGMII_AMDET)
     {
-        dprintf("SGMII_BASET");
+	    dprintf("RGMII_AMDET");
     }
-	else if (*(a_uint32_t *) buf == PORT_QSGMII)
+    else if (*(a_uint32_t *) buf == PORT_RGMII_BASET)
     {
-        dprintf("QSGMII");
+	    dprintf("RGMII_BASET");
     }
-	else if (*(a_uint32_t *) buf == PORT_SGMII_PLUS)
+    else if (*(a_uint32_t *) buf == PORT_RGMII_BX1000)
     {
-        dprintf("SGMII PLUS");
+	    dprintf("RGMII_BX1000");
     }
-	else if (*(a_uint32_t *) buf == PORT_USXGMII)
+    else if (*(a_uint32_t *) buf == PORT_RGMII_FX100)
     {
-        dprintf("USXGMII");
+	    dprintf("RGMII_FX100");
     }
-	else if (*(a_uint32_t *) buf == PORT_10GBASE_R)
+    else if (*(a_uint32_t *) buf == PHY_SGMII_BASET)
     {
-        dprintf("10gbase_r");
+	    dprintf("SGMII_BASET");
     }
-	else if (*(a_uint32_t *) buf == PORT_INTERFACE_MODE_MAX)
+    else if (*(a_uint32_t *) buf == PORT_QSGMII)
     {
-        dprintf("INTERFACEMODE_MAX");
+	    dprintf("QSGMII");
     }
-
+    else if (*(a_uint32_t *) buf == PORT_SGMII_PLUS)
+    {
+	    dprintf("SGMII PLUS");
+    }
+    else if (*(a_uint32_t *) buf == PORT_USXGMII)
+    {
+	    dprintf("USXGMII");
+    }
+    else if (*(a_uint32_t *) buf == PORT_10GBASE_R)
+    {
+	    dprintf("10gbase_r");
+    }
+    else if (*(a_uint32_t *) buf == PORT_INTERFACE_MODE_MAX)
+    {
+	    dprintf("INTERFACEMODE_MAX");
+    }
     else
     {
-        dprintf("UNKNOWN VALUE");
+	    dprintf("UNKNOWN VALUE");
     }
 }
 
@@ -5377,8 +5404,9 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry)
 sw_error_t
 cmd_data_check_acl_action(fal_acl_rule_t * entry)
 {
-    char *cmd;
+    char *cmd, *cmd_find;
     a_uint32_t tmpdata = 0;
+    sw_error_t rv;
 
     /* get permit action configuration */
     cmd_data_check_element("permit", "yes", "usage: <yes/no/y/n>\n",
@@ -5417,11 +5445,46 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
 
     if (tmpdata)
     {
-        cmd_data_check_element("dst port", "null",
-                               "usage: input port number such as 1,3\n",
-                               cmd_data_check_portmap, (cmd, &entry->ports,
-                                       sizeof (fal_pbmp_t)));
-        FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_REDPT);
+        do
+        {
+            cmd = get_sub_cmd("dest port", "null");
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                 return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+                dprintf("usage: physical port such as 1,3\n");
+                dprintf("       nexthop with highest 8bits as 0x1\n");
+                dprintf("       vp and trunk with highest 8bits as 0x2\n");
+                return SW_BAD_VALUE;
+            }
+            else
+            {
+                cmd_find = strstr(cmd, ",");
+                if (cmd_find == NULL)
+                {
+                    rv = cmd_data_check_portid(cmd, &entry->ports, sizeof (fal_pbmp_t));
+                    if(entry->ports <= SW_MAX_NR_PORT)
+                    {
+                        entry->ports = 1<<(entry->ports);
+                    }
+                }
+                else
+                {
+                    rv = cmd_data_check_portmap(cmd, &entry->ports, sizeof (fal_pbmp_t));
+                }
+                if(rv != SW_OK)
+                {
+                    dprintf("usage: physical port such as 1,3\n");
+                    dprintf("       nexthop with highest 8bits as 0x1\n");
+                    dprintf("       vp and trunk with highest 8bits as 0x2\n");
+                }
+                FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_REDPT);
+            }
+        }while (talk_mode && (SW_OK != rv));
     }
 
     /* get copy to cpu action configuration */
@@ -6577,12 +6640,26 @@ cmd_data_print_aclrule(char * param_name, a_uint32_t * buf,
     {
         dprintf("\n[mirror]:yes");
     }
-
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_REDPT))
     {
-        dprintf("\n[rdt_to_port]:yes");
-        cmd_data_print_portmap("  [dest_port]:", rule->ports,
-                               sizeof (fal_pbmp_t));
+        a_uint32_t dest_type = FAL_ACL_DEST_TYPE(rule->ports);
+        a_uint32_t dest_val = FAL_ACL_DEST_VALUE(rule->ports);
+        dprintf("\n[rdt_to_port]:yes   ");
+        if(dest_type == FAL_ACL_DEST_PORT_BMP)
+        {
+            cmd_data_print_portmap("[dest_port]:",
+                                        dest_val, sizeof(a_uint32_t));
+        }
+        else if(dest_type == FAL_ACL_DEST_PORT_ID)
+        {
+            cmd_data_print_uint32("dest_port",
+                                        &dest_val, sizeof(a_uint32_t));
+        }
+        else if(dest_type == FAL_ACL_DEST_NEXTHOP)
+        {
+            cmd_data_print_uint32("dest_port(next_hop)",
+                                        &dest_val, sizeof(a_uint32_t));
+        }
     }
 
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_MODIFY_VLAN))
