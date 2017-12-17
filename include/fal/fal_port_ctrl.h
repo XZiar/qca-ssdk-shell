@@ -235,6 +235,14 @@ typedef enum {
 				/**<PORT_USXGMII mode*/
 		PORT_10GBASE_R,
 				/**<PORT_10GBASE_R mode*/
+		PORT_RGMII_BASET,
+				/**< RGMII mode */
+		PORT_RGMII_BX1000,
+				/**< RGMII BX1000 mode */
+		PORT_RGMII_FX100,
+				/**< RGMII FX100 mode */
+		PORT_RGMII_AMDET,
+				/**< RGMII Auto mode */
 		PORT_INTERFACE_MODE_MAX = 0xFF
 	} fal_port_interface_mode_t;
 
@@ -244,6 +252,10 @@ typedef struct {
 	a_uint32_t RxBadCRC;
 	a_uint32_t TxGoodFrame;
 	a_uint32_t TxBadCRC;
+	a_uint32_t SysRxGoodFrame;
+	a_uint32_t SysRxBadCRC;
+	a_uint32_t SysTxGoodFrame;
+	a_uint32_t SysTxBadCRC;
 } fal_port_counter_info_t;
 
 /*above is new add for malibu phy*/
