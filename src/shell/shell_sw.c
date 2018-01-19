@@ -21,12 +21,21 @@ static int sw_devid = 0;
 sw_error_t
 cmd_set_devid(a_uint32_t *arg_val)
 {
+    sw_error_t rtn;
+    ssdk_cfg_t ssdk_cfg_new;
+
     if (arg_val[1] >= SW_MAX_NR_DEV)
     {
         dprintf("dev_id should be less than <%d>\n", SW_MAX_NR_DEV);
         return SW_FAIL;
     }
     sw_devid = arg_val[1];
+
+    rtn = fal_ssdk_cfg(sw_devid, &ssdk_cfg_new);
+    if (rtn == SW_OK)
+    {
+	    ssdk_cfg = ssdk_cfg_new;
+    }
 
     return SW_OK;
 }
