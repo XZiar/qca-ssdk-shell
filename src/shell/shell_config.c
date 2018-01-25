@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2017, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2018, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -273,6 +273,7 @@ struct cmd_des_t gcmd_des[] =
             {"fdbrfs", "del", "delete a FDB rfs", "", SW_API_FDB_RFS_DEL, NULL},
             {"ptmaclimitctrl", "set", "set port maclimit ctrl", "<port_id>", SW_API_FDB_PT_MACLIMIT_CTRL_SET, NULL},
             {"ptmaclimitctrl", "get", "get port maclimit ctrl", "<port_id>", SW_API_FDB_PT_MACLIMIT_CTRL_GET, NULL},
+            {"fidEntry", "flush", "flush all FDB entries by a fid", "<fid> <0:dynamic only|1:dynamic and static>", SW_API_FDB_DEL_BY_FID, NULL},
             {NULL, NULL, NULL, NULL, (int)NULL, NULL}/*end of desc*/
         },
     },

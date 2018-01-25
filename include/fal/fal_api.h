@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2017, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2018, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -442,7 +442,8 @@ extern "C" {
     SW_API_DEF(SW_API_FDB_RFS_SET,   fal_fdb_rfs_set),   \
     SW_API_DEF(SW_API_FDB_RFS_DEL,   fal_fdb_rfs_del),   \
     SW_API_DEF(SW_API_FDB_PT_MACLIMIT_CTRL_SET, fal_fdb_port_maclimit_ctrl_set), \
-    SW_API_DEF(SW_API_FDB_PT_MACLIMIT_CTRL_GET, fal_fdb_port_maclimit_ctrl_get),
+    SW_API_DEF(SW_API_FDB_PT_MACLIMIT_CTRL_GET, fal_fdb_port_maclimit_ctrl_get), \
+    SW_API_DEF(SW_API_FDB_DEL_BY_FID, fal_fdb_del_by_fid),
 
 #define FDB_API_PARAM \
     SW_API_DESC(SW_API_FDB_ADD) \
@@ -490,7 +491,8 @@ extern "C" {
     SW_API_DESC(SW_API_FDB_RFS_SET)  \
     SW_API_DESC(SW_API_FDB_RFS_DEL)   \
     SW_API_DESC(SW_API_FDB_PT_MACLIMIT_CTRL_SET) \
-    SW_API_DESC(SW_API_FDB_PT_MACLIMIT_CTRL_GET)
+    SW_API_DESC(SW_API_FDB_PT_MACLIMIT_CTRL_GET) \
+    SW_API_DESC(SW_API_FDB_DEL_BY_FID)
 #else
 #define FDB_API
 #define FDB_API_PARAM
