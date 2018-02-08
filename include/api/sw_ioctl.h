@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2017, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2018, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -263,6 +263,7 @@ extern "C" {
 #define SW_API_FDB_PT_STAMOVE_GET          (43  + SW_API_FDB_OFFSET)
 #define SW_API_FDB_PT_MACLIMIT_CTRL_SET    (44  + SW_API_FDB_OFFSET)
 #define SW_API_FDB_PT_MACLIMIT_CTRL_GET    (45  + SW_API_FDB_OFFSET)
+#define SW_API_FDB_DEL_BY_FID              (46  + SW_API_FDB_OFFSET)
 
 
     /*acl*/

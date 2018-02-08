@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -747,7 +747,7 @@ static void cmd_data_print_mirror_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_fdb_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_FDB_PORT_MACLIMIT_CTRL_GET+1] ={
+	char *func_name[FUNC_FDB_DEL_BY_FID+1] ={
 		"FUNC_FDB_ENTRY_ADD",
 		"FUNC_FDB_ENTRY_FLUSH",
 		"FUNC_FDB_ENTRY_DEL_BYPORT",
@@ -779,7 +779,8 @@ static void cmd_data_print_fdb_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_FDB_PORT_ADD",
 		"FUNC_FDB_PORT_DEL",
 		"FUNC_FDB_PORT_MACLIMIT_CTRL_SET",
-		"FUNC_FDB_PORT_MACLIMIT_CTRL_GET"
+		"FUNC_FDB_PORT_MACLIMIT_CTRL_GET",
+		"FUNC_FDB_DEL_BY_FID"
 	};
 
 	for(func = FUNC_FDB_ENTRY_ADD; func <= FUNC_FDB_PORT_MACLIMIT_CTRL_GET; func++)
@@ -793,6 +794,18 @@ static void cmd_data_print_fdb_func_ctrl(fal_func_ctrl_t *p)
 			dprintf("%d  %s  unregistered\n", func, func_name[func]);
 		}
 	}
+	for(func = FUNC_FDB_DEL_BY_FID; func <= FUNC_FDB_DEL_BY_FID; func++)
+	{
+		if (p->bitmap[1] & (1<<(func % 32)))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+
 	return;
 }
 
