@@ -337,7 +337,7 @@ enum {
     fal_fdb_port_maclimit_ctrl_get(a_uint32_t dev_id, fal_port_t port_id, fal_maclimit_ctrl_t * maclimit_ctrl);
 
     sw_error_t
-    fal_fdb_del_by_fid(a_uint32_t dev_id, a_uint16_t fid, a_uint32_t flag);
+    fal_fdb_entry_del_byfid(a_uint32_t dev_id, a_uint16_t fid, a_uint32_t flag);
 
 #define fal_fdb_add 	fal_fdb_entry_add
 #define fal_fdb_del_all	fal_fdb_entry_flush
