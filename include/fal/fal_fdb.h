@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2017, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2018, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -122,6 +122,7 @@ enum {
 	FUNC_FDB_PORT_DEL,
 	FUNC_FDB_PORT_MACLIMIT_CTRL_SET,
 	FUNC_FDB_PORT_MACLIMIT_CTRL_GET,
+	FUNC_FDB_DEL_BY_FID,
 };
 
 	typedef struct
@@ -334,6 +335,9 @@ enum {
 
     sw_error_t
     fal_fdb_port_maclimit_ctrl_get(a_uint32_t dev_id, fal_port_t port_id, fal_maclimit_ctrl_t * maclimit_ctrl);
+
+    sw_error_t
+    fal_fdb_del_by_fid(a_uint32_t dev_id, a_uint16_t fid, a_uint32_t flag);
 
 #define fal_fdb_add 	fal_fdb_entry_add
 #define fal_fdb_del_all	fal_fdb_entry_flush
