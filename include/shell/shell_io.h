@@ -11,7 +11,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-
+/*qca808x_start*/
 #ifndef _SHELL_IO_H
 #define _SHELL_IO_H
 
@@ -58,14 +58,18 @@ sw_error_t cmd_data_check_duplex(char *cmd_str, a_uint32_t * arg_val,
                                  a_uint32_t size);
 sw_error_t cmd_data_check_speed(char *cmd_str, a_uint32_t * arg_val,
                                 a_uint32_t size);
+/*qca808x_end*/
 sw_error_t cmd_data_check_1qmode(char *cmd_str, a_uint32_t * arg_val,
                                  a_uint32_t size);
 sw_error_t cmd_data_check_egmode(char *cmd_str, a_uint32_t * arg_val,
                                  a_uint32_t size);
+/*qca808x_start*/
 sw_error_t cmd_data_check_capable(char *cmd_str, a_uint32_t * arg_val,
                                   a_uint32_t size);
+/*qca808x_end*/
 sw_error_t cmd_data_check_fdbentry(char *cmdstr, void *val, a_uint32_t size);
 sw_error_t cmd_data_check_maclimit_ctrl(char *cmdstr, void *val, a_uint32_t size);
+/*qca808x_start*/
 sw_error_t cmd_data_check_macaddr(char *cmdstr, void *val, a_uint32_t size);
 
 void cmd_data_print_uint32(a_uint8_t * param_name, a_uint32_t * buf,
@@ -82,6 +86,7 @@ void cmd_data_print_duplex(a_uint8_t * param_name, a_uint32_t * buf,
                            a_uint32_t size);
 void cmd_data_print_speed(a_uint8_t * param_name, a_uint32_t * buf,
                           a_uint32_t size);
+/*qca808x_end*/
 sw_error_t cmd_data_check_vlan(char *cmdstr, fal_vlan_t * val, a_uint32_t size);
 void cmd_data_print_vlan(a_uint8_t * param_name, a_uint32_t * buf,
                          a_uint32_t size);
@@ -95,14 +100,16 @@ void cmd_data_print_1qmode(a_uint8_t * param_name, a_uint32_t * buf,
                            a_uint32_t size);
 void cmd_data_print_egmode(a_uint8_t * param_name, a_uint32_t * buf,
                            a_uint32_t size);
+/*qca808x_start*/
 void cmd_data_print_capable(a_uint8_t * param_name, a_uint32_t * buf,
                             a_uint32_t size);
-void cmd_data_print_fdbentry(a_uint8_t * param_name, a_uint32_t * buf,
-                             a_uint32_t size);
+/*qca808x_end*/
 void cmd_data_print_maclimit_ctrl(a_uint8_t * param_name, a_uint32_t * buf,
-                             a_uint32_t size);
+                            a_uint32_t size);
+/*qca808x_start*/
 void cmd_data_print_macaddr(char * param_name, a_uint32_t * buf,
                             a_uint32_t size);
+/*qca808x_end*/
 sw_error_t cmd_data_check_qos_sch(char *cmdstr, fal_sch_mode_t * val,
                                   a_uint32_t size);
 void cmd_data_print_qos_sch(a_uint8_t * param_name, a_uint32_t * buf,
@@ -123,6 +130,7 @@ sw_error_t cmd_data_check_leaky(char *cmdstr, fal_leaky_ctrl_mode_t * val,
                                 a_uint32_t size);
 void cmd_data_print_leaky(a_uint8_t * param_name, a_uint32_t * buf,
                           a_uint32_t size);
+
 sw_error_t cmd_data_check_uinta(char *cmdstr, a_uint32_t * val,
                                 a_uint32_t size);
 void cmd_data_print_uinta(a_uint8_t * param_name, a_uint32_t * buf,
@@ -179,13 +187,14 @@ sw_error_t
 cmd_data_check_qinq_role(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
 void
 cmd_data_print_qinq_role(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+/*qca808x_start*/
 void
 cmd_data_print_cable_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 void
 cmd_data_print_cable_len(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 void
 cmd_data_print_ssdk_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
+/*qca808x_end*/
 sw_error_t
 cmd_data_check_hdrmode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
 
@@ -314,12 +323,13 @@ cmd_data_check_mac_config(char *cmd_str, void * val, a_uint32_t size);
 
 void
 cmd_data_print_mac_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
 sw_error_t
 cmd_data_check_phy_config(char *cmd_str, void * val, a_uint32_t size);
 
 void
 cmd_data_print_phy_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+void cmd_data_print_fdbentry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
 cmd_data_check_fdb_smode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
@@ -329,7 +339,6 @@ cmd_data_print_fdb_smode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
 
 void
 cmd_data_print_fdb_ctrl_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
 sw_error_t
 cmd_data_check_fx100_config(char *cmd_str, void * arg_val, a_uint32_t size);
 
@@ -606,22 +615,22 @@ sw_error_t
 cmd_data_check_fdb_rfs(char *cmd_str, void * val, a_uint32_t size);
 sw_error_t
 cmd_data_check_flow_rfs(char *cmd_str, void * val, a_uint32_t size);
-
+/*qca808x_start*/
 sw_error_t
 cmd_data_check_crossover_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
 
 sw_error_t
 cmd_data_check_crossover_status(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
-
+/*qca808x_end*/
 sw_error_t
 cmd_data_check_prefer_medium(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
 
 sw_error_t
 cmd_data_check_fiber_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
-
+/*qca808x_start*/
 sw_error_t
 cmd_data_check_interface_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
-
+/*qca808x_end*/
 sw_error_t
 cmd_data_check_newadr_lrn(char *cmd_str, void * val, a_uint32_t size);
 
@@ -648,18 +657,20 @@ cmd_data_check_mtu_entry(char *cmd_str, void * val, a_uint32_t size);
 
 sw_error_t
 cmd_data_check_mru_entry(char *cmd_str, void * val, a_uint32_t size);
-
+/*qca808x_start*/
 void
 cmd_data_print_crossover_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 void
 cmd_data_print_crossover_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+/*qca808x_end*/
 
 void
 cmd_data_print_prefer_medium(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 void
 cmd_data_print_fiber_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+/*qca808x_start*/
 
 void
 cmd_data_print_interface_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
@@ -675,6 +686,7 @@ cmd_data_print_phy_register_info(a_uint8_t * param_name, a_uint32_t * buf, a_uin
 
 void
 cmd_data_print_debug_register_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+/*qca808x_end*/
 
 void
 cmd_data_print_mtu_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
@@ -847,5 +859,6 @@ cmd_data_check_debug_port_counter_status(char *info, fal_counter_en_t *val, a_ui
 void
 cmd_data_print_debug_port_counter_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
+/*qca808x_start*/
 #endif
-
+/*qca808x_end*/
