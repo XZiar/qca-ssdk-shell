@@ -623,6 +623,12 @@ sw_error_t
 cmd_data_check_interface_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
 
 sw_error_t
+cmd_data_check_port_eee_config(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_port_eee_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
 cmd_data_check_newadr_lrn(char *cmd_str, void * val, a_uint32_t size);
 
 void
