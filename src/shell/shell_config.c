@@ -20,7 +20,9 @@
 struct cmd_des_t gcmd_des[] =
 {
     /*port ctrl*/
+/*qca808x_end*/
 #ifdef IN_PORTCONTROL
+/*qca808x_start*/
     {
         "port", "config port control",
         {
@@ -109,6 +111,8 @@ struct cmd_des_t gcmd_des[] =
 /*qca808x_end*/
             {"interface3az", "set", "set interface and phy 3az info", "<port_id> <enable/disable>", SW_API_PT_INTERFACE_3AZ_STATUS_SET, NULL},
             {"interface3az", "get", "get interface and phy 3az info", "<port_id>", SW_API_PT_INTERFACE_3AZ_STATUS_GET, NULL},
+            {"promiscmode", "set", "set port promisc mode", "<port_id> <enable|disable>", SW_API_PT_PROMISC_MODE_SET, NULL},
+            {"promiscmode", "get", "get port promisc mode", "<port_id>", SW_API_PT_PROMISC_MODE_GET, NULL},
             {"mtu", "set", "set port mtu value", "", SW_API_PT_MTU_SET, NULL},
             {"mtu", "get", "get port mtu value", "", SW_API_PT_MTU_GET, NULL},
             {"mru", "set", "set port mru value", "", SW_API_PT_MRU_SET, NULL},
@@ -117,12 +121,14 @@ struct cmd_des_t gcmd_des[] =
             {"srcfilter", "get", "get port source filter bypass", "<port_id>", SW_API_PT_SOURCE_FILTER_GET, NULL},
             {"frameMaxSize", "get", "get port frame max size", "<port_id>", SW_API_PT_FRAME_MAX_SIZE_GET},
             {"frameMaxSize", "set", "set port frame max size", "<port_id> <frame_max_size>", SW_API_PT_FRAME_MAX_SIZE_SET},
-            /*qca808x_start*/
+            {"eeecfg", "set", "set interface eee info", "<port_id>", SW_API_PT_INTERFACE_EEE_CFG_SET, NULL},
+            {"eeecfg", "get", "get interface eee info", "<port_id>", SW_API_PT_INTERFACE_EEE_CFG_GET, NULL},
+/*qca808x_start*/
             {NULL, NULL, NULL, NULL, (int)NULL, NULL},/*end of desc*/
         },
     },
-#endif
 /*qca808x_end*/
+#endif
 
     /*vlan*/
 #ifdef IN_VLAN
