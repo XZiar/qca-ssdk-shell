@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2018, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2019, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -249,6 +249,7 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_PORT_EEE_CONFIG, cmd_data_check_port_eee_config, cmd_data_print_port_eee_config),
     SW_TYPE_DEF(SW_PREFER_MEDIUM, cmd_data_check_prefer_medium, cmd_data_print_prefer_medium),
     SW_TYPE_DEF(SW_FIBER_MODE, cmd_data_check_fiber_mode, cmd_data_print_fiber_mode),
+    SW_TYPE_DEF(SW_SRC_FILTER_CONFIG, cmd_data_check_src_filter_config, cmd_data_print_src_filter_config),
 /*qca808x_start*/
     SW_TYPE_DEF(SW_INTERFACE_MODE, cmd_data_check_interface_mode, cmd_data_print_interface_mode),
     SW_TYPE_DEF(SW_COUNTER_INFO, NULL, cmd_data_print_counter_info),
@@ -28220,5 +28221,120 @@ cmd_data_print_ptp_interrupt(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 	dprintf("[intr_status]:0x%x\n", entry->intr_status);
 
 	return SW_OK;
+}
+
+sw_error_t
+cmd_data_check_source_filter_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
+{
+	if (cmd_str == NULL)
+	{
+		return SW_BAD_PARAM;
+	}
+
+	if (!strncasecmp(cmd_str, "virtual_port", 15))
+	{
+		*arg_val = FAL_SRC_FILTER_MODE_VP;
+	}
+	else if (!strncasecmp(cmd_str, "physical_port", 15))
+	{
+		*arg_val = FAL_SRC_FILTER_MODE_PHYSICAL;
+	}
+	else
+	{
+	    return SW_BAD_VALUE;
+	}
+
+	return SW_OK;
+}
+
+sw_error_t
+cmd_data_check_src_filter_config(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	a_uint32_t tmp;
+	sw_error_t rv;
+	fal_src_filter_config_t src_filter_config;
+
+	aos_mem_zero(&src_filter_config, sizeof (fal_src_filter_config_t));
+
+	do
+	{
+	    cmd = get_sub_cmd("srcfilter_enable", "enable");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+	    if (!strncasecmp(cmd, "quit", 4))
+	    {
+	        return SW_BAD_VALUE;
+	    }
+	    else if (!strncasecmp(cmd, "help", 4))
+	    {
+	        dprintf("usage: enable/disable \n");
+	        rv = SW_BAD_VALUE;
+	    }
+	    else
+	    {
+	        rv = cmd_data_check_enable(cmd, &(src_filter_config.src_filter_enable),
+					sizeof (a_bool_t));
+	        if (SW_OK != rv)
+	            dprintf("usage: enable/disable \n");
+	    }
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+	    cmd = get_sub_cmd("srcfilter_mode", "virtual_port");
+	    SW_RTN_ON_NULL_PARAM(cmd);
+
+	    if (!strncasecmp(cmd, "quit", 4))
+	    {
+	        return SW_BAD_VALUE;
+	    }
+	    else if (!strncasecmp(cmd, "help", 4))
+	    {
+	        dprintf("usage: usage: virtual_port physical_port\n");
+	        rv = SW_BAD_VALUE;
+	    }
+	    else
+	    {
+			cmd_data_check_source_filter_mode(cmd, &(src_filter_config.src_filter_mode),
+				sizeof(a_uint32_t));
+	    }
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	*(fal_src_filter_config_t *)arg_val = src_filter_config;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_src_filter_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_src_filter_config_t *src_filter_config;
+	src_filter_config = (fal_src_filter_config_t *) buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	if(src_filter_config->src_filter_enable)
+	{
+		dprintf("src_filter_enable:ENABLE\n");
+	}
+	else
+	{
+		dprintf("src_filter_enable:DISABLE\n");
+	}
+	if(src_filter_config->src_filter_mode == FAL_SRC_FILTER_MODE_VP)
+	{
+		dprintf("src_filter_mode:virtual_port mode\n");
+	}
+	else if(src_filter_config->src_filter_mode == FAL_SRC_FILTER_MODE_PHYSICAL)
+	{
+		dprintf("src_filter_mode:physical_port mode\n");
+	}
+	else
+	{
+		dprintf("src_filter_mode:unknown\n");
+	}
 }
 

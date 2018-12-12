@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2018, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2019, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -640,6 +640,12 @@ cmd_data_check_port_eee_config(char *cmd_str, void * val, a_uint32_t size);
 
 void
 cmd_data_print_port_eee_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_src_filter_config(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
+
+void
+cmd_data_print_src_filter_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
 sw_error_t
 cmd_data_check_newadr_lrn(char *cmd_str, void * val, a_uint32_t size);
 
