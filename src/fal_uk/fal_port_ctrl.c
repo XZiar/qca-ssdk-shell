@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014,2016-2018, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014,2016-2019, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -902,6 +902,30 @@ fal_port_interface_eee_cfg_get(a_uint32_t dev_id, fal_port_t port_id,
 	rv = sw_uk_exec(SW_API_PT_INTERFACE_EEE_CFG_GET, dev_id, port_id, port_eee_cfg);
 
 	return rv;
+}
 
-    return rv;
+sw_error_t
+fal_port_source_filter_config_set(a_uint32_t dev_id,
+	fal_port_t port_id, fal_src_filter_config_t *src_filter_config)
+
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_SOURCE_FILTER_CONFIG_SET, dev_id, port_id,
+			src_filter_config);
+
+	return rv;
+}
+
+sw_error_t
+fal_port_source_filter_config_get(a_uint32_t dev_id,
+	fal_port_t port_id, fal_src_filter_config_t *src_filter_config)
+
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_SOURCE_FILTER_CONFIG_GET, dev_id, port_id,
+			src_filter_config);
+
+	return rv;
 }
