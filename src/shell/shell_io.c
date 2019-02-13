@@ -647,7 +647,12 @@ static char *mib_regname[] =
     "RxUniCast",
     "TxUniCast",
     "RxJmFcsErr",
-    "RxJmAligErr"
+    "RxJmAligErr",
+    "Rx14To63",
+    "RxTooLongByte",
+    "RxTooLongByte1",
+    "RxRuntByte",
+    "RxRuntByte1",
 };
 
 static char *mib_cntr_regname[] =
@@ -694,7 +699,10 @@ static char *mib_cntr_regname[] =
     "RxUniCast",
     "TxUniCast",
     "RxJmFcsErr",
-    "RxJmAligErr"
+    "RxJmAligErr",
+    "Rx14To63",
+    "RxTooLongByte",
+    "RxRuntByte",
 };
 
 static char *xgmib_regname[] =
@@ -758,7 +766,7 @@ cmd_data_print_mib(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
             offset++)
     {
 
-        dprintf("%-12s<0x%08x>  ", mib_regname[offset], *(buf + offset));
+        dprintf("%-15s<0x%015x>  ", mib_regname[offset], *(buf + offset));
         if ((offset + 1) % 3 == 0)
             dprintf("\n");
     }
@@ -773,7 +781,7 @@ cmd_data_print_mib_cntr(a_uint8_t * param_name, a_uint64_t * buf, a_uint32_t siz
     for (offset = 0; offset < (sizeof (fal_mib_counter_t) / sizeof (a_uint64_t));
             offset++)
     {
-        dprintf("%-12s<0x%010llx>  ", mib_cntr_regname[offset], *(buf + offset));
+        dprintf("%-14s<0x%014llx>  ", mib_cntr_regname[offset], *(buf + offset));
         if ((offset + 1) % 3 == 0)
             dprintf("\n");
     }
