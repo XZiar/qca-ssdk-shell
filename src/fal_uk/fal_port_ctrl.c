@@ -929,3 +929,28 @@ fal_port_source_filter_config_get(a_uint32_t dev_id,
 
 	return rv;
 }
+
+sw_error_t
+fal_switch_port_loopback_set(a_uint32_t dev_id, fal_port_t port_id,
+	fal_loopback_config_t *loopback_cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_SWITCH_PORT_LOOPBACK_SET, dev_id,
+			port_id, loopback_cfg);
+
+	return rv;
+}
+sw_error_t
+fal_switch_port_loopback_get(a_uint32_t dev_id, fal_port_t port_id,
+	fal_loopback_config_t *loopback_cfg)
+
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_SWITCH_PORT_LOOPBACK_GET, dev_id, port_id,
+			loopback_cfg);
+
+	return rv;
+}
+

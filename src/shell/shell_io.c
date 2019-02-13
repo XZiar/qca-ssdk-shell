@@ -246,10 +246,11 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_CROSSOVER_MODE, cmd_data_check_crossover_mode, cmd_data_print_crossover_mode),
     SW_TYPE_DEF(SW_CROSSOVER_STATUS, cmd_data_check_crossover_status, cmd_data_print_crossover_status),
 /*qca808x_end*/
-	SW_TYPE_DEF(SW_PORT_EEE_CONFIG, cmd_data_check_port_eee_config, cmd_data_print_port_eee_config),
+    SW_TYPE_DEF(SW_PORT_EEE_CONFIG, cmd_data_check_port_eee_config, cmd_data_print_port_eee_config),
     SW_TYPE_DEF(SW_PREFER_MEDIUM, cmd_data_check_prefer_medium, cmd_data_print_prefer_medium),
     SW_TYPE_DEF(SW_FIBER_MODE, cmd_data_check_fiber_mode, cmd_data_print_fiber_mode),
     SW_TYPE_DEF(SW_SRC_FILTER_CONFIG, cmd_data_check_src_filter_config, cmd_data_print_src_filter_config),
+    SW_TYPE_DEF(SW_PORT_LOOPBACK_CONFIG, cmd_data_check_switch_port_loopback_config, cmd_data_print_switch_port_loopback_config),
 /*qca808x_start*/
     SW_TYPE_DEF(SW_INTERFACE_MODE, cmd_data_check_interface_mode, cmd_data_print_interface_mode),
     SW_TYPE_DEF(SW_COUNTER_INFO, NULL, cmd_data_print_counter_info),
@@ -9144,6 +9145,123 @@ cmd_data_print_port_eee_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 
     return;
 }
+
+sw_error_t
+cmd_data_check_switch_port_loopback_config(char *cmd_str, void * val,
+	a_uint32_t size)
+{
+    char *cmd;
+    sw_error_t rv;
+    fal_loopback_config_t cfg;
+
+    aos_mem_zero(&cfg, sizeof (fal_loopback_config_t));
+
+    do
+    {
+        cmd = get_sub_cmd("loopback_enable", "no");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(cfg.enable),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("crc_stripped_enable", "no");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(cfg.crc_stripped),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("loopback_rate", "1-0x12c");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer [unit is Mpps]\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(cfg.loopback_rate), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer [unit is Mpps]\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    *(fal_loopback_config_t *)val = cfg;
+    return SW_OK;
+}
+void
+cmd_data_print_switch_port_loopback_config(a_uint8_t * param_name,
+	a_uint32_t * buf, a_uint32_t size)
+{
+    fal_loopback_config_t *cfg;
+
+    cfg = (fal_loopback_config_t *) buf;
+
+    if (A_TRUE == cfg->enable)
+    {
+        dprintf("\n[loopback_enable]:yes  ");
+    }
+    else
+    {
+        dprintf("\n[loopback_enable]:no  ");
+    }
+    if (A_TRUE == cfg->crc_stripped)
+    {
+        dprintf("\n[crc_stripped_enable]:yes  ");
+    }
+    else
+    {
+        dprintf("\n[crc_stripped_enable]:no  ");
+    }
+
+    dprintf("\n[loopback_rate]:%d[Mpps]", cfg->loopback_rate);
+
+    return;
+}
+
 /*qca808x_start*/
 void
 cmd_data_print_cable_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)

@@ -210,6 +210,10 @@ struct cmd_des_t gcmd_des[] =
                 SW_API_PT_SOURCE_FILTER_CONFIG_SET, NULL},
             {"srcfiltercfg", "get", "get port source filter configure", "<port_id>",
                 SW_API_PT_SOURCE_FILTER_CONFIG_GET, NULL},
+            {"switchportloopback", "set", "set switch port loopback", "<port_id>",
+                SW_API_PT_SWITCH_PORT_LOOPBACK_SET, NULL},
+            {"switchportloopback", "get", "get switch port loopback", "<port_id>",
+                SW_API_PT_SWITCH_PORT_LOOPBACK_GET, NULL},
 /*qca808x_start*/
             {NULL, NULL, NULL, NULL, (int)NULL, NULL},/*end of desc*/
         },
