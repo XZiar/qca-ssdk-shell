@@ -230,6 +230,7 @@ typedef enum
 	SW_RESOURCE_SCHE,
 	SW_PORT_EEE_CONFIG,
 	SW_SRC_FILTER_CONFIG,
+	SW_PORT_LOOPBACK_CONFIG,
 } sw_data_type_e;
 
     typedef struct

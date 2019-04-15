@@ -393,6 +393,12 @@ enum
 		fal_src_filter_mode_t	src_filter_mode;
 	} fal_src_filter_config_t;
 
+	typedef struct {
+		a_bool_t enable;
+		a_bool_t crc_stripped;
+		a_uint32_t loopback_rate; /*Mpps*/
+	}fal_loopback_config_t;
+
 	sw_error_t
 	fal_port_max_frame_size_set(a_uint32_t dev_id, fal_port_t port_id,
 			a_uint32_t max_frame);
@@ -751,6 +757,15 @@ fal_port_source_filter_config_get(a_uint32_t dev_id,
 sw_error_t
 fal_port_source_filter_config_set(a_uint32_t dev_id,
 	fal_port_t port_id, fal_src_filter_config_t *src_filter_config);
+
+sw_error_t
+fal_switch_port_loopback_get(a_uint32_t dev_id, fal_port_t port_id,
+	fal_loopback_config_t *loopback_cfg);
+
+sw_error_t
+fal_switch_port_loopback_set(a_uint32_t dev_id, fal_port_t port_id,
+	fal_loopback_config_t *loopback_cfg);
+
 /*qca808x_start*/
 #ifdef __cplusplus
 }
