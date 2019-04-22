@@ -737,10 +737,14 @@ static void
 prompt_print(void)
 {
     if (cmd_promptp)
+    {
         printf("%s", cmd_promptp);
+    }
 
-	if (cmd_promptp)
-		term_cursor = strlen(cmd_promptp);
+    if (cmd_promptp)
+    {
+        term_cursor = strlen(cmd_promptp);
+    }
     cmd_cursor = 0;
     fflush(stdout);
 }
