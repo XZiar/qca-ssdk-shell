@@ -977,6 +977,56 @@ cmd_data_check_ptp_interrupt(char *info, void *val, a_uint32_t size);
 void
 cmd_data_print_ptp_interrupt(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
+sw_error_t
+cmd_data_check_sfp_ccode_type(char *cmdstr, fal_sfp_cc_type_t *arg_val, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_sfp_data(char *cmd_str, void *arg_val, a_uint32_t size);
+
+void
+cmd_data_print_sfp_data(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_dev_type(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_transc_code(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_rate_encode(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_link_length(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_vendor_info(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_laser_wavelength(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_option(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_ctrl_rate(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_enhanced_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_diag_threshold(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_diag_cal_const(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_diag_realtime(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_ctrl_status(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+void
+cmd_data_print_sfp_alarm_warn_flag(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 /*qca808x_start*/
 #endif
 /*qca808x_end*/
