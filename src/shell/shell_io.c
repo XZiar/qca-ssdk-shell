@@ -29558,17 +29558,59 @@ void
 cmd_data_print_sfp_vendor_info(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 {
 	fal_sfp_vendor_info_t *entry;
+	a_uint8_t index;
 
 	dprintf("\n[%s] \n", param_name);
 
 	entry = (fal_sfp_vendor_info_t *)buf;
-	dprintf("[vendor_name]:%s \n[vendor_oui]:%s\n",
-			entry->vendor_name, entry->vendor_oui);
-	dprintf("[vendor_pn]:%s \n[vendor_rev]:%s\n",
-			entry->vendor_pn, entry->vendor_rev);
-	dprintf("[vendor_sn]:%s \n[vendor_date_code]:%s\n",
-			entry->vendor_sn, entry->vendor_date_code);
+	dprintf("[vendor_name]:");
+	index = 0;
+	while (index < sizeof(entry->vendor_name)) {
+		dprintf("%c", entry->vendor_name[index]);
+		index++;
+	}
 	dprintf("\n");
+
+	dprintf("[vendor_oui]:");
+	index = 0;
+	while (index < sizeof(entry->vendor_oui)) {
+		dprintf("%02x", entry->vendor_oui[index]);
+		index++;
+	}
+	dprintf("\n");
+
+	dprintf("[vendor_pn]:");
+	index = 0;
+	while (index < sizeof(entry->vendor_pn)) {
+		dprintf("%c", entry->vendor_pn[index]);
+		index++;
+	}
+	dprintf("\n");
+
+	dprintf("[vendor_rev]:");
+	index = 0;
+	while (index < sizeof(entry->vendor_rev)) {
+		dprintf("%c", entry->vendor_rev[index]);
+		index++;
+	}
+	dprintf("\n");
+
+	dprintf("[vendor_sn]:");
+	index = 0;
+	while (index < sizeof(entry->vendor_sn)) {
+		dprintf("%c", entry->vendor_sn[index]);
+		index++;
+	}
+	dprintf("\n");
+
+	dprintf("[vendor_date_code]:");
+	index = 0;
+	while (index < sizeof(entry->vendor_date_code)) {
+		dprintf("%c", entry->vendor_date_code[index]);
+		index++;
+	}
+
+	dprintf("\n\n");
 }
 
 void
@@ -29591,9 +29633,9 @@ cmd_data_print_sfp_option(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size
 	dprintf("\n[%s] \n", param_name);
 
 	entry = (fal_sfp_option_t *)buf;
-	dprintf("[linear_recv_output]:0x%x [pwr_level_declar]:0x%x"
-			"[cool_transc_declar]:0x%x [loss_signal]:0x%x"
-			"[loss_invert_signal]:0x%x [tx_fault_signal]:0x%x"
+	dprintf("[linear_recv_output]:0x%x [pwr_level_declar]:0x%x "
+			"[cool_transc_declar]:0x%x [loss_signal]:0x%x "
+			"[loss_invert_signal]:0x%x [tx_fault_signal]:0x%x "
 			"[tx_disable]:0x%x [rate_sel]:0x%x\n",
 			entry->linear_recv_output, entry->pwr_level_declar,
 			entry->cool_transc_declar, entry->loss_signal,
@@ -29623,13 +29665,13 @@ cmd_data_print_sfp_enhanced_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_
 	dprintf("\n[%s] \n", param_name);
 
 	entry = (fal_sfp_enhanced_cfg_t *)buf;
-	dprintf("[addr_mode]:0x%x [rec_pwr_type]:0x%x [external_cal]:0x%x"
+	dprintf("[addr_mode]:0x%x [rec_pwr_type]:0x%x [external_cal]:0x%x "
 			"[internal_cal]:0x%x [diag_mon_flag]:0x%x [legacy_type]:0x%x\n",
 			entry->addr_mode, entry->rec_pwr_type, entry->external_cal,
 			entry->internal_cal, entry->diag_mon_flag, entry->legacy_type);
 
-	dprintf("[soft_rate_sel_op]:0x%x [app_sel_op]:0x%x, [soft_rate_ctrl_op]:0x%x"
-			"[rx_los_op]:0x%x [tx_fault_op]:0x%x [tx_disable_ctrl_op]:0x%x"
+	dprintf("[soft_rate_sel_op]:0x%x [app_sel_op]:0x%x, [soft_rate_ctrl_op]:0x%x "
+			"[rx_los_op]:0x%x [tx_fault_op]:0x%x [tx_disable_ctrl_op]:0x%x "
 			"[alarm_warning_flag_op]:0x%x\n",
 			entry->soft_rate_sel_op, entry->app_sel_op, entry->soft_rate_ctrl_op,
 			entry->rx_los_op, entry->tx_fault_op, entry->tx_disable_ctrl_op,
@@ -29716,8 +29758,8 @@ cmd_data_print_sfp_ctrl_status(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t
 	dprintf("\n[%s] \n", param_name);
 
 	entry = (fal_sfp_ctrl_status_t *)buf;
-	dprintf("[data_ready]:0x%x [rx_los]:0x%x [tx_fault]:0x%x [soft_rate_sel]:0x%x"
-			"[rate_sel]:0x%x [rs_state]:0x%x [soft_tx_disable]:0x%x"
+	dprintf("[data_ready]:0x%x [rx_los]:0x%x [tx_fault]:0x%x [soft_rate_sel]:0x%x "
+			"[rate_sel]:0x%x [rs_state]:0x%x [soft_tx_disable]:0x%x "
 			"[tx_disable]:0x%x\n",
 			entry->data_ready, entry->rx_los, entry->tx_fault, entry->soft_rate_sel,
 			entry->rate_sel, entry->rs_state, entry->soft_tx_disable,
@@ -29737,10 +29779,10 @@ cmd_data_print_sfp_alarm_warn_flag(a_uint8_t *param_name, a_ulong_t *buf, a_uint
 	dprintf("\n[%s] \n", param_name);
 
 	entry = (fal_sfp_alarm_warn_flag_t *)buf;
-	dprintf("[tx_pwr_low_alarm]:0x%x [tx_pwr_high_alarm]:0x%x"
-			"[tx_bias_low_alarm]:0x%x [tx_bias_high_alarm]:0x%x"
-			"[vcc_low_alarm]:0x%x [vcc_high_alarm]:0x%x"
-			"[tmp_low_alarm]:0x%x [tmp_high_alarm]:0x%x"
+	dprintf("[tx_pwr_low_alarm]:0x%x [tx_pwr_high_alarm]:0x%x "
+			"[tx_bias_low_alarm]:0x%x [tx_bias_high_alarm]:0x%x "
+			"[vcc_low_alarm]:0x%x [vcc_high_alarm]:0x%x "
+			"[tmp_low_alarm]:0x%x [tmp_high_alarm]:0x%x "
 			"[rx_pwr_low_alarm]:0x%x [rx_pwr_high_alarm]:0x%x\n",
 			entry->tx_pwr_low_alarm, entry->tx_pwr_high_alarm,
 			entry->tx_bias_low_alarm, entry->tx_bias_high_alarm,
@@ -29748,10 +29790,10 @@ cmd_data_print_sfp_alarm_warn_flag(a_uint8_t *param_name, a_ulong_t *buf, a_uint
 			entry->tmp_low_alarm, entry->tmp_high_alarm,
 			entry->rx_pwr_low_alarm, entry->rx_pwr_high_alarm);
 
-	dprintf("[tx_pwr_low_warning]:0x%x [tx_pwr_high_warning]:0x%x"
-			"[tx_bias_low_warning]:0x%x [tx_bias_high_warning]:0x%x"
-			"[vcc_low_warning]:0x%x [vcc_high_warning]:0x%x"
-			"[tmp_low_warning]:0x%x [tmp_high_warning]:0x%x"
+	dprintf("[tx_pwr_low_warning]:0x%x [tx_pwr_high_warning]:0x%x "
+			"[tx_bias_low_warning]:0x%x [tx_bias_high_warning]:0x%x "
+			"[vcc_low_warning]:0x%x [vcc_high_warning]:0x%x "
+			"[tmp_low_warning]:0x%x [tmp_high_warning]:0x%x "
 			"[rx_pwr_low_warning]:0x%x [rx_pwr_high_warning]:0x%x\n",
 			entry->tx_pwr_low_warning, entry->tx_pwr_high_warning,
 			entry->tx_bias_low_warning, entry->tx_bias_high_warning,
