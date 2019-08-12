@@ -130,6 +130,10 @@ ifeq (TRUE, $(IN_PTP))
   MODULE_CFLAG += -DIN_PTP
 endif
 
+ifeq (TRUE, $(IN_SFP))
+  MODULE_CFLAG += -DIN_SFP
+endif
+
 ifeq (TRUE, $(IN_PPPOE))
   MODULE_CFLAG += -DIN_PPPOE
 endif

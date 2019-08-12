@@ -1387,6 +1387,49 @@ struct cmd_des_t gcmd_des[] =
 		},
 	},
 #endif
+	/* SFP */
+#ifdef IN_SFP
+	{
+		"sfp", "sfp data",
+		{
+			{"Data", "get", "get sfp data", "<port_id>",
+				SW_API_SFP_DATA_GET, NULL},
+			{"Data", "set", "set sfp data", "<port_id>",
+				SW_API_SFP_DATA_SET, NULL},
+			{"DevType", "get", "get sfp device type", "<port_id>",
+				SW_API_SFP_DEV_TYPE_GET, NULL},
+			{"TransceiverCode", "get", "get sfp transceiver code", "<port_id>",
+				SW_API_SFP_TRANSC_CODE_GET, NULL},
+			{"RateEncode", "get", "get sfp rate encode", "<port_id>",
+				SW_API_SFP_RATE_ENCODE_GET, NULL},
+			{"LinkLength", "get", "get sfp link length", "<port_id>",
+				SW_API_SFP_LINK_LENGTH_GET, NULL},
+			{"VendorInfo", "get", "get sfp vendor info", "<port_id>",
+				SW_API_SFP_VENDOR_INFO_GET, NULL},
+			{"LaserWaveLength", "get", "get sfp laser wavelength", "<port_id>",
+				SW_API_SFP_LASER_WAVELENGTH_GET, NULL},
+			{"Option", "get", "get sfp option", "<port_id>",
+				SW_API_SFP_OPTION_GET, NULL},
+			{"CtrlRate", "get", "get sfp control rate limit", "<port_id>",
+				SW_API_SFP_CTRL_RATE_GET, NULL},
+			{"EnhancedCfg", "get", "get sfp enhanced config", "<port_id>",
+				SW_API_SFP_ENHANCED_CFG_GET, NULL},
+			{"DiagThreshold", "get", "get sfp diagnostic threshold",
+				"<port_id>", SW_API_SFP_DIAG_THRESHOLD_GET, NULL},
+			{"DiagCalConst", "get", "get sfp diagnostic calibration constants",
+				"<port_id>", SW_API_SFP_DIAG_CAL_CONST_GET, NULL},
+			{"DiagRealTimeData", "get", "get sfp diagnostic monitor data",
+				"<port_id>", SW_API_SFP_DIAG_REALTIME_GET, NULL},
+			{"DiagCtrlStatue", "get", "get sfp diagnostic control & status bits",
+				"<port_id>", SW_API_SFP_DIAG_CTRL_STATUS_GET, NULL},
+			{"DiagAlarmWarnFlag", "get", "get sfp diagnostic alarm warning flag",
+				"<port_id>", SW_API_SFP_DIAG_ALARM_WARN_FLAG_GET, NULL},
+			{"CheckCode", "get", "get sfp check code",
+				"<port_id> <base|ext|dmi>", SW_API_SFP_CHECKCODE_GET, NULL},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
 /*qca808x_start*/
     {"help", "type ? get help", {{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/}},
 

@@ -84,7 +84,7 @@ get_cmd_buf(char *tag, char *defval)
 static char *
 get_cmd_stdin(char *tag, char *defval)
 {
-    static char gsubcmdstr[128];
+    static char gsubcmdstr[256];
     int pos = 0;
     int c;
 
@@ -98,12 +98,12 @@ get_cmd_stdin(char *tag, char *defval)
     }
 
     fflush(stdout);
-    memset(gsubcmdstr, 0, 128);
+    memset(gsubcmdstr, 0, sizeof(gsubcmdstr));
 
     while ((c = getchar()) != '\n')
     {
         gsubcmdstr[pos++] = c;
-        if (pos == 127)
+        if (pos == (sizeof(gsubcmdstr) - 1))
         {
             dprintf("too long command\n");
             return NULL;
@@ -364,6 +364,22 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_PTP_TRIGGER, cmd_data_check_ptp_trigger, cmd_data_print_ptp_trigger),
     SW_TYPE_DEF(SW_PTP_CAPTURE, cmd_data_check_ptp_capture, cmd_data_print_ptp_capture),
     SW_TYPE_DEF(SW_PTP_INTERRUPT, cmd_data_check_ptp_interrupt, cmd_data_print_ptp_interrupt),
+    SW_TYPE_DEF(SW_SFP_DATA, cmd_data_check_sfp_data, cmd_data_print_sfp_data),
+    SW_TYPE_DEF(SW_SFP_DEV_TYPE, NULL, cmd_data_print_sfp_dev_type),
+    SW_TYPE_DEF(SW_SFP_TRANSC_CODE, NULL, cmd_data_print_sfp_transc_code),
+    SW_TYPE_DEF(SW_SFP_RATE_ENCODE, NULL, cmd_data_print_sfp_rate_encode),
+    SW_TYPE_DEF(SW_SFP_LINK_LENGTH, NULL, cmd_data_print_sfp_link_length),
+    SW_TYPE_DEF(SW_SFP_VENDOR_INFO, NULL, cmd_data_print_sfp_vendor_info),
+    SW_TYPE_DEF(SW_SFP_LASER_WAVELENGTH, NULL, cmd_data_print_sfp_laser_wavelength),
+    SW_TYPE_DEF(SW_SFP_OPTION, NULL, cmd_data_print_sfp_option),
+    SW_TYPE_DEF(SW_SFP_CTRL_RATE, NULL, cmd_data_print_sfp_ctrl_rate),
+    SW_TYPE_DEF(SW_SFP_ENHANCED_CFG, NULL, cmd_data_print_sfp_enhanced_cfg),
+    SW_TYPE_DEF(SW_SFP_DIAG_THRESHOLD, NULL, cmd_data_print_sfp_diag_threshold),
+    SW_TYPE_DEF(SW_SFP_DIAG_CAL_CONST, NULL, cmd_data_print_sfp_diag_cal_const),
+    SW_TYPE_DEF(SW_SFP_DIAG_REALTIME, NULL, cmd_data_print_sfp_diag_realtime),
+    SW_TYPE_DEF(SW_SFP_CTRL_STATUS, NULL, cmd_data_print_sfp_ctrl_status),
+    SW_TYPE_DEF(SW_SFP_ALARM_WARN_FLAG, NULL, cmd_data_print_sfp_alarm_warn_flag),
+    SW_TYPE_DEF(SW_SFP_CCODE_TYPE, cmd_data_check_sfp_ccode_type, NULL),
 /*qca808x_start*/
 };
 
@@ -29302,3 +29318,487 @@ cmd_data_print_src_filter_config(a_uint8_t * param_name, a_uint32_t * buf, a_uin
 	}
 }
 
+sw_error_t
+cmd_data_check_sfp_ccode_type(char *cmdstr, fal_sfp_cc_type_t *arg_val, a_uint32_t size)
+{
+	sw_error_t rv = SW_OK;
+
+	if (cmdstr == NULL) {
+		return SW_BAD_PARAM;
+	} else if (0 == cmdstr[0]) {
+		return SW_BAD_VALUE;
+	}
+
+	if (!strcasecmp(cmdstr, "base")) {
+		*arg_val = FAL_SFP_CC_BASE;
+	}
+	else if (!strcasecmp(cmdstr, "ext")) {
+		*arg_val = FAL_SFP_CC_EXT;
+	}
+	else if (!strcasecmp(cmdstr, "dmi")) {
+		*arg_val = FAL_SFP_CC_DMI;
+	}
+	else {
+		dprintf("usage: <base/ext/dmi>\n");
+		rv = SW_BAD_VALUE;
+	}
+
+	return rv;
+}
+
+sw_error_t
+cmd_data_check_sfp_data(char *cmd_str, void *arg_val, a_uint32_t size)
+{
+	fal_sfp_data_t entry;
+	sw_error_t rv;
+	char *cmd, cmd_byte[3];
+	char fmt[3] = "%x";
+	a_uint8_t bytes;
+
+	aos_mem_zero(&entry, sizeof(fal_sfp_data_t));
+
+	do {
+		cmd = get_sub_cmd("addr", "0x50");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: input valid i2c slave addr(0x0~0x7f) \n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint8(cmd, &(entry.addr), sizeof(a_uint8_t));
+			if (SW_OK != rv) {
+				rv = SW_BAD_VALUE;
+			}
+		}
+	} while (talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("offset", "0x0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: 0x0~0xff \n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint8(cmd, &(entry.offset), sizeof(a_uint8_t));
+			if (SW_OK != rv) {
+				rv = SW_BAD_VALUE;
+			}
+		}
+	} while (talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("count", "0x0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: 0x0~0xff \n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint8(cmd, &(entry.count), sizeof(a_uint8_t));
+			if (SW_OK != rv) {
+				rv = SW_BAD_VALUE;
+			} else if (entry.offset + entry.count > 255) {
+				dprintf("error: offset + count more than 255\n");
+				rv = SW_BAD_VALUE;
+			}
+		}
+	} while (talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("data", "null");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncmp(cmd, "null", strlen(cmd))) {
+			/* the default value "null" of data is for getting operation */
+			rv = SW_OK;
+			break;
+		}
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("input the matched hex data count: 0x%x \n", entry.count);
+			rv = SW_BAD_VALUE;
+		}
+		else if (strspn(cmd, "1234567890abcdefABCDEFXx") != strlen(cmd) ||
+				strlen(cmd) != (entry.count * 2 + 2)) {
+			dprintf("the input data is invalid\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			if (cmd[0] == '0' && (cmd[1] == 'x' || cmd[1] == 'X')) {
+				cmd += 2;
+				for (bytes = 0; bytes < entry.count; bytes++) {
+					if (strlen(cmd) == 0) {
+						break;
+					}
+					/* copy 2 chars from cmd */
+					strlcpy(cmd_byte, cmd, sizeof(cmd_byte));
+					sscanf(cmd_byte, fmt, &(entry.data[bytes]));
+					cmd += 2;
+				}
+
+				if (bytes < entry.count) {
+					dprintf("the byte length of input data is less than %d\n",
+							entry.count);
+					rv = SW_BAD_VALUE;
+				} else {
+					rv = SW_OK;
+				}
+			} else {
+				dprintf("need to input hex data\n");
+				rv = SW_BAD_VALUE;
+			}
+		}
+	} while (talk_mode && (SW_OK != rv));
+
+	*(fal_sfp_data_t *)arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_sfp_data(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	a_uint8_t data_cnt;
+	fal_sfp_data_t *sfp_data = (fal_sfp_data_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	dprintf("eeprom addr: 0x%02x\n", sfp_data->addr);
+	dprintf("eeprom data:");
+	for (data_cnt = 0; data_cnt < sfp_data->count; data_cnt++) {
+		if (!(data_cnt % 16)) {
+			dprintf("\n%02x:", sfp_data->offset + data_cnt);
+		}
+
+		dprintf("%02x", sfp_data->data[data_cnt]);
+	}
+
+	dprintf("\n\n");
+}
+
+void
+cmd_data_print_sfp_dev_type(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_dev_type_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_dev_type_t *)buf;
+	dprintf("[id]:0x%x [ext_id]:0x%x\n", entry->identifier, entry->ext_indentifier);
+	dprintf("[connector_type]:0x%x\n", entry->connector_type);
+	dprintf("\n");
+}
+
+void
+cmd_data_print_sfp_transc_code(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_transc_code_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_transc_code_t *)buf;
+	dprintf("[eth_10g_ccode]:0x%x [infiniband_ccode]:0x%x [escon_ccode]:0x%x "
+			"[sonet_ccode]:0x%x [eth_ccode]:0x%x [fibre_chan_link_length]:0x%x "
+			"[fibre_chan_tech]: 0x%x [sfp_cable_tech]:0x%x [fibre_chan_trans_md]:0x%x "
+			"[fibre_chan_speed]:0x%x\n",
+			entry->eth_10g_ccode, entry->infiniband_ccode, entry->escon_ccode,
+			entry->sonet_ccode, entry->eth_ccode, entry->fibre_chan_link_length,
+			entry->fibre_chan_tech, entry->sfp_cable_tech, entry->fibre_chan_trans_md,
+			entry->fibre_chan_speed);
+	dprintf("\n");
+}
+
+void
+cmd_data_print_sfp_rate_encode(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_rate_encode_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_rate_encode_t *)buf;
+	dprintf("[encode]:0x%x [nominal_bit_rate]:0x%x\n", entry->encode, entry->nominal_bit_rate);
+	dprintf("[rate_id]:0x%x\n", entry->rate_id);
+	dprintf("\n");
+}
+
+void
+cmd_data_print_sfp_link_length(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_link_length_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_link_length_t *)buf;
+	dprintf("[single_mode_length_km]:0x%x [single_mode_length_100m]:0x%x\n",
+			entry->single_mode_length_km, entry->single_mode_length_100m);
+	dprintf("[om2_mode_length_10m]:0x%x [om1_mode_length_10m]:0x%x\n",
+			entry->om2_mode_length_10m, entry->om1_mode_length_10m);
+	dprintf("[copper_mode_length_1m]:0x%x [om3_mode_length_1m]:0x%x\n",
+			entry->copper_mode_length_1m, entry->om3_mode_length_1m);
+	dprintf("\n");
+}
+
+void
+cmd_data_print_sfp_vendor_info(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_vendor_info_t *entry;
+	a_uint8_t index;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_vendor_info_t *)buf;
+	dprintf("[vendor_name]:");
+	index = 0;
+	while (index < sizeof(entry->vendor_name)) {
+		dprintf("%c", entry->vendor_name[index]);
+		index++;
+	}
+	dprintf("\n");
+
+	dprintf("[vendor_oui]:");
+	index = 0;
+	while (index < sizeof(entry->vendor_oui)) {
+		dprintf("%02x", entry->vendor_oui[index]);
+		index++;
+	}
+	dprintf("\n");
+
+	dprintf("[vendor_pn]:");
+	index = 0;
+	while (index < sizeof(entry->vendor_pn)) {
+		dprintf("%c", entry->vendor_pn[index]);
+		index++;
+	}
+	dprintf("\n");
+
+	dprintf("[vendor_rev]:");
+	index = 0;
+	while (index < sizeof(entry->vendor_rev)) {
+		dprintf("%c", entry->vendor_rev[index]);
+		index++;
+	}
+	dprintf("\n");
+
+	dprintf("[vendor_sn]:");
+	index = 0;
+	while (index < sizeof(entry->vendor_sn)) {
+		dprintf("%c", entry->vendor_sn[index]);
+		index++;
+	}
+	dprintf("\n");
+
+	dprintf("[vendor_date_code]:");
+	index = 0;
+	while (index < sizeof(entry->vendor_date_code)) {
+		dprintf("%c", entry->vendor_date_code[index]);
+		index++;
+	}
+
+	dprintf("\n\n");
+}
+
+void
+cmd_data_print_sfp_laser_wavelength(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_laser_wavelength_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_laser_wavelength_t *)buf;
+	dprintf("[laser_wavelength]:0x%x\n", entry->laser_wavelength);
+	dprintf("\n");
+}
+
+void
+cmd_data_print_sfp_option(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_option_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_option_t *)buf;
+	dprintf("[linear_recv_output]:0x%x [pwr_level_declar]:0x%x "
+			"[cool_transc_declar]:0x%x [loss_signal]:0x%x "
+			"[loss_invert_signal]:0x%x [tx_fault_signal]:0x%x "
+			"[tx_disable]:0x%x [rate_sel]:0x%x\n",
+			entry->linear_recv_output, entry->pwr_level_declar,
+			entry->cool_transc_declar, entry->loss_signal,
+			entry->loss_invert_signal, entry->tx_fault_signal,
+			entry->tx_disable, entry->rate_sel);
+	dprintf("\n");
+}
+
+void
+cmd_data_print_sfp_ctrl_rate(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_rate_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_rate_t *)buf;
+	dprintf("[upper_rate_limit]:0x%x [lower_rate_limit]:0x%x\n",
+			entry->upper_rate_limit, entry->lower_rate_limit);
+	dprintf("\n");
+}
+
+void
+cmd_data_print_sfp_enhanced_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_enhanced_cfg_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_enhanced_cfg_t *)buf;
+	dprintf("[addr_mode]:0x%x [rec_pwr_type]:0x%x [external_cal]:0x%x "
+			"[internal_cal]:0x%x [diag_mon_flag]:0x%x [legacy_type]:0x%x\n",
+			entry->addr_mode, entry->rec_pwr_type, entry->external_cal,
+			entry->internal_cal, entry->diag_mon_flag, entry->legacy_type);
+
+	dprintf("[soft_rate_sel_op]:0x%x [app_sel_op]:0x%x, [soft_rate_ctrl_op]:0x%x "
+			"[rx_los_op]:0x%x [tx_fault_op]:0x%x [tx_disable_ctrl_op]:0x%x "
+			"[alarm_warning_flag_op]:0x%x\n",
+			entry->soft_rate_sel_op, entry->app_sel_op, entry->soft_rate_ctrl_op,
+			entry->rx_los_op, entry->tx_fault_op, entry->tx_disable_ctrl_op,
+			entry->alarm_warning_flag_op);
+
+	dprintf("[compliance_feature]:0x%x\n", entry->compliance_feature);
+	dprintf("\n");
+}
+
+void
+cmd_data_print_sfp_diag_threshold(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_internal_threshold_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_internal_threshold_t *)buf;
+	dprintf("[temp_high_alarm]:0x%x [temp_low_alarm]:0x%x "
+			"[temp_high_warning]:0x%x [temp_low_warning]:0x%x\n",
+			entry->temp_high_alarm, entry->temp_low_alarm,
+			entry->temp_high_warning, entry->temp_low_warning);
+	dprintf("[vol_high_alarm]:0x%x [vol_low_alarm]:0x%x "
+			"[vol_high_warning]:0x%x [vol_low_warning]:0x%x\n",
+			entry->vol_high_alarm, entry->vol_low_alarm,
+			entry->vol_high_warning, entry->vol_low_warning);
+	dprintf("[bias_high_alarm]:0x%x [bias_low_alarm]:0x%x "
+			"[bias_high_warning]:0x%x [bias_low_warning]:0x%x\n",
+			entry->bias_high_alarm, entry->bias_low_alarm,
+			entry->bias_high_warning, entry->bias_low_warning);
+	dprintf("[tx_power_high_alarm]:0x%x [tx_power_low_alarm]:0x%x "
+			"[tx_power_high_warning]:0x%x [tx_power_low_warning]:0x%x\n",
+			entry->tx_power_high_alarm, entry->tx_power_low_alarm,
+			entry->tx_power_high_warning, entry->tx_power_low_warning);
+	dprintf("[rx_power_high_alarm]:0x%x [rx_power_low_alarm]:0x%x "
+			"[rx_power_high_warning]:0x%x [rx_power_low_warning]:0x%x\n",
+			entry->rx_power_high_alarm, entry->rx_power_low_alarm,
+			entry->rx_power_high_warning, entry->rx_power_low_warning);
+	dprintf("\n");
+}
+
+void
+cmd_data_print_sfp_diag_cal_const(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_cal_const_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_cal_const_t *)buf;
+	dprintf("[rx_power4]:0x%x [rx_power3]:0x%x [rx_power2]:0x%x "
+			"[rx_power1]:0x%x [rx_power0]:0x%x\n",
+			entry->rx_power4, entry->rx_power3, entry->rx_power2,
+			entry->rx_power1, entry->rx_power0);
+	dprintf("[tx_bias_slope]:0x%x [tx_bias_offset]:0x%x\n",
+			entry->tx_bias_slope, entry->tx_bias_offset);
+	dprintf("[tx_power_slope]:0x%x [tx_power_offset]:0x%x\n",
+			entry->tx_power_slope, entry->tx_power_offset);
+	dprintf("[temp_slope]:0x%x [temp_offset]:0x%x\n",
+			entry->temp_slope, entry->temp_offset);
+	dprintf("[vol_slope]:0x%x [vol_offset]:0x%x\n",
+			entry->vol_slope, entry->vol_offset);
+	dprintf("\n");
+}
+
+void
+cmd_data_print_sfp_diag_realtime(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_realtime_diag_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_realtime_diag_t *)buf;
+	dprintf("[cur_temp]:0x%x [cur_vol]:0x%x [tx_cur_bias]:0x%x\n",
+			entry->cur_temp, entry->cur_vol, entry->tx_cur_bias);
+	dprintf("[tx_cur_power]:0x%x [rx_cur_power]:0x%x\n",
+			entry->tx_cur_power, entry->rx_cur_power);
+	dprintf("\n");
+}
+
+void
+cmd_data_print_sfp_ctrl_status(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_ctrl_status_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_ctrl_status_t *)buf;
+	dprintf("[data_ready]:0x%x [rx_los]:0x%x [tx_fault]:0x%x [soft_rate_sel]:0x%x "
+			"[rate_sel]:0x%x [rs_state]:0x%x [soft_tx_disable]:0x%x "
+			"[tx_disable]:0x%x\n",
+			entry->data_ready, entry->rx_los, entry->tx_fault, entry->soft_rate_sel,
+			entry->rate_sel, entry->rs_state, entry->soft_tx_disable,
+			entry->tx_disable);
+
+	dprintf("[pwr_level_sel]:0x%x [pwr_level_op_state]:0x%x [soft_rs_sel]:0x%x\n",
+			entry->pwr_level_sel, entry->pwr_level_op_state, entry->soft_rs_sel);
+
+	dprintf("\n");
+}
+
+void
+cmd_data_print_sfp_alarm_warn_flag(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_sfp_alarm_warn_flag_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_sfp_alarm_warn_flag_t *)buf;
+	dprintf("[tx_pwr_low_alarm]:0x%x [tx_pwr_high_alarm]:0x%x "
+			"[tx_bias_low_alarm]:0x%x [tx_bias_high_alarm]:0x%x "
+			"[vcc_low_alarm]:0x%x [vcc_high_alarm]:0x%x "
+			"[tmp_low_alarm]:0x%x [tmp_high_alarm]:0x%x "
+			"[rx_pwr_low_alarm]:0x%x [rx_pwr_high_alarm]:0x%x\n",
+			entry->tx_pwr_low_alarm, entry->tx_pwr_high_alarm,
+			entry->tx_bias_low_alarm, entry->tx_bias_high_alarm,
+			entry->vcc_low_alarm, entry->vcc_high_alarm,
+			entry->tmp_low_alarm, entry->tmp_high_alarm,
+			entry->rx_pwr_low_alarm, entry->rx_pwr_high_alarm);
+
+	dprintf("[tx_pwr_low_warning]:0x%x [tx_pwr_high_warning]:0x%x "
+			"[tx_bias_low_warning]:0x%x [tx_bias_high_warning]:0x%x "
+			"[vcc_low_warning]:0x%x [vcc_high_warning]:0x%x "
+			"[tmp_low_warning]:0x%x [tmp_high_warning]:0x%x "
+			"[rx_pwr_low_warning]:0x%x [rx_pwr_high_warning]:0x%x\n",
+			entry->tx_pwr_low_warning, entry->tx_pwr_high_warning,
+			entry->tx_bias_low_warning, entry->tx_bias_high_warning,
+			entry->vcc_low_warning, entry->vcc_high_warning,
+			entry->tmp_low_warning, entry->tmp_high_warning,
+			entry->rx_pwr_low_warning, entry->rx_pwr_high_warning);
+	dprintf("\n");
+}
