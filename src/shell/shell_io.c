@@ -14,6 +14,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
 /*qca808x_start*/
 #include <stdio.h>
 #include "shell_io.h"
@@ -31598,16 +31599,17 @@ cmd_data_check_ptp_pkt_info(char *info, void *val, a_uint32_t size)
 }
 
 void
-cmd_data_print_ptp_pkt_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+cmd_data_print_ptp_pkt_info(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size)
 {
 	fal_ptp_pkt_info_t *entry;
 
-	entry = (fal_ptp_pkt_info_t *) buf;
-	dprintf("[sequence_id]:%s\n", entry->sequence_id);
-	dprintf("[clock_identify]:0x%llx\n", entry->clock_identify);
-	dprintf("[port_number]:%d [msg_type]:%d\n", entry->port_number, entry->msg_type);
-	dprintf("\n");
+	dprintf("\n[%s] \n", param_name);
 
+	entry = (fal_ptp_pkt_info_t *) buf;
+	dprintf("[sequence_id]:%lx\n", entry->sequence_id);
+	dprintf("[clock_identify]:0x%llx\n", entry->clock_identify);
+	dprintf("[port_number]:0x%x\n", entry->port_number);
+	dprintf("[msg_type]:0x%x\n", entry->msg_type);
 }
 
 sw_error_t

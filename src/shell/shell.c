@@ -1,5 +1,8 @@
 /*
  * Copyright (c) 2014, 2017-2018, The Linux Foundation. All rights reserved.
+ *
+ * Copyright (c) 2021 Qualcomm Innovation Center, Inc. All rights reserved.
+ *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -11,6 +14,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
 /*qca808x_start*/
 #include <stdio.h>
 #include <stdarg.h>
@@ -334,37 +338,39 @@ cmd_parse_sw(char **cmd_str, a_ulong_t * arg_val)
     }
 
     /*args number check */
-    if ( (arg_index == 0 && ( api_id == SW_CMD_VLAN_SHOW ||
-                              api_id == SW_CMD_FDB_SHOW ||
-                              api_id == SW_CMD_RESV_FDB_SHOW ||
-                              api_id == SW_CMD_HOST_SHOW ||
-                              api_id == SW_CMD_HOST_IPV4_SHOW ||
-                              api_id == SW_CMD_HOST_IPV6_SHOW ||
-                              api_id == SW_CMD_HOST_IPV4M_SHOW ||
-                              api_id == SW_CMD_HOST_IPV6M_SHOW ||
-                              api_id == SW_CMD_FLOW_IPV43T_SHOW ||
-                              api_id == SW_CMD_FLOW_IPV63T_SHOW ||
-                              api_id == SW_CMD_FLOW_IPV45T_SHOW ||
-                              api_id == SW_CMD_FLOW_IPV65T_SHOW ||
-                              api_id == SW_CMD_NAT_SHOW ||
-                              api_id == SW_CMD_NAPT_SHOW ||
-                              api_id == SW_CMD_FLOW_SHOW ||
-                              api_id == SW_CMD_CTRLPKT_SHOW ||
-                              api_id == SW_CMD_INTFMAC_SHOW ||
-                              api_id == SW_CMD_TUNNEL_DECAP_ENTRY_SHOW ||
-                              api_id == SW_CMD_TUNNEL_VLAN_ENTRY_SHOW ||
-                              api_id == SW_CMD_TUNNEL_ENCAP_ENTRY_SHOW ||
-                              api_id == SW_CMD_GENEVE_ENTRY_SHOW ||
-                              api_id == SW_CMD_MAPT_ENTRY_SHOW ||
-                              api_id == SW_CMD_PUBADDR_SHOW )) ||
-		    ( arg_index == 1 && (api_id == SW_CMD_SET_DEVID ||
-					 api_id == SW_CMD_VXLAN_ENTRY_SHOW ||
-					 api_id == SW_CMD_TUNNEL_PROGRAM_ENTRY_SHOW ||
-					 api_id == SW_CMD_TUNNEL_PROGRAM_UDF_SHOW ||
-					 api_id == SW_CMD_TUNNEL_UDF_PROFILE_ENTRY_SHOW ||
-					 api_id == SW_CMD_ACL_UDF_PROFILE_ENTRY_SHOW)) ||
-		    ( arg_index == 2 && api_id == SW_CMD_PT_VLAN_TRANS_ADV_SHOW) )
-        return SW_OK;
+    if ((arg_index == 0 && (api_id == SW_CMD_VLAN_SHOW ||
+				    api_id == SW_CMD_FDB_SHOW ||
+				    api_id == SW_CMD_RESV_FDB_SHOW ||
+				    api_id == SW_CMD_HOST_SHOW ||
+				    api_id == SW_CMD_HOST_IPV4_SHOW ||
+				    api_id == SW_CMD_HOST_IPV6_SHOW ||
+				    api_id == SW_CMD_HOST_IPV4M_SHOW ||
+				    api_id == SW_CMD_HOST_IPV6M_SHOW ||
+				    api_id == SW_CMD_FLOW_IPV43T_SHOW ||
+				    api_id == SW_CMD_FLOW_IPV63T_SHOW ||
+				    api_id == SW_CMD_FLOW_IPV45T_SHOW ||
+				    api_id == SW_CMD_FLOW_IPV65T_SHOW ||
+				    api_id == SW_CMD_NAT_SHOW ||
+				    api_id == SW_CMD_NAPT_SHOW ||
+				    api_id == SW_CMD_FLOW_SHOW ||
+				    api_id == SW_CMD_CTRLPKT_SHOW ||
+				    api_id == SW_CMD_INTFMAC_SHOW ||
+				    api_id == SW_CMD_TUNNEL_DECAP_ENTRY_SHOW ||
+				    api_id == SW_CMD_TUNNEL_VLAN_ENTRY_SHOW ||
+				    api_id == SW_CMD_TUNNEL_ENCAP_ENTRY_SHOW ||
+				    api_id == SW_CMD_GENEVE_ENTRY_SHOW ||
+				    api_id == SW_CMD_MAPT_ENTRY_SHOW ||
+				    api_id == SW_CMD_PUBADDR_SHOW )) ||
+				    ( arg_index == 1 && (api_id == SW_CMD_SET_DEVID ||
+						api_id == SW_CMD_VXLAN_ENTRY_SHOW ||
+						api_id == SW_CMD_TUNNEL_PROGRAM_ENTRY_SHOW ||
+						api_id == SW_CMD_TUNNEL_PROGRAM_UDF_SHOW ||
+						api_id == SW_CMD_TUNNEL_UDF_PROFILE_ENTRY_SHOW ||
+						api_id == SW_CMD_ACL_UDF_PROFILE_ENTRY_SHOW)) ||
+				    (arg_index == 2 && (api_id == SW_CMD_PT_VLAN_TRANS_ADV_SHOW ||
+						api_id == SW_CMD_PTP_TIMESTAMP_SHOW))) {
+							return SW_OK;
+						}
 
     return SW_BAD_PARAM;
 }
