@@ -20505,6 +20505,149 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
+    do
+    {
+        cmd = get_sub_cmd("pmtu_check_l3", "yes");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_TRUE, &(entry.pmtu_check_l3), sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("pmtu", "0x5dc");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: path mtu value per flow\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.pmtu), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: path mtu value per flow\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("vpn_id", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: vpn id\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.vpn_id), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: vpn id\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    if (entry.fwd_type == 4) { /* forward type is bridge */
+	    do
+	    {
+		    cmd = get_sub_cmd("bridge_vlan_format_valid", "yes");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4))
+		    {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4))
+		    {
+			    dprintf("usage: <yes/no/y/n>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else
+		    {
+			    rv = cmd_data_check_confirm(cmd, A_TRUE, &(entry.vlan_fmt_valid),
+					    sizeof (a_bool_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <yes/no/y/n>\n");
+		    }
+	    }
+	    while (talk_mode && (SW_OK != rv));
+
+	    do
+	    {
+		    cmd = get_sub_cmd("bridge_svlan_format", "yes");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4))
+		    {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4))
+		    {
+			    dprintf("usage: <yes/no/y/n>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else
+		    {
+			    rv = cmd_data_check_confirm(cmd, A_TRUE, &(entry.svlan_fmt),
+					    sizeof (a_bool_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <yes/no/y/n>\n");
+		    }
+	    }
+	    while (talk_mode && (SW_OK != rv));
+
+	    do
+	    {
+		    cmd = get_sub_cmd("bridge_cvlan_format", "yes");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4))
+		    {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4))
+		    {
+			    dprintf("usage: <yes/no/y/n>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else
+		    {
+			    rv = cmd_data_check_confirm(cmd, A_TRUE, &(entry.cvlan_fmt),
+					    sizeof (a_bool_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <yes/no/y/n>\n");
+		    }
+	    }
+	    while (talk_mode && (SW_OK != rv));
+    }
+
     *(fal_flow_entry_t *)val = entry;
     return SW_OK;
 }
@@ -20517,16 +20660,31 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     entry = (fal_flow_entry_t *) buf;
     
     dprintf("\n[entry_id]:0x%x [entry_type]:0x%x [host_addr_type]:0x%x [host_addr_index]:0x%x ",
-			entry->entry_id, entry->entry_type, entry->host_addr_type, entry->host_addr_index);
-    dprintf("\n[protocol]:0x%x [agetime]:0x%x [src_intf_valid]:0x%x [src_intf_index]:0x%x [fwd_type]:0x%x ",
-			entry->protocol, entry->age, entry->src_intf_valid, entry->src_intf_index, entry->fwd_type);
-    dprintf("\n[snat_nexthop]:0x%x [snat_srcport]:0x%x [dnat_nexthop]:0x%x [dnat_dstport]:0x%x [route_nexthop]:0x%x ",
-			entry->snat_nexthop, entry->snat_srcport, entry->dnat_nexthop, entry->dnat_dstport, entry->route_nexthop);
-    dprintf("\n[port_valid]:0x%x [route_port]:0x%x [bridge_port]:0x%x [de_acclr]:0x%x [copy_tocpu]:0x%x ",
-			entry->port_valid, entry->route_port, entry->bridge_port, entry->deacclr_en, entry->copy_tocpu_en);
-    dprintf("\n[syn_toggle]:0x%x [pri_profile]:0x%x [sevice_code]:0x%x [ip_type]:0x%x [src_port]:0x%x [dst_port]:0x%x [tree_id]:0x%x ",
-			entry->syn_toggle, entry->pri_profile, entry->sevice_code, entry->ip_type, entry->src_port, entry->dst_port, entry->tree_id);
-    if (entry->entry_type & FAL_FLOW_IP4_5TUPLE_ADDR || entry->entry_type & FAL_FLOW_IP4_3TUPLE_ADDR) {
+		    entry->entry_id, entry->entry_type,
+		    entry->host_addr_type, entry->host_addr_index);
+    dprintf("\n[protocol]:0x%x [agetime]:0x%x [src_intf_valid]:0x%x \
+		    [src_intf_index]:0x%x [fwd_type]:0x%x ",
+		    entry->protocol, entry->age, entry->src_intf_valid,
+		    entry->src_intf_index, entry->fwd_type);
+    dprintf("\n[snat_nexthop]:0x%x [snat_srcport]:0x%x [dnat_nexthop]:0x%x \
+		    [dnat_dstport]:0x%x [route_nexthop]:0x%x ",
+		    entry->snat_nexthop, entry->snat_srcport, entry->dnat_nexthop,
+		    entry->dnat_dstport, entry->route_nexthop);
+    dprintf("\n[port_valid]:0x%x [route_port]:0x%x [bridge_port]:0x%x \
+		    [de_acclr]:0x%x [copy_tocpu]:0x%x ",
+		    entry->port_valid, entry->route_port, entry->bridge_port,
+		    entry->deacclr_en, entry->copy_tocpu_en);
+    dprintf("\n[syn_toggle]:0x%x [pri_profile]:0x%x [sevice_code]:0x%x [ip_type]:0x%x \
+		    [src_port]:0x%x [dst_port]:0x%x [tree_id]:0x%x ",
+		    entry->syn_toggle, entry->pri_profile, entry->sevice_code,
+		    entry->ip_type, entry->src_port, entry->dst_port, entry->tree_id);
+    dprintf("\n[pmtu_check_l3]:0x%x [pmtu]:0x%x [vpn_id]:0x%x",
+		    entry->pmtu_check_l3, entry->pmtu, entry->vpn_id);
+    dprintf("\n[bridge_vlan_format_valid]:0x%x [bridge_svlan_format]:0x%x \
+		    [bridge_cvlan_format]:0x%x",
+		    entry->vlan_fmt_valid, entry->svlan_fmt, entry->cvlan_fmt);
+    if ((entry->entry_type & FAL_FLOW_IP4_5TUPLE_ADDR) ||
+		    (entry->entry_type & FAL_FLOW_IP4_3TUPLE_ADDR)) {
         cmd_data_print_ip4addr("\n[ip_addr]:",
                                (a_uint32_t *) & (entry->flow_ip.ipv4),
                                sizeof (fal_ip4_addr_t));
