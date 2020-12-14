@@ -2662,6 +2662,34 @@ cmd_data_print_flowtype(a_char_t * param_name, a_uint32_t * buf, a_uint32_t size
         dprintf("UNKNOWN VALUE");
     }
 }
+
+sw_error_t
+cmd_data_check_srctype(char *cmdstr, a_uint8_t def, a_uint8_t *val, a_uint32_t size) {
+	if (0 == cmdstr[0]) {
+		*val = def;
+	} else if (!strcasecmp(cmdstr, "vp")) {
+		*val = 0;
+	} else if (!strcasecmp(cmdstr, "l3_if")) {
+		*val = 1;
+	} else {
+		return SW_BAD_VALUE;
+	}
+	return SW_OK;
+}
+
+void
+cmd_data_print_srctype(char *param_name, a_uint8_t val, a_uint32_t size)
+{
+    dprintf("%s", param_name);
+    if (1 == val) {
+        dprintf("l3_if");
+    } else {
+        dprintf("vp");
+    }
+
+    return;
+}
+
 /*qca808x_start*/
 sw_error_t
 cmd_data_check_confirm(char *cmdstr, a_bool_t def, a_bool_t * val,
@@ -23673,12 +23701,89 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 	}
 	while (talk_mode && (SW_OK != rv));
 
+	do
+	{
+		cmd = get_sub_cmd("vni_resv_enable", "yes");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &entry.vni_resv_enable,
+					sizeof (a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("vni_resv_type", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: 0 for vni only, 1 for vni and reserver\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_integer(cmd, &tmp, 0x1, 0x0);
+			if (SW_OK != rv) {
+				dprintf("usage: 0 for vni only, 1 for vni and reserver\n");
+			} else {
+				entry.vni_resv_type = tmp;
+			}
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("vni_resv", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: vni or gre key filed value\n");
+			rv = SW_BAD_VALUE;
+
+		}
+		else
+		{
+			rv = cmd_data_check_uint32(cmd, &entry.vni_resv, sizeof (a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: vni or gre key filed value\n");
+		}
+
+	}
+	while (talk_mode && (SW_OK != rv));
+
 	*val = entry;
 	return SW_OK;
 }
 
 void
-cmd_data_print_port_vlan_translation_adv_rule(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+cmd_data_print_port_vlan_translation_adv_rule(a_uint8_t * param_name,
+		a_uint32_t * buf, a_uint32_t size)
 {
 	fal_vlan_trans_adv_rule_t *entry;
 
@@ -23701,8 +23806,12 @@ cmd_data_print_port_vlan_translation_adv_rule(a_uint8_t * param_name, a_uint32_t
 	dprintf("\n[protocol_en]:%s  [protocol]:0x%x", entry->protocol_enable?"ENABLE":"DISABLE",
 		entry->protocol);
 
-	dprintf("\n[vsivalid]:%s  [vsi_en]:%s  [vsi]:%d\n\n", entry->vsi_valid?"ENABLE":"DISABLE",
+	dprintf("\n[vsivalid]:%s  [vsi_en]:%s  [vsi]:%d", entry->vsi_valid?"ENABLE":"DISABLE",
 			entry->vsi_enable?"ENABLE":"DISABLE", entry->vsi);
+
+	dprintf("\n[vni_resv_enable]:%s  [vni_resv_type]:%s  [vni_resv]:%d\n\n",
+			entry->vni_resv_enable?"ENABLE":"DISABLE",
+			entry->vni_resv_type?"VNI_RESV":"VNI_ONLY", entry->vni_resv);
 }
 
 sw_error_t
@@ -24219,6 +24328,130 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 	}
 	while (talk_mode && (SW_OK != rv));
 
+	do
+	{
+		cmd = get_sub_cmd("src_info_enable", "yes");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &entry.src_info_enable,
+					sizeof (a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("src_info_type", "vp");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: vp: virtual port, l3_if: layer 3 interface\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_srctype(cmd, 0, &entry.src_info_type,
+					sizeof(a_uint8_t));
+			if (SW_OK != rv)
+				dprintf("usage: vp: virtual port, l3_if: layer 3 interfac\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("src_info", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: src info value\n");
+			rv = SW_BAD_VALUE;
+
+		}
+		else
+		{
+			rv = cmd_data_check_uint32(cmd, &entry.src_info, sizeof (a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: src info value\n");
+		}
+
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("vni_resv_enable", "yes");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &entry.vni_resv_enable,
+					sizeof (a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
+		cmd = get_sub_cmd("vni_resv", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: vni or gre key filed value\n");
+			rv = SW_BAD_VALUE;
+
+		}
+		else
+		{
+			rv = cmd_data_check_uint32(cmd, &entry.vni_resv, sizeof (a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: vni or gre key filed value\n");
+		}
+
+	}
+	while (talk_mode && (SW_OK != rv));
+
 	*val = entry;
 	return SW_OK;
 }
@@ -24255,9 +24488,18 @@ cmd_data_print_port_vlan_translation_adv_action(a_uint8_t * param_name, a_uint32
 	dprintf("\n[counter_en]:%s  [counter_id]:%d",
 			entry->counter_enable?"ENABLE":"DISABLE",
 			entry->counter_id);
-	dprintf("\n[vsi_translation_en]:%s  [vsitranslation]:%d \n\n",
+	dprintf("\n[vsi_translation_en]:%s  [vsitranslation]:%d",
 			entry->vsi_xlt_enable?"ENABLE":"DISABLE",
 			entry->vsi_xlt);
+
+	cmd_data_print_srctype("\n[src_info_type]:", entry->src_info_type,
+			sizeof(entry->src_info_type));
+
+	dprintf("\n[src_info_enable]:%s  [src_info]:%d",
+			entry->src_info_enable?"ENABLE":"DISABLE", entry->src_info);
+
+	dprintf("\n[vni_resv_enable]:%s  [vni_resv]:%d\n\n",
+			entry->vni_resv_enable?"ENABLE":"DISABLE", entry->vni_resv);
 }
 
 sw_error_t
