@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2019, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -15650,6 +15650,48 @@ cmd_data_check_vsi_member(char *cmd_str, void * val, a_uint32_t size)
 	if (rv)
 		return rv;
 
+	rv = __cmd_data_check_complex("vports_bitmap(port64-port95)", 0,
+                        "usage: Bit0-port64 Bit1-port65 ....\n",
+                        cmd_data_check_pbmp, &(entry.member_vports[0]),
+                        sizeof (a_uint32_t));
+	if (rv)
+		return rv;
+
+	rv = __cmd_data_check_complex("vports_bitmap(port96-port127)", 0,
+                        "usage: Bit0-port96 Bit1-port97 ....\n",
+                        cmd_data_check_pbmp, &(entry.member_vports[1]),
+                        sizeof (a_uint32_t));
+	if (rv)
+		return rv;
+
+	rv = __cmd_data_check_complex("vports_bitmap(port128-port159)", 0,
+                        "usage: Bit0-port128 Bit1-port129 ....\n",
+                        cmd_data_check_pbmp, &(entry.member_vports[2]),
+                        sizeof (a_uint32_t));
+	if (rv)
+		return rv;
+
+	rv = __cmd_data_check_complex("vports_bitmap(port160-port191)", 0,
+                        "usage: Bit0-port160 Bit1-port161 ....\n",
+                        cmd_data_check_pbmp, &(entry.member_vports[3]),
+                        sizeof (a_uint32_t));
+	if (rv)
+		return rv;
+
+	rv = __cmd_data_check_complex("vports_bitmap(port192-port223)", 0,
+                        "usage: Bit0-port192 Bit1-port193 ...\n",
+                        cmd_data_check_pbmp, &(entry.member_vports[4]),
+                        sizeof (a_uint32_t));
+	if (rv)
+		return rv;
+
+	rv = __cmd_data_check_complex("vports_bitmap(port224-port255)", 0,
+                        "usage: Bit0-port224 Bit1-port225 ....\n",
+                        cmd_data_check_pbmp, &(entry.member_vports[5]),
+                        sizeof (a_uint32_t));
+	if (rv)
+		return rv;
+
 	*(fal_vsi_member_t *)val = entry;
 	return SW_OK;
 }
@@ -15658,6 +15700,7 @@ void
 cmd_data_print_vsi_member_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 {
     fal_vsi_member_t *entry;
+    a_uint32_t vports_bmp_index = 0;
 
     entry = (fal_vsi_member_t *) buf;
     dprintf("\n");
@@ -15665,6 +15708,14 @@ cmd_data_print_vsi_member_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint
     dprintf("[unknown_unicast_membership]:0x%x\n", entry->uuc_ports);
     dprintf("[unknown_multicast_membership]:0x%x\n", entry->umc_ports);
     dprintf("[broadcast_membership]:0x%x\n", entry->bc_ports);
+    for(vports_bmp_index = 0;
+        vports_bmp_index < sizeof(entry->member_vports)/sizeof(a_uint32_t);
+        vports_bmp_index ++)
+    {
+        dprintf("[vports_membership[%d]:0x%x\n", vports_bmp_index,
+            entry->member_vports[vports_bmp_index]);
+    }
+
     return;
 }
 
