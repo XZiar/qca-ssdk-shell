@@ -262,6 +262,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_VSI_NEWADDR_LRN, cmd_data_check_newadr_lrn, cmd_data_print_newaddr_lrn_entry),
     SW_TYPE_DEF(SW_VSI_STAMOVE, cmd_data_check_stamove, cmd_data_print_stamove_entry),
     SW_TYPE_DEF(SW_VSI_MEMBER, cmd_data_check_vsi_member, cmd_data_print_vsi_member_entry),
+    SW_TYPE_DEF(SW_VSI_BRIDGE_VSI, cmd_data_check_vsi_bridge_vsi, cmd_data_print_vsi_bridge_vsi),
     SW_TYPE_DEF(SW_VSI_COUNTER, NULL, cmd_data_print_vsi_counter),
     SW_TYPE_DEF(SW_MTU_INFO, NULL, cmd_data_print_mtu_info),
     SW_TYPE_DEF(SW_MRU_INFO, NULL, cmd_data_print_mru_info),
@@ -15743,6 +15744,46 @@ cmd_data_print_vsi_member_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint
         dprintf("[vports_membership[%d]:0x%x\n", vports_bmp_index,
             entry->member_vports[vports_bmp_index]);
     }
+
+    return;
+}
+
+sw_error_t
+cmd_data_check_vsi_bridge_vsi(char *cmd_str, void * arg_val, a_uint32_t size)
+{
+    sw_error_t rv;
+    fal_vsi_bridge_vsi_t bridge_vsi;
+
+    aos_mem_zero(&bridge_vsi, sizeof (fal_vsi_bridge_vsi_t));
+
+    rv = __cmd_data_check_complex("bridge_vsi_en", "disable",
+                        "usage: bridge vsi enable or disable\n",
+                        cmd_data_check_enable, &(bridge_vsi.bridge_vsi_enable),
+                        sizeof (a_bool_t));
+    SW_RTN_ON_ERROR(rv);
+
+    rv = __cmd_data_check_complex("bridge_vsi_id", "0",
+                        "usage: bridge vsi id is 0~63\n",
+                        cmd_data_check_uint32, &(bridge_vsi.bridge_vsi_id),
+                        sizeof (a_uint32_t));
+
+    *(fal_vsi_bridge_vsi_t *)arg_val = bridge_vsi;
+
+    return rv;
+}
+
+
+void
+cmd_data_print_vsi_bridge_vsi(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_vsi_bridge_vsi_t *bridge_vsi;
+
+    bridge_vsi = (fal_vsi_bridge_vsi_t *) buf;
+    cmd_data_print_enable("bridge_vsi_en", &bridge_vsi->bridge_vsi_enable,
+        sizeof(bridge_vsi->bridge_vsi_enable));
+    dprintf("\n");
+    cmd_data_print_uint32("bridge_vsi_id", &bridge_vsi->bridge_vsi_id,
+        sizeof(bridge_vsi->bridge_vsi_id));
 
     return;
 }

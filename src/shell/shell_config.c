@@ -1083,6 +1083,8 @@ struct cmd_des_t gcmd_des[] =
             {"member", "get", "Get vsi based member ports", "<vsi>", SW_API_VSI_MEMBER_GET, NULL},
             {"counter", "get", "Get vsi based counter", "<vsi>", SW_API_VSI_COUNTER_GET, NULL},
             {"counter", "cleanup", "Cleanup vsi based counter", "<vsi>", SW_API_VSI_COUNTER_CLEANUP, NULL},
+            {"bridgevsi", "get", "get bridge vsi", "<vsi>", SW_API_VSI_BRIDGE_VSI_GET, NULL},
+            {"bridgevsi", "set", "set bridge vsi", "<vsi>", SW_API_VSI_BRIDGE_VSI_SET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

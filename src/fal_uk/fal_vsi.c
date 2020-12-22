@@ -145,4 +145,24 @@ fal_vsi_counter_cleanup(a_uint32_t dev_id, a_uint32_t vsi_id)
     return rv;
 }
 
+sw_error_t
+fal_vsi_bridge_vsi_get(a_uint32_t dev_id, a_uint32_t vsi_id,
+	fal_vsi_bridge_vsi_t *bridge_vsi)
+{
+    sw_error_t rv;
 
+    rv = sw_uk_exec(SW_API_VSI_BRIDGE_VSI_GET, dev_id, vsi_id,
+		bridge_vsi);
+    return rv;
+}
+
+sw_error_t
+fal_vsi_bridge_vsi_set(a_uint32_t dev_id, a_uint32_t vsi_id,
+	fal_vsi_bridge_vsi_t *bridge_vsi)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_VSI_BRIDGE_VSI_SET, dev_id, vsi_id,
+		bridge_vsi);
+    return rv;
+}
