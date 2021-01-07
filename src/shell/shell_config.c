@@ -1447,6 +1447,22 @@ struct cmd_des_t gcmd_des[] =
 		},
 	},
 #endif
+
+	/*vport*/
+#ifdef IN_VPORT
+	{
+		"vport", "config vport",
+		{
+			{"phyport", "set", "set physical port of vport",
+				"<port_id> <physical_port>",
+				SW_API_VPORT_PHYSICAL_PORT_SET, NULL},
+			{"phyport", "get", "get physical port of vport",
+				"<port_id>", SW_API_VPORT_PHYSICAL_PORT_GET, NULL},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
+
 /*qca808x_start*/
     {"help", "type ? get help", {{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/}},
 

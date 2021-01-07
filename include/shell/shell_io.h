@@ -1040,6 +1040,7 @@ cmd_data_print_sfp_ctrl_status(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t
 
 void
 cmd_data_print_sfp_alarm_warn_flag(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
 /*qca808x_start*/
 #endif
 /*qca808x_end*/

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2016-2018, 2021, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -107,6 +107,8 @@ cmd_data_check_module(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
 		*arg_val = FAL_MODULE_CTRLPKT;
 	} else if (!strcasecmp(cmd_str, "policer")){
 		*arg_val = FAL_MODULE_POLICER;
+	} else if (!strcasecmp(cmd_str, "vport")) {
+		*arg_val = FAL_MODULE_VPORT;
 	}
     else
     {
@@ -163,6 +165,8 @@ cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		dprintf("ctrlpkt");
 	} else if (*(a_uint32_t *) buf == FAL_MODULE_POLICER) {
 		dprintf("policer");
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_VPORT) {
+		dprintf("vport");
 	}
 }
 
@@ -1022,6 +1026,28 @@ static void cmd_data_print_policer_func_ctrl(fal_func_ctrl_t *p)
 	return;
 }
 
+static void cmd_data_print_vport_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_VPORT_PHYSICAL_PORT_GET+1] = {
+		"FUNC_VPORT_PHYSICAL_PORT_SET",
+		"FUNC_VPORT_PHYSICAL_PORT_GET",
+	};
+
+	for(func = FUNC_VPORT_PHYSICAL_PORT_SET; func <= FUNC_VPORT_PHYSICAL_PORT_GET; func++)
+	{
+		if(p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
 void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 {
 	if(module == FAL_MODULE_ACL){
@@ -1066,6 +1092,8 @@ void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 		cmd_data_print_ctrlpkt_func_ctrl(p);
 	} else if (module == FAL_MODULE_POLICER){
 		cmd_data_print_policer_func_ctrl(p);
+	} else if (module == FAL_MODULE_VPORT) {
+		cmd_data_print_vport_func_ctrl(p);
 	}
 
 	return;

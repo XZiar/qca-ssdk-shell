@@ -146,6 +146,10 @@ ifeq (TRUE, $(UK_IF))
   MODULE_CFLAG += -DUK_IF
 endif
 
+ifeq (TRUE, $(IN_VPORT))
+	MODULE_CFLAG += -DIN_VPORT
+endif
+
 #ifdef UK_NL_PROT
   MODULE_CFLAG += -DUK_NL_PROT=$(UK_NL_PROT)
 #endif
