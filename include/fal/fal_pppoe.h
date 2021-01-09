@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2016-2017, 2021, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -38,16 +38,18 @@ enum {
 
 typedef struct
 {
-	a_uint32_t entry_id;
-	a_uint32_t session_id;
-	a_bool_t   multi_session;
-	a_bool_t   uni_session;
-	a_uint32_t vrf_id;
-	a_uint32_t port_bitmap;
-	a_uint32_t l3_if_index;
-	a_bool_t   l3_if_valid;
-	a_bool_t   smac_valid;
-	fal_mac_addr_t smac_addr;
+	a_uint32_t entry_id; /* the entry id saved to pppoe table */
+	a_uint32_t session_id; /* pppoe session id */
+	a_bool_t   multi_session; /* matched multicast session */
+	a_bool_t   uni_session; /* matched unicast session */
+	a_uint32_t vrf_id; /* vrf id, HPPE not supported */
+	fal_pbmp_t port_bitmap; /* matched ports */
+	a_uint32_t l3_if_index; /* if matched, this l3 interface index will remove pppoe header */
+	a_bool_t   l3_if_valid; /* this l3 interface index valid or not */
+	a_bool_t   smac_valid; /* if matched source mac address */
+	fal_mac_addr_t smac_addr; /* matched source mac address */
+	a_uint32_t tl_l3_if_index; /* tunnel pppoe l3_if check, added for ipq90xx */
+	a_bool_t   tl_l3_if_valid; /* tunnel l3 interface index valid or not, added for ipq90xx */
 } fal_pppoe_session_t;
 
 sw_error_t
