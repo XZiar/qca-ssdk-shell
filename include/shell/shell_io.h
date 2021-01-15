@@ -845,6 +845,15 @@ cmd_data_print_policer_cmd_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 sw_error_t
 cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size);
 
+sw_error_t
+cmd_data_check_policer_remap(char *cmd_str, void * val, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_policer_priority(char *cmd_str, void * val, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_policer_ctrl(char *cmd_str, void * val, a_uint32_t size);
+
 void
 cmd_data_print_acl_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
@@ -853,6 +862,15 @@ cmd_data_print_policer_counter_infor(a_uint8_t * param_name, a_uint32_t * buf, a
 
 void
 cmd_data_print_policer_global_counter_infor(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+void
+cmd_data_print_policer_remap(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+void
+cmd_data_print_policer_priority(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+void
+cmd_data_print_policer_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 void
 cmd_data_print_port_scheduler_resource(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);

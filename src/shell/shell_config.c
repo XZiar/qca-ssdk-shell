@@ -1205,6 +1205,12 @@ struct cmd_des_t gcmd_des[] =
 			{"aclentry", "set", "Set acl policer entry", "<index>", SW_API_POLICER_ACL_ENTRY_SET, NULL},
 			{"aclentry", "get", "Get acl policer entry", "<index>", SW_API_POLICER_ACL_ENTRY_GET, NULL},
 			{"globalcounter", "get", "Get policer global counter", "", SW_API_POLICER_GLOBAL_COUNTER_GET, NULL},
+			{"bypass", "set", "Set policer bypass drop packet", "<frame_type> <enable>", SW_API_POLICER_BYPASS_EN_SET, NULL},
+			{"bypass", "get", "Get policer bypass drop packet", "<frame_type>", SW_API_POLICER_BYPASS_EN_GET, NULL},
+			{"priremap", "set", "Set acl policer priority remap", "<priority> <remap>", SW_API_POLICER_PRIORITY_REMAP_SET, NULL},
+			{"priremap", "get", "Get acl policer priority remap", "<priority>", SW_API_POLICER_PRIORITY_REMAP_GET, NULL},
+			{"ctrl", "set", "Set policer ctrl", " <ctrl>", SW_API_POLICER_CTRL_SET, NULL},
+	    	{"ctrl", "get", "Get policer ctrl", " <ctrl>", SW_API_POLICER_CTRL_GET, NULL},
 			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
 		},
 	},
