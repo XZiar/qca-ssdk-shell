@@ -117,15 +117,17 @@ extern "C" {
 /*qca808x_start*/
     typedef enum
     {
-        CHIP_UNSPECIFIED = 0,
-        CHIP_ATHENA,
-        CHIP_GARUDA,
-        CHIP_SHIVA,
-        CHIP_HORUS,
-        CHIP_ISIS,
-        CHIP_ISISC,
-        CHIP_DESS,
-        CHIP_HPPE,
+	    CHIP_UNSPECIFIED = 0,
+	    CHIP_ATHENA,
+	    CHIP_GARUDA,
+	    CHIP_SHIVA,
+	    CHIP_HORUS,
+	    CHIP_ISIS,
+	    CHIP_ISISC,
+	    CHIP_DESS,
+	    CHIP_HPPE,
+	    CHIP_SCOMPHY,
+	    CHIP_APPE,
     } ssdk_chip_type;
 /*qca808x_end*/
     typedef struct

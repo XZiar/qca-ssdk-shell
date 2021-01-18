@@ -22872,6 +22872,80 @@ cmd_data_check_ingress_filter(char *info, void *val, a_uint32_t size)
         }
     }while (talk_mode && (SW_OK != rv));
 
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	    /* get tag filter */
+	    do
+	    {
+		    cmd = get_sub_cmd("ctag_tagged_filter_en", "disable");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4))
+		    {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4))
+		    {
+			    dprintf("usage: <enable/disable>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else
+		    {
+			    rv = cmd_data_check_enable(cmd, &(pEntry->ctag_tagged_filter),
+					    sizeof(a_uint32_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <enable/disable>\n");
+		    }
+	    } while(talk_mode && (SW_OK != rv));
+
+	    /* get untag filter */
+	    do
+	    {
+		    cmd = get_sub_cmd("ctag_untagged_filter_en", "disable");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4))
+		    {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4))
+		    {
+			    dprintf("usage: <enable/disable>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else
+		    {
+			    rv = cmd_data_check_enable(cmd, &(pEntry->ctag_untagged_filter),
+					    sizeof(a_uint32_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <enable/disable>\n");
+		    }
+	    } while(talk_mode && (SW_OK != rv));
+
+	    /* get priority tag filter */
+	    do
+	    {
+		    cmd = get_sub_cmd("ctag_priority_tagged_filter_en", "disable");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4))
+		    {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4))
+		    {
+			    dprintf("usage: <enable/disable>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else
+		    {
+			    rv = cmd_data_check_enable(cmd, &(pEntry->ctag_priority_filter),
+					    sizeof(a_uint32_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <enable/disable>\n");
+		    }
+	    } while(talk_mode && (SW_OK != rv));
+    }
+
     return SW_OK;
 }
 
@@ -22892,6 +22966,17 @@ cmd_data_print_ingress_filter(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     cmd_data_print_enable("priority_tagged_filter_en", (a_uint32_t *) &
         (entry->priority_filter), 4);
     dprintf("\n");
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	    cmd_data_print_enable("ctag_tagged_filter_en",
+			    (a_uint32_t *) & (entry->ctag_tagged_filter), sizeof(a_uint32_t));
+	    dprintf("\n");
+	    cmd_data_print_enable("ctag_untagged_filter_en",
+			    (a_uint32_t *) & (entry->ctag_untagged_filter), sizeof(a_uint32_t));
+	    dprintf("\n");
+	    cmd_data_print_enable("ctag_priority_tagged_filter_en",
+			    (a_uint32_t *) & (entry->ctag_priority_filter), sizeof(a_uint32_t));
+	    dprintf("\n");
+    }
 
 }
 
