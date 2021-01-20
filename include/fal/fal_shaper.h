@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2016-2017, 2021, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -34,6 +34,12 @@ typedef enum
 	FAL_L3_EXCLUDE_CRC  /* after Ethernet type excude CRC*/
 } fal_shaper_frame_mode_t;
 
+typedef enum
+{
+	FAL_SHAPER_METER_RFC = 0, /* legacy feature, add it for ipq95xx */
+	FAL_SHAPER_METER_MEF10_3 /* mef10-3 feature, add it for ipq95xx */
+} fal_shaper_meter_type_t;
+
 typedef struct
 {
 	a_bool_t  couple_en; /* two buckets coupled enable or disable*/
@@ -45,6 +51,12 @@ typedef struct
 	a_uint32_t ebs; /* excess burst size */
 	a_uint32_t eir; /* excess information rate */
 	fal_shaper_frame_mode_t shaper_frame_mode; /* shaper frame mode */
+	a_uint32_t cir_max; /* max committed information rate, add it for ipq95xx */
+	a_uint32_t eir_max; /* max excess information rate, add it for ipq95xx */
+	a_uint32_t next_ptr; /* next entry, add it for ipq95xx */
+	a_bool_t grp_end; /* last entry or not in current group, add it for ipq95xx */
+	a_bool_t grp_couple_en; /* group coupled not, add it for ipq95xx */
+	fal_shaper_meter_type_t meter_type; /*legacy or mef10-3,add it for ipq95xx */
 } fal_shaper_config_t;
 
 typedef struct
@@ -54,6 +66,12 @@ typedef struct
      a_bool_t      e_token_number_negative_en; /* E token is negative or not */
      a_uint32_t    e_token_number; /* E token value */
 } fal_shaper_token_number_t;
+
+typedef struct
+{
+	a_uint32_t head; /* linklist head, add it for ipq95xx */
+	a_uint32_t tail; /* linklist tail, add it for ipq95xx */
+} fal_shaper_ctrl_t;
 
 enum
 {
@@ -77,8 +95,11 @@ enum
 	FUNC_ADPT_QUEUE_SHAPER_TIME_SLOT_SET,
 	FUNC_ADPT_SHAPER_IPG_PREAMBLE_LENGTH_SET,
 	FUNC_ADPT_SHAPER_IPG_PREAMBLE_LENGTH_GET,
+	FUNC_ADPT_QUEUE_SHAPER_CTRL_SET,
+	FUNC_ADPT_QUEUE_SHAPER_CTRL_GET,
+	FUNC_ADPT_FLOW_SHAPER_CTRL_SET,
+	FUNC_ADPT_FLOW_SHAPER_CTRL_GET,
 };
-
 
 sw_error_t
 fal_port_shaper_set(a_uint32_t dev_id, fal_port_t port_id,
@@ -152,7 +173,17 @@ fal_shaper_ipg_preamble_length_set(a_uint32_t dev_id, a_uint32_t ipg_pre_length)
 sw_error_t
 fal_shaper_ipg_preamble_length_get(a_uint32_t dev_id, a_uint32_t *ipg_pre_length);
 
+sw_error_t
+fal_queue_shaper_ctrl_set(a_uint32_t dev_id, fal_shaper_ctrl_t *queue_shaper_ctrl);
 
+sw_error_t
+fal_flow_shaper_ctrl_set(a_uint32_t dev_id, fal_shaper_ctrl_t *flow_shaper_ctrl);
+
+sw_error_t
+fal_queue_shaper_ctrl_get(a_uint32_t dev_id, fal_shaper_ctrl_t *queue_shaper_ctrl);
+
+sw_error_t
+fal_flow_shaper_ctrl_get(a_uint32_t dev_id, fal_shaper_ctrl_t *flow_shaper_ctrl);
 #ifdef __cplusplus
 }
 #endif                          /* __cplusplus */

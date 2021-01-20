@@ -1066,6 +1066,10 @@ extern "C" {
 #define SW_API_QUEUE_SHAPER_GET               (17  + SW_API_SHAPER_OFFSET)
 #define SW_API_SHAPER_IPG_PRE_SET               (18  + SW_API_SHAPER_OFFSET)
 #define SW_API_SHAPER_IPG_PRE_GET               (19  + SW_API_SHAPER_OFFSET)
+#define SW_API_QUEUE_SHAPER_CTRL_SET               (20  + SW_API_SHAPER_OFFSET)
+#define SW_API_QUEUE_SHAPER_CTRL_GET               (21  + SW_API_SHAPER_OFFSET)
+#define SW_API_FLOW_SHAPER_CTRL_SET               (22  + SW_API_SHAPER_OFFSET)
+#define SW_API_FLOW_SHAPER_CTRL_GET               (23  + SW_API_SHAPER_OFFSET)
 
 /*qca808x_start*/
 #define SW_API_MAX                 0xffff

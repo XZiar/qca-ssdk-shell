@@ -218,4 +218,39 @@ fal_shaper_ipg_preamble_length_get(a_uint32_t dev_id, a_uint32_t *ipg_pre_length
     return rv;
 }
 
+sw_error_t
+fal_queue_shaper_ctrl_set(a_uint32_t dev_id, fal_shaper_ctrl_t *queue_shaper_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QUEUE_SHAPER_CTRL_SET, dev_id, queue_shaper_ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_queue_shaper_ctrl_get(a_uint32_t dev_id, fal_shaper_ctrl_t *queue_shaper_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QUEUE_SHAPER_CTRL_GET, dev_id, queue_shaper_ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_flow_shaper_ctrl_set(a_uint32_t dev_id, fal_shaper_ctrl_t *flow_shaper_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FLOW_SHAPER_CTRL_SET, dev_id, flow_shaper_ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_flow_shaper_ctrl_get(a_uint32_t dev_id, fal_shaper_ctrl_t *flow_shaper_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_FLOW_SHAPER_CTRL_GET, dev_id, flow_shaper_ctrl);
+    return rv;
+}
 

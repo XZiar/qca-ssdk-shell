@@ -517,6 +517,10 @@ static sw_data_type_t sw_data_type[] =
 		    cmd_data_print_port_shaper_config),
     SW_TYPE_DEF(SW_SHAPER_CONFIG, cmd_data_check_shaper_config,
 		    cmd_data_print_shaper_config),
+    SW_TYPE_DEF(SW_QUEUE_SHAPER_CTRL, cmd_data_check_queue_shaper_ctrl,
+	                  cmd_data_print_shaper_ctrl),
+    SW_TYPE_DEF(SW_FLOW_SHAPER_CTRL, cmd_data_check_flow_shaper_ctrl,
+	                  cmd_data_print_shaper_ctrl),
     SW_TYPE_DEF(SW_BMSTHRESH, cmd_data_check_bm_static_thresh,
 		    cmd_data_print_bm_static_thresh),
     SW_TYPE_DEF(SW_BMDTHRESH, cmd_data_check_bm_dynamic_thresh,
@@ -27183,7 +27187,7 @@ cmd_data_check_port_shaper_config(char *cmd_str, void * val, a_uint32_t size)
     do
     {
         cmd = get_sub_cmd("meter_unit", "0-1");
-		SW_RTN_ON_NULL_PARAM(cmd);
+        SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
         {
@@ -27231,7 +27235,7 @@ cmd_data_check_port_shaper_config(char *cmd_str, void * val, a_uint32_t size)
     do
     {
         cmd = get_sub_cmd("cir", "0");
-		SW_RTN_ON_NULL_PARAM(cmd);
+        SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
         {
@@ -27254,7 +27258,7 @@ cmd_data_check_port_shaper_config(char *cmd_str, void * val, a_uint32_t size)
     do
     {
         cmd = get_sub_cmd("cbs", "0");
-		SW_RTN_ON_NULL_PARAM(cmd);
+        SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
         {
@@ -27277,7 +27281,7 @@ cmd_data_check_port_shaper_config(char *cmd_str, void * val, a_uint32_t size)
      do
     {
         cmd = get_sub_cmd("shaper_frame_mode", "0-2");
-		SW_RTN_ON_NULL_PARAM(cmd);
+        SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
         {
@@ -27313,6 +27317,29 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
+        cmd = get_sub_cmd("meter_type", "0-1");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.meter_type), sizeof (fal_shaper_meter_type_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
         cmd = get_sub_cmd("couple_enable", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
 
@@ -27339,7 +27366,7 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
     do
     {
         cmd = get_sub_cmd("meter_unit", "0-1");
-		SW_RTN_ON_NULL_PARAM(cmd);
+        SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
         {
@@ -27387,7 +27414,7 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
     do
     {
         cmd = get_sub_cmd("cir", "0");
-		SW_RTN_ON_NULL_PARAM(cmd);
+        SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
         {
@@ -27409,8 +27436,31 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
+        cmd = get_sub_cmd("cir_max", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.cir_max), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
         cmd = get_sub_cmd("cbs", "0");
-		SW_RTN_ON_NULL_PARAM(cmd);
+        SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
         {
@@ -27458,7 +27508,7 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
     do
     {
         cmd = get_sub_cmd("eir", "0");
-		SW_RTN_ON_NULL_PARAM(cmd);
+        SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
         {
@@ -27480,8 +27530,31 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
+        cmd = get_sub_cmd("eir_max", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.eir_max), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
         cmd = get_sub_cmd("ebs", "0");
-		SW_RTN_ON_NULL_PARAM(cmd);
+        SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
         {
@@ -27503,8 +27576,81 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
+        cmd = get_sub_cmd("next_ptr", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.next_ptr), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("grp_end", "no");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_end),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("grp_couple_enable", "no");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_couple_en),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
         cmd = get_sub_cmd("shaper_frame_mode", "0-2");
-		SW_RTN_ON_NULL_PARAM(cmd);
+        SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
         {
@@ -27525,6 +27671,124 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
     while (talk_mode && (SW_OK != rv));
 
     *(fal_shaper_config_t *)val = entry;
+    return SW_OK;
+}
+
+sw_error_t
+cmd_data_check_queue_shaper_ctrl(char *cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    sw_error_t rv;
+    fal_shaper_ctrl_t entry;
+
+    aos_mem_zero(&entry, sizeof (fal_shaper_ctrl_t));
+
+    do
+    {
+        cmd = get_sub_cmd("head", "0-299");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.head), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("tail", "0-299");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.tail), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    *(fal_shaper_ctrl_t *)val = entry;
+    return SW_OK;
+}
+
+sw_error_t
+cmd_data_check_flow_shaper_ctrl(char *cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    sw_error_t rv;
+    fal_shaper_ctrl_t entry;
+
+    aos_mem_zero(&entry, sizeof (fal_shaper_ctrl_t));
+
+    do
+    {
+        cmd = get_sub_cmd("head", "0-63");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.head), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("tail", "0-63");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: integer\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(entry.tail), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: integer\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    *(fal_shaper_ctrl_t *)val = entry;
     return SW_OK;
 }
 
@@ -27584,6 +27848,8 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 
     entry = (fal_shaper_config_t *) buf;
 
+    dprintf("\n[shaper_meter_type]:0x%x", entry->meter_type);
+
     if (A_TRUE == entry->couple_en)
     {
         dprintf("\n[shaper_couple_enable]:yes  ");
@@ -27605,6 +27871,7 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
     }
 
     dprintf("\n[shaper_cir]:0x%x", entry->cir);
+    dprintf("\n[shaper_cir_max]:0x%x", entry->cir_max);
     dprintf("\n[shaper_cbs]:0x%x", entry->cbs);
 
     if (A_TRUE == entry->e_shaper_en)
@@ -27617,7 +27884,28 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
     }
 
     dprintf("\n[shaper_eir]:0x%x", entry->eir);
+    dprintf("\n[shaper_eir_max]:0x%x", entry->eir_max);
     dprintf("\n[shaper_ebs]:0x%x", entry->ebs);
+
+    dprintf("\n[next_ptr]:%d", entry->next_ptr);
+
+    if (A_TRUE == entry->grp_end)
+    {
+        dprintf("\n[grp_end]:yes  ");
+    }
+    else
+    {
+        dprintf("\n[grp_end]:no  ");
+    }
+
+    if (A_TRUE == entry->grp_couple_en)
+    {
+        dprintf("\n[grp_coupling_enable]:yes  ");
+    }
+    else
+    {
+        dprintf("\n[grp_coupling_enable]:no  ");
+    }
 
     dprintf("\n[shaper_frame_mode]:0x%x", entry->shaper_frame_mode);
 
@@ -27646,6 +27934,19 @@ cmd_data_print_port_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
     dprintf("\n[shaper_cbs]:0x%x", entry->cbs);
 
     dprintf("\n[shaper_frame_mode]:0x%x", entry->shaper_frame_mode);
+
+    return;
+}
+
+void
+cmd_data_print_shaper_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_shaper_ctrl_t *entry;
+
+    entry = (fal_shaper_ctrl_t *) buf;
+
+    dprintf("\n[head]:0x%x", entry->head);
+    dprintf("\n[tail]:0x%x", entry->tail);
 
     return;
 }

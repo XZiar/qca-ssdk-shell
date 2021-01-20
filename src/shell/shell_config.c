@@ -1234,6 +1234,10 @@ struct cmd_des_t gcmd_des[] =
 	    {"queueshaper", "get", "Get queue shaper entry", " <queue_id>", SW_API_QUEUE_SHAPER_GET, NULL},
 	    {"ipgcompensation", "set", "Set shaper IPG and Preamble value", " <value>", SW_API_SHAPER_IPG_PRE_SET, NULL},
 	    {"ipgcompensation", "get", "Get port shaper IPG and Preamble value", "", SW_API_SHAPER_IPG_PRE_GET, NULL},
+	    {"queueshaperctrl", "set", "Set queue shaper ctrl", " <ctrl>", SW_API_QUEUE_SHAPER_CTRL_SET, NULL},
+	    {"queueshaperctrl", "get", "Get queue shaper ctrl", " <ctrl>", SW_API_QUEUE_SHAPER_CTRL_GET, NULL},
+	    {"flowshaperctrl", "set", "Set flow shaper ctrl", " <ctrl>", SW_API_FLOW_SHAPER_CTRL_SET, NULL},
+	    {"flowshaperctrl", "get", "Get flow shaper ctrl", " <ctrl>", SW_API_FLOW_SHAPER_CTRL_GET, NULL},
 	    {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
 	},
     },

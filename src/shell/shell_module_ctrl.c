@@ -712,7 +712,7 @@ static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_shaper_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_ADPT_SHAPER_IPG_PREAMBLE_LENGTH_GET+1] ={
+	char *func_name[FUNC_ADPT_FLOW_SHAPER_CTRL_GET+1] ={
 		"FUNC_ADPT_FLOW_SHAPER_SET",
 		"FUNC_ADPT_QUEUE_SHAPER_GET",
 		"FUNC_ADPT_QUEUE_SHAPER_TOKEN_NUMBER_SET",
@@ -733,10 +733,14 @@ static void cmd_data_print_shaper_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_ADPT_QUEUE_SHAPER_TIME_SLOT_SET",
 		"FUNC_ADPT_SHAPER_IPG_PREAMBLE_LENGTH_SET",
 		"FUNC_ADPT_SHAPER_IPG_PREAMBLE_LENGTH_GET",
+		"FUNC_ADPT_QUEUE_SHAPER_CTRL_SET",
+		"FUNC_ADPT_QUEUE_SHAPER_CTRL_GET",
+		"FUNC_ADPT_FLOW_SHAPER_CTRL_SET",
+		"FUNC_ADPT_FLOW_SHAPER_CTRL_GET",
 
 	};
 
-	for(func = FUNC_ADPT_FLOW_SHAPER_SET; func <= FUNC_ADPT_SHAPER_IPG_PREAMBLE_LENGTH_GET; func++)
+	for(func = FUNC_ADPT_FLOW_SHAPER_SET; func <= FUNC_ADPT_FLOW_SHAPER_CTRL_GET; func++)
 	{
 		if(p->bitmap[0] & (1<<func))
 		{
