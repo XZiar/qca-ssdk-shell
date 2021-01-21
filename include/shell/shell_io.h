@@ -237,6 +237,10 @@ cmd_data_check_udf_pkt_type(a_char_t *cmdstr, fal_acl_udf_pkt_type_t * arg_val, 
 void
 cmd_data_print_udf_pkt_type(a_char_t * param_name, a_uint32_t * buf,
                         a_uint32_t size);
+sw_error_t
+cmd_data_check_acl_udf_profile_entry(char * cmd_str, void * val, a_uint32_t size);
+void
+cmd_data_print_acl_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
 cmd_data_check_host_entry(char *cmd_str, void * val, a_uint32_t size);

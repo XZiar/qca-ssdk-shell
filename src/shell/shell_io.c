@@ -466,6 +466,8 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_PPPOE, cmd_data_check_pppoe, cmd_data_print_pppoe),
     SW_TYPE_DEF(SW_PPPOE_LESS, cmd_data_check_pppoe_less, cmd_data_print_pppoe),
     SW_TYPE_DEF(SW_ACL_UDF_TYPE, cmd_data_check_udf_type, cmd_data_print_udf_type),
+    SW_TYPE_DEF(SW_ACL_UDF_PROFILE_ENTRY, cmd_data_check_acl_udf_profile_entry,
+            cmd_data_print_acl_udf_profile_entry),
     SW_TYPE_DEF(SW_IP_HOSTENTRY, cmd_data_check_host_entry, cmd_data_print_host_entry),
     SW_TYPE_DEF(SW_ARP_LEARNMODE, cmd_data_check_arp_learn_mode, cmd_data_print_arp_learn_mode),
     SW_TYPE_DEF(SW_IP_GUARDMODE, cmd_data_check_ip_guard_mode, cmd_data_print_ip_guard_mode),
@@ -5705,6 +5707,83 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     return SW_OK;
 }
 
+
+sw_error_t
+cmd_data_check_acl_udf_profile_entry(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_acl_udf_profile_entry_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_acl_udf_profile_entry_t));
+
+    dprintf("\n");
+    /* get l3 type configuration */
+    cmd_data_check_element("l3 type incl", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (tmpdata)));
+
+    if (tmpdata)
+    {
+        cmd_data_check_element("l3 type", "ipv4",
+                               "usage: ipv4, ipv6, arp, others \n",
+                               cmd_data_check_attr, ("l3_type", cmd,
+                                       &tmpdata, sizeof(tmpdata)));
+        entry.l3_type = tmpdata & 0x3;
+        FAL_FIELD_FLG_SET(entry.field_flag, FAL_ACL_UDF_PROFILE_ENTRY_FIELD_L3_TYPE);
+    }
+
+    /* get l4 type configuration */
+    cmd_data_check_element("l4 type incl", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (tmpdata)));
+
+    if (tmpdata)
+    {
+        cmd_data_check_element("l4 type", "tcp",
+                               "usage: tcp, udp, udp-lite, icmp, others \n",
+                               cmd_data_check_attr, ("l4_type", cmd,
+                                       &tmpdata, sizeof(tmpdata)));
+        entry.l4_type = tmpdata & 0x7;
+        FAL_FIELD_FLG_SET(entry.field_flag, FAL_ACL_UDF_PROFILE_ENTRY_FIELD_L4_TYPE);
+    }
+
+    *(fal_acl_udf_profile_entry_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_acl_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_acl_udf_profile_entry_t *entry;
+    a_uint32_t tmpdata = 0;
+
+    entry = (fal_acl_udf_profile_entry_t *) buf;
+
+    if (FAL_FIELD_FLG_TST(entry->field_flag, FAL_ACL_UDF_PROFILE_ENTRY_FIELD_L3_TYPE))
+    {
+        tmpdata = entry->l3_type;
+        dprintf("\n[l3_type_incl]:yes");
+        cmd_data_print_attr("l3_type", " [l3_type]:", &tmpdata, sizeof(tmpdata));
+    }
+    else
+    {
+        dprintf("\n[l3_type]:all");
+    }
+
+    if (FAL_FIELD_FLG_TST(entry->field_flag, FAL_ACL_UDF_PROFILE_ENTRY_FIELD_L4_TYPE))
+    {
+        tmpdata = entry->l4_type;
+        dprintf("\n[l4_type_incl]:yes");
+        cmd_data_print_attr("l4_type", " [l4_type]:", &tmpdata, sizeof(tmpdata));
+    }
+    else
+    {
+        dprintf("\n[l4_type]:all");
+    }
+    dprintf("\n");
+    return;
+}
 
 sw_error_t
 cmd_data_check_udf_type(char *cmdstr, fal_acl_udf_type_t * arg_val, a_uint32_t size)

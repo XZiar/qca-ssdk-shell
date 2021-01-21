@@ -205,3 +205,63 @@ fal_acl_udf_profile_get(a_uint32_t dev_id, fal_acl_udf_pkt_type_t pkt_type,
     return rv;
 }
 
+sw_error_t
+fal_acl_udf_profile_entry_add(a_uint32_t dev_id, a_uint32_t profile_id,
+		fal_acl_udf_profile_entry_t * entry)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_ACL_UDF_PROFILE_ENTRY_ADD, dev_id, profile_id, entry);
+    return rv;
+}
+
+sw_error_t
+fal_acl_udf_profile_entry_del(a_uint32_t dev_id, a_uint32_t profile_id,
+		fal_acl_udf_profile_entry_t * entry)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_ACL_UDF_PROFILE_ENTRY_DEL, dev_id, profile_id, entry);
+    return rv;
+}
+
+sw_error_t
+fal_acl_udf_profile_entry_getfirst(a_uint32_t dev_id, a_uint32_t profile_id,
+		fal_acl_udf_profile_entry_t * entry)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_ACL_UDF_PROFILE_ENTRY_GETFIRST, dev_id, profile_id, entry);
+    return rv;
+}
+
+sw_error_t
+fal_acl_udf_profile_entry_getnext(a_uint32_t dev_id, a_uint32_t profile_id,
+		fal_acl_udf_profile_entry_t * entry)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_ACL_UDF_PROFILE_ENTRY_GETNEXT, dev_id, profile_id, entry);
+    return rv;
+}
+
+sw_error_t
+fal_acl_udf_profile_cfg_set(a_uint32_t dev_id, a_uint32_t profile_id,
+		a_uint32_t udf_idx, fal_acl_udf_type_t udf_type, a_uint32_t offset)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_ACL_UDF_PROFILE_CFG_SET, dev_id, profile_id, udf_idx, udf_type, offset);
+    return rv;
+}
+
+sw_error_t
+fal_acl_udf_profile_cfg_get(a_uint32_t dev_id, a_uint32_t profile_id,
+		a_uint32_t udf_idx, fal_acl_udf_type_t * udf_type, a_uint32_t * offset)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_ACL_UDF_PROFILE_CFG_GET, dev_id, profile_id, udf_idx, udf_type, offset);
+    return rv;
+}
+
