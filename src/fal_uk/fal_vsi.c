@@ -166,3 +166,26 @@ fal_vsi_bridge_vsi_set(a_uint32_t dev_id, a_uint32_t vsi_id,
 		bridge_vsi);
     return rv;
 }
+
+sw_error_t
+fal_vsi_invalidvsi_ctrl_get(a_uint32_t dev_id, fal_port_t port_id,
+	fal_vsi_invalidvsi_ctrl_t *invalidvsi_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_VSI_INVALIDVSI_CTRL_GET, dev_id, port_id,
+		invalidvsi_ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_vsi_invalidvsi_ctrl_set(a_uint32_t dev_id, fal_port_t port_id,
+	fal_vsi_invalidvsi_ctrl_t *invalidvsi_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_VSI_INVALIDVSI_CTRL_SET, dev_id, port_id,
+		invalidvsi_ctrl);
+    return rv;
+}
+

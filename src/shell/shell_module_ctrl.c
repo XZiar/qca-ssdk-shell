@@ -217,6 +217,8 @@ static void cmd_data_print_vsi_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_VSI_MEMBER_GET",
 		"FUNC_VSI_COUNTER_GET",
 		"FUNC_VSI_COUNTER_CLEANUP",
+		"FUNC_VSI_INVALIDVSI_CTRL_SET",
+		"FUNC_VSI_INVALIDVSI_CTRL_GET",
 		"FUNC_VSI_BRIDGE_VSI_SET",
 		"FUNC_VSI_BRIDGE_VSI_GET",
 	};

@@ -42,6 +42,14 @@ struct attr_des_t
 
 struct attr_des_t g_attr_des[] =
 {
+	{
+		"dest_info_type",
+		{
+			{"port_bmp", FAL_DEST_INFO_PORT_BMP},
+			{"port_id", FAL_DEST_INFO_PORT_ID},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -345,6 +353,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_VSI_STAMOVE, cmd_data_check_stamove, cmd_data_print_stamove_entry),
     SW_TYPE_DEF(SW_VSI_MEMBER, cmd_data_check_vsi_member, cmd_data_print_vsi_member_entry),
     SW_TYPE_DEF(SW_VSI_BRIDGE_VSI, cmd_data_check_vsi_bridge_vsi, cmd_data_print_vsi_bridge_vsi),
+    SW_TYPE_DEF(SW_VSI_INVALIDVSI_CTRL, cmd_data_check_vsi_invalidvsi_ctrl, cmd_data_print_vsi_invalidvsi_ctrl),
     SW_TYPE_DEF(SW_VSI_COUNTER, NULL, cmd_data_print_vsi_counter),
     SW_TYPE_DEF(SW_MTU_INFO, NULL, cmd_data_print_mtu_info),
     SW_TYPE_DEF(SW_MRU_INFO, NULL, cmd_data_print_mru_info),
@@ -15866,6 +15875,56 @@ cmd_data_print_vsi_bridge_vsi(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     dprintf("\n");
     cmd_data_print_uint32("bridge_vsi_id", &bridge_vsi->bridge_vsi_id,
         sizeof(bridge_vsi->bridge_vsi_id));
+
+    return;
+}
+
+sw_error_t
+cmd_data_check_vsi_invalidvsi_ctrl(char *cmd_str, void * arg_val, a_uint32_t size)
+{
+    char *cmd;
+
+    fal_vsi_invalidvsi_ctrl_t invalidvsi_ctrl;
+
+    aos_mem_zero(&invalidvsi_ctrl, sizeof (fal_vsi_invalidvsi_ctrl_t));
+
+    cmd_data_check_element("dest_en", "disable",
+                        "usage:dest_en,enable/disable\n",
+                        cmd_data_check_enable, (cmd, &(invalidvsi_ctrl.dest_en),
+                        sizeof (invalidvsi_ctrl.dest_en)));
+
+    cmd_data_check_element("dest_info_type", "port_id",
+                        "usage:dest_info_type:port_bitmap/port_id, etc\n",
+                        cmd_data_check_attr, ("dest_info_type", cmd,
+                        &(invalidvsi_ctrl.dest_info.dest_info_type),
+                        sizeof(invalidvsi_ctrl.dest_info.dest_info_type)));
+
+    cmd_data_check_element("dest_info_value", "0",
+                        "usage:dest_info_value, port_id/port_bmp, etc\n",
+                        cmd_data_check_uint32, (cmd, &(invalidvsi_ctrl.dest_info.dest_info_value),
+                        sizeof (invalidvsi_ctrl.dest_info.dest_info_value)));
+
+    *(fal_vsi_invalidvsi_ctrl_t *)arg_val = invalidvsi_ctrl;
+
+    return SW_OK;
+}
+
+void
+cmd_data_print_vsi_invalidvsi_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_vsi_invalidvsi_ctrl_t *invalidvsi_ctrl;
+
+    invalidvsi_ctrl = (fal_vsi_invalidvsi_ctrl_t *) buf;
+    cmd_data_print_enable("dest_en", &(invalidvsi_ctrl->dest_en),
+        sizeof(invalidvsi_ctrl->dest_en));
+    dprintf("\n");
+    cmd_data_print_attr("dest_info_type", "[dest_info_type]:",
+        &(invalidvsi_ctrl->dest_info.dest_info_type),
+        sizeof(invalidvsi_ctrl->dest_info.dest_info_type));
+    dprintf("\n");
+    cmd_data_print_uint32("dest_info_value",
+        &(invalidvsi_ctrl->dest_info.dest_info_value),
+        sizeof(invalidvsi_ctrl->dest_info.dest_info_value));
 
     return;
 }
