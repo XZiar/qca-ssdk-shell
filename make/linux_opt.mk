@@ -154,6 +154,14 @@ ifeq (TRUE, $(IN_TUNNEL))
 	MODULE_CFLAG += -DIN_TUNNEL
 endif
 
+ifeq (TRUE, $(IN_VXLAN))
+  MODULE_CFLAG += -DIN_VXLAN
+endif
+
+ifeq (TRUE, $(IN_GENEVE))
+  MODULE_CFLAG += -DIN_GENEVE
+endif
+
 #auto_insert_flag
 
 #ifdef UK_NL_PROT

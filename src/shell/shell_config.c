@@ -1543,6 +1543,48 @@ struct cmd_des_t gcmd_des[] =
 		},
 	},
 #endif
+	/* VXLAN */
+#ifdef IN_VXLAN
+	{
+		"vxlan", "config vxlan",
+		{
+			{"entry", "add", "add a vxlan entry", "<vxlan_type>",
+				SW_API_VXLAN_ENTRY_ADD, NULL},
+			{"entry", "del", "delete a vxlan entry", "<vxlan_type>",
+				SW_API_VXLAN_ENTRY_DEL, NULL},
+			{"entry", "getfirst", "get first vxlan entry", "<vxlan_type>",
+				SW_API_VXLAN_ENTRY_GETFIRST, NULL},
+			{"entry", "getnext", "get next vxlan entry", "<vxlan_type>",
+				SW_API_VXLAN_ENTRY_GETNEXT, NULL},
+			{"entry", "show", "show all vxlan entry", "<0:vxlan|1:vxlan-gpe>",
+				SW_CMD_VXLAN_ENTRY_SHOW, cmd_show_vxlan_entry},
+			{"gpeprotocfg", "set", "set vxlan-gpe proto cfg", "",
+				SW_API_VXLAN_GPE_PROTO_CFG_SET, NULL},
+			{"gpeprotocfg", "get", "get vxlan-gpe proto cfg", "",
+				SW_API_VXLAN_GPE_PROTO_CFG_GET, NULL},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
+	/* GENEVE */
+#ifdef IN_GENEVE
+	{
+		"geneve", "config geneve",
+		{
+			{"entry", "add", "add a geneve entry", "",
+				SW_API_GENEVE_ENTRY_ADD, NULL},
+			{"entry", "del", "delete a geneve entry", "",
+				SW_API_GENEVE_ENTRY_DEL, NULL},
+			{"entry", "getfirst", "get first geneve entry", "",
+				SW_API_GENEVE_ENTRY_GETFIRST, NULL},
+			{"entry", "getnext", "get next geneve entry", "",
+				SW_API_GENEVE_ENTRY_GETNEXT, NULL},
+			{"entry", "show", "show all geneve entry", "",
+				SW_CMD_GENEVE_ENTRY_SHOW, cmd_show_geneve_entry},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
 
 /* auto_insert_flag */
 

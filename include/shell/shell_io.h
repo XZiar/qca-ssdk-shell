@@ -1107,6 +1107,21 @@ cmd_data_check_tunnel_global_cfg(char *info, fal_tunnel_global_cfg_t *val, a_uin
 void
 cmd_data_print_tunnel_global_cfg(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
 
+sw_error_t
+cmd_data_check_vxlan_type(char * cmd_str, a_uint32_t * arg_val, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_udp_entry(char * cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_tunnel_udp_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_vxlan_gpe_proto(char * cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_vxlan_gpe_proto(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
 /* auto_insert_flag */
 
 /*qca808x_start*/

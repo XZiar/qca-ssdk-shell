@@ -111,6 +111,10 @@ cmd_data_check_module(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
 		*arg_val = FAL_MODULE_VPORT;
 	} else if (!strcasecmp(cmd_str, "tunnel")) {
 		*arg_val = FAL_MODULE_TUNNEL;
+	} else if (!strcasecmp(cmd_str, "vxlan")){
+		*arg_val = FAL_MODULE_VXLAN;
+	} else if (!strcasecmp(cmd_str, "geneve")){
+		*arg_val = FAL_MODULE_GENEVE;
 	}
 /* auto_insert_flag_1 */
     else
@@ -172,6 +176,10 @@ cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		dprintf("vport");
 	} else if (*(a_uint32_t *) buf == FAL_MODULE_TUNNEL) {
 		dprintf("tunnel");
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_VXLAN) {
+		dprintf("vxlan");
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_GENEVE) {
+		dprintf("geneve");
 	}
 /* auto_insert_flag_2 */
 }
@@ -1106,6 +1114,56 @@ static void cmd_data_print_tunnel_func_ctrl(fal_func_ctrl_t *p)
 	return;
 }
 
+static void cmd_data_print_vxlan_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_VXLAN_GPE_PROTO_CFG_GET+1] ={
+		"FUNC_VXLAN_ENTRY_ADD",
+		"FUNC_VXLAN_ENTRY_DEL",
+		"FUNC_VXLAN_ENTRY_GETFIRST",
+		"FUNC_VXLAN_ENTRY_GETNEXT",
+		"FUNC_VXLAN_GPE_PROTO_CFG_SET",
+		"FUNC_VXLAN_GPE_PROTO_CFG_GET"
+	};
+
+	for(func = FUNC_VXLAN_ENTRY_ADD; func <= FUNC_VXLAN_GPE_PROTO_CFG_GET; func++)
+	{
+		if(p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
+static void cmd_data_print_geneve_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_GENEVE_ENTRY_GETNEXT+1] ={
+		"FUNC_GENEVE_ENTRY_ADD",
+		"FUNC_GENEVE_ENTRY_DEL",
+		"FUNC_GENEVE_ENTRY_GETFIRST",
+		"FUNC_GENEVE_ENTRY_GETNEXT",
+	};
+
+	for(func = FUNC_GENEVE_ENTRY_ADD; func <= FUNC_GENEVE_ENTRY_GETNEXT; func++)
+	{
+		if(p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
 /* auto_insert_flag_3 */
 
 void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
@@ -1156,6 +1214,10 @@ void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 		cmd_data_print_vport_func_ctrl(p);
 	} else if (module == FAL_MODULE_TUNNEL) {
 		cmd_data_print_tunnel_func_ctrl(p);
+	} else if (module == FAL_MODULE_VXLAN){
+		cmd_data_print_vxlan_func_ctrl(p);
+	} else if (module == FAL_MODULE_GENEVE){
+		cmd_data_print_geneve_func_ctrl(p);
 	}
 /* auto_insert_flag */
 

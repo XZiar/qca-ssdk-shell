@@ -858,3 +858,86 @@ cmd_show_tunnel_encap_entry(a_ulong_t *arg_val)
 
 	return SW_OK;
 }
+
+sw_error_t
+cmd_show_vxlan_entry(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t vxlan_type, cnt;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_tunnel_udp_entry_t *entry = (fal_tunnel_udp_entry_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(entry, sizeof(fal_tunnel_udp_entry_t));
+
+	vxlan_type = arg_val[1];
+	cnt = 0;
+
+	if (vxlan_type != FAL_VXLAN &&
+			vxlan_type != FAL_VXLAN_GPE) {
+		return SW_BAD_PARAM;
+	}
+
+	arg_val[0] = SW_API_VXLAN_ENTRY_GETFIRST;
+
+	while (1) {
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = vxlan_type;
+		arg_val[4] = (a_ulong_t)entry;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+		arg_val[0] = SW_API_VXLAN_ENTRY_GETNEXT;
+		cnt++;
+	}
+
+	if((rtn != SW_OK) && (rtn != SW_NOT_FOUND)) {
+		cmd_print_error(rtn);
+	} else {
+		dprintf("\nvxlan total %d entries\n", cnt);
+	}
+
+	return SW_OK;
+}
+
+sw_error_t
+cmd_show_geneve_entry(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t cnt;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_tunnel_udp_entry_t *entry = (fal_tunnel_udp_entry_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(entry, sizeof(fal_tunnel_udp_entry_t));
+
+	cnt = 0;
+
+	arg_val[0] = SW_API_GENEVE_ENTRY_GETFIRST;
+
+	while (1) {
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = (a_ulong_t)entry;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+		arg_val[0] = SW_API_GENEVE_ENTRY_GETNEXT;
+		cnt++;
+	}
+
+	if((rtn != SW_OK) && (rtn != SW_NOT_FOUND)) {
+		cmd_print_error(rtn);
+	} else {
+		dprintf("\ngeneve total %d entries\n", cnt);
+	}
+
+	return SW_OK;
+}
