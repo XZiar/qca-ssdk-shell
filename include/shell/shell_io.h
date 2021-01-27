@@ -1047,6 +1047,68 @@ cmd_data_print_sfp_ctrl_status(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t
 void
 cmd_data_print_sfp_alarm_warn_flag(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 
+sw_error_t
+cmd_data_check_tunnel_intf(char *info, fal_tunnel_intf_t *val, a_uint32_t size);
+
+void
+cmd_data_print_tunnel_intf(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_port_intf(char *info, fal_tunnel_port_intf_t *val, a_uint32_t size);
+
+void
+cmd_data_print_tunnel_port_intf(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_encap_rule_entry(char *info, fal_tunnel_encap_rule_t *val, a_uint32_t size);
+
+void
+cmd_data_print_tunnel_encap_rule_entry(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_encap_tunnelid(char *info, fal_tunnel_id_t *val, a_uint32_t size);
+
+void
+cmd_data_print_tunnel_encap_tunnelid(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_vlan_intf(char *info, fal_tunnel_vlan_intf_t *val, a_uint32_t size);
+
+void
+cmd_data_print_tunnel_vlan_intf(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_decap_entry(char *info, fal_tunnel_decap_entry_t *val, a_uint32_t size);
+
+void
+cmd_data_print_tunnel_decap_entry(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_encap_entry(char *info, fal_tunnel_encap_cfg_t *val, a_uint32_t size);
+
+void
+cmd_data_print_tunnel_encap_entry(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_encap_header_ctrl(char *info,
+		fal_tunnel_encap_header_ctrl_t *val, a_uint32_t size);
+void
+cmd_data_print_tunnel_encap_header_ctrl(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_decap_header_ctrl(char *info,
+		fal_tunnel_decap_header_ctrl_t *val, a_uint32_t size);
+void
+cmd_data_print_tunnel_decap_header_ctrl(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_global_cfg(char *info, fal_tunnel_global_cfg_t *val, a_uint32_t size);
+
+void
+cmd_data_print_tunnel_global_cfg(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
+/* auto_insert_flag */
+
 /*qca808x_start*/
 #endif
 /*qca808x_end*/
