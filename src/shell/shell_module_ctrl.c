@@ -109,7 +109,10 @@ cmd_data_check_module(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
 		*arg_val = FAL_MODULE_POLICER;
 	} else if (!strcasecmp(cmd_str, "vport")) {
 		*arg_val = FAL_MODULE_VPORT;
+	} else if (!strcasecmp(cmd_str, "tunnel")) {
+		*arg_val = FAL_MODULE_TUNNEL;
 	}
+/* auto_insert_flag_1 */
     else
     {
         return SW_BAD_VALUE;
@@ -167,7 +170,10 @@ cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		dprintf("policer");
 	} else if (*(a_uint32_t *) buf == FAL_MODULE_VPORT) {
 		dprintf("vport");
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_TUNNEL) {
+		dprintf("tunnel");
 	}
+/* auto_insert_flag_2 */
 }
 
 static void cmd_data_print_acl_func_ctrl(fal_func_ctrl_t *p)
@@ -1050,6 +1056,58 @@ static void cmd_data_print_vport_func_ctrl(fal_func_ctrl_t *p)
 	return;
 }
 
+static void cmd_data_print_tunnel_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_TUNNEL_PORT_INTF_GET+1] = {
+		"FUNC_TUNNEL_INTF_SET",
+		"FUNC_TUNNEL_INTF_GET",
+		"FUNC_TUNNEL_ENCAP_RULE_ENTRY_SET",
+		"FUNC_TUNNEL_ENCAP_RULE_ENTRY_GET",
+		"FUNC_TUNNEL_ENCAP_RULE_ENTRY_DEL",
+		"FUNC_TUNNEL_ENCAP_INTF_TUNNELID_SET",
+		"FUNC_TUNNEL_ENCAP_INTF_TUNNELID_GET",
+		"FUNC_TUNNEL_VLAN_INTF_ADD",
+		"FUNC_TUNNEL_VLAN_INTF_GETFIRST",
+		"FUNC_TUNNEL_VLAN_INTF_GETNEXT",
+		"FUNC_TUNNEL_VLAN_INTF_DEL",
+		"FUNC_TUNNEL_ENCAP_PORT_TUNNELID_SET",
+		"FUNC_TUNNEL_ENCAP_PORT_TUNNELID_GET",
+		"FUNC_TUNNEL_DECAP_ENTRY_ADD",
+		"FUNC_TUNNEL_DECAP_ENTRY_GET",
+		"FUNC_TUNNEL_DECAP_ENTRY_GETNEXT",
+		"FUNC_TUNNEL_DECAP_ENTRY_DEL",
+		"FUNC_TUNNEL_DECAP_ENTRY_FLUSH",
+		"FUNC_TUNNEL_ENCAP_ENTRY_ADD",
+		"FUNC_TUNNEL_ENCAP_ENTRY_GET",
+		"FUNC_TUNNEL_ENCAP_ENTRY_GETNEXT",
+		"FUNC_TUNNEL_ENCAP_ENTRY_DEL",
+		"FUNC_TUNNEL_GLOBAL_CFG_SET",
+		"FUNC_TUNNEL_GLOBAL_CFG_GET",
+		"FUNC_TUNNEL_ENCAP_HEADER_CTRL_SET",
+		"FUNC_TUNNEL_ENCAP_HEADER_CTRL_GET",
+		"FUNC_TUNNEL_DECAP_HEADER_CTRL_SET",
+		"FUNC_TUNNEL_DECAP_HEADER_CTRL_GET",
+		"FUNC_TUNNEL_PORT_INTF_SET",
+		"FUNC_TUNNEL_PORT_INTF_GET",
+	};
+
+	for(func = FUNC_TUNNEL_INTF_SET; func <= FUNC_TUNNEL_PORT_INTF_GET; func++)
+	{
+		if(p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
+/* auto_insert_flag_3 */
+
 void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 {
 	if(module == FAL_MODULE_ACL){
@@ -1096,7 +1154,10 @@ void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 		cmd_data_print_policer_func_ctrl(p);
 	} else if (module == FAL_MODULE_VPORT) {
 		cmd_data_print_vport_func_ctrl(p);
+	} else if (module == FAL_MODULE_TUNNEL) {
+		cmd_data_print_tunnel_func_ctrl(p);
 	}
+/* auto_insert_flag */
 
 	return;
 }

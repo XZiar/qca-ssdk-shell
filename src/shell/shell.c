@@ -349,6 +349,9 @@ cmd_parse_sw(char **cmd_str, a_ulong_t * arg_val)
                               api_id == SW_CMD_FLOW_SHOW ||
                               api_id == SW_CMD_CTRLPKT_SHOW ||
                               api_id == SW_CMD_INTFMAC_SHOW ||
+                              api_id == SW_CMD_TUNNEL_DECAP_ENTRY_SHOW ||
+                              api_id == SW_CMD_TUNNEL_VLAN_ENTRY_SHOW ||
+                              api_id == SW_CMD_TUNNEL_ENCAP_ENTRY_SHOW ||
                               api_id == SW_CMD_PUBADDR_SHOW )) ||
 		    ( arg_index == 1 && api_id == SW_CMD_SET_DEVID) ||
 		    ( arg_index == 2 && api_id == SW_CMD_PT_VLAN_TRANS_ADV_SHOW) )

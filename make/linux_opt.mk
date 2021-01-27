@@ -150,6 +150,12 @@ ifeq (TRUE, $(IN_VPORT))
 	MODULE_CFLAG += -DIN_VPORT
 endif
 
+ifeq (TRUE, $(IN_TUNNEL))
+	MODULE_CFLAG += -DIN_TUNNEL
+endif
+
+#auto_insert_flag
+
 #ifdef UK_NL_PROT
   MODULE_CFLAG += -DUK_NL_PROT=$(UK_NL_PROT)
 #endif

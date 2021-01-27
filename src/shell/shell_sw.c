@@ -737,3 +737,124 @@ cmd_show_ptvlan_entry(a_ulong_t *arg_val)
 
 	return SW_OK;
 }
+
+sw_error_t
+cmd_show_tunnel_decap_entry(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t cnt;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_tunnel_decap_entry_t *decap_entry = (fal_tunnel_decap_entry_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(decap_entry, sizeof(fal_tunnel_decap_entry_t));
+
+	cnt = 0;
+	decap_entry->decap_rule.entry_id = 0;
+
+	while (decap_entry->decap_rule.entry_id < FAL_TUNNEL_DECAP_ENTRY_MAX) {
+		arg_val[0] = SW_API_TUNNEL_DECAP_ENTRY_GETNEXT;
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = FAL_TUNNEL_OP_MODE_INDEX;
+		arg_val[4] = (a_ulong_t)decap_entry;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+		cnt++;
+		/* entry_id will be updated by cmd_exec_api */
+		decap_entry->decap_rule.entry_id++;
+	}
+
+	if((rtn != SW_OK) && (rtn != SW_OUT_OF_RANGE)) {
+		cmd_print_error(rtn);
+	} else {
+		dprintf("\ndecap total %d entries\n", cnt);
+	}
+
+	return SW_OK;
+}
+
+sw_error_t
+cmd_show_tunnel_vlan_entry(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t cnt;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_tunnel_vlan_intf_t *decap_vlan = (fal_tunnel_vlan_intf_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(decap_vlan, sizeof(fal_tunnel_vlan_intf_t));
+
+	cnt = 0;
+	arg_val[0] = SW_API_TUNNEL_VLAN_INTF_GETFIRST;
+
+	while (1) {
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = (a_ulong_t)decap_vlan;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+		cnt++;
+		arg_val[0] = SW_API_TUNNEL_VLAN_INTF_GETNEXT;
+	}
+
+	if((rtn != SW_OK) && (rtn != SW_NOT_FOUND)) {
+		cmd_print_error(rtn);
+	} else {
+		dprintf("\ndecap vlan total %d entries\n", cnt);
+	}
+
+	return SW_OK;
+}
+
+sw_error_t
+cmd_show_tunnel_encap_entry(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t cnt, tunnel_id;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_tunnel_encap_cfg_t *encap_entry = (fal_tunnel_encap_cfg_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(encap_entry, sizeof(fal_tunnel_encap_cfg_t));
+
+	cnt = 0;
+	tunnel_id = 0;
+
+	while (tunnel_id < FAL_TUNNEL_ENCAP_ENTRY_MAX) {
+		arg_val[0] = SW_API_TUNNEL_ENCAP_ENTRY_GETNEXT;
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = tunnel_id;
+		arg_val[4] = (a_ulong_t)encap_entry;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+		/* tunnel_id will be updated by cmd_exec_api */
+		tunnel_id = encap_entry->rt_tunnel_id;
+		dprintf(encap_entry->rt_tlid_type ? "[tunnel_l3_if]:%d" : "[tunnel_vp_id]:%d",
+				encap_entry->rt_tlid_index);
+		dprintf(" [tunnel_id]:%d\n", tunnel_id);
+		tunnel_id++;
+		cnt++;
+	}
+
+	if((rtn != SW_OK) && (rtn != SW_OUT_OF_RANGE)) {
+		cmd_print_error(rtn);
+	} else {
+		dprintf("\nencap total %d entries\n", cnt);
+	}
+
+	return SW_OK;
+}
