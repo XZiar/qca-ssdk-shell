@@ -413,6 +413,10 @@ struct cmd_des_t gcmd_des[] =
 		    "<cnt_index>", SW_API_PT_VLAN_COUNTER_CLEANUP, NULL},
             {"counter", "get", "get port vlan counter",
 		    "<cnt_index>", SW_API_PT_VLAN_COUNTER_GET, NULL},
+	    {"vpgroup", "set", "set vpgroup of vport", "<port_id> <ingress|egress> <vpgroup>",
+		    SW_API_PT_VLAN_VPGROUP_SET, NULL},
+	    {"vpgroup", "get", "get vpgroup of vport", "<port_id> <ingress|egress>",
+		    SW_API_PT_VLAN_VPGROUP_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

@@ -752,3 +752,22 @@ fal_port_vlan_counter_cleanup(a_uint32_t dev_id, a_uint32_t cnt_index)
     return rv;
 }
 
+sw_error_t
+fal_port_vlan_vpgroup_set(a_uint32_t dev_id, a_uint32_t vport,
+		fal_port_vlan_direction_t direction, a_uint32_t vpgroup_id)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_VPGROUP_SET, dev_id, vport, direction, vpgroup_id);
+    return rv;
+}
+
+sw_error_t
+fal_port_vlan_vpgroup_get(a_uint32_t dev_id, a_uint32_t vport,
+		fal_port_vlan_direction_t direction, a_uint32_t *vpgroup_id)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_VPGROUP_GET, dev_id, vport, direction, vpgroup_id);
+    return rv;
+}
