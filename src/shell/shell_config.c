@@ -1617,6 +1617,41 @@ struct cmd_des_t gcmd_des[] =
 	},
 #endif
 
+	/* TUNNEL PROGRAM */
+#ifdef IN_TUNNEL_PROGRAM
+	{
+		"tunnelprogram", "config tunnelprogram",
+		{
+			{"entry", "add", "add a tunnel program entry", "<program_type>",
+					SW_API_TUNNEL_PROGRAM_ENTRY_ADD, NULL},
+			{"entry", "del", "delete a tunnel program entry", "<program_type>",
+					SW_API_TUNNEL_PROGRAM_ENTRY_DEL, NULL},
+			{"entry", "getfirst", "get first tunnel program entry", "<program_type>",
+					SW_API_TUNNEL_PROGRAM_ENTRY_GETFIRST, NULL},
+			{"entry", "getnext", "get next tunnel program entry", "<program_type>",
+					SW_API_TUNNEL_PROGRAM_ENTRY_GETNEXT, NULL},
+			{"entry", "show", "show all program entry", "<0:program0|...|5:program5>",
+					SW_CMD_TUNNEL_PROGRAM_ENTRY_SHOW,
+					cmd_show_tunnel_program_entry},
+			{"cfg", "set", "set tunnel program configuration", "<program_type>",
+					SW_API_TUNNEL_PROGRAM_CFG_SET, NULL},
+			{"cfg", "get", "get tunnel program configuration", "<program_type>",
+					SW_API_TUNNEL_PROGRAM_CFG_GET, NULL},
+			{"udf", "add", "add a tunnel program udf entry", "<program_type>",
+					SW_API_TUNNEL_PROGRAM_UDF_ADD, NULL},
+			{"udf", "del", "delete a tunnel program udf entry", "<program_type>",
+					SW_API_TUNNEL_PROGRAM_UDF_DEL, NULL},
+			{"udf", "getfirst", "get first tunnel program udf entry", "<program_type>",
+					SW_API_TUNNEL_PROGRAM_UDF_GETFIRST, NULL},
+			{"udf", "getnext", "get next tunnel program udf entry", "<program_type>",
+					SW_API_TUNNEL_PROGRAM_UDF_GETNEXT, NULL},
+			{"udf", "show", "show all program udf rules", "<0:program0|...|5:program5>",
+					SW_CMD_TUNNEL_PROGRAM_UDF_SHOW, cmd_show_tunnel_program_udf},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
+
 /* auto_insert_flag */
 
 /*qca808x_start*/

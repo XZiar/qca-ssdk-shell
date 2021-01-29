@@ -979,3 +979,91 @@ cmd_show_mapt_entry(a_ulong_t *arg_val)
 
 	return SW_OK;
 }
+
+sw_error_t
+cmd_show_tunnel_program_entry(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t program_type, cnt;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_tunnel_program_entry_t *entry = (fal_tunnel_program_entry_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(entry, sizeof(fal_tunnel_program_entry_t));
+
+	program_type = arg_val[1];
+	cnt = 0;
+
+	if (program_type > FAL_TUNNEL_PROGRAM_TYPE_5) {
+		return SW_BAD_PARAM;
+	}
+
+	arg_val[0] = SW_API_TUNNEL_PROGRAM_ENTRY_GETFIRST;
+
+	while (1) {
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = program_type;
+		arg_val[4] = (a_ulong_t)entry;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+		arg_val[0] = SW_API_TUNNEL_PROGRAM_ENTRY_GETNEXT;
+		cnt++;
+	}
+
+	if((rtn != SW_OK) && (rtn != SW_NOT_FOUND)) {
+		cmd_print_error(rtn);
+	} else {
+		dprintf("\ntunnel program total %d entries\n", cnt);
+	}
+
+	return SW_OK;
+}
+
+sw_error_t
+cmd_show_tunnel_program_udf(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t program_type, cnt;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_tunnel_program_udf_t *entry = (fal_tunnel_program_udf_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(entry, sizeof(fal_tunnel_program_udf_t));
+
+	program_type = arg_val[1];
+	cnt = 0;
+
+	if (program_type > FAL_TUNNEL_PROGRAM_TYPE_5) {
+		return SW_BAD_PARAM;
+	}
+
+	arg_val[0] = SW_API_TUNNEL_PROGRAM_UDF_GETFIRST;
+
+	while (1) {
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = program_type;
+		arg_val[4] = (a_ulong_t)entry;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+		arg_val[0] = SW_API_TUNNEL_PROGRAM_UDF_GETNEXT;
+		cnt++;
+	}
+
+	if((rtn != SW_OK) && (rtn != SW_NOT_FOUND)) {
+		cmd_print_error(rtn);
+	} else {
+		dprintf("\ntunnel program udf total %d entries\n", cnt);
+	}
+
+	return SW_OK;
+}

@@ -91,6 +91,67 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"tunnel_program_type",
+		{
+			{"program0", FAL_TUNNEL_PROGRAM_TYPE_0},
+			{"program1", FAL_TUNNEL_PROGRAM_TYPE_1},
+			{"program2", FAL_TUNNEL_PROGRAM_TYPE_2},
+			{"program3", FAL_TUNNEL_PROGRAM_TYPE_3},
+			{"program4", FAL_TUNNEL_PROGRAM_TYPE_4},
+			{"program5", FAL_TUNNEL_PROGRAM_TYPE_5},
+			{"0", FAL_TUNNEL_PROGRAM_TYPE_0},
+			{"1", FAL_TUNNEL_PROGRAM_TYPE_1},
+			{"2", FAL_TUNNEL_PROGRAM_TYPE_2},
+			{"3", FAL_TUNNEL_PROGRAM_TYPE_3},
+			{"4", FAL_TUNNEL_PROGRAM_TYPE_4},
+			{"5", FAL_TUNNEL_PROGRAM_TYPE_5},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
+		"hdr_type",
+		{
+			{"ethernet", FAL_ETHERNET_HDR},
+			{"ethernet-tag", FAL_ETHERNET_TAG_HDR},
+			{"ipv4", FAL_IPV4_HDR},
+			{"ipv6", FAL_IPV6_HDR},
+			{"udp", FAL_UDP_HDR},
+			{"udp-lite", FAL_UDP_LITE_HDR},
+			{"tcp", FAL_TCP_HDR},
+			{"gre", FAL_GRE_HDR},
+			{"vxlan", FAL_VXLAN_HDR},
+			{"vxlan-gpe", FAL_VXLAN_GPE_HDR},
+			{"geneve", FAL_GENEVE_HDR},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
+		"tunnel_program_pos_mode",
+		{
+			{"end", 0},
+			{"start", 1},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
+		"tunnel_program_inner_type_mode",
+		{
+			{"fix", 0},
+			{"udf", 1},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
+		"tunnel_program_opt_len_unit",
+		{
+			{"1byte", 0},
+			{"2bytes", 1},
+			{"4bytes", 2},
+			{"8bytes", 3},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -540,6 +601,13 @@ static sw_data_type_t sw_data_type[] =
 		    cmd_data_print_mapt_decap_rule_entry),
     SW_TYPE_DEF(SW_MAPT_DECAP_ENTRY, cmd_data_check_mapt_decap_entry,
 		    cmd_data_print_mapt_decap_entry),
+    SW_TYPE_DEF(SW_TUNNEL_PROGRAM_TYPE, cmd_data_check_tunnel_program_type, NULL),
+    SW_TYPE_DEF(SW_TUNNEL_PROGRAM_ENTRY, cmd_data_check_tunnel_program_entry,
+		    cmd_data_print_tunnel_program_entry),
+    SW_TYPE_DEF(SW_TUNNEL_PROGRAM_CFG, cmd_data_check_tunnel_program_cfg,
+		    cmd_data_print_tunnel_program_cfg),
+    SW_TYPE_DEF(SW_TUNNEL_PROGRAM_UDF, cmd_data_check_tunnel_program_udf,
+		    cmd_data_print_tunnel_program_udf),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -35021,6 +35089,453 @@ cmd_data_print_vxlan_gpe_proto(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
     dprintf("\n[ipv4]:0x%x", proto->ipv4);
     dprintf("\n[ipv6]:0x%x", proto->ipv6);
     dprintf("\n[ethernet]:0x%x", proto->ethernet);
+    return;
+}
+
+sw_error_t
+cmd_data_check_tunnel_program_type(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
+{
+
+    return cmd_data_check_attr("tunnel_program_type", cmd_str,
+                    arg_val, sizeof(*arg_val));
+}
+
+sw_error_t
+cmd_data_check_tunnel_program_entry(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_tunnel_program_entry_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_tunnel_program_entry_t));
+
+    dprintf("\n");
+
+    cmd_data_check_element("ip ver", "ipv4",
+                       "usage: ipv4, ipv6, ipv4_and_ipv6\n",
+                       cmd_data_check_attr, ("ip_ver", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.ip_ver= tmpdata & 0x3;
+
+    cmd_data_check_element("outer hdr type", "ethernet",
+                       "usage: ethernet, ipv4, ipv6, udp, udp-lite, tcp, "
+                       "gre, vxlan, vxlan-gpe, geneve\n",
+                       cmd_data_check_attr, ("hdr_type", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.outer_hdr_type = tmpdata & 0xf;
+
+    if(entry.outer_hdr_type == FAL_ETHERNET_HDR)
+    {
+        cmd_data_check_element("ethernet type", NULL,
+                           "usage: the format is 0x0-0xffff or 0-65535\n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                           0xffff, 0x0));
+        entry.protocol = tmpdata & 0xffff;
+
+        cmd_data_check_element("ethernet type mask", NULL,
+                           "usage: the format is 0x0-0xffff or 0-65535\n",
+                           cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
+                                   0x0));
+        entry.protocol_mask = tmpdata & 0xffff;
+    }
+    else if(entry.outer_hdr_type == FAL_IPV4_HDR || entry.outer_hdr_type == FAL_IPV6_HDR)
+    {
+        cmd_data_check_element("ip protocol", NULL,
+                           "usage: the format is 0x0-0xff or 0-255 \n",
+                           cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+                                   0x0));
+        entry.protocol = tmpdata & 0xff;
+
+        cmd_data_check_element("ip protocol mask", NULL,
+                           "usage: the format is 0x0-0xff or 0-255 \n",
+                           cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+                                   0x0));
+        entry.protocol_mask = tmpdata & 0xff;
+    }
+    else if(entry.outer_hdr_type >= FAL_UDP_HDR && entry.outer_hdr_type <= FAL_TCP_HDR)
+    {
+        cmd_data_check_element("l4 dst port", NULL,
+                           "usage: the format is 0x0-0xffff or 0-65535 \n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffff, 0x0));
+        entry.protocol = tmpdata & 0xffff;
+
+        cmd_data_check_element("l4 dst port mask", NULL,
+                           "usage: the format is 0x0-0xffff or 0-65535 \n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffff, 0x0));
+        entry.protocol_mask = tmpdata & 0xffff;
+
+        cmd_data_check_element("l4 src port", NULL,
+                           "usage: the format is 0x0-0xffff or 0-65535 \n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffff, 0x0));
+        entry.protocol |= (tmpdata & 0xffff)<<16;
+
+        cmd_data_check_element("l4 src port mask", NULL,
+                           "usage: the format is 0x0-0xffff or 0-65535 \n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffff, 0x0));
+        entry.protocol_mask |= (tmpdata & 0xffff)<<16;
+    }
+    else if(entry.outer_hdr_type >= FAL_GRE_HDR && entry.outer_hdr_type <= FAL_GENEVE_HDR)
+    {
+        cmd_data_check_element("first 32bit filed of tunnel header", NULL,
+                           "usage: the format is 0x0-0xffffffff or 0-4294967295\n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffffffff, 0x0));
+        entry.protocol = tmpdata & 0xffffffff;
+
+        cmd_data_check_element("first 32bit filed mask of tunnel header", NULL,
+                           "usage: the format is 0x0-0xffffffff or 0-4294967295 \n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffffffff, 0x0));
+        entry.protocol_mask = tmpdata & 0xffffffff;
+    }
+    else
+    {
+        dprintf("%s", "usage: ethernet, ipv4, ipv6, udp, udp-lite, "
+                        "tcp, gre, vxlan, vxlan-gpe, geneve\n");
+        return SW_BAD_PARAM;
+    }
+
+    *(fal_tunnel_program_entry_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_tunnel_program_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_tunnel_program_entry_t *entry;
+    a_uint32_t tmpdata = 0;
+    a_uint16_t l4_port = 0, l4_port_mask = 0;
+
+    entry = (fal_tunnel_program_entry_t *) buf;
+
+    tmpdata = entry->ip_ver;
+    cmd_data_print_attr("ip_ver", "\n[ip_ver]:",
+                    &tmpdata, sizeof(tmpdata));
+
+    tmpdata = entry->outer_hdr_type;
+    cmd_data_print_attr("hdr_type", " [outer_hdr_type]:",
+                    &tmpdata, sizeof(tmpdata));
+
+    if(entry->outer_hdr_type == FAL_ETHERNET_HDR)
+    {
+        dprintf("\n[ethernet_type]:0x%x", entry->protocol);
+        dprintf("  [ethernet_type_mask]:0x%x", entry->protocol_mask);
+    }
+    if(entry->outer_hdr_type == FAL_IPV4_HDR || entry->outer_hdr_type == FAL_IPV6_HDR)
+    {
+        dprintf("\n[ip_protocol]:0x%x", entry->protocol);
+        dprintf("  [ip_protocol_mask]:0x%x", entry->protocol_mask);
+    }
+    if(entry->outer_hdr_type >= FAL_UDP_HDR && entry->outer_hdr_type <= FAL_TCP_HDR)
+    {
+        l4_port = (entry->protocol)&0xffff;
+        l4_port_mask = (entry->protocol_mask)&0xffff;
+        dprintf("\n[l4_dst_port]:0x%x", l4_port);
+        dprintf("  [l4_dst_port_mask]:0x%x", l4_port_mask);
+
+        l4_port = (entry->protocol)>>16;
+        l4_port_mask = (entry->protocol_mask)>>16;
+        dprintf("\n[l4_src_port]:0x%x", l4_port);
+        dprintf("  [l4_src_port_mask]:0x%x", l4_port_mask);
+    }
+    if(entry->outer_hdr_type >= FAL_GRE_HDR && entry->outer_hdr_type <= FAL_GENEVE_HDR)
+    {
+        dprintf("\n[tunnel_hdr_f32bit]:0x%x", entry->protocol);
+        dprintf("  [tunnel_hdr_f32bit_mask]:0x%x", entry->protocol_mask);
+    }
+    dprintf("\n");
+    return;
+}
+
+sw_error_t
+cmd_data_check_tunnel_program_cfg(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_tunnel_program_cfg_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_tunnel_program_cfg_t));
+
+    dprintf("\n");
+
+    cmd_data_check_element("program pos mode", "end",
+                       "usage: end for end of outer hdr, start for start of outer hdr\n",
+                       cmd_data_check_attr, ("tunnel_program_pos_mode", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.program_pos_mode = tmpdata & 0x1;
+
+    cmd_data_check_element("inner type mode", "fix",
+                       "usage: fix, udf\n",
+                       cmd_data_check_attr, ("tunnel_program_inner_type_mode", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.inner_type_mode = tmpdata & 0x1;
+
+    if(entry.inner_type_mode == 0)
+    {
+        cmd_data_check_element("inner hdr type", "ethernet",
+                           "usage: ethernet, ethernet-tag, ipv4, ipv6\n",
+                           cmd_data_check_attr, ("hdr_type", cmd,
+                                   &tmpdata, sizeof(tmpdata)));
+        entry.inner_hdr_type = tmpdata & 0x3;
+    }
+
+    cmd_data_check_element("basic hdr length", "0",
+                       "usage: the format is 0x0-0x7e or 0-126, must be even\n",
+                       cmd_data_check_integer, (cmd, &tmpdata,
+                               0x7e, 0x0));
+    entry.basic_hdr_len = tmpdata;
+
+    cmd_data_check_element("option length unit", "1byte",
+                       "usage: 1byte, 2bytes, 4bytes, 8bytes\n",
+                       cmd_data_check_attr, ("tunnel_program_opt_len_unit", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.opt_len_unit = tmpdata & 0x3;
+
+    cmd_data_check_element("option length mask", "0",
+                       "usage: the format is 0x0-0xffff or 0-65535\n",
+                       cmd_data_check_integer, (cmd, &tmpdata,
+                               0xffff, 0x0));
+    entry.opt_len_mask = tmpdata & 0xffff;
+
+    cmd_data_check_element("udf0 offset", "0",
+                       "usage: the format is 0x0-0x7e or 0-126, must be even\n",
+                       cmd_data_check_integer, (cmd, &tmpdata,
+                               0x7e, 0x0));
+    entry.udf_offset[0] = tmpdata;
+
+    cmd_data_check_element("udf1 offset", "0",
+                       "usage: the format is 0x0-0x7e or 0-126, must be even\n",
+                       cmd_data_check_integer, (cmd, &tmpdata,
+                               0x7e, 0x0));
+    entry.udf_offset[1] = tmpdata;
+    cmd_data_check_element("udf2 offset", "0",
+                       "usage: the format is 0x0-0x7e or 0-126, must be even\n",
+                       cmd_data_check_integer, (cmd, &tmpdata,
+                               0x7e, 0x0));
+    entry.udf_offset[2] = tmpdata;
+
+    *(fal_tunnel_program_cfg_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_tunnel_program_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_tunnel_program_cfg_t *entry;
+    a_uint32_t tmpdata = 0;
+
+    entry = (fal_tunnel_program_cfg_t *) buf;
+
+    tmpdata = entry->program_pos_mode;
+    cmd_data_print_attr("tunnel_program_pos_mode", "\n[program_pos_mode]:",
+                    &tmpdata, sizeof(tmpdata));
+    tmpdata = entry->inner_type_mode;
+    cmd_data_print_attr("tunnel_program_inner_type_mode", "  [inner_type_mode]:",
+                    &tmpdata, sizeof(tmpdata));
+    if(entry->inner_type_mode == 0)
+    {
+        tmpdata = entry->inner_hdr_type;
+        cmd_data_print_attr("hdr_type", " [inner_type]:",
+                    &tmpdata, sizeof(tmpdata));
+    }
+    dprintf("\n[basic_hdr_len]:0x%x", entry->basic_hdr_len);
+    tmpdata = entry->opt_len_unit;
+    cmd_data_print_attr("tunnel_program_opt_len_unit", "  [opt_len_unit]:",
+                    &tmpdata, sizeof(tmpdata));
+    dprintf("  [opt_len_mask]:0x%x", entry->opt_len_mask);
+
+    dprintf("\n[udf0_offset]:0x%x", entry->udf_offset[0]);
+    dprintf("  [udf1_offset]:0x%x", entry->udf_offset[1]);
+    dprintf("  [udf2_offset]:0x%x", entry->udf_offset[2]);
+
+    return;
+}
+
+sw_error_t
+cmd_data_check_tunnel_program_udf(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_tunnel_program_udf_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_tunnel_program_udf_t));
+
+    /* get udf0 field configuration */
+    cmd_data_check_element("udf0", "no",
+                       "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                       (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
+    if(tmpdata)
+    {
+        cmd_data_check_element("udf0", NULL,
+                           "usage: the format is 0x0-0xffff\n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffff, 0x0));
+        entry.udf_val[0] = tmpdata & 0xffff;
+
+        cmd_data_check_element("udf0 mask", NULL,
+                           "usage: the format is 0x0-0xffff\n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffff, 0x0));
+        entry.udf_mask[0] = tmpdata & 0xffff;
+        FAL_TUNNEL_PROGRAM_UDF_FIELD_FLG_SET(entry.field_flag, FAL_TUNNEL_PROGRAM_UDF_FIELD_UDF0);
+    }
+
+    /* get udf1 field configuration */
+    cmd_data_check_element("udf1", "no",
+                       "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                       (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
+    if(tmpdata)
+    {
+        cmd_data_check_element("udf1", NULL,
+                           "usage: the format is 0x0-0xffff\n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffff, 0x0));
+        entry.udf_val[1] = tmpdata & 0xffff;
+
+        cmd_data_check_element("udf1 mask", NULL,
+                           "usage: the format is 0x0-0xffff\n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffff, 0x0));
+        entry.udf_mask[1] = tmpdata & 0xffff;
+        FAL_TUNNEL_PROGRAM_UDF_FIELD_FLG_SET(entry.field_flag, FAL_TUNNEL_PROGRAM_UDF_FIELD_UDF1);
+    }
+
+    /* get udf2 field configuration */
+    cmd_data_check_element("udf2", "no",
+                       "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                       (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
+    if(tmpdata)
+    {
+        cmd_data_check_element("udf2", "0",
+                           "usage: the format is 0x0-0xffff\n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffff, 0x0));
+        entry.udf_val[2] = tmpdata & 0xffff;
+
+        cmd_data_check_element("udf2 mask", "0",
+                           "usage: the format is 0x0-0xffff\n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffff, 0x0));
+        entry.udf_mask[2] = tmpdata & 0xffff;
+        FAL_TUNNEL_PROGRAM_UDF_FIELD_FLG_SET(entry.field_flag, FAL_TUNNEL_PROGRAM_UDF_FIELD_UDF2);
+    }
+
+    /* get rule inverse configuration */
+    cmd_data_check_element("rule inverse", "no", "usage: <yes/no/y/n>\n",
+                       cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                               sizeof (a_bool_t)));
+
+    if (tmpdata)
+    {
+        FAL_TUNNEL_PROGRAM_UDF_FIELD_FLG_SET(entry.field_flag,
+                        FAL_TUNNEL_PROGRAM_UDF_FIELD_INVERSE);
+    }
+
+    /* get inner hdr type action */
+    cmd_data_check_element("inner hdr type valid", "no",
+                       "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                       (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
+    if(tmpdata)
+    {
+        cmd_data_check_element("inner hdr type", "ethernet",
+                           "usage: ethernet, ethernet-tag, ipv4, ipv6\n",
+                           cmd_data_check_attr, ("hdr_type", cmd,
+                                   &tmpdata, sizeof(tmpdata)));
+        entry.inner_hdr_type = tmpdata & 0x3;
+
+        FAL_TUNNEL_PROGRAM_UDF_ACTION_FLG_SET(entry.action_flag,
+                        FAL_TUNNEL_PROGRAM_UDF_ACTION_INNER_HDR_TYPE);
+    }
+
+    /* get udf hdr length action */
+    cmd_data_check_element("udf hdr length valid", "no",
+                       "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                       (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
+    if(tmpdata)
+    {
+        cmd_data_check_element("udf hdr length", "0",
+                           "usage: the format is 0x0-0x1e or 0-30, must be even\n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0x1e,0x0));
+        entry.udf_hdr_len = tmpdata;
+
+        FAL_TUNNEL_PROGRAM_UDF_ACTION_FLG_SET(entry.action_flag,
+                        FAL_TUNNEL_PROGRAM_UDF_ACTION_UDF_HDR_LEN);
+    }
+
+    /* get exceptioin en*/
+    cmd_data_check_element("exceptioin", "no", "usage: <yes/no/y/n>\n",
+                       cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                               sizeof (a_bool_t)));
+
+    if (tmpdata)
+    {
+        FAL_TUNNEL_PROGRAM_UDF_ACTION_FLG_SET(entry.action_flag,
+                        FAL_TUNNEL_PROGRAM_UDF_ACTION_EXCEPTION_EN);
+    }
+
+    *(fal_tunnel_program_udf_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_tunnel_program_udf(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_tunnel_program_udf_t *entry;
+    a_uint32_t tmpdata = 0;
+
+    entry = (fal_tunnel_program_udf_t *) buf;
+
+    /* print program udf rule */
+    if (FAL_TUNNEL_PROGRAM_UDF_FIELD_FLG_TST(entry->field_flag,
+                        FAL_TUNNEL_PROGRAM_UDF_FIELD_UDF0))
+    {
+        dprintf("\n[udf0]:0x%x", entry->udf_val[0]);
+        dprintf("  [udf0_mask]:0x%x", entry->udf_mask[0]);
+    }
+    if (FAL_TUNNEL_PROGRAM_UDF_FIELD_FLG_TST(entry->field_flag,
+                        FAL_TUNNEL_PROGRAM_UDF_FIELD_UDF1))
+    {
+        dprintf("\n[udf1]:0x%x", entry->udf_val[1]);
+        dprintf("  [udf1_mask]:0x%x", entry->udf_mask[1]);
+    }
+    if (FAL_TUNNEL_PROGRAM_UDF_FIELD_FLG_TST(entry->field_flag,
+                        FAL_TUNNEL_PROGRAM_UDF_FIELD_UDF2))
+    {
+        dprintf("\n[udf2]:0x%x", entry->udf_val[2]);
+        dprintf("  [udf2_mask]:0x%x", entry->udf_mask[2]);
+    }
+    if (FAL_TUNNEL_PROGRAM_UDF_FIELD_FLG_TST(entry->field_flag,
+                        FAL_TUNNEL_PROGRAM_UDF_FIELD_INVERSE))
+    {
+        dprintf("\n[rule_inverse]:yes");
+    }
+
+    /* print program udf action */
+    if (FAL_TUNNEL_PROGRAM_UDF_ACTION_FLG_TST(entry->action_flag,
+                        FAL_TUNNEL_PROGRAM_UDF_ACTION_INNER_HDR_TYPE))
+    {
+        tmpdata = entry->inner_hdr_type;
+        dprintf("\n[inner_hdr_type_valid]:yes");
+        cmd_data_print_attr("hdr_type", " [inner_hdr_type]:",
+                    &tmpdata, sizeof(tmpdata));
+    }
+    if (FAL_TUNNEL_PROGRAM_UDF_ACTION_FLG_TST(entry->action_flag,
+                        FAL_TUNNEL_PROGRAM_UDF_ACTION_UDF_HDR_LEN))
+    {
+        dprintf("\n[udf_hdr_len_valid]:yes");
+        dprintf("  [udf_hdr_len]:0x%x", entry->udf_hdr_len);
+    }
+    if (FAL_TUNNEL_PROGRAM_UDF_ACTION_FLG_TST(entry->action_flag,
+                        FAL_TUNNEL_PROGRAM_UDF_ACTION_EXCEPTION_EN))
+    {
+        dprintf("\n[exceptioin_en]:yes");
+    }
+    dprintf("\n");
     return;
 }
 

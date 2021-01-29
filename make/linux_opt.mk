@@ -166,6 +166,10 @@ ifeq (TRUE, $(IN_MAPT))
 	MODULE_CFLAG += -DIN_MAPT
 endif
 
+ifeq (TRUE, $(IN_TUNNEL_PROGRAM))
+  MODULE_CFLAG += -DIN_TUNNEL_PROGRAM
+endif
+
 #auto_insert_flag
 
 #ifdef UK_NL_PROT
