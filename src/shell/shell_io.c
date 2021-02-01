@@ -152,6 +152,14 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"mtu_type",
+		{
+			{"ethernet", FAL_MTU_ETHERNET},
+			{"ip", FAL_MTU_IP},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -851,6 +859,27 @@ cmd_data_print_enable(a_char_t * param_name, a_uint32_t * buf, a_uint32_t size)
     }
 }
 /*qca808x_end*/
+#define cmd_data_check_element(info, defval, usage, chk_func, param) \
+{\
+    sw_error_t ret;\
+    do {\
+        cmd = get_sub_cmd(info, defval);\
+        SW_RTN_ON_NULL_PARAM(cmd);\
+        \
+        if (!strncasecmp(cmd, "quit", 4)) {\
+            return SW_BAD_VALUE;\
+        } else if (!strncasecmp(cmd, "help", 4)) {\
+            dprintf("%s", usage);\
+            ret = SW_BAD_VALUE;\
+        } else {\
+            ret = chk_func param; \
+            if (SW_OK != ret)\
+                dprintf("%s", usage);\
+            else\
+            append_acl_cmd(cmd);\
+        }\
+    } while (talk_mode && (SW_OK != ret));\
+}
 /*mib*/
 static char *mib_regname[] =
 {
@@ -1634,6 +1663,17 @@ cmd_data_print_mtu_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 		dprintf("mtu_action:rdtcpu\n");
 	else
 		dprintf("mtu_action:unknown\n");
+	cmd_data_print_enable("mtu_enable", &mtu->mtu_enable,
+		sizeof(mtu->mtu_enable));
+	dprintf("\n");
+	cmd_data_print_attr("mtu_type", "[mtu_type]:",
+		&(mtu->mtu_type), sizeof(mtu->mtu_type));
+	dprintf("\n");
+	cmd_data_print_uint32("extra_header_len", &mtu->extra_header_len,
+		sizeof(mtu->extra_header_len));
+	dprintf("\n");
+	cmd_data_print_uint32("eg_vlan_tag_flag", &mtu->eg_vlan_tag_flag,
+		sizeof(mtu->eg_vlan_tag_flag));
 }
 
 void
@@ -1715,13 +1755,36 @@ cmd_data_check_mtu_entry(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-	    rv = cmd_data_check_maccmd(cmd, (fal_fwd_cmd_t *) (&(entry.action)),
-				sizeof (a_uint32_t));
+            rv = cmd_data_check_maccmd(cmd, (fal_fwd_cmd_t *) (&(entry.action)),
+                sizeof (a_uint32_t));
             if (SW_OK != rv)
                 dprintf("usage: usage: forward/drop/cpycpu/rdtcpu\n");
         }
     }
     while (talk_mode && (SW_OK != rv));
+
+    cmd_data_check_element("mtu_enable", "enable",
+                        "usage: usage: enable/disable\n",
+                        cmd_data_check_enable, (cmd,
+                        &(entry.mtu_enable), sizeof(entry.mtu_enable)));
+
+    cmd_data_check_element("mtu_type", "ethernet",
+                        "usage:mtu_type:ethernet/ip, etc\n",
+                        cmd_data_check_attr, ("mtu_type", cmd,
+                        &(entry.mtu_type), sizeof(entry.mtu_type)));
+
+    cmd_data_check_element("extra_header_len", "128",
+                        "usage: extra_header_len\n",
+                        cmd_data_check_uint32, (cmd,
+                        &(entry.extra_header_len),
+                        sizeof(entry.extra_header_len)));
+
+    cmd_data_check_element("eg_vlan_tag_flag", "0",
+                        "usage: eg_vlan_tag_flag,bit 0 ctag, bit 1 stag\n",
+                        cmd_data_check_uint32, (cmd,
+                        &(entry.eg_vlan_tag_flag),
+                        sizeof(entry.eg_vlan_tag_flag)));
+
 
     *(fal_mtu_ctrl_t *)val = entry;
     return SW_OK;
@@ -3715,28 +3778,6 @@ cmd_data_print_maclimit_ctrl(a_uint8_t * param_name, a_uint32_t * buf,
     return;
 }
 /*qca808x_start*/
-
-#define cmd_data_check_element(info, defval, usage, chk_func, param) \
-{\
-    sw_error_t ret;\
-    do {\
-        cmd = get_sub_cmd(info, defval);\
-        SW_RTN_ON_NULL_PARAM(cmd);\
-        \
-        if (!strncasecmp(cmd, "quit", 4)) {\
-            return SW_BAD_VALUE;\
-        } else if (!strncasecmp(cmd, "help", 4)) {\
-            dprintf("%s", usage);\
-            ret = SW_BAD_VALUE;\
-        } else {\
-            ret = chk_func param; \
-            if (SW_OK != ret)\
-                dprintf("%s", usage);\
-            else\
-            append_acl_cmd(cmd);\
-        }\
-    } while (talk_mode && (SW_OK != ret));\
-}
 
 sw_error_t
 cmd_data_check_integer(char *cmd_str, a_uint32_t * arg_val, a_uint32_t max_val,
