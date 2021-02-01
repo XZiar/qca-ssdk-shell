@@ -26841,6 +26841,30 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 
 	do
 	{
+		cmd = get_sub_cmd("bypass_bitmap_3", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: refer to service spec\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_uint32(cmd, &entry.bypass_bitmap[3],
+				sizeof (a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: refer to service spec\n");
+		}
+	}
+	while (talk_mode && (SW_OK != rv));
+
+	do
+	{
 		cmd = get_sub_cmd("direction", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
@@ -26973,8 +26997,10 @@ cmd_data_print_servcode_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 	dprintf("\ndestport_en:%s  destport_id:%d\n",
 				entry->dest_port_valid? "ENABLE" : "DISABLE",
 				entry->dest_port_id);
-	dprintf("bypass_bitmap_0:0x%x  bypass_bitmap_1:0x%x  bypass_bitmap_2:0x%x\n",
-				entry->bypass_bitmap[0], entry->bypass_bitmap[1], entry->bypass_bitmap[2]);
+	dprintf("bypass_bitmap_0:0x%x  bypass_bitmap_1:0x%x  "
+			"bypass_bitmap_2:0x%x  bypass_bitmap_3:0x%x\n",
+				entry->bypass_bitmap[0], entry->bypass_bitmap[1],
+				entry->bypass_bitmap[2], entry->bypass_bitmap[3]);
 	dprintf("direction:%d\n", entry->direction);
 	dprintf("field_update_bitmap:0x%x  next_servicecode:%d\n",
 				entry->field_update_bitmap, entry->next_service_code);
