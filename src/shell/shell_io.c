@@ -20,11 +20,93 @@
     do { if ((rtn) == NULL) return SW_BAD_PARAM; } while(0);
 
 #define DEFAULT_FLAG "default"
+#define MAX_ARRT_NUM 32
+#define INVALID_ARRT_VALUE 0xFFFFFFFF
 static char **full_cmdstrp;
 static int talk_mode = 1;
 
 char g_aclcmd[500] = "\0";
 a_uint32_t g_aclcmd_len = 0;;
+
+struct sub_attr_des_t
+{
+	char *sub_attr_name;
+	a_uint32_t value;
+};
+
+struct attr_des_t
+{
+	char *attr_name;
+	struct sub_attr_des_t sub_attr_des[MAX_ARRT_NUM];
+};
+
+struct attr_des_t g_attr_des[] =
+{
+	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
+};
+
+sw_error_t
+cmd_data_check_attr(char * attr_name, char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
+{
+	a_uint32_t i, j;
+
+	if (NULL == cmd_str)
+	{
+		return SW_BAD_VALUE;
+	}
+
+	for (i = 0; g_attr_des[i].attr_name != NULL; i++)
+	{
+		if (!strcasecmp(attr_name, g_attr_des[i].attr_name))
+		{ /* find attr */
+			break;
+		}
+	}
+	if (g_attr_des[i].attr_name == NULL)
+	{
+		return SW_BAD_VALUE;
+	}
+	for (j = 0; g_attr_des[i].sub_attr_des[j].sub_attr_name != NULL; j++)
+	{
+		if (!strcasecmp(cmd_str, g_attr_des[i].sub_attr_des[j].sub_attr_name))
+		{ /* find sub attr */
+			*arg_val = g_attr_des[i].sub_attr_des[j].value;
+			return SW_OK;
+		}
+	}
+	return SW_BAD_VALUE;
+}
+
+void
+cmd_data_print_attr(char * attr_name, char * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	a_uint32_t *val;
+	a_uint32_t i, j;
+	val =  buf;
+	dprintf("%s", param_name);
+
+	for (i = 0; g_attr_des[i].attr_name != NULL; i++)
+	{
+		if (!strcasecmp(attr_name, g_attr_des[i].attr_name))
+		{ /* find attr */
+			break;
+		}
+	}
+	if (g_attr_des[i].attr_name == NULL)
+	{
+		dprintf("unknow");
+	}
+	for (j = 0; g_attr_des[i].sub_attr_des[j].value != INVALID_ARRT_VALUE; j++)
+	{
+		if (*val == g_attr_des[i].sub_attr_des[j].value)
+		{ /* find value */
+			dprintf("%s", g_attr_des[i].sub_attr_des[j].sub_attr_name);
+			return;
+		}
+	}
+	/*not find*/
+	dprintf("unknow");
+}
 
 void append_acl_cmd(char * cmd)
 {
