@@ -353,6 +353,7 @@ cmd_parse_sw(char **cmd_str, a_ulong_t * arg_val)
                               api_id == SW_CMD_TUNNEL_VLAN_ENTRY_SHOW ||
                               api_id == SW_CMD_TUNNEL_ENCAP_ENTRY_SHOW ||
                               api_id == SW_CMD_GENEVE_ENTRY_SHOW ||
+                              api_id == SW_CMD_MAPT_ENTRY_SHOW ||
                               api_id == SW_CMD_PUBADDR_SHOW )) ||
 		    ( arg_index == 1 && (api_id == SW_CMD_SET_DEVID ||
 					 api_id == SW_CMD_VXLAN_ENTRY_SHOW )) ||

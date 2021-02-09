@@ -263,6 +263,9 @@ typedef enum
 	SW_VXLAN_TYPE,
 	SW_TUNNEL_UDP_ENTRY,
 	SW_VXLAN_GPE_PROTO,
+	SW_MAPT_DECAP_CTRL,
+	SW_MAPT_DECAP_RULE_ENTRY,
+	SW_MAPT_DECAP_ENTRY,
 /* auto_insert_flag */
 } sw_data_type_e;
 

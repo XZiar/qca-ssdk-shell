@@ -941,3 +941,41 @@ cmd_show_geneve_entry(a_ulong_t *arg_val)
 
 	return SW_OK;
 }
+
+sw_error_t
+cmd_show_mapt_entry(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t cnt;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_mapt_decap_entry_t *decap_entry = (fal_mapt_decap_entry_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(decap_entry, sizeof(fal_mapt_decap_entry_t));
+
+	cnt = 0;
+	arg_val[0] = SW_API_MAPT_DECAP_ENTRY_GETFIRST;
+
+	while (1) {
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = (a_ulong_t)decap_entry;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+
+		arg_val[0] = SW_API_MAPT_DECAP_ENTRY_GETNEXT;
+		cnt++;
+	}
+
+	if((rtn != SW_OK) && (rtn != SW_NOT_FOUND)) {
+		cmd_print_error(rtn);
+	} else {
+		dprintf("\nmapt total %d entries\n", cnt);
+	}
+
+	return SW_OK;
+}

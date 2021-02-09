@@ -55,6 +55,7 @@ enum{
 	FAL_MODULE_TUNNEL,
 	FAL_MODULE_VXLAN,
 	FAL_MODULE_GENEVE,
+	FAL_MODULE_MAPT,
 /* auto_insert_flag */
 	FAL_MODULE_MAX,
 };

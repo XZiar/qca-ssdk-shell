@@ -49,6 +49,7 @@ extern "C" {
     sw_error_t cmd_show_tunnel_encap_entry(a_ulong_t *arg_val);
     sw_error_t cmd_show_vxlan_entry(a_ulong_t *arg_val);
     sw_error_t cmd_show_geneve_entry(a_ulong_t *arg_val);
+    sw_error_t cmd_show_mapt_entry(a_ulong_t *arg_val);
 /*qca808x_start*/
 #ifdef __cplusplus
 }

@@ -1586,6 +1586,37 @@ struct cmd_des_t gcmd_des[] =
 	},
 #endif
 
+	/*mapt*/
+#ifdef IN_MAPT
+	{
+		"mapt", "config mapt",
+		{
+			{"decap_ctrl", "set", "set decap_ctrl of mapt", " <decap_ctrl>",
+				SW_API_MAPT_DECAP_CTRL_SET, NULL},
+			{"decap_ctrl", "get", "get decap_ctrl of mapt", "",
+				SW_API_MAPT_DECAP_CTRL_GET, NULL},
+			{"decap_rule_entry", "set", "set decap_rule_entry of mapt",
+				"<rule_id> <decap_rule_entry>",
+				SW_API_MAPT_DECAP_RULE_ENTRY_SET, NULL},
+			{"decap_rule_entry", "get", "get decap_rule_entry of mapt",
+				"<rule_id>", SW_API_MAPT_DECAP_RULE_ENTRY_GET, NULL},
+			{"decap_rule_entry", "del", "get decap_rule_entry of mapt",
+				"<rule_id>", SW_API_MAPT_DECAP_RULE_ENTRY_DEL, NULL},
+			{"decap_entry", "add", "add decap_entry of mapt", " <decap_entry>",
+				SW_API_MAPT_DECAP_ENTRY_ADD, NULL},
+			{"decap_entry", "del", "delete decap_entry of mapt", " <decap_entry>",
+				SW_API_MAPT_DECAP_ENTRY_DEL, NULL},
+			{"decap_entry", "getfirst", "get first decap_entry of mapt", "",
+				SW_API_MAPT_DECAP_ENTRY_GETFIRST, NULL},
+			{"decap_entry", "getnext", "get next decap_entry of mapt", "<decap_entry>",
+				SW_API_MAPT_DECAP_ENTRY_GETNEXT, NULL},
+			{"decap_entry", "show", "show mapt decap entries", "",
+				SW_CMD_MAPT_ENTRY_SHOW, cmd_show_mapt_entry},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
+
 /* auto_insert_flag */
 
 /*qca808x_start*/

@@ -1122,6 +1122,24 @@ cmd_data_check_vxlan_gpe_proto(char * cmd_str, void * val, a_uint32_t size);
 void
 cmd_data_print_vxlan_gpe_proto(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
+sw_error_t
+cmd_data_check_mapt_decap_ctrl(char *info, void *val, a_uint32_t size);
+
+void
+cmd_data_print_mapt_decap_ctrl(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_mapt_decap_rule_entry(char *info, void *val, a_uint32_t size);
+
+void
+cmd_data_print_mapt_decap_rule_entry(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_mapt_decap_entry(char *info, void *val, a_uint32_t size);
+
+void
+cmd_data_print_mapt_decap_entry(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
 /* auto_insert_flag */
 
 /*qca808x_start*/

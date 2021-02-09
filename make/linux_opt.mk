@@ -162,6 +162,10 @@ ifeq (TRUE, $(IN_GENEVE))
   MODULE_CFLAG += -DIN_GENEVE
 endif
 
+ifeq (TRUE, $(IN_MAPT))
+	MODULE_CFLAG += -DIN_MAPT
+endif
+
 #auto_insert_flag
 
 #ifdef UK_NL_PROT
