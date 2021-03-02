@@ -160,6 +160,51 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"l3_type",
+		{
+			{"others", FAL_L3_TYPE_OTHERS},
+			{"ipv4", FAL_L3_TYPE_IPV4},
+			{"arp", FAL_L3_TYPE_ARP},
+			{"ipv6", FAL_L3_TYPE_IPV6},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
+		"l4_type",
+		{
+			{"others", FAL_L4_TYPE_OTHERS},
+			{"tcp", FAL_L4_TYPE_TCP},
+			{"udp", FAL_L4_TYPE_UDP},
+			{"udp-lite", FAL_L4_TYPE_UDP_LITE},
+			{"icmp", FAL_L4_TYPE_ICMP},
+			{"gre", FAL_L4_TYPE_GRE},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
+		"tunnel_overlay_type",
+		{
+			{"gre-tap", FAL_TUNNEL_OVERLAY_TYPE_GRE_TAP},
+			{"vxlan", FAL_TUNNEL_OVERLAY_TYPE_VXLAN},
+			{"vxlan-gpe", FAL_TUNNEL_OVERLAY_TYPE_VXLAN_GPE},
+			{"geneve", FAL_TUNNEL_OVERLAY_TYPE_GENEVE},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
+		"tunnel_udf_type",
+		{
+			{"l2", FAL_TUNNEL_UDF_TYPE_L2},
+			{"l3", FAL_TUNNEL_UDF_TYPE_L3},
+			{"l4", FAL_TUNNEL_UDF_TYPE_L4},
+			{"overlay", FAL_TUNNEL_UDF_TYPE_OVERLAY},
+			{"program", FAL_TUNNEL_UDF_TYPE_PROGRAM},
+			{"payload", FAL_TUNNEL_UDF_TYPE_PAYLOAD},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -606,6 +651,10 @@ static sw_data_type_t sw_data_type[] =
 		    cmd_data_print_tunnel_encap_header_ctrl),
     SW_TYPE_DEF(SW_TUNNEL_DECAP_HEADER_CTRL, cmd_data_check_tunnel_decap_header_ctrl,
 		    cmd_data_print_tunnel_decap_header_ctrl),
+    SW_TYPE_DEF(SW_TUNNEL_UDF_PROFILE_ENTRY, cmd_data_check_tunnel_udf_profile_entry,
+		    cmd_data_print_tunnel_udf_profile_entry),
+    SW_TYPE_DEF(SW_TUNNEL_UDF_TYPE, cmd_data_check_tunnel_udf_type,
+		    cmd_data_print_tunnel_udf_type),
     SW_TYPE_DEF(SW_VXLAN_TYPE, cmd_data_check_vxlan_type, NULL),
     SW_TYPE_DEF(SW_TUNNEL_UDP_ENTRY, cmd_data_check_tunnel_udp_entry,
 		    cmd_data_print_tunnel_udp_entry),
@@ -35911,6 +35960,158 @@ cmd_data_print_tunnel_global_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32
 			entry->hash_mode[0], entry->hash_mode[1]);
 
 	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_tunnel_udf_profile_entry(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_tunnel_udf_profile_entry_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_tunnel_udf_profile_entry_t));
+
+    dprintf("\n");
+    /* get l3 type configuration */
+    cmd_data_check_element("l3 type incl", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (tmpdata)));
+
+    if (tmpdata)
+    {
+        cmd_data_check_element("l3 type", "ipv4",
+                               "usage: ipv4, ipv6, arp, others \n",
+                               cmd_data_check_attr, ("l3_type", cmd,
+                                       &tmpdata, sizeof(tmpdata)));
+        entry.l3_type = tmpdata & 0x3;
+        FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_SET(entry.field_flag,
+                FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_L3_TYPE);
+    }
+
+    /* get l4 type configuration */
+    cmd_data_check_element("l4 type incl", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (tmpdata)));
+
+    if (tmpdata)
+    {
+        cmd_data_check_element("l4 type", "tcp",
+                               "usage: tcp, udp, udp-lite, icmp, gre, others \n",
+                               cmd_data_check_attr, ("l4_type", cmd,
+                                       &tmpdata, sizeof(tmpdata)));
+        entry.l4_type = tmpdata & 0x7;
+        FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_SET(entry.field_flag,
+                FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_L4_TYPE);
+    }
+
+    /* get overlay type configuration */
+    cmd_data_check_element("overlay type incl", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (tmpdata)));
+
+    if (tmpdata)
+    {
+        cmd_data_check_element("overlay type", "gre-tap",
+                               "usage: gre-tap, vxlan, vxlan-gpe, geneve\n",
+                               cmd_data_check_attr, ("tunnel_overlay_type", cmd,
+                                       &tmpdata, sizeof(tmpdata)));
+        entry.overlay_type = tmpdata & 0x3;
+        FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_SET(entry.field_flag,
+                FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_OVERLAY_TYPE);
+    }
+
+    /* get program type configuration */
+    cmd_data_check_element("program type incl", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (tmpdata)));
+
+    if (tmpdata)
+    {
+        cmd_data_check_element("program type", "program0",
+                               "usage: program0, program1, program2,"
+                               " program3, program4, program5\n",
+                               cmd_data_check_attr, ("tunnel_program_type", cmd,
+                                       &tmpdata, sizeof(tmpdata)));
+        entry.program_type = tmpdata & 0x7;
+        FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_SET(entry.field_flag,
+                FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_PROGRAM_TYPE);
+    }
+
+    *(fal_tunnel_udf_profile_entry_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_tunnel_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_tunnel_udf_profile_entry_t *entry;
+    a_uint32_t tmpdata = 0;
+
+    entry = (fal_tunnel_udf_profile_entry_t *) buf;
+
+    if (FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_TST(entry->field_flag,
+        FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_L3_TYPE))
+    {
+        tmpdata = entry->l3_type;
+        dprintf("\n[l3_type_incl]:yes");
+        cmd_data_print_attr("l3_type", " [l3_type]:", &tmpdata, sizeof(tmpdata));
+    }
+    else
+    {
+        dprintf("\n[l3_type]:all");
+    }
+
+    if (FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_TST(entry->field_flag,
+        FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_L4_TYPE))
+    {
+        tmpdata = entry->l4_type;
+        dprintf("\n[l4_type_incl]:yes");
+        cmd_data_print_attr("l4_type", " [l4_type]:", &tmpdata, sizeof(tmpdata));
+    }
+    else
+    {
+        dprintf("\n[l4_type]:all");
+    }
+    if (FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_TST(entry->field_flag,
+        FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_OVERLAY_TYPE))
+    {
+        tmpdata = entry->overlay_type;
+        dprintf("\n[overlay_type_incl]:yes");
+        cmd_data_print_attr("tunnel_overlay_type", " [overlay_type]:", &tmpdata, sizeof(tmpdata));
+    }
+    else
+    {
+        dprintf("\n[overlay_type]:all");
+    }
+    if (FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_TST(entry->field_flag,
+        FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_PROGRAM_TYPE))
+    {
+        tmpdata = entry->program_type;
+        dprintf("\n[program_type_incl]:yes");
+        cmd_data_print_attr("tunnel_program_type", " [program_type]:", &tmpdata, sizeof(tmpdata));
+    }
+    else
+    {
+        dprintf("\n[program_type]:all");
+    }
+    dprintf("\n");
+    return;
+}
+
+sw_error_t
+cmd_data_check_tunnel_udf_type(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
+{
+
+    return cmd_data_check_attr("tunnel_udf_type", cmd_str,
+                    arg_val, sizeof(*arg_val));
+}
+
+void
+cmd_data_print_tunnel_udf_type(a_char_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+
+    return cmd_data_print_attr("tunnel_udf_type",
+                    param_name, buf, sizeof(a_uint32_t));
 }
 
 sw_error_t

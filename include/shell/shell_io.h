@@ -1117,6 +1117,18 @@ void
 cmd_data_print_tunnel_global_cfg(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
 
 sw_error_t
+cmd_data_check_tunnel_udf_profile_entry(char * cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_tunnel_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_udf_type(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
+
+void
+cmd_data_print_tunnel_udf_type(a_char_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
 cmd_data_check_vxlan_type(char * cmd_str, a_uint32_t * arg_val, a_uint32_t size);
 
 sw_error_t

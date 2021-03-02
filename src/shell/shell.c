@@ -360,7 +360,8 @@ cmd_parse_sw(char **cmd_str, a_ulong_t * arg_val)
 		    ( arg_index == 1 && (api_id == SW_CMD_SET_DEVID ||
 					 api_id == SW_CMD_VXLAN_ENTRY_SHOW ||
 					 api_id == SW_CMD_TUNNEL_PROGRAM_ENTRY_SHOW ||
-					 api_id == SW_CMD_TUNNEL_PROGRAM_UDF_SHOW )) ||
+					 api_id == SW_CMD_TUNNEL_PROGRAM_UDF_SHOW ||
+					 api_id == SW_CMD_TUNNEL_UDF_PROFILE_ENTRY_SHOW)) ||
 		    ( arg_index == 2 && api_id == SW_CMD_PT_VLAN_TRANS_ADV_SHOW) )
         return SW_OK;
 
