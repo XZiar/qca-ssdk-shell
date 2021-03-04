@@ -402,3 +402,22 @@ fal_qm_port_source_profile_get(
     return rv;
 }
 
+sw_error_t
+fal_qm_enqueue_config_set(a_uint32_t dev_id,
+		fal_enqueue_cfg_t *enqueue_cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_ENQUEUE_CFG_SET, dev_id, enqueue_cfg);
+    return rv;
+}
+
+sw_error_t
+fal_qm_enqueue_config_get(a_uint32_t dev_id,
+		fal_enqueue_cfg_t *enqueue_cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_ENQUEUE_CFG_GET, dev_id, enqueue_cfg);
+    return rv;
+}

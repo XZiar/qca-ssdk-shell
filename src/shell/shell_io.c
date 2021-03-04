@@ -612,6 +612,8 @@ static sw_data_type_t sw_data_type[] =
 		    cmd_data_print_tunnel_program_cfg),
     SW_TYPE_DEF(SW_TUNNEL_PROGRAM_UDF, cmd_data_check_tunnel_program_udf,
 		    cmd_data_print_tunnel_program_udf),
+    SW_TYPE_DEF(SW_ENQUEUE_CFG, cmd_data_check_enqueue_cfg,
+		    cmd_data_print_enqueue_cfg),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -36599,4 +36601,309 @@ cmd_data_print_mapt_decap_rule_entry(a_uint8_t *param_name, a_ulong_t *buf, a_ui
 	dprintf("\n");
 }
 
+static const a_char_t *enqueue_type_str[FAL_ENQUEUE_INVALID] = {
+	"flow",
+	"vsi",
+	"servcode",
+};
+
+sw_error_t
+cmd_data_check_enqueue_type(char *cmd_str,
+		fal_enqueue_type_t *arg_val, a_uint32_t size)
+{
+	fal_enqueue_type_t type;
+	for (type = FAL_ENQUEUE_FLOW;
+			type < FAL_ENQUEUE_INVALID; type++) {
+		if (!strcasecmp(cmd_str, enqueue_type_str[type])) {
+			*arg_val = type;
+			break;
+		}
+	}
+
+	if (type == FAL_ENQUEUE_INVALID) {
+		return SW_BAD_VALUE;
+	} else {
+		return SW_OK;
+	}
+}
+
+void
+cmd_data_print_enqueue_type(a_char_t *param_name,
+		fal_enqueue_type_t buf, a_uint32_t size)
+{
+    dprintf("%s:", param_name);
+    switch (buf) {
+	    case FAL_ENQUEUE_FLOW:
+	    case FAL_ENQUEUE_VSI:
+	    case FAL_ENQUEUE_SERVCODE:
+		    dprintf("%s", enqueue_type_str[buf]);
+		    break;
+	    default:
+		    dprintf("unknown value %d", buf);
+		    break;
+    }
+}
+
+sw_error_t
+cmd_data_check_enqueue_cfg(char *cmd_str, fal_enqueue_cfg_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	sw_error_t rv;
+	fal_enqueue_cfg_t entry;
+	a_uint32_t tmp = 0;
+
+	aos_mem_zero(&entry, sizeof(fal_enqueue_cfg_t));
+
+	do {
+		cmd = get_sub_cmd("enqueue_type", "flow");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: flow, vsi, servcode\n");
+			rv = SW_BAD_VALUE;
+		} else {
+			rv = cmd_data_check_enqueue_type(cmd, &entry.rule_entry.enqueue_type,
+					sizeof(entry.rule_entry.enqueue_type));
+			if (SW_OK != rv)
+				dprintf("usage: flow, vsi, servcode\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("enqueue_en", "n");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.index_entry.enqueue_en),
+					sizeof(a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	switch (entry.rule_entry.enqueue_type) {
+		case FAL_ENQUEUE_FLOW:
+			do {
+				cmd = get_sub_cmd("flow_pri_profile", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4)) {
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4)) {
+					dprintf("usage: flow qos profile id for enqueue map\n");
+					rv = SW_BAD_VALUE;
+				} else {
+					rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: flow qos profile id for "
+								"enqueue map\n");
+					else
+						entry.rule_entry.flow_pri_profile = tmp;
+				}
+			} while(talk_mode && (SW_OK != rv));
+
+			do {
+				cmd = get_sub_cmd("enqueue_vport", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4)) {
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4)) {
+					dprintf("usage: enqueue port id to index egress queue\n");
+					rv = SW_BAD_VALUE;
+				} else {
+					rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: enqueue port id to index "
+								"egress queue\n");
+					else
+						entry.index_entry.enqueue_vport = tmp;
+				}
+			} while(talk_mode && (SW_OK != rv));
+
+			break;
+		case FAL_ENQUEUE_VSI:
+			do {
+				cmd = get_sub_cmd("vsi", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4)) {
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4)) {
+					dprintf("usage: egress vsi id\n");
+					rv = SW_BAD_VALUE;
+				} else {
+					rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: egress vsi id\n");
+					else
+						entry.rule_entry.vsi_dest.vsi = tmp;
+				}
+			} while(talk_mode && (SW_OK != rv));
+
+			do {
+				cmd = get_sub_cmd("phy_port", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4)) {
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4)) {
+					dprintf("usage: physical port be used for enqueue map\n");
+					rv = SW_BAD_VALUE;
+				} else {
+					rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: physical port be used for "
+								"enqueue map\n");
+					else
+						entry.rule_entry.vsi_dest.phy_port = tmp;
+				}
+			} while(talk_mode && (SW_OK != rv));
+
+			do {
+				cmd = get_sub_cmd("enqueue_vport", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4)) {
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4)) {
+					dprintf("usage: enqueue port id to index egress queue\n");
+					rv = SW_BAD_VALUE;
+				} else {
+					rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: enqueue port id to index "
+								"egress queue\n");
+					else
+						entry.index_entry.enqueue_vport = tmp;
+				}
+			} while(talk_mode && (SW_OK != rv));
+
+			break;
+		case FAL_ENQUEUE_SERVCODE:
+			do {
+				cmd = get_sub_cmd("dest_vport", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4)) {
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4)) {
+					dprintf("usage: egress vport for service code enqueue\n");
+					rv = SW_BAD_VALUE;
+				} else {
+					rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: egress vport for "
+								"service code enqueue\n");
+					else
+						entry.rule_entry.dst_port = tmp;
+				}
+			} while(talk_mode && (SW_OK != rv));
+
+			do {
+				cmd = get_sub_cmd("enqueue_servcode", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4)) {
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4)) {
+					dprintf("usage: enqueue service code to index "
+							"egress queue\n");
+					rv = SW_BAD_VALUE;
+				} else {
+					rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: enqueue service code to "
+								"index egress queue\n");
+					else
+						entry.index_entry.enqueue_servcode.service_code =
+							tmp;
+				}
+			} while(talk_mode && (SW_OK != rv));
+
+			do {
+				cmd = get_sub_cmd("enqueue_servcode_phyport", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4)) {
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4)) {
+					dprintf("usage: enqueue service code with phy port to "
+							"index egress queue\n");
+					rv = SW_BAD_VALUE;
+				} else {
+					rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: enqueue service code with phy "
+								"port to index egress queue\n");
+					else
+						entry.index_entry.enqueue_servcode.phy_port = tmp;
+				}
+			} while(talk_mode && (SW_OK != rv));
+
+			break;
+		default:
+			break;
+	}
+
+	*(fal_enqueue_cfg_t *)arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_enqueue_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_enqueue_cfg_t *entry;
+
+	entry = (fal_enqueue_cfg_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_enqueue_type("[enqueue_type]", entry->rule_entry.enqueue_type,
+			sizeof(entry->rule_entry.enqueue_type));
+	cmd_data_print_confirm(" [enqueue_en]:", entry->index_entry.enqueue_en,
+			sizeof(a_bool_t));
+	switch (entry->rule_entry.enqueue_type) {
+		case FAL_ENQUEUE_FLOW:
+			dprintf(" [flow_pri_profile]:%d", entry->rule_entry.flow_pri_profile);
+			dprintf(" [enqueue_vport]:%d", entry->index_entry.enqueue_vport);
+			break;
+		case FAL_ENQUEUE_VSI:
+			dprintf(" [vsi]:%d", entry->rule_entry.vsi_dest.vsi);
+			dprintf(" [phy_port]:%d", entry->rule_entry.vsi_dest.phy_port);
+			dprintf(" [enqueue_vport]:%d", entry->index_entry.enqueue_vport);
+			break;
+		case FAL_ENQUEUE_SERVCODE:
+			dprintf(" [dest_vport]:%d", entry->rule_entry.dst_port);
+			dprintf(" [enqueue_servcode]:%d",
+					entry->index_entry.enqueue_servcode.service_code);
+			dprintf(" [enqueue_servcode_phyport]:%d",
+					entry->index_entry.enqueue_servcode.phy_port);
+			break;
+		default:
+			dprintf("unknow enqueue type:%d", entry->rule_entry.enqueue_type);
+			break;
+	}
+
+	dprintf("\n");
+}
 /* auto_insert_flag_1 */

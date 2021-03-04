@@ -1134,6 +1134,10 @@ struct cmd_des_t gcmd_des[] =
 	    {"enqueue", "get", "get enqueue control", "<queue_id>", SW_API_QM_ENQUEUE_CTRL_GET, NULL},
 	    {"srcprofile", "set", "set source profile", "<port_id> <src_profile>", SW_API_QM_SOURCE_PROFILE_SET, NULL},
 	    {"srcprofile", "get", "get source profile", "<port_id>", SW_API_QM_SOURCE_PROFILE_GET, NULL},
+	    {"enqueue_cfg", "get", "get enqueue config", "<enqueue_rule>",
+		    SW_API_QM_ENQUEUE_CFG_GET, NULL},
+	    {"enqueue_cfg", "set", "set enqueue config", "<enqueue_rule>",
+		    SW_API_QM_ENQUEUE_CFG_SET, NULL},
 	    {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

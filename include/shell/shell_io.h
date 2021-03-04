@@ -1161,6 +1161,12 @@ cmd_data_check_tunnel_program_udf(char * cmd_str, void * val, a_uint32_t size);
 void
 cmd_data_print_tunnel_program_udf(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
+sw_error_t
+cmd_data_check_enqueue_cfg(char *info, fal_enqueue_cfg_t *val, a_uint32_t size);
+
+void
+cmd_data_print_enqueue_cfg(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+
 /* auto_insert_flag */
 
 /*qca808x_start*/

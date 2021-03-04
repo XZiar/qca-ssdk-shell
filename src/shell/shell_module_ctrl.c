@@ -386,7 +386,7 @@ static void cmd_data_print_mib_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_qm_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_QM_SOURCE_PROFILE_SET+1] ={
+	char *func_name[FUNC_QM_ENQUEUE_CFG_SET+1] ={
 		"FUNC_UCAST_HASH_MAP_SET",
 		"FUNC_AC_DYNAMIC_THRESHOLD_GET",
 		"FUNC_UCAST_QUEUE_BASE_PROFILE_GET",
@@ -418,11 +418,13 @@ static void cmd_data_print_qm_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_QUEUE_COUNTER_CTRL_SET",
 		"FUNC_QM_ENQUEUE_CTRL_GET",
 		"FUNC_QM_ENQUEUE_CTRL_SET",
-		"FUNC_QM_SOURCE_PROFILE_GET",
-		"FUNC_QM_SOURCE_PROFILE_SET"
+		"FUNC_QM_PORT_SRCPROFILE_GET",
+		"FUNC_QM_PORT_SRCPROFILE_SET",
+		"FUNC_QM_ENQUEUE_CFG_GET",
+		"FUNC_QM_ENQUEUE_CFG_SET"
 	};
 
-	for(func = FUNC_UCAST_HASH_MAP_SET; func <= FUNC_QM_SOURCE_PROFILE_SET; func++)
+	for(func = FUNC_UCAST_HASH_MAP_SET; func <= FUNC_QM_ENQUEUE_CFG_SET; func++)
 	{
 		if(p->bitmap[0] & (1 << func))
 		{
