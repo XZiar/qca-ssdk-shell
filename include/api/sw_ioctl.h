@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2019, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -1018,6 +1018,8 @@ extern "C" {
 #define SW_API_MGMTCTRL_CTRLPKT_PROFILE_DEL (5  + SW_API_CTRLPKT_OFFSET)
 #define SW_API_MGMTCTRL_CTRLPKT_PROFILE_GETFIRST (6  + SW_API_CTRLPKT_OFFSET)
 #define SW_API_MGMTCTRL_CTRLPKT_PROFILE_GETNEXT (7  + SW_API_CTRLPKT_OFFSET)
+#define SW_API_MGMTCTRL_VPGROUP_SET (8  + SW_API_CTRLPKT_OFFSET)
+#define SW_API_MGMTCTRL_VPGROUP_GET (9  + SW_API_CTRLPKT_OFFSET)
 
     /* Service Code */
 #define SW_API_SERVCODE_OFFSET        2600

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2016-2017, 2021, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -92,5 +92,23 @@ fal_mgmtctrl_ctrlpkt_profile_getnext(a_uint32_t dev_id, fal_ctrlpkt_profile_t *c
     sw_error_t rv;
 
     rv = sw_uk_exec(SW_API_MGMTCTRL_CTRLPKT_PROFILE_GETNEXT, dev_id, ctrlpkt);
+    return rv;
+}
+
+sw_error_t
+fal_mgmtctrl_vpgroup_set(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t vpgroup_id)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_MGMTCTRL_VPGROUP_SET, dev_id, port_id, vpgroup_id);
+    return rv;
+}
+
+sw_error_t
+fal_mgmtctrl_vpgroup_get(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t *vpgroup_id)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_MGMTCTRL_VPGROUP_GET, dev_id, port_id, vpgroup_id);
     return rv;
 }

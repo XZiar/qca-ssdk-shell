@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2019, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -1157,6 +1157,8 @@ struct cmd_des_t gcmd_des[] =
             {"appprofile", "getfirst", "get first app profile entry", "", SW_API_MGMTCTRL_CTRLPKT_PROFILE_GETFIRST, NULL},
             {"appprofile", "getnext", "get next app profile entry", "<app_entry>", SW_API_MGMTCTRL_CTRLPKT_PROFILE_GETNEXT, NULL},
             {"appprofile", "show", "show whole app profile entries", "", SW_CMD_CTRLPKT_SHOW, cmd_show_ctrlpkt},
+            {"vpgroup", "set", "set the vpgroup", "<port_id> <vpgroup_id>", SW_API_MGMTCTRL_VPGROUP_SET, NULL},
+            {"vpgroup", "get", "get the vpgroup", "<port_id>", SW_API_MGMTCTRL_VPGROUP_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

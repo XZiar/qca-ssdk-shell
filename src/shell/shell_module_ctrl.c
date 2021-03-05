@@ -995,7 +995,7 @@ static void cmd_data_print_portvlan_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_ctrlpkt_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_MGMTCTRL_CTRLPKT_PROFILE_GETNEXT+1] ={
+	char *func_name[FUNC_MGMTCTRL_VPGROUP_GET+1] ={
 		"FUNC_MGMTCTRL_ETHTYPE_PROFILE_SET",
 		"FUNC_MGMTCTRL_ETHTYPE_PROFILE_GET",
 		"FUNC_MGMTCTRL_RFDB_PROFILE_SET",
@@ -1003,10 +1003,12 @@ static void cmd_data_print_ctrlpkt_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_MGMTCTRL_CTRLPKT_PROFILE_ADD",
 		"FUNC_MGMTCTRL_CTRLPKT_PROFILE_DEL",
 		"FUNC_MGMTCTRL_CTRLPKT_PROFILE_GETFIRST",
-		"FUNC_MGMTCTRL_CTRLPKT_PROFILE_GETNEXT"
+		"FUNC_MGMTCTRL_CTRLPKT_PROFILE_GETNEXT",
+		"FUNC_MGMTCTRL_VPGROUP_SET",
+		"FUNC_MGMTCTRL_VPGROUP_GET"
 	};
 
-	for(func = FUNC_MGMTCTRL_ETHTYPE_PROFILE_SET; func <= FUNC_MGMTCTRL_CTRLPKT_PROFILE_GETNEXT; func++)
+	for(func = FUNC_MGMTCTRL_ETHTYPE_PROFILE_SET; func <= FUNC_MGMTCTRL_VPGROUP_GET; func++)
 	{
 		if (p->bitmap[0] & (1<<func))
 		{
