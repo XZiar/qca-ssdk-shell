@@ -29,7 +29,7 @@ extern "C" {
 
 #define IOCTL_BUF_SIZE 2048
 #define CMDSTR_BUF_SIZE 1024
-#define CMDSTR_ARGS_MAX 128
+#define CMDSTR_ARGS_MAX 192
 #define dprintf cmd_print
     extern sw_error_t cmd_exec_api(a_ulong_t *arg_val);
     extern void cmd_print(char *fmt, ...);

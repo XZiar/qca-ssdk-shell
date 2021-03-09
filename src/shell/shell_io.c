@@ -229,14 +229,43 @@ struct attr_des_t g_attr_des[] =
 		}
 	},
 	{
-        "flow_excep_type",
-        {
-            {"flow_aware", FAL_FLOW_AWARE},
-            {"flow_hit", FAL_FLOW_HIT},
-            {"flow_miss", FAL_FLOW_MISS},
-            {NULL, INVALID_ARRT_VALUE}
-        }
-    },
+        	"flow_excep_type",
+		{
+			{"flow_aware", FAL_FLOW_AWARE},
+			{"flow_hit", FAL_FLOW_HIT},
+			{"flow_miss", FAL_FLOW_MISS},
+		}
+	},
+	{
+		"vpn_type",
+		{
+			{"vsi", 0},
+			{"vrf", 1},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
+		"tunnel_type",
+		{
+			{"gre_tap_ipv4", FAL_TUNNEL_TYPE_GRE_TAP_OVER_IPV4},
+			{"gre_tap_ipv6", FAL_TUNNEL_TYPE_GRE_TAP_OVER_IPV6},
+			{"vxlan_ipv4", FAL_TUNNEL_TYPE_VXLAN_OVER_IPV4},
+			{"vxlan_ipv6", FAL_TUNNEL_TYPE_VXLAN_OVER_IPV6},
+			{"vxlan_gpe_ipv4", FAL_TUNNEL_TYPE_VXLAN_GPE_OVER_IPV4},
+			{"vxlan_gpe_ipv6", FAL_TUNNEL_TYPE_VXLAN_GPE_OVER_IPV6},
+			{"ipv4_ipv6", FAL_TUNNEL_TYPE_IPV4_OVER_IPV6},
+			{"program0", FAL_TUNNEL_TYPE_PROGRAM0},
+			{"program1", FAL_TUNNEL_TYPE_PROGRAM1},
+			{"program2", FAL_TUNNEL_TYPE_PROGRAM2},
+			{"program3", FAL_TUNNEL_TYPE_PROGRAM3},
+			{"program4", FAL_TUNNEL_TYPE_PROGRAM4},
+			{"program5", FAL_TUNNEL_TYPE_PROGRAM5},
+			{"geneve_ipv4", FAL_TUNNEL_TYPE_GENEVE_OVER_IPV4},
+			{"geneve_ipv6", FAL_TUNNEL_TYPE_GENEVE_OVER_IPV6},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -3965,7 +3994,33 @@ cmd_data_check_ruletype(char *cmd_str, fal_acl_rule_type_t * arg_val,
     }
     else
     {
-        return SW_BAD_VALUE;
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+        {
+            if (!strcasecmp(cmd_str, "tunnel_mac"))
+            {
+                *arg_val = FAL_ACL_RULE_TUNNEL_MAC;
+            }
+            else if (!strcasecmp(cmd_str, "tunnel_ip4"))
+            {
+                *arg_val = FAL_ACL_RULE_TUNNEL_IP4;
+            }
+            else if (!strcasecmp(cmd_str, "tunnel_ip6"))
+            {
+                *arg_val = FAL_ACL_RULE_TUNNEL_IP6;
+            }
+            else if (!strcasecmp(cmd_str, "tunnel_udf"))
+            {
+                *arg_val = FAL_ACL_RULE_TUNNEL_UDF;
+            }
+            else
+            {
+                return SW_BAD_VALUE;
+            }
+        }
+        else
+        {
+            return SW_BAD_VALUE;
+        }
     }
 
     return SW_OK;
@@ -3995,6 +4050,22 @@ cmd_data_print_ruletype(char * param_name, a_uint32_t * buf,
     else if (FAL_ACL_RULE_UDF == *val)
     {
         dprintf("udf");
+    }
+    else if (FAL_ACL_RULE_TUNNEL_MAC == *val)
+    {
+        dprintf("tunnel_mac");
+    }
+    else if (FAL_ACL_RULE_TUNNEL_IP4 == *val)
+    {
+        dprintf("tunnel_ip4");
+    }
+    else if (FAL_ACL_RULE_TUNNEL_IP6 == *val)
+    {
+        dprintf("tunnel_ip6");
+    }
+    else if (FAL_ACL_RULE_TUNNEL_UDF == *val)
+    {
+        dprintf("tunnel_udf");
     }
     else
     {
@@ -4029,6 +4100,10 @@ cmd_data_check_ip_packet_type(char *cmd_str, a_uint32_t * arg_val,
     else if (!strcasecmp(cmd_str, "icmp"))
     {
         *arg_val = 7;
+    }
+    else if (!strcasecmp(cmd_str, "gre"))
+    {
+        *arg_val = 4;
     }
     else
     {
@@ -4067,6 +4142,10 @@ cmd_data_print_ip_packet_type(char * param_name, a_uint16_t * buf,
     else if (7 == *val)
     {
         dprintf("icmp");
+    }
+    else if (4 == *val)
+    {
+        dprintf("gre");
     }
     else
     {
@@ -4535,7 +4614,7 @@ cmd_data_print_ip6addr(a_char_t * param_name, a_uint32_t * buf,
 }
 
 sw_error_t
-cmd_data_check_mac_field(fal_acl_rule_t * entry)
+cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
 {
     char *cmd;
     a_uint32_t tmpdata = 0;
@@ -4673,124 +4752,125 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry)
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_ETHTYPE);
     }
 
-    /* get vlanid field configuration */
-    cmd_data_check_element("vlanid field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
-
-    if (tmpdata)
+    if(!is_inner)
     {
-        cmd_data_check_element("vlanid opration", "mask",
+        /* get vlanid field configuration */
+        cmd_data_check_element("vlanid field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+
+        if (tmpdata)
+        {
+            cmd_data_check_element("vlanid opration", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
                                        &(entry->vid_op)));
 
-        if (FAL_ACL_FIELD_MASK == entry->vid_op)
-        {
-            cmd_data_check_element("vlanid", NULL,
-                                   "usage: the format is 0x0-0xfff or 0-4095 \n",
-                                   cmd_data_check_integer, (cmd, &tmpdata,
-                                           0xfff, 0x0));
-            entry->vid_val = tmpdata & 0xfff;
+            if (FAL_ACL_FIELD_MASK == entry->vid_op)
+            {
+                cmd_data_check_element("vlanid", NULL,
+                                       "usage: the format is 0x0-0xfff or 0-4095 \n",
+                                       cmd_data_check_integer, (cmd, &tmpdata,
+                                               0xfff, 0x0));
+                entry->vid_val = tmpdata & 0xfff;
 
-            cmd_data_check_element("vlanid mask", NULL,
-                                   "usage: the format is 0x0-0xfff or 0-4095 \n",
-                                   cmd_data_check_integer, (cmd, &tmpdata,
-                                           0xfff, 0x0));
-            entry->vid_mask = tmpdata & 0xfff;
+                cmd_data_check_element("vlanid mask", NULL,
+                                       "usage: the format is 0x0-0xfff or 0-4095 \n",
+                                       cmd_data_check_integer, (cmd, &tmpdata,
+                                               0xfff, 0x0));
+                entry->vid_mask = tmpdata & 0xfff;
+            }
+            else if (FAL_ACL_FIELD_RANGE == entry->vid_op)
+            {
+                cmd_data_check_element("vlanid low", NULL,
+                                       "usage: the format is 0x0-0xfff or 0-4095 \n",
+                                       cmd_data_check_integer, (cmd, &tmpdata,
+                                               0xfff, 0x0));
+                entry->vid_val = tmpdata & 0xfff;
+
+                cmd_data_check_element("vlanid high", NULL,
+                                       "usage: the format is 0x0-0xfff or 0-4095 \n",
+                                       cmd_data_check_integer, (cmd, &tmpdata,
+                                               0xfff, 0x0));
+                entry->vid_mask = tmpdata & 0xfff;
+            }
+            else
+            {
+                cmd_data_check_element("vlanid", NULL,
+                                       "usage: the format is 0x0-0xfff or 0-4095 \n",
+                                       cmd_data_check_integer, (cmd, &tmpdata,
+                                               0xfff, 0x0));
+                entry->vid_val = tmpdata & 0xfff;
+            }
+
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_VID);
         }
-        else if (FAL_ACL_FIELD_RANGE == entry->vid_op)
+        /* get vlan tagged field configuration */
+        cmd_data_check_element("vlan tagged field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+
+        if (tmpdata)
         {
-            cmd_data_check_element("vlanid low", NULL,
-                                   "usage: the format is 0x0-0xfff or 0-4095 \n",
-                                   cmd_data_check_integer, (cmd, &tmpdata,
-                                           0xfff, 0x0));
-            entry->vid_val = tmpdata & 0xfff;
+            cmd_data_check_element("tagged", NULL,
+                                   "usage: the format is 0x0-0x1 or 0-1 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                                           0x0));
+            entry->tagged_val = tmpdata & 0x1;
 
-            cmd_data_check_element("vlanid high", NULL,
-                                   "usage: the format is 0x0-0xfff or 0-4095 \n",
-                                   cmd_data_check_integer, (cmd, &tmpdata,
-                                           0xfff, 0x0));
-            entry->vid_mask = tmpdata & 0xfff;
+            cmd_data_check_element("tagged mask", NULL,
+                                   "usage: the format is 0x0-0x1 or 0-1 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                                           0x0));
+            entry->tagged_mask = tmpdata & 0x1;
+
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_TAGGED);
         }
-        else
+
+        /* get up field configuration */
+        cmd_data_check_element("up field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+
+        if (tmpdata)
         {
-            cmd_data_check_element("vlanid", NULL,
-                                   "usage: the format is 0x0-0xfff or 0-4095 \n",
-                                   cmd_data_check_integer, (cmd, &tmpdata,
-                                           0xfff, 0x0));
-            entry->vid_val = tmpdata & 0xfff;
+            cmd_data_check_element("up", NULL,
+                                   "usage: the format is 0x0-0x7 or 0-7 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x7,
+                                           0x0));
+            entry->up_val = tmpdata & 0x7;
+
+            cmd_data_check_element("up mask", NULL,
+                                   "usage: the format is 0x0-0x7 or 0-7 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x7,
+                                           0x0));
+            entry->up_mask = tmpdata & 0x7;
+
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_UP);
         }
 
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_VID);
+        /* get cfi field configuration */
+        cmd_data_check_element("cfi field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+
+        if (tmpdata)
+        {
+            cmd_data_check_element("cfi", NULL,
+                                   "usage: the format is 0x0-0x1 or 0-1 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                                           0x0));
+            entry->cfi_val = tmpdata & 0x1;
+
+            cmd_data_check_element("cfi mask", NULL,
+                                   "usage: the format is 0x0-0x1 or 0-1 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                                           0x0));
+            entry->cfi_mask = tmpdata & 0x1;
+
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_CFI);
+        }
     }
-
-    /* get vlan tagged field configuration */
-    cmd_data_check_element("vlan tagged field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
-
-    if (tmpdata)
-    {
-        cmd_data_check_element("tagged", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
-                                       0x0));
-        entry->tagged_val = tmpdata & 0x1;
-
-        cmd_data_check_element("tagged mask", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
-                                       0x0));
-        entry->tagged_mask = tmpdata & 0x1;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_TAGGED);
-    }
-
-    /* get up field configuration */
-    cmd_data_check_element("up field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
-
-    if (tmpdata)
-    {
-        cmd_data_check_element("up", NULL,
-                               "usage: the format is 0x0-0x7 or 0-7 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x7,
-                                       0x0));
-        entry->up_val = tmpdata & 0x7;
-
-        cmd_data_check_element("up mask", NULL,
-                               "usage: the format is 0x0-0x7 or 0-7 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x7,
-                                       0x0));
-        entry->up_mask = tmpdata & 0x7;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_UP);
-    }
-
-    /* get cfi field configuration */
-    cmd_data_check_element("cfi field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
-
-    if (tmpdata)
-    {
-        cmd_data_check_element("cfi", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
-                                       0x0));
-        entry->cfi_val = tmpdata & 0x1;
-
-        cmd_data_check_element("cfi mask", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
-                                       0x0));
-        entry->cfi_mask = tmpdata & 0x1;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_CFI);
-    }
-
     /* get svlan tagged field configuration */
     cmd_data_check_element("svlan tagged field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
@@ -5025,42 +5105,43 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry)
 
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_CTAG_CFI);
     }
-
-    /* get vsi valid field configuration */
-    cmd_data_check_element("vsi valid field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
-    if(tmpdata)
+    if(!is_inner)
     {
+        /* get vsi valid field configuration */
+        cmd_data_check_element("vsi valid field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if(tmpdata)
+        {
             entry->vsi_valid_mask = 1;
-	    cmd_data_check_element("is vsi valid", "no", "usage: <yes/no/y/n>\n",
-	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->vsi_valid,
-	                                   sizeof (a_bool_t)));
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_VSI_VALID);
+            cmd_data_check_element("is vsi valid", "no", "usage: <yes/no/y/n>\n",
+                                   cmd_data_check_confirm, (cmd, A_FALSE, &entry->vsi_valid,
+                                           sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_VSI_VALID);
+        }
+
+        /* get vsi field configuration */
+        cmd_data_check_element("vsi field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+
+        if (tmpdata)
+        {
+            cmd_data_check_element("vsi", "0x0",
+                                   "usage: the format is 0x0-0x1f or 0-31 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1f,
+                                           0x0));
+            entry->vsi = tmpdata & 0x1f;
+
+            cmd_data_check_element("vsi mask", NULL,
+                                   "usage: the format is 0x0-0x1f or 0-31 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1f,
+                                           0x0));
+            entry->vsi_mask = tmpdata & 0x1f;
+
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_VSI);
+        }
     }
-
-    /* get vsi field configuration */
-    cmd_data_check_element("vsi field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
-
-    if (tmpdata)
-    {
-        cmd_data_check_element("vsi", "0x0",
-                               "usage: the format is 0x0-0x1f or 0-31 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1f,
-                                       0x0));
-        entry->vsi = tmpdata & 0x1f;
-
-        cmd_data_check_element("vsi mask", NULL,
-                               "usage: the format is 0x0-0x1f or 0-31 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1f,
-                                       0x0));
-        entry->vsi_mask = tmpdata & 0x1f;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_VSI);
-    }
-
     /* get pppoe session id field configuration */
     cmd_data_check_element("pppoe session id field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
@@ -5086,7 +5167,7 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry)
 }
 
 sw_error_t
-cmd_data_check_ip4_field(fal_acl_rule_t * entry)
+cmd_data_check_ip4_field(fal_acl_rule_t * entry, a_bool_t is_inner)
 {
     char *cmd;
     a_uint32_t tmpdata = 0;
@@ -5132,51 +5213,52 @@ cmd_data_check_ip4_field(fal_acl_rule_t * entry)
 
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP4_DIP);
     }
-
-    /* get ripv1 field configuration */
-    cmd_data_check_element("ripv1 field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (tmpdata)));
-
-    if (tmpdata)
+    if(!is_inner)
     {
-        cmd_data_check_element("ripv1", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
-                                       0x0));
-        entry->ripv1_val = tmpdata & 0x1;
+        /* get ripv1 field configuration */
+        cmd_data_check_element("ripv1 field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (tmpdata)));
 
-        cmd_data_check_element("ripv1 mask", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
-                                       0x0));
-        entry->ripv1_mask = tmpdata & 0x1;
+        if (tmpdata)
+        {
+            cmd_data_check_element("ripv1", NULL,
+                                   "usage: the format is 0x0-0x1 or 0-1 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                                           0x0));
+            entry->ripv1_val = tmpdata & 0x1;
 
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_RIPV1);
+            cmd_data_check_element("ripv1 mask", NULL,
+                                   "usage: the format is 0x0-0x1 or 0-1 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                                           0x0));
+            entry->ripv1_mask = tmpdata & 0x1;
+
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_RIPV1);
+        }
+
+        /* get dhcpv4 field configuration */
+        cmd_data_check_element("dhcpv4 field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (tmpdata)));
+
+        if (tmpdata)
+        {
+            cmd_data_check_element("dhcpv4", NULL,
+                                   "usage: the format is 0x0-0x1 or 0-1 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                                           0x0));
+            entry->dhcpv4_val = tmpdata & 0x1;
+
+            cmd_data_check_element("dhcpv4 mask", NULL,
+                                   "usage: the format is 0x0-0x1 or 0-1 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1,
+                                           0x0));
+            entry->dhcpv4_mask = tmpdata & 0x1;
+
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_DHCPV4);
+        }
     }
-
-    /* get dhcpv4 field configuration */
-    cmd_data_check_element("dhcpv4 field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (tmpdata)));
-
-    if (tmpdata)
-    {
-        cmd_data_check_element("dhcpv4", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
-                                       0x0));
-        entry->dhcpv4_val = tmpdata & 0x1;
-
-        cmd_data_check_element("dhcpv4 mask", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
-                                       0x0));
-        entry->dhcpv4_mask = tmpdata & 0x1;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_DHCPV4);
-    }
-
     /* get ipv4 option field configuration */
     cmd_data_check_element("ipv4 option field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
@@ -5184,18 +5266,18 @@ cmd_data_check_ip4_field(fal_acl_rule_t * entry)
 
     if (tmpdata)
     {
-            entry->is_ipv4_option_mask = 1;
-	    cmd_data_check_element("Is ipv4 option", "no", "usage: <yes/no/y/n>\n",
-	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ipv4_option_val,
-	                                   sizeof (a_bool_t)));
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IPV4_OPTION);
+        entry->is_ipv4_option_mask = 1;
+        cmd_data_check_element("Is ipv4 option", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ipv4_option_val,
+                                       sizeof (a_bool_t)));
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IPV4_OPTION);
     }
 
     return SW_OK;
 }
 
 sw_error_t
-cmd_data_check_ip6_field(fal_acl_rule_t * entry)
+cmd_data_check_ip6_field(fal_acl_rule_t * entry, a_bool_t is_inner)
 {
     char *cmd;
     a_uint32_t tmpdata = 0;
@@ -5242,52 +5324,52 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
 
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP6_DIP);
     }
-
-    /* get ip6 flow label field configuration */
-    cmd_data_check_element("ip6 flow label field", "no",
-                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
-
-    if (tmpdata)
+    if(!is_inner)
     {
-        cmd_data_check_element("ip6 label", NULL,
-                               "usage: the format is 0x0-0xfffff or 0-1048575\n",
-                               cmd_data_check_integer, (cmd,
-                                       &(entry->ip6_lable_val),
-                                       0xfffff, 0x0));
+        /* get ip6 flow label field configuration */
+        cmd_data_check_element("ip6 flow label field", "no",
+                               "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                               (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
-        cmd_data_check_element("ip6 label mask", NULL,
-                               "usage: the format is 0x0-0xfffff or 0-1048575\n",
-                               cmd_data_check_integer, (cmd,
-                                       &(entry->
-                                         ip6_lable_mask),
-                                       0xfffff, 0x0));
+        if (tmpdata)
+        {
+            cmd_data_check_element("ip6 label", NULL,
+                                   "usage: the format is 0x0-0xfffff or 0-1048575\n",
+                                   cmd_data_check_integer, (cmd,
+                                           &(entry->ip6_lable_val),
+                                           0xfffff, 0x0));
 
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP6_LABEL);
+            cmd_data_check_element("ip6 label mask", NULL,
+                                   "usage: the format is 0x0-0xfffff or 0-1048575\n",
+                                   cmd_data_check_integer, (cmd,
+                                           &(entry->ip6_lable_mask),
+                                           0xfffff, 0x0));
+
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP6_LABEL);
+        }
+
+        /* get dhcpv6 field configuration */
+        cmd_data_check_element("dhcpv6 field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (tmpdata)));
+
+        if (tmpdata)
+        {
+            cmd_data_check_element("dhcpv6", NULL,
+                                   "usage: the format is 0x0-0x1 or 0-1 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+                                           0x0));
+            entry->dhcpv6_val = tmpdata & 0xff;
+
+            cmd_data_check_element("dhcpv6 mask", NULL,
+                                   "usage: the format is 0x0-0x1 or 0-1 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+                                           0x0));
+            entry->dhcpv6_mask = tmpdata & 0xff;
+
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_DHCPV6);
+        }
     }
-
-    /* get dhcpv6 field configuration */
-    cmd_data_check_element("dhcpv6 field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (tmpdata)));
-
-    if (tmpdata)
-    {
-        cmd_data_check_element("dhcpv6", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
-                                       0x0));
-        entry->dhcpv6_val = tmpdata & 0xff;
-
-        cmd_data_check_element("dhcpv6 mask", NULL,
-                               "usage: the format is 0x0-0x1 or 0-1 \n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
-                                       0x0));
-        entry->dhcpv6_mask = tmpdata & 0xff;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_DHCPV6);
-    }
-
     /* get mobility header field configuration */
     cmd_data_check_element("mobility header field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
@@ -5295,11 +5377,12 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
 
     if (tmpdata)
     {
-            entry->is_mobility_header_mask = 1;
-	    cmd_data_check_element("Is mobility header", "no", "usage: <yes/no/y/n>\n",
-	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_mobility_header_val,
-	                                   sizeof (a_bool_t)));
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MOBILITY_HEADER);
+        entry->is_mobility_header_mask = 1;
+        cmd_data_check_element("Is mobility header", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE,
+                               &entry->is_mobility_header_val,
+                                       sizeof (a_bool_t)));
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MOBILITY_HEADER);
     }
 
     /* get fragment header field configuration */
@@ -5323,11 +5406,11 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry)
 
     if (tmpdata)
     {
-            entry->is_other_header_mask = 1;
-	    cmd_data_check_element("Is other header", "no", "usage: <yes/no/y/n>\n",
-	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_other_header_val,
-	                                   sizeof (a_bool_t)));
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_OTHER_EXT_HEADER);
+        entry->is_other_header_mask = 1;
+        cmd_data_check_element("Is other header", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_other_header_val,
+                                       sizeof (a_bool_t)));
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_OTHER_EXT_HEADER);
     }
 
     return SW_OK;
@@ -5702,13 +5785,14 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
 
     if (tmpdata)
     {
-            entry->l3_pkt_type_mask = 0x7;
-            cmd_data_check_element("l3 packet type", "tcp",
-                               "usage: TCP, UDP, UDP-Lite, ARP, ICMP \n",
-                               cmd_data_check_ip_packet_type, (cmd, &tmpdata,sizeof(tmpdata)));
-            entry->l3_pkt_type = tmpdata & 0x7;
+        entry->l3_pkt_type_mask = 0x7;
+        cmd_data_check_element("l3 packet type", "tcp",
+                           "usage: TCP, UDP, UDP-Lite, ARP, ICMP, GRE \n",
+                           cmd_data_check_ip_packet_type, (cmd, &tmpdata,sizeof(tmpdata)));
 
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP_PKT_TYPE);
+        entry->l3_pkt_type = tmpdata & 0x7;
+
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP_PKT_TYPE);
     }
 
     /* get ah header field configuration */
@@ -5718,11 +5802,11 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
 
     if (tmpdata)
     {
-            entry->is_ah_header_mask = 1;
-	    cmd_data_check_element("Is AH header", "no", "usage: <yes/no/y/n>\n",
-	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ah_header_val,
-	                                   sizeof (a_bool_t)));
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_AH_HEADER);
+        entry->is_ah_header_mask = 1;
+        cmd_data_check_element("Is AH header", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ah_header_val,
+                                       sizeof (a_bool_t)));
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_AH_HEADER);
     }
 
     /* get esp header field configuration */
@@ -5732,16 +5816,15 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
 
     if (tmpdata)
     {
-            entry->is_esp_header_mask = 1;
-	    cmd_data_check_element("Is ESP header", "no", "usage: <yes/no/y/n>\n",
-	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_esp_header_val,
-	                                   sizeof (a_bool_t)));
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ESP_HEADER);
+        entry->is_esp_header_mask = 1;
+        cmd_data_check_element("Is ESP header", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_esp_header_val,
+                                       sizeof (a_bool_t)));
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ESP_HEADER);
     }
 
     return SW_OK;
 }
-
 
 sw_error_t
 cmd_data_check_acl_udf_profile_entry(char * cmd_str, void * val, a_uint32_t size)
@@ -6022,47 +6105,49 @@ cmd_data_print_udf_element(char * param_name, a_uint32_t * buf,
 
 
 sw_error_t
-cmd_data_check_udf_field(fal_acl_rule_t * entry)
+cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
 {
     char *cmd;
     a_uint32_t tmpdata = 0, vlen = 0, mlen = 0;
 
-    /* get udf field configuration */
-    cmd_data_check_element("user define field", "no",
-                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-                           (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
-
-    if (tmpdata)
+    if(!is_inner)
     {
-        cmd_data_check_element("udf type", NULL,
-                               "usage: <l2/l3>\n",
-                               cmd_data_check_udf_type, (cmd,
-                                       &(entry->udf_type), 4));
+        /* get udf field configuration */
+        cmd_data_check_element("user define field", "no",
+                               "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                               (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
-        cmd_data_check_element("udf offset", NULL,
-                               "usage: <0-126, must be even>\n",
-                               cmd_data_check_uint32, (cmd, &tmpdata, vlen));
-        entry->udf_offset = tmpdata;
-
-        cmd_data_check_element("udf value", NULL,
-                               "usage: the format is xx-xx-xx-xx-xx\n",
-                               cmd_data_check_udf_element, (cmd,
-                                       &(entry->udf_val[0]), &vlen));
-
-        cmd_data_check_element("udf mask", NULL,
-                               "usage: the format is xx-xx-xx-xx-xx\n",
-                               cmd_data_check_udf_element, (cmd,
-                                       &(entry->udf_mask[0]), &mlen));
-
-        if (vlen != mlen)
+        if (tmpdata)
         {
-            return SW_BAD_VALUE;
+            cmd_data_check_element("udf type", NULL,
+                                   "usage: <l2/l3>\n",
+                                   cmd_data_check_udf_type, (cmd,
+                                           &(entry->udf_type), 4));
+
+            cmd_data_check_element("udf offset", NULL,
+                                   "usage: <0-126, must be even>\n",
+                                   cmd_data_check_uint32, (cmd, &tmpdata, vlen));
+            entry->udf_offset = tmpdata;
+
+            cmd_data_check_element("udf value", NULL,
+                                   "usage: the format is xx-xx-xx-xx-xx\n",
+                                   cmd_data_check_udf_element, (cmd,
+                                           &(entry->udf_val[0]), &vlen));
+
+            cmd_data_check_element("udf mask", NULL,
+                                   "usage: the format is xx-xx-xx-xx-xx\n",
+                                   cmd_data_check_udf_element, (cmd,
+                                           &(entry->udf_mask[0]), &mlen));
+
+            if (vlen != mlen)
+            {
+                return SW_BAD_VALUE;
+            }
+            entry->udf_len = vlen;
+
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF);
         }
-        entry->udf_len = vlen;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF);
     }
-
     /* get udf0 field configuration */
     cmd_data_check_element("udf0", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
@@ -6114,7 +6199,7 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry)
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF0);
     }
 
-        /* get udf1 field configuration */
+    /* get udf1 field configuration */
     cmd_data_check_element("udf1", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
@@ -6171,18 +6256,49 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry)
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if (tmpdata)
     {
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+        {
+            cmd_data_check_element("udf2 opration", "mask",
+                                   "usage: <mask/range/le/ge/ne> \n",
+                                   cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
+                                           &(entry->udf2_op)));
+        }
+        if (FAL_ACL_FIELD_MASK == entry->udf2_op)
+        {
+            cmd_data_check_element("udf2", NULL,
+                                   "usage: the format is 0x0-0xffff\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf2_val = tmpdata & 0xffff;
 
-	cmd_data_check_element("udf2", NULL,
-	                   "usage: the format is 0x0-0xffff\n",
-	                   cmd_data_check_integer, (cmd, &tmpdata,
-	                           0xffff, 0x0));
-	entry->udf2_val = tmpdata & 0xffff;
+            cmd_data_check_element("udf2 mask", NULL,
+                                   "usage: the format is 0x0-0xffff\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf2_mask = tmpdata & 0xffff;
+        }
+        else if (FAL_ACL_FIELD_RANGE == entry->udf2_op)
+        {
+            cmd_data_check_element("udf2 low", NULL,
+                                   "usage: the format is 0x0-0xffff or\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf2_val= tmpdata & 0xffff;
 
-	cmd_data_check_element("udf2 mask", NULL,
-	                   "usage: the format is 0x0-0xffff\n",
-	                   cmd_data_check_integer, (cmd, &tmpdata,
-	                           0xffff, 0x0));
-	entry->udf2_mask = tmpdata & 0xffff;
+            cmd_data_check_element("udf2 high", NULL,
+                                   "usage: the format is 0x0-0xffff\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf2_mask = tmpdata & 0xffff;
+        }
+        else
+        {
+            cmd_data_check_element("udf2", NULL,
+                                   "usage: the format is 0x0-0xffff\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xffff, 0x0));
+            entry->udf2_val = tmpdata & 0xffff;
+        }
 
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF2);
     }
@@ -6193,49 +6309,171 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry)
     if (tmpdata)
     {
 
-	cmd_data_check_element("udf3", NULL,
-	                   "usage: the format is 0x0-0xffff\n",
-	                   cmd_data_check_integer, (cmd, &tmpdata,
-	                           0xffff, 0x0));
-	entry->udf3_val = tmpdata & 0xffff;
+        cmd_data_check_element("udf3", NULL,
+                           "usage: the format is 0x0-0xffff\n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffff, 0x0));
+        entry->udf3_val = tmpdata & 0xffff;
 
-	cmd_data_check_element("udf3 mask", NULL,
-	                   "usage: the format is 0x0-0xffff\n",
-	                   cmd_data_check_integer, (cmd, &tmpdata,
-	                           0xffff, 0x0));
-	entry->udf3_mask = tmpdata & 0xffff;
+        cmd_data_check_element("udf3 mask", NULL,
+                           "usage: the format is 0x0-0xffff\n",
+                           cmd_data_check_integer, (cmd, &tmpdata,
+                                   0xffff, 0x0));
+        entry->udf3_mask = tmpdata & 0xffff;
 
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF3);
     }
 
-    if(entry->rule_type == FAL_ACL_RULE_UDF)
+    /* get udfprofile field configuration */
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
     {
-	/* get IP/NON-IP field configuration */
-	cmd_data_check_element("IP/NON-IP field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
-	if(tmpdata)
-	{
-		entry->is_ip_mask = 1;
-		cmd_data_check_element("Is IP packet", "no", "usage: <yes/no/y/n>\n",
-	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ip_val,
-	                                   sizeof (a_bool_t)));
-		FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP);
-	}
-	/* get IPv4/IPv6 field configuration */
-	cmd_data_check_element("IPv4/IPv6 field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                   sizeof (a_bool_t)));
-	if(tmpdata)
-	{
-		entry->is_ipv6_mask = 1;
-		cmd_data_check_element("Is IPv6 packet", "no", "usage: <yes/no/y/n>\n",
-	                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ipv6_val,
-	                                   sizeof (a_bool_t)));
-		FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IPV6);
-	}
+        cmd_data_check_element("udfprofile", "no",
+                               "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                               (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
+        if (tmpdata)
+        {
+            cmd_data_check_element("udfprofile", NULL,
+                               "usage: the format is 0x0-0x7\n",
+                               cmd_data_check_integer, (cmd, &tmpdata,
+                                       0x7, 0x0));
+            entry->udfprofile_val = tmpdata & 0x7;
+
+            cmd_data_check_element("udfprofile mask", NULL,
+                               "usage: the format is 0x0-0x7\n",
+                               cmd_data_check_integer, (cmd, &tmpdata,
+                                       0x7, 0x0));
+            entry->udfprofile_mask = tmpdata & 0x7;
+
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDFPROFILE);
+        }
     }
 
+    if(entry->rule_type == FAL_ACL_RULE_UDF || entry->rule_type == FAL_ACL_RULE_TUNNEL_UDF)
+    {
+        /* get IP/NON-IP field configuration */
+        cmd_data_check_element("IP/NON-IP field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if(tmpdata)
+        {
+            entry->is_ip_mask = 1;
+            cmd_data_check_element("Is IP packet", "no", "usage: <yes/no/y/n>\n",
+                                   cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ip_val,
+                                           sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP);
+        }
+        /* get IPv4/IPv6 field configuration */
+        cmd_data_check_element("IPv4/IPv6 field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if(tmpdata)
+        {
+            entry->is_ipv6_mask = 1;
+            cmd_data_check_element("Is IPv6 packet", "no", "usage: <yes/no/y/n>\n",
+                                   cmd_data_check_confirm, (cmd, A_FALSE, &entry->is_ipv6_val,
+                                           sizeof (a_bool_t)));
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IPV6);
+        }
+    }
+
+    return SW_OK;
+}
+
+sw_error_t
+cmd_data_check_tunnel_info_field(fal_acl_tunnel_info_t * entry)
+{
+    char *cmd;
+    a_uint32_t tmpdata = 0;
+
+    /* get tunnel type field configuration */
+    cmd_data_check_element("tunnel type field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if(tmpdata)
+    {
+        entry->tunnel_type_mask = 0x1f;
+        cmd_data_check_element("tunnel type", "gre_tap_ipv4",
+               "usage: gre_tap_ipv4, gre_tap_ipv6, vxlan_ipv4, vxlan_ipv6, "
+               "vxlan_gpe_ipv4, vxlan_gpe_ipv6, ipv4_ipv6, program0, "
+               "program1, program2, program3, program4, program5, "
+               "geneve_ipv4, geneve_ipv6\n",
+               cmd_data_check_attr, ("tunnel_type", cmd,
+                             &tmpdata, sizeof(tmpdata)));
+        entry->tunnel_type = tmpdata & 0x1f;
+
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TUNNEL_TYPE);
+    }
+
+    /* get inner type field configuration */
+    cmd_data_check_element("inner type field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if(tmpdata)
+    {
+        entry->inner_type_mask = 0x3;
+        cmd_data_check_element("inner type", "ethernet",
+                           "usage: ethernet, ipv4, ipv6\n",
+                           cmd_data_check_attr, ("hdr_type", cmd,
+                                   &tmpdata, sizeof(tmpdata)));
+        entry->inner_type = tmpdata & 0x3;
+
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TUNNEL_INNER_TYPE);
+    }
+
+    /* get tunnek key valid field configuration */
+    cmd_data_check_element("tunnel key valid field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if(tmpdata)
+    {
+        entry->tunnel_key_valid_mask = 1;
+        cmd_data_check_element("is tunnel key valid", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &entry->tunnel_key_valid,
+                                       sizeof (a_bool_t)));
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TUNNEL_KEY_VALID);
+    }
+
+    /* get tunnel key field configuration */
+    cmd_data_check_element("tunnel key field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if (tmpdata)
+    {
+        cmd_data_check_element("tunel key", NULL,
+                               "usage: the format is 0x0-0xffffffff or 0-4294967295\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xffffffff,
+                                       0x0));
+        entry->tunnel_key = tmpdata & 0xffffffff;
+        cmd_data_check_element("tunel key mask", NULL,
+                               "usage: the format is 0x0-0xffffffff or 0-4294967295\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xffffffff,
+                                       0x0));
+        entry->tunnel_key_mask = tmpdata & 0xffffffff;
+
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TUNNEL_KEY);
+    }
+
+    /* get tunnel decap_en field configuration */
+    cmd_data_check_element("tunnel decap_en field", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+    if(tmpdata)
+    {
+        entry->tunnel_decap_en_mask = 1;
+        cmd_data_check_element("tunnel decap_en", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &entry->tunnel_decap_en,
+                                   sizeof (a_bool_t)));
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TUNNEL_DECAP_EN);
+    }
+
+    /* get tnnel info rule inverse configuration */
+    cmd_data_check_element("rule inverse", "no", "usage: <yes/no/y/n>\n",
+                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                    sizeof (a_bool_t)));
+    if (tmpdata)
+    {
+        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TUNNEL_INVERSE_ALL);
+    }
     return SW_OK;
 }
 
@@ -6625,6 +6863,39 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
             entry->policy_fwd = FAL_ACL_POLICY_DNAT;
         }
 
+        if((FAL_ACL_RULE_TUNNEL_MAC == entry->rule_type ||
+            FAL_ACL_RULE_TUNNEL_IP4 == entry->rule_type ||
+            FAL_ACL_RULE_TUNNEL_IP6 == entry->rule_type ||
+            FAL_ACL_RULE_TUNNEL_UDF == entry->rule_type) &&
+            (ssdk_cfg.init_cfg.chip_type == CHIP_APPE))
+        {
+            cmd_data_check_element("snapt", "no", "usage: <yes/no/y/n>\n",
+                                   cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                           sizeof (a_bool_t)));
+            if (tmpdata)
+            {
+                cmd_data_check_element("snapt l4 port", NULL,
+                               "usage: the format is 0x0-0xffff or 0-65535\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
+                                       0x0));
+                entry->napt_l4_port= tmpdata & 0xffff;
+                entry->policy_fwd = FAL_ACL_POLICY_SNAPT;
+            }
+
+            cmd_data_check_element("dnapt", "no", "usage: <yes/no/y/n>\n",
+                                   cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                           sizeof (a_bool_t)));
+            if (tmpdata)
+            {
+                cmd_data_check_element("dnapt l4 port", NULL,
+                               "usage: the format is 0x0-0xffff or 0-65535\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
+                                       0x0));
+                entry->napt_l4_port= tmpdata & 0xffff;
+                entry->policy_fwd = FAL_ACL_POLICY_DNAPT;
+            }
+        }
+
         FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_POLICY_FORWARD_EN);
     }
 
@@ -6890,7 +7161,306 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                                     0x0));
     entry->qos_res_prec = tmpdata;
 
+    /*new pre acl actions check for alder*/
+    if((FAL_ACL_RULE_TUNNEL_MAC == entry->rule_type ||
+        FAL_ACL_RULE_TUNNEL_IP4 == entry->rule_type ||
+        FAL_ACL_RULE_TUNNEL_IP6 == entry->rule_type ||
+        FAL_ACL_RULE_TUNNEL_UDF == entry->rule_type) &&
+        (ssdk_cfg.init_cfg.chip_type == CHIP_APPE))
+    {
+        /* cascade data action configuration */
+        cmd_data_check_element("cascade data change", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if (A_TRUE == tmpdata)
+        {
+            cmd_data_check_element("cascade data", NULL,
+                                   "usage: 0-127\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x7f,
+                                           0x0));
+            entry->cascade_data = tmpdata & 0x7f;
+
+            FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_CASCADE);
+        }
+        /* vpn action configuration */
+        cmd_data_check_element("vpn change", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if (A_TRUE == tmpdata)
+        {
+            cmd_data_check_element("vpn type", "vsi",
+                                   "usage: vsi, vrf\n",
+                                   cmd_data_check_attr, ("vpn_type", cmd,
+                                   &tmpdata, sizeof(tmpdata)));
+            entry->vpn_type= tmpdata & 0x1;
+
+            cmd_data_check_element("vpn id", NULL,
+                                   "usage: 0-63\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x3f,
+                                           0x0));
+            entry->vpn_id= tmpdata & 0x3f;
+
+            FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_VPN);
+        }
+        /*learn_dis action configuration */
+        cmd_data_check_element("learn_dis enable", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if (A_TRUE == tmpdata)
+        {
+            FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_LEARN_DIS);
+        }
+    }
     return SW_OK;
+}
+
+void acl_rule_field_convert(fal_acl_rule_t * rule,
+            fal_acl_rule_field_t * rule_field, a_bool_t to_inner)
+{
+    if(to_inner)
+    {
+        /*fields flag*/
+        aos_mem_copy(rule_field->field_flg,
+            rule->field_flg, sizeof(fal_acl_field_map_t));
+
+        /*mac fields*/
+        rule_field->is_fake_mac_header_mask = rule->is_fake_mac_header_mask;
+        rule_field->is_fake_mac_header_val = rule->is_fake_mac_header_val;
+        rule_field->is_snap_mask = rule->is_snap_mask;
+        rule_field->is_snap_val = rule->is_snap_val;
+        rule_field->is_ethernet_mask = rule->is_ethernet_mask;
+        rule_field->is_ethernet_val = rule->is_ethernet_val;
+        rule_field->is_ip_mask = rule->is_ip_mask;
+        rule_field->is_ip_val= rule->is_ip_val;
+        rule_field->is_ipv6_mask = rule->is_ipv6_mask;
+        rule_field->is_ipv6_val = rule->is_ipv6_val;
+        aos_mem_copy(rule_field->dest_mac_val.uc,
+            rule->dest_mac_val.uc, sizeof(fal_mac_addr_t));
+        aos_mem_copy(rule_field->dest_mac_mask.uc,
+            rule->dest_mac_mask.uc, sizeof(fal_mac_addr_t));
+        aos_mem_copy(rule_field->src_mac_val.uc,
+            rule->src_mac_val.uc, sizeof(fal_mac_addr_t));
+        aos_mem_copy(rule_field->src_mac_mask.uc,
+            rule->src_mac_mask.uc, sizeof(fal_mac_addr_t));
+        rule_field->ethtype_val = rule->ethtype_val;
+        rule_field->ethtype_mask = rule->ethtype_mask;
+        rule_field->stagged_val = rule->stagged_val;
+        rule_field->stagged_mask = rule->stagged_mask;
+        rule_field->stag_vid_op = rule->stag_vid_op;
+        rule_field->stag_vid_val = rule->stag_vid_val;
+        rule_field->stag_vid_mask = rule->stag_vid_mask;
+        rule_field->stag_pri_val = rule->stag_pri_val;
+        rule_field->stag_pri_mask = rule->stag_pri_mask;
+        rule_field->stag_dei_val = rule->stag_dei_val;
+        rule_field->stag_dei_mask = rule->stag_dei_mask;
+        rule_field->ctagged_val = rule->ctagged_val;
+        rule_field->ctagged_mask = rule->ctagged_mask;
+        rule_field->ctag_vid_op = rule->ctag_vid_op;
+        rule_field->ctag_vid_val = rule->ctag_vid_val;
+        rule_field->ctag_vid_mask = rule->ctag_vid_mask;
+        rule_field->ctag_pri_val = rule->ctag_pri_val;
+        rule_field->ctag_pri_mask = rule->ctag_pri_mask;
+        rule_field->ctag_cfi_val = rule->ctag_cfi_val;
+        rule_field->ctag_cfi_mask = rule->ctag_cfi_mask;
+        rule_field->pppoe_sessionid = rule->pppoe_sessionid;
+        rule_field->pppoe_sessionid_mask = rule->pppoe_sessionid_mask;
+
+        /*ipv4 fields*/
+        rule_field->src_ip4_val = rule->src_ip4_val;
+        rule_field->src_ip4_mask = rule->src_ip4_mask;
+        rule_field->dest_ip4_val = rule->dest_ip4_val;
+        rule_field->dest_ip4_mask = rule->dest_ip4_mask;
+        rule_field->is_ipv4_option_mask = rule->is_ipv4_option_mask;
+        rule_field->is_ipv4_option_val = rule->is_ipv4_option_val;
+
+        /*ipv6 fields*/
+        aos_mem_copy(rule_field->src_ip6_val.ul,
+            rule->src_ip6_val.ul, sizeof(fal_ip6_addr_t));
+        aos_mem_copy(rule_field->src_ip6_mask.ul,
+            rule->src_ip6_mask.ul, sizeof(fal_ip6_addr_t));
+        aos_mem_copy(rule_field->dest_ip6_val.ul,
+            rule->dest_ip6_val.ul, sizeof(fal_ip6_addr_t));
+        aos_mem_copy(rule_field->dest_ip6_mask.ul,
+            rule->dest_ip6_mask.ul, sizeof(fal_ip6_addr_t));
+        rule_field->is_mobility_header_mask = rule->is_mobility_header_mask;
+        rule_field->is_mobility_header_val = rule->is_mobility_header_val;
+        rule_field->is_fragment_header_mask = rule->is_fragment_header_mask;
+        rule_field->is_fragment_header_val = rule->is_fragment_header_val;
+        rule_field->is_other_header_mask = rule->is_other_header_mask;
+        rule_field->is_other_header_val = rule->is_other_header_val;
+
+        /*ip fields*/
+        rule_field->ip_proto_val = rule->ip_proto_val;
+        rule_field->ip_proto_mask = rule->ip_proto_mask;
+        rule_field->ip_dscp_val = rule->ip_dscp_val;
+        rule_field->ip_dscp_mask = rule->ip_dscp_mask;
+        rule_field->dest_l4port_op = rule->dest_l4port_op;
+        rule_field->dest_l4port_val = rule->dest_l4port_val;
+        rule_field->dest_l4port_mask = rule->dest_l4port_mask;
+        rule_field->src_l4port_op = rule->src_l4port_op;
+        rule_field->src_l4port_val = rule->src_l4port_val;
+        rule_field->src_l4port_mask = rule->src_l4port_mask;
+        rule_field->tcp_flag_val = rule->tcp_flag_val;
+        rule_field->tcp_flag_mask = rule->tcp_flag_mask;
+        rule_field->icmp_type_code_op = rule->icmp_type_code_op;
+        rule_field->icmp_type_val = rule->icmp_type_val;
+        rule_field->icmp_type_mask = rule->icmp_type_mask;
+        rule_field->icmp_code_val = rule->icmp_code_val;
+        rule_field->icmp_code_mask = rule->icmp_code_mask;
+        rule_field->is_fragement_mask = rule->is_fragement_mask;
+        rule_field->is_fragement_val = rule->is_fragement_val;
+        rule_field->is_first_frag_mask = rule->is_first_frag_mask;
+        rule_field->is_first_frag_val = rule->is_first_frag_val;
+        rule_field->l3_ttl_mask = rule->l3_ttl_mask;
+        rule_field->l3_ttl = rule->l3_ttl;
+        rule_field->l3_length_op = rule->l3_length_op;
+        rule_field->l3_length = rule->l3_length;
+        rule_field->l3_length_mask = rule->l3_length_mask;
+        rule_field->l3_pkt_type_mask = rule->l3_pkt_type_mask;
+        rule_field->l3_pkt_type = rule->l3_pkt_type;
+        rule_field->is_ah_header_mask = rule->is_ah_header_mask;
+        rule_field->is_ah_header_val = rule->is_ah_header_val;
+        rule_field->is_esp_header_mask = rule->is_esp_header_mask;
+        rule_field->is_esp_header_val = rule->is_esp_header_val;
+
+        /*udf fields*/
+        rule_field->udf0_op = rule->udf0_op;
+        rule_field->udf0_val = rule->udf0_val;
+        rule_field->udf0_mask = rule->udf0_mask;
+        rule_field->udf1_op = rule->udf1_op;
+        rule_field->udf1_val = rule->udf1_val;
+        rule_field->udf1_mask = rule->udf1_mask;
+        rule_field->udf2_op = rule->udf2_op;
+        rule_field->udf2_val = rule->udf2_val;
+        rule_field->udf2_mask = rule->udf2_mask;
+        rule_field->udf3_val = rule->udf3_val;
+        rule_field->udf3_mask = rule->udf3_mask;
+        rule_field->udfprofile_val = rule->udfprofile_val;
+        rule_field->udfprofile_mask = rule->udfprofile_mask;
+    }
+    else
+    {
+        /*fields flag*/
+        aos_mem_copy(rule->field_flg,
+            rule_field->field_flg, sizeof(fal_acl_field_map_t));
+
+        /*mac fields*/
+        rule->is_fake_mac_header_mask = rule_field->is_fake_mac_header_mask;
+        rule->is_fake_mac_header_val = rule_field->is_fake_mac_header_val;
+        rule->is_snap_mask = rule_field->is_snap_mask;
+        rule->is_snap_val = rule_field->is_snap_val;
+        rule->is_ethernet_mask = rule_field->is_ethernet_mask;
+        rule->is_ethernet_val = rule_field->is_ethernet_val;
+        rule->is_ip_mask = rule_field->is_ip_mask;
+        rule->is_ip_val = rule_field->is_ip_val;
+        rule->is_ipv6_mask = rule_field->is_ipv6_mask;
+        rule->is_ipv6_val = rule_field->is_ipv6_val;
+        aos_mem_copy(rule->dest_mac_val.uc,
+            rule_field->dest_mac_val.uc, sizeof(fal_mac_addr_t));
+        aos_mem_copy(rule->dest_mac_mask.uc,
+            rule_field->dest_mac_mask.uc, sizeof(fal_mac_addr_t));
+        aos_mem_copy(rule->src_mac_val.uc,
+            rule_field->src_mac_val.uc, sizeof(fal_mac_addr_t));
+        aos_mem_copy(rule->src_mac_mask.uc,
+            rule_field->src_mac_mask.uc, sizeof(fal_mac_addr_t));
+        rule->ethtype_val = rule_field->ethtype_val;
+
+        rule->ethtype_mask = rule_field->ethtype_mask;
+        rule->stagged_val = rule_field->stagged_val;
+        rule->stagged_mask = rule_field->stagged_mask;
+        rule->stag_vid_op = rule_field->stag_vid_op;
+        rule->stag_vid_val = rule_field->stag_vid_val;
+        rule->stag_vid_mask = rule_field->stag_vid_mask;
+        rule->stag_pri_val = rule_field->stag_pri_val;
+        rule->stag_pri_mask = rule_field->stag_pri_mask;
+        rule->stag_dei_val = rule_field->stag_dei_val;
+        rule->stag_dei_mask = rule_field->stag_dei_mask;
+        rule->ctagged_val = rule_field->ctagged_val;
+        rule->ctagged_mask = rule_field->ctagged_mask;
+        rule->ctag_vid_op = rule_field->ctag_vid_op;
+        rule->ctag_vid_val = rule_field->ctag_vid_val;
+        rule->ctag_vid_mask = rule_field->ctag_vid_mask;
+        rule->ctag_pri_val = rule_field->ctag_pri_val;
+        rule->ctag_pri_mask = rule_field->ctag_pri_mask;
+        rule->ctag_cfi_val = rule_field->ctag_cfi_val;
+        rule->ctag_cfi_mask = rule_field->ctag_cfi_mask;
+        rule->pppoe_sessionid = rule_field->pppoe_sessionid;
+        rule->pppoe_sessionid_mask = rule_field->pppoe_sessionid_mask;
+
+        /*ipv4 fields*/
+        rule->src_ip4_val = rule_field->src_ip4_val;
+        rule->src_ip4_mask = rule_field->src_ip4_mask;
+        rule->dest_ip4_val = rule_field->dest_ip4_val;
+        rule->dest_ip4_mask = rule_field->dest_ip4_mask;
+        rule->is_ipv4_option_mask = rule_field->is_ipv4_option_mask;
+        rule->is_ipv4_option_val = rule_field->is_ipv4_option_val;
+
+        /*ipv6 fields*/
+        aos_mem_copy(rule->src_ip6_val.ul,
+            rule_field->src_ip6_val.ul, sizeof(fal_ip6_addr_t));
+        aos_mem_copy(rule->src_ip6_mask.ul,
+            rule_field->src_ip6_mask.ul, sizeof(fal_ip6_addr_t));
+        aos_mem_copy(rule->dest_ip6_val.ul,
+            rule_field->dest_ip6_val.ul, sizeof(fal_ip6_addr_t));
+        aos_mem_copy(rule->dest_ip6_mask.ul,
+            rule_field->dest_ip6_mask.ul, sizeof(fal_ip6_addr_t));
+        rule->is_mobility_header_mask = rule_field->is_mobility_header_mask;
+        rule->is_mobility_header_val = rule_field->is_mobility_header_val;
+        rule->is_fragment_header_mask = rule_field->is_fragment_header_mask;
+        rule->is_fragment_header_val = rule_field->is_fragment_header_val;
+        rule->is_other_header_mask = rule_field->is_other_header_mask;
+        rule->is_other_header_val = rule_field->is_other_header_val;
+
+        /*ip fields*/
+        rule->ip_proto_val = rule_field->ip_proto_val;
+        rule->ip_proto_mask = rule_field->ip_proto_mask;
+        rule->ip_dscp_val = rule_field->ip_dscp_val;
+        rule->ip_dscp_mask = rule_field->ip_dscp_mask;
+        rule->dest_l4port_op = rule_field->dest_l4port_op;
+        rule->dest_l4port_val = rule_field->dest_l4port_val;
+        rule->dest_l4port_mask = rule_field->dest_l4port_mask;
+        rule->src_l4port_op = rule_field->src_l4port_op;
+        rule->src_l4port_val = rule_field->src_l4port_val;
+        rule->src_l4port_mask = rule_field->src_l4port_mask;
+        rule->tcp_flag_val = rule_field->tcp_flag_val;
+        rule->tcp_flag_mask = rule_field->tcp_flag_mask;
+        rule->icmp_type_code_op = rule_field->icmp_type_code_op;
+        rule->icmp_type_val = rule_field->icmp_type_val;
+        rule->icmp_type_mask = rule_field->icmp_type_mask;
+        rule->icmp_code_val = rule_field->icmp_code_val;
+        rule->icmp_code_mask = rule_field->icmp_code_mask;
+        rule->is_fragement_mask = rule_field->is_fragement_mask;
+        rule->is_fragement_val = rule_field->is_fragement_val;
+        rule->is_first_frag_mask = rule_field->is_first_frag_mask;
+        rule->is_first_frag_val = rule_field->is_first_frag_val;
+        rule->l3_ttl_mask = rule_field->l3_ttl_mask;
+        rule->l3_ttl = rule_field->l3_ttl;
+        rule->l3_length_op = rule_field->l3_length_op;
+        rule->l3_length = rule_field->l3_length;
+        rule->l3_length_mask = rule_field->l3_length_mask;
+        rule->l3_pkt_type_mask = rule_field->l3_pkt_type_mask;
+        rule->l3_pkt_type = rule_field->l3_pkt_type;
+        rule->is_ah_header_mask = rule_field->is_ah_header_mask;
+        rule->is_ah_header_val = rule_field->is_ah_header_val;
+        rule->is_esp_header_mask = rule_field->is_esp_header_mask;
+        rule->is_esp_header_val = rule_field->is_esp_header_val;
+
+        /*udf fields*/
+        rule->udf0_op = rule_field->udf0_op;
+        rule->udf0_val = rule_field->udf0_val;
+        rule->udf0_mask = rule_field->udf0_mask;
+        rule->udf1_op = rule_field->udf1_op;
+        rule->udf1_val = rule_field->udf1_val;
+        rule->udf1_mask = rule_field->udf1_mask;
+        rule->udf2_op = rule_field->udf2_op;
+        rule->udf2_val = rule_field->udf2_val;
+        rule->udf2_mask = rule_field->udf2_mask;
+        rule->udf3_val = rule_field->udf3_val;
+        rule->udf3_mask = rule_field->udf3_mask;
+        rule->udfprofile_val = rule_field->udfprofile_val;
+        rule->udfprofile_mask = rule_field->udfprofile_mask;
+    }
+    return;
 }
 
 sw_error_t
@@ -6899,9 +7469,11 @@ cmd_data_check_aclrule(char *info, void *val, a_uint32_t size)
     char *cmd;
     sw_error_t rv;
     fal_acl_rule_t entry;
+    fal_acl_rule_t tmp_entry;
     a_uint32_t tmpdata = 0;
 
     memset(&entry, 0, sizeof (fal_acl_rule_t));
+    memset(&tmp_entry, 0, sizeof (fal_acl_rule_t));
 
     dprintf("\n");
     g_aclcmd_len = snprintf(g_aclcmd, 500-g_aclcmd_len, "ssdk_sh acl rule add [listid] [ruleid] 1 ");
@@ -6921,29 +7493,31 @@ cmd_data_check_aclrule(char *info, void *val, a_uint32_t size)
                                0x0));
     entry.acl_pool = tmpdata;
     /* get rule type configuration */
-    cmd_data_check_element("rule type", NULL, "usage: <mac/ip4/ip6/udf> \n",
+    cmd_data_check_element("rule type", NULL, "usage: <mac/ip4/ip6/udf"
+                           "/tunnel_mac/tunnel_ip4/tunnel_ip6/tunnel_udf> \n",
                            cmd_data_check_ruletype, (cmd, &entry.rule_type,
-                                   sizeof
-                                   (fal_acl_rule_type_t)));
+                                   sizeof(fal_acl_rule_type_t)));
 
-    if (FAL_ACL_RULE_MAC == entry.rule_type)
+    if (FAL_ACL_RULE_MAC == entry.rule_type ||
+        FAL_ACL_RULE_TUNNEL_MAC == entry.rule_type)
     {
-        rv = cmd_data_check_mac_field(&entry);
+        rv = cmd_data_check_mac_field(&entry, A_FALSE);
         if (SW_OK != rv)
         {
             return rv;
         }
     }
 
-    if (FAL_ACL_RULE_IP4 == entry.rule_type)
+    if (FAL_ACL_RULE_IP4 == entry.rule_type ||
+        FAL_ACL_RULE_TUNNEL_IP4 == entry.rule_type)
     {
-        rv = cmd_data_check_mac_field(&entry);
+        rv = cmd_data_check_mac_field(&entry, A_FALSE);
         if (SW_OK != rv)
         {
             return rv;
         }
 
-        rv = cmd_data_check_ip4_field(&entry);
+        rv = cmd_data_check_ip4_field(&entry, A_FALSE);
         if (SW_OK != rv)
         {
             return rv;
@@ -6956,15 +7530,16 @@ cmd_data_check_aclrule(char *info, void *val, a_uint32_t size)
         }
     }
 
-    if (FAL_ACL_RULE_IP6 == entry.rule_type)
+    if (FAL_ACL_RULE_IP6 == entry.rule_type ||
+        FAL_ACL_RULE_TUNNEL_IP6 == entry.rule_type)
     {
-        rv = cmd_data_check_mac_field(&entry);
+        rv = cmd_data_check_mac_field(&entry, A_FALSE);
         if (SW_OK != rv)
         {
             return rv;
         }
 
-        rv = cmd_data_check_ip6_field(&entry);
+        rv = cmd_data_check_ip6_field(&entry, A_FALSE);
         if (SW_OK != rv)
         {
             return rv;
@@ -6977,7 +7552,7 @@ cmd_data_check_aclrule(char *info, void *val, a_uint32_t size)
         }
     }
 
-    rv = cmd_data_check_udf_field(&entry);
+    rv = cmd_data_check_udf_field(&entry, A_FALSE);
     if (SW_OK != rv)
     {
         return rv;
@@ -6991,6 +7566,100 @@ cmd_data_check_aclrule(char *info, void *val, a_uint32_t size)
     if (tmpdata)
     {
         FAL_FIELD_FLG_SET(entry.field_flg, FAL_ACL_FIELD_INVERSE_ALL);
+    }
+
+    if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) &&
+        (FAL_ACL_RULE_TUNNEL_MAC == entry.rule_type ||
+        FAL_ACL_RULE_TUNNEL_IP4 == entry.rule_type ||
+        FAL_ACL_RULE_TUNNEL_IP6 == entry.rule_type ||
+        FAL_ACL_RULE_TUNNEL_UDF == entry.rule_type))
+    {
+        /*query tunnel info fields */
+        cmd_data_check_element("tunnel info fields:", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+        if(tmpdata)
+        {
+            rv = cmd_data_check_tunnel_info_field(&entry.tunnel_info);
+            if (SW_OK != rv)
+            {
+                return rv;
+            }
+        }
+        /*query inner packet fields*/
+        cmd_data_check_element("inner packet fields:", "no", "usage: <yes/no/y/n>\n",
+                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                   sizeof (a_bool_t)));
+        if(tmpdata)
+        {
+            /* get inner rule type configuration */
+            cmd_data_check_element("rule type", NULL, "usage: <mac/ip4/ip6/udf> \n",
+                           cmd_data_check_ruletype, (cmd, &entry.inner_rule_field.rule_type,
+                                   sizeof(fal_acl_rule_type_t)));
+            if(FAL_ACL_RULE_MAC == entry.inner_rule_field.rule_type)
+            {
+                rv = cmd_data_check_mac_field(&tmp_entry, A_TRUE);
+                if (SW_OK != rv)
+                {
+                    return rv;
+                }
+            }
+            if(FAL_ACL_RULE_IP4 == entry.inner_rule_field.rule_type)
+            {
+                rv = cmd_data_check_mac_field(&tmp_entry, A_TRUE);
+                if (SW_OK != rv)
+                {
+                    return rv;
+                }
+
+                rv = cmd_data_check_ip4_field(&tmp_entry, A_TRUE);
+                if (SW_OK != rv)
+                {
+                    return rv;
+                }
+
+                rv = cmd_data_check_ip_field(&tmp_entry);
+                if (SW_OK != rv)
+                {
+                    return rv;
+                }
+            }
+            if (FAL_ACL_RULE_IP6 == entry.inner_rule_field.rule_type)
+            {
+                rv = cmd_data_check_mac_field(&tmp_entry, A_TRUE);
+                if (SW_OK != rv)
+                {
+                    return rv;
+                }
+
+                rv = cmd_data_check_ip6_field(&tmp_entry, A_TRUE);
+                if (SW_OK != rv)
+                {
+                    return rv;
+                }
+
+                rv = cmd_data_check_ip_field(&tmp_entry);
+                if (SW_OK != rv)
+                {
+                    return rv;
+                }
+            }
+            rv = cmd_data_check_udf_field(&tmp_entry, A_TRUE);
+            if (SW_OK != rv)
+            {
+                return rv;
+            }
+            /*convert to inner rule filed*/
+            acl_rule_field_convert(&tmp_entry, &entry.inner_rule_field, A_TRUE);
+            /* get rule inverse configuration */
+            cmd_data_check_element("rule inverse", "no", "usage: <yes/no/y/n>\n",
+                                    cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                            sizeof (a_bool_t)));
+            if (tmpdata)
+            {
+                FAL_FIELD_FLG_SET(entry.inner_rule_field.field_flg, FAL_ACL_FIELD_INVERSE_ALL);
+            }
+        }
     }
 
     rv = cmd_data_check_acl_action(&entry);
@@ -7026,33 +7695,22 @@ static void cmd_data_print_acl_bypass_bitmap(a_uint32_t bitmap)
         dprintf("\t[bypass_port_isolation]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_PORT_ISOLATION)&0x1);
 	return;
 }
-void
-cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
-                       a_uint32_t size)
+
+void acl_rule_field_print(fal_acl_rule_t * rule)
 {
-    fal_acl_rule_t *rule;
-
-    rule = (fal_acl_rule_t *) buf;
-
-    cmd_data_print_ruletype("\n[rule_type]:",
-                            (a_uint32_t *) & (rule->rule_type),
-                            sizeof (fal_acl_rule_type_t));
-
-    dprintf("\n[priority]:0x%x", rule->pri);
-    cmd_data_print_confirm("\n[post_routing_en]:", rule->post_routing, sizeof(a_uint32_t));
-    dprintf("\n[acl_pool]:0x%x", rule->acl_pool);
-
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_FAKE_MAC_HEADER))
     {
-    	cmd_data_print_confirm("\n[fake_mac_header]:", rule->is_fake_mac_header_val, sizeof(a_uint32_t));
+        cmd_data_print_confirm("\n[fake_mac_header]:",
+                                rule->is_fake_mac_header_val,
+                                sizeof(a_uint32_t));
     }
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_SNAP))
     {
-    	cmd_data_print_confirm("\n[snap]:", rule->is_snap_val, sizeof(a_uint32_t));
+        cmd_data_print_confirm("\n[snap]:", rule->is_snap_val, sizeof(a_uint32_t));
     }
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_ETHERNET))
     {
-    	cmd_data_print_confirm("\n[ethernet]:", rule->is_ethernet_val, sizeof(a_uint32_t));
+        cmd_data_print_confirm("\n[ethernet]:", rule->is_ethernet_val, sizeof(a_uint32_t));
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_DA))
@@ -7451,21 +8109,119 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF2))
     {
-	dprintf("  [udf2]:0x%x", rule->udf2_val);
-	dprintf("  [udf2_mask]:0x%x", rule->udf2_mask);
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+        {
+            cmd_data_print_fieldop("\n[udf2_op]:",
+                                   (a_uint32_t *) & (rule->udf2_op),
+                                   sizeof (fal_acl_field_op_t));
+        }
+        if (FAL_ACL_FIELD_MASK == rule->udf2_op)
+        {
+            dprintf("  [udf2]:0x%x", rule->udf2_val);
+            dprintf("  [udf2_mask]:0x%x", rule->udf2_mask);
+        }
+        else
+        {
+            dprintf("  [udf2_low]:0x%x", rule->udf2_val);
+            dprintf("  [udf2_high]:0x%x", rule->udf2_mask);
+        }
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF3))
     {
-	dprintf("  [udf3]:0x%x", rule->udf3_val);
-	dprintf("  [udf3_mask]:0x%x", rule->udf3_mask);
+        dprintf("  [udf3]:0x%x", rule->udf3_val);
+        dprintf("  [udf3_mask]:0x%x", rule->udf3_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDFPROFILE))
+    {
+        dprintf("  [udfprofile]:0x%x", rule->udfprofile_val);
+        dprintf("  [udfprofile_mask]:0x%x", rule->udfprofile_mask);
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_INVERSE_ALL))
     {
         dprintf("\n[rule_inverse]:yes");
     }
+    return;
+}
 
+void
+cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
+                       a_uint32_t size)
+{
+    fal_acl_rule_t *rule;
+    a_uint32_t tmpdata;
+    fal_acl_rule_t tmp_rule;
+
+    aos_mem_zero(&tmp_rule, sizeof(fal_acl_rule_t));
+    rule = (fal_acl_rule_t *) buf;
+
+    cmd_data_print_ruletype("\n[rule_type]:",
+                            (a_uint32_t *) & (rule->rule_type),
+                            sizeof (fal_acl_rule_type_t));
+
+    dprintf("\n[priority]:0x%x", rule->pri);
+    cmd_data_print_confirm("\n[post_routing_en]:", rule->post_routing, sizeof(a_uint32_t));
+    dprintf("\n[acl_pool]:0x%x", rule->acl_pool);
+
+    acl_rule_field_print(rule);
+
+    if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) &&
+        (FAL_ACL_RULE_TUNNEL_MAC == rule->rule_type ||
+        FAL_ACL_RULE_TUNNEL_IP4 == rule->rule_type ||
+        FAL_ACL_RULE_TUNNEL_IP6 == rule->rule_type ||
+        FAL_ACL_RULE_TUNNEL_UDF == rule->rule_type))
+    {
+        dprintf("\n\n tunnel rule fields: ");
+        if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_TYPE))
+        {
+            cmd_data_print_attr("tunnel_type", "\n[tunnel_type]:",
+                                       &rule->tunnel_info.tunnel_type,
+                                       sizeof(a_uint32_t));
+        }
+
+        if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_INNER_TYPE))
+        {
+            cmd_data_print_attr("hdr_type", "\n[inner_type]:",
+                                &rule->tunnel_info.inner_type,
+                                sizeof(a_uint32_t));
+        }
+
+        if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_KEY_VALID))
+        {
+            cmd_data_print_confirm("\n[tunnel_key_valid]:",
+                                   rule->tunnel_info.tunnel_key_valid,
+                                   sizeof(a_uint32_t));
+        }
+
+        if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_KEY))
+        {
+            dprintf("\n[tunnel_key]:0x%x", rule->tunnel_info.tunnel_key);
+            dprintf("  [tunnel_key_mask]:0x%x", rule->tunnel_info.tunnel_key_mask);
+        }
+
+        if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_DECAP_EN))
+        {
+            cmd_data_print_confirm("\n[tunnel_decap_en]:",
+                                   rule->tunnel_info.tunnel_decap_en,
+                                   sizeof(a_uint32_t));
+        }
+
+        if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_INVERSE_ALL))
+        {
+            dprintf("\n[rule_inverse]:yes");
+        }
+
+        dprintf("\n\n inner rule fields: ");
+        cmd_data_print_ruletype("\n[rule_type]:",
+                                (a_uint32_t *) & (rule->inner_rule_field.rule_type),
+                                sizeof (fal_acl_rule_type_t));
+        acl_rule_field_convert(&tmp_rule, &rule->inner_rule_field, A_FALSE);
+        acl_rule_field_print(&tmp_rule);
+        dprintf("\n\n action fields: ");
+    }
+    /*action fields*/
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_PERMIT))
     {
         dprintf("\n[permit]:yes");
@@ -7626,6 +8382,18 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
         {
             dprintf("\n[policy_forward]:dnat");
         }
+
+        if (FAL_ACL_POLICY_SNAPT == rule->policy_fwd)
+        {
+            dprintf("\n[policy_forward]:snapt");
+            dprintf("\n[snapt_l4_port]:0x%x", rule->napt_l4_port);
+        }
+
+        if (FAL_ACL_POLICY_DNAPT == rule->policy_fwd)
+        {
+            dprintf("\n[policy_forward]:dnapt");
+            dprintf("\n[dnapt_l4_port]:0x%x", rule->napt_l4_port);
+        }
     }
 
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_BYPASS_EGRESS_TRANS))
@@ -7681,8 +8449,38 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
     {
         dprintf("\n[meta_data]:no");
     }
-
     dprintf("\n[qos_res_prec]:%d", rule->qos_res_prec);
+
+    /*new pre acl actions print for alder*/
+    if((FAL_ACL_RULE_TUNNEL_MAC == rule->rule_type ||
+        FAL_ACL_RULE_TUNNEL_IP4 == rule->rule_type ||
+        FAL_ACL_RULE_TUNNEL_IP6 == rule->rule_type ||
+        FAL_ACL_RULE_TUNNEL_UDF == rule->rule_type) &&
+        (ssdk_cfg.init_cfg.chip_type == CHIP_APPE))
+    {
+        if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_CASCADE))
+        {
+            dprintf("\n[cascade_data]:0x%x", rule->cascade_data);
+        }
+
+        if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_VPN))
+        {
+            tmpdata = rule->vpn_type;
+            cmd_data_print_attr("vpn_type", "\n[vpn_type]:",
+                    &tmpdata, sizeof(tmpdata));
+            dprintf("\n[vpn_id]:0x%x", rule->vpn_id);
+        }
+
+        if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_LEARN_DIS))
+        {
+            dprintf("\n[learn_dis]:yes");
+        }
+        else
+        {
+            dprintf("\n[learn_dis]:no");
+        }
+    }
+
     dprintf("\n[match_counter]:%d", rule->match_cnt);
     dprintf("\n[match_bytes]:%lld", rule->match_bytes);
 
@@ -33137,74 +33935,6 @@ cmd_data_print_tag_format(a_char_t *param_name, a_uint32_t *buf, a_uint32_t size
     }
 }
 
-static const a_char_t *tunnel_type_str[FAL_TUNNEL_TYPE_INVALID_TUNNEL] = {
-	"gre_tap_ipv4",
-	"gre_tap_ipv6",
-	"vxlan_ipv4",
-	"vxlan_ipv6",
-	"vxlan_gpe_ipv4",
-	"vxlan_gpe_ipv6",
-	"reserved",
-	"ipv4_ipv6",
-	"program0",
-	"program1",
-	"program2",
-	"program3",
-	"program4",
-	"program5",
-	"geneve_ipv4",
-	"geneve_ipv6"
-};
-
-sw_error_t
-cmd_data_check_tunnel_type(char *cmd_str,
-		fal_tunnel_type_t *arg_val, a_uint32_t size)
-{
-	fal_tunnel_type_t type;
-	for (type = FAL_TUNNEL_TYPE_GRE_TAP_OVER_IPV4;
-			type < FAL_TUNNEL_TYPE_INVALID_TUNNEL; type++) {
-		if (!strcasecmp(cmd_str, tunnel_type_str[type])) {
-			*arg_val = type;
-			break;
-		}
-	}
-
-	if (type == FAL_TUNNEL_TYPE_INVALID_TUNNEL) {
-		return SW_BAD_VALUE;
-	} else {
-		return SW_OK;
-	}
-}
-
-void
-cmd_data_print_tunnel_type(a_char_t *param_name,
-		fal_tunnel_type_t *buf, a_uint32_t size)
-{
-    dprintf("%s:", param_name);
-    switch (*buf) {
-	    case FAL_TUNNEL_TYPE_GRE_TAP_OVER_IPV4:
-	    case FAL_TUNNEL_TYPE_GRE_TAP_OVER_IPV6:
-	    case FAL_TUNNEL_TYPE_VXLAN_OVER_IPV4:
-	    case FAL_TUNNEL_TYPE_VXLAN_OVER_IPV6:
-	    case FAL_TUNNEL_TYPE_VXLAN_GPE_OVER_IPV4:
-	    case FAL_TUNNEL_TYPE_VXLAN_GPE_OVER_IPV6:
-	    case FAL_TUNNEL_TYPE_IPV4_OVER_IPV6:
-	    case FAL_TUNNEL_TYPE_PROGRAM0:
-	    case FAL_TUNNEL_TYPE_PROGRAM1:
-	    case FAL_TUNNEL_TYPE_PROGRAM2:
-	    case FAL_TUNNEL_TYPE_PROGRAM3:
-	    case FAL_TUNNEL_TYPE_PROGRAM4:
-	    case FAL_TUNNEL_TYPE_PROGRAM5:
-	    case FAL_TUNNEL_TYPE_GENEVE_OVER_IPV4:
-	    case FAL_TUNNEL_TYPE_GENEVE_OVER_IPV6:
-		    dprintf("%s", tunnel_type_str[*buf]);
-		    break;
-	    default:
-		    dprintf("UNKNOWN VALUE %d", *buf);
-		    break;
-    }
-}
-
 static const a_char_t *decap_key_str[FAL_TUNNEL_KEY_MAX] = {
 	"key_sip",
 	"key_dip",
@@ -34633,7 +35363,7 @@ cmd_data_check_tunnel_decap_entry(char *cmd_str,
 			rv = SW_BAD_VALUE;
 		}
 		else {
-			rv = cmd_data_check_tunnel_type(cmd, &(entry_rule->tunnel_type),
+			rv = cmd_data_check_attr("tunnel_type", cmd, &(entry_rule->tunnel_type),
 					sizeof(entry_rule->tunnel_type));
 			if (SW_OK != rv) {
 				dprintf("usage: tunnel_type:"
@@ -35674,7 +36404,8 @@ cmd_data_print_tunnel_decap_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint3
 
 	dprintf("\n[%s] \n", param_name);
 
-	cmd_data_print_tunnel_type("[tunnel_type]", &entry_rule->tunnel_type, sizeof(a_uint32_t));
+	cmd_data_print_attr("tunnel_type", "[tunnel_type]",
+			&entry_rule->tunnel_type, sizeof(a_uint32_t));
 	dprintf(" [entry_id]:%d", entry_rule->entry_id);
 	dprintf("\n\n");
 
