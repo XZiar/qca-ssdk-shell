@@ -22939,80 +22939,109 @@ cmd_data_print_global_qinqmode(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 sw_error_t
 cmd_data_check_port_qinqmode(char *info, void *val, a_uint32_t size)
 {
-    char *cmd;
-    sw_error_t rv;
-    fal_port_qinq_role_t *pEntry = (fal_port_qinq_role_t *)val;
+	char *cmd;
+	sw_error_t rv;
+	fal_port_qinq_role_t *pEntry = (fal_port_qinq_role_t *)val;
 
-    memset(pEntry, 0, sizeof(fal_port_qinq_role_t));
+	memset(pEntry, 0, sizeof(fal_port_qinq_role_t));
 
-    /* get mask */
-    do
-    {
-        cmd = get_sub_cmd("mask", "0x0");
-        SW_RTN_ON_NULL_PARAM(cmd);
+	/* get mask */
+	do
+	{
+		cmd = get_sub_cmd("mask", "0x0");
+		SW_RTN_ON_NULL_PARAM(cmd);
 
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <bit 0 for ingress and bit 1 for egress>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(pEntry->mask), sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: <bit 0 for ingress and bit 1 for egress>\n");
-        }
-    }while (talk_mode && (SW_OK != rv));
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <bit 0 for ingress and bit 1 for egress, "
+					"bit2 for tunnel parser>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_uint32(cmd, &(pEntry->mask), sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: <bit 0 for ingress and bit 1 for egress, "
+						"bit2 for tunnel parser>\n");
+		}
+	}while (talk_mode && (SW_OK != rv));
 
-    /* get ingress mode */
-    do
-    {
-        cmd = get_sub_cmd("ingress_qinq_role", "edge");
-        SW_RTN_ON_NULL_PARAM(cmd);
+	/* get ingress mode */
+	do
+	{
+		cmd = get_sub_cmd("ingress_qinq_role", "edge");
+		SW_RTN_ON_NULL_PARAM(cmd);
 
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <edge/core>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_qinq_role(cmd, &(pEntry->ingress_port_role), sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: <edge/core>\n");
-        }
-    }while (talk_mode && (SW_OK != rv));
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <edge/core>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_qinq_role(cmd,
+					&(pEntry->ingress_port_role), sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: <edge/core>\n");
+		}
+	}while (talk_mode && (SW_OK != rv));
 
-    /* get egress mode */
-    do
-    {
-        cmd = get_sub_cmd("egress_qinq_role", "edge");
-        SW_RTN_ON_NULL_PARAM(cmd);
+	/* get egress mode */
+	do
+	{
+		cmd = get_sub_cmd("egress_qinq_role", "edge");
+		SW_RTN_ON_NULL_PARAM(cmd);
 
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <edge/core>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_qinq_role(cmd, &(pEntry->egress_port_role), sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: <edge/core>\n");
-        }
-    }while (talk_mode && (SW_OK != rv));
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <edge/core>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_qinq_role(cmd,
+					&(pEntry->egress_port_role), sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: <edge/core>\n");
+		}
+	}while (talk_mode && (SW_OK != rv));
+
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+		do
+		{
+			cmd = get_sub_cmd("tunnel_qinq_role", "edge");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4))
+			{
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4))
+			{
+				dprintf("usage: <edge/core>\n");
+				rv = SW_BAD_VALUE;
+			}
+			else
+			{
+				rv = cmd_data_check_qinq_role(cmd,
+						&(pEntry->tunnel_port_role), sizeof(a_uint32_t));
+				if (SW_OK != rv)
+					dprintf("usage: <edge/core>\n");
+			}
+		} while (talk_mode && (SW_OK != rv));
+	}
 
     return SW_OK;
 }
@@ -23020,119 +23049,180 @@ cmd_data_check_port_qinqmode(char *info, void *val, a_uint32_t size)
 void
 cmd_data_print_port_qinqmode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 {
-    fal_port_qinq_role_t *entry;
+	fal_port_qinq_role_t *entry;
 
-    entry = (fal_port_qinq_role_t *) buf;
-    dprintf("\n");
-    dprintf("[mask]:%d\n", entry->mask);
+	entry = (fal_port_qinq_role_t *) buf;
+	dprintf("\n");
+	dprintf("[mask]:%d\n", entry->mask);
 
-    cmd_data_print_qinq_role("ingress_qinq_role",
-				(a_uint32_t *) & (entry->ingress_port_role),
+	cmd_data_print_qinq_role("ingress_qinq_role",
+			(a_uint32_t *) & (entry->ingress_port_role),
+			sizeof(a_uint32_t));
+
+	cmd_data_print_qinq_role("egress_qinq_role",
+			(a_uint32_t *) & (entry->egress_port_role),
+			sizeof(a_uint32_t));
+
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+		cmd_data_print_qinq_role("tunnel_qinq_role",
+				(a_uint32_t *) & (entry->tunnel_port_role),
 				sizeof(a_uint32_t));
-
-    cmd_data_print_qinq_role("egress_qinq_role",
-				(a_uint32_t *) & (entry->egress_port_role),
-				sizeof(a_uint32_t));
-
+	}
 }
 
 sw_error_t
 cmd_data_check_tpid(char *info, void *val, a_uint32_t size)
 {
-    char *cmd;
-    sw_error_t rv;
-    fal_tpid_t *pEntry = (fal_tpid_t *)val;
-    a_uint32_t tmp = 0;
+	char *cmd;
+	sw_error_t rv;
+	fal_tpid_t *pEntry = (fal_tpid_t *)val;
+	a_uint32_t tmp = 0;
 
-    memset(pEntry, 0, sizeof(fal_tpid_t));
+	memset(pEntry, 0, sizeof(fal_tpid_t));
 
-    /* get mask */
-    do
-    {
-        cmd = get_sub_cmd("mask", "0x0");
-        SW_RTN_ON_NULL_PARAM(cmd);
+	/* get mask */
+	do
+	{
+		cmd = get_sub_cmd("mask", "0x0");
+		SW_RTN_ON_NULL_PARAM(cmd);
 
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <bit 0 for ctpid and bit 1 for stpid>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(pEntry->mask), sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: <bit 0 for ctpid and bit 1 for stpid>\n");
-        }
-    }while (talk_mode && (SW_OK != rv));
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <bit 0 for ctpid and bit 1 for stpid bit 2 for "
+					"tunnel ctpid, bit 3 for tunnel stpid >\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_uint32(cmd, &(pEntry->mask), sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: <bit 0 for ctpid and bit 1 for stpid bit 2 for "
+						"tunnel ctpid, bit 3 for tunnel stpid >\n");
+		}
+	} while (talk_mode && (SW_OK != rv));
 
-    /* get ctpid */
-    do
-    {
-        cmd = get_sub_cmd("ctagtpid", "0x8100");
-        SW_RTN_ON_NULL_PARAM(cmd);
+	/* get ctpid */
+	do
+	{
+		cmd = get_sub_cmd("ctagtpid", "0x8100");
+		SW_RTN_ON_NULL_PARAM(cmd);
 
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <0x8100>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: <0x8100>\n");
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <0x8100>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: <0x8100>\n");
 
-	     pEntry->ctpid = (a_uint16_t)tmp;
-        }
-    }while (talk_mode && (SW_OK != rv));
+			pEntry->ctpid = (a_uint16_t)tmp;
+		}
+	} while (talk_mode && (SW_OK != rv));
 
-    /* get stpid */
-    do
-    {
-        cmd = get_sub_cmd("stagtpid", "0x88a8");
-        SW_RTN_ON_NULL_PARAM(cmd);
+	/* get stpid */
+	do
+	{
+		cmd = get_sub_cmd("stagtpid", "0x88a8");
+		SW_RTN_ON_NULL_PARAM(cmd);
 
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <0x88a8>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: <0x88a8>\n");
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <0x88a8>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: <0x88a8>\n");
 
-	     pEntry->stpid = (a_uint16_t)tmp;
-        }
-    }while (talk_mode && (SW_OK != rv));
+			pEntry->stpid = (a_uint16_t)tmp;
+		}
+	} while (talk_mode && (SW_OK != rv));
 
-    return SW_OK;
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+		do
+		{
+			cmd = get_sub_cmd("tunnel_ctagtpid", "0x8100");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4))
+			{
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4))
+			{
+				dprintf("usage: <0x8100>\n");
+				rv = SW_BAD_VALUE;
+			}
+			else
+			{
+				rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+				if (SW_OK != rv)
+					dprintf("usage: <0x8100>\n");
+
+				pEntry->tunnel_ctpid = (a_uint16_t)tmp;
+			}
+		} while (talk_mode && (SW_OK != rv));
+
+		/* get stpid */
+		do
+		{
+			cmd = get_sub_cmd("tunnel_stagtpid", "0x88a8");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4))
+			{
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4))
+			{
+				dprintf("usage: <0x88a8>\n");
+				rv = SW_BAD_VALUE;
+			}
+			else
+			{
+				rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+				if (SW_OK != rv)
+					dprintf("usage: <0x88a8>\n");
+
+				pEntry->tunnel_stpid = (a_uint16_t)tmp;
+			}
+		} while (talk_mode && (SW_OK != rv));
+	}
+
+	return SW_OK;
 }
 
 void
 cmd_data_print_tpid(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 {
-    fal_tpid_t *entry;
+	fal_tpid_t *entry;
 
-    entry = (fal_tpid_t *) buf;
-    dprintf("\n");
-    dprintf("[mask]:%d\n", entry->mask);
-    dprintf("[ctagtpid]:0x%x\n", entry->ctpid);
-    dprintf("[stagtpid]:0x%x\n", entry->stpid);
-
+	entry = (fal_tpid_t *) buf;
+	dprintf("\n");
+	dprintf("[mask]:%d\n", entry->mask);
+	dprintf("[ctagtpid]:0x%x\n", entry->ctpid);
+	dprintf("[stagtpid]:0x%x\n", entry->stpid);
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+		dprintf("[tunnel_ctagtpid]:0x%x\n", entry->tunnel_ctpid);
+		dprintf("[tunnel_stagtpid]:0x%x\n", entry->tunnel_stpid);
+	}
 }
 
 sw_error_t
