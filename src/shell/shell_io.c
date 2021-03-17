@@ -31599,6 +31599,25 @@ cmd_data_check_tunnel_port_intf(char *cmd_str, fal_tunnel_port_intf_t *arg_val, 
 	} while(talk_mode && (SW_OK != rv));
 
 	do {
+		cmd = get_sub_cmd("dmac_addr", "0-0-0-0-0-0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: the format is xx-xx-xx-xx-xx-xx \n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_macaddr(cmd, &entry.mac_addr,
+					sizeof (fal_mac_addr_t));
+			if (SW_OK != rv)
+				dprintf("usage: the format is xx-xx-xx-xx-xx-xx \n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
 		cmd = get_sub_cmd("pppoe_en", "n");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
@@ -31618,21 +31637,40 @@ cmd_data_check_tunnel_port_intf(char *cmd_str, fal_tunnel_port_intf_t *arg_val, 
 	} while(talk_mode && (SW_OK != rv));
 
 	do {
-		cmd = get_sub_cmd("dmac_addr", "0-0-0-0-0-0");
+		cmd = get_sub_cmd("pppoe_group_id", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4)) {
 			return SW_BAD_VALUE;
 		}
 		else if (!strncasecmp(cmd, "help", 4)) {
-			dprintf("usage: the format is xx-xx-xx-xx-xx-xx \n");
+			dprintf("usage: pppoe group id\n");
 			rv = SW_BAD_VALUE;
 		}
 		else {
-			rv = cmd_data_check_macaddr(cmd, &entry.mac_addr,
-					sizeof (fal_mac_addr_t));
+			rv = cmd_data_check_uint32(cmd, &(entry.pppoe_group_id),
+					sizeof(a_uint32_t));
 			if (SW_OK != rv)
-				dprintf("usage: the format is xx-xx-xx-xx-xx-xx \n");
+				dprintf("usage: pppoe group id\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("vlan_group_id", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: vlan group id\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint32(cmd, &(entry.vlan_group_id),
+					sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: vlan group id\n");
 		}
 	} while(talk_mode && (SW_OK != rv));
 
@@ -31651,11 +31689,13 @@ cmd_data_print_tunnel_port_intf(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_
 	cmd_data_print_confirm("[tl_l3if_en]", entry->l3_if.l3_if_valid,
 			sizeof(entry->l3_if.l3_if_valid));
 	dprintf(" [tl_l3if]:%d", entry->l3_if.l3_if_index);
+	cmd_data_print_macaddr(" [dmac_addr]:", (a_uint32_t *) &(entry->mac_addr),
+			sizeof (fal_mac_addr_t));
 	dprintf("\n");
 	cmd_data_print_confirm("[pppoe_en]", entry->pppoe_en,
 			sizeof(entry->pppoe_en));
-	cmd_data_print_macaddr(" [dmac_addr]:", (a_uint32_t *) &(entry->mac_addr),
-			sizeof (fal_mac_addr_t));
+	dprintf(" [pppoe_group_id]:%d", entry->pppoe_group_id);
+	dprintf(" [vlan_group_id]:%d", entry->vlan_group_id);
 	dprintf("\n");
 }
 
