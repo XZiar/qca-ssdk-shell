@@ -56,45 +56,21 @@ set_devid(int dev_id)
 sw_error_t
 cmd_show_fdb(a_ulong_t *arg_val)
 {
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_ISIS) {
+    if ((ssdk_cfg.init_cfg.chip_type == CHIP_ISISC) ||
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_ISIS) ||
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_DESS) ||
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) ||
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE)) {
 	    sw_error_t rtn;
 	    a_uint32_t cnt = 0;
-	    fal_fdb_op_t    *fdb_op    = (fal_fdb_op_t *)    (ioctl_buf + sizeof(sw_error_t) / 4);
-	    fal_fdb_entry_t *fdb_entry = (fal_fdb_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4 + sizeof(fal_fdb_op_t) / 4);
+	    a_uint16_t rtn_size = sizeof(sw_error_t);
+	    a_uint16_t p_size = sizeof(a_ulong_t);
 
-	    aos_mem_zero(fdb_op,    sizeof (fal_fdb_op_t));
-	    aos_mem_zero(fdb_entry, sizeof (fal_fdb_entry_t));
-	    arg_val[0] = SW_API_FDB_EXTEND_FIRST;
+	    fal_fdb_op_t *fdb_op = (fal_fdb_op_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
+	    fal_fdb_entry_t *fdb_entry = (fal_fdb_entry_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size +
+			    (sizeof(fal_fdb_op_t)+p_size-1)/p_size);
 
-	    while (1)
-	    {
-	        arg_val[1] = (a_ulong_t) ioctl_buf;
-	        arg_val[2] = get_devid();
-	        arg_val[3] = (a_ulong_t) fdb_op;
-	        arg_val[4] = (a_ulong_t) fdb_entry;
-
-	        rtn = cmd_exec_api(arg_val);
-	        if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
-	        {
-	            break;
-	        }
-	        arg_val[0] = SW_API_FDB_EXTEND_NEXT;
-	        cnt++;
-	    }
-
-	    if((rtn != SW_OK) && (rtn != SW_NO_MORE))
-	        cmd_print_error(rtn);
-	    else
-	        dprintf("\ntotal %d entries\n", cnt);
-    }else if ((ssdk_cfg.init_cfg.chip_type == CHIP_ISISC) ||
-               (ssdk_cfg.init_cfg.chip_type == CHIP_DESS) ||
-               (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE)) {
-	    sw_error_t rtn;
-	    a_uint32_t cnt = 0;
-	    fal_fdb_op_t    *fdb_op    = (fal_fdb_op_t *)    (ioctl_buf + sizeof(sw_error_t) / 4);
-	    fal_fdb_entry_t *fdb_entry = (fal_fdb_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4 + sizeof(fal_fdb_op_t) / 4);
-
-	    aos_mem_zero(fdb_op,    sizeof (fal_fdb_op_t));
+	    aos_mem_zero(fdb_op, sizeof (fal_fdb_op_t));
 	    aos_mem_zero(fdb_entry, sizeof (fal_fdb_entry_t));
 	    arg_val[0] = SW_API_FDB_EXTEND_FIRST;
 
@@ -148,8 +124,10 @@ cmd_show_fdb(a_ulong_t *arg_val)
 	        dprintf("\ntotal %d entries\n", cnt);
     }else {
 	    sw_error_t rtn;
-	    a_uint32_t rtn_size = 1, cnt = 0;
-	    fal_fdb_entry_t *fdb_entry = (fal_fdb_entry_t *) (ioctl_buf + rtn_size);
+	    a_uint32_t cnt = 0;
+	    a_uint16_t rtn_size = sizeof(sw_error_t);
+	    a_uint16_t p_size = sizeof(a_ulong_t);
+	    fal_fdb_entry_t *fdb_entry = (fal_fdb_entry_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
 	    memset(fdb_entry, 0, sizeof (fal_fdb_entry_t));
 	    arg_val[0] = SW_API_FDB_FIRST;
@@ -183,7 +161,10 @@ cmd_show_ctrlpkt(a_ulong_t *arg_val)
 {
 	sw_error_t rtn;
 	a_uint32_t cnt = 0;
-	fal_ctrlpkt_profile_t *ctrlpkt = (fal_ctrlpkt_profile_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+	a_uint16_t rtn_size = sizeof(sw_error_t);
+	a_uint16_t p_size = sizeof(a_ulong_t);
+	fal_ctrlpkt_profile_t *ctrlpkt =
+		(fal_ctrlpkt_profile_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
 	aos_mem_zero(ctrlpkt, sizeof (fal_ctrlpkt_profile_t));
 	arg_val[0] = SW_API_MGMTCTRL_CTRLPKT_PROFILE_GETFIRST;
@@ -215,8 +196,10 @@ sw_error_t
 cmd_show_vlan(a_ulong_t *arg_val)
 {
 	sw_error_t rtn = SW_OK;
-	a_uint32_t rtn_size = 1 ,tmp_vid = FAL_NEXT_ENTRY_FIRST_ID, cnt = 0;
-	fal_vlan_t *vlan_entry = (fal_vlan_t *) (ioctl_buf + rtn_size);
+	a_uint32_t tmp_vid = FAL_NEXT_ENTRY_FIRST_ID, cnt = 0;
+	a_uint16_t rtn_size = sizeof(sw_error_t);
+	a_uint16_t p_size = sizeof(a_ulong_t);
+	fal_vlan_t *vlan_entry = (fal_vlan_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
 	switch (ssdk_cfg.init_cfg.chip_type) {
 		case CHIP_ISIS:
@@ -266,8 +249,11 @@ cmd_show_resv_fdb(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
-    a_ulong_t  *iterator  = ioctl_buf + 1;
-    fal_fdb_entry_t *entry = (fal_fdb_entry_t *) (ioctl_buf + 2);
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
+    a_ulong_t  *iterator  = (ioctl_buf+(rtn_size+p_size-1)/p_size);
+    fal_fdb_entry_t *entry = (fal_fdb_entry_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size +
+		    (sizeof(*iterator)+p_size-1)/p_size);
 
     *iterator = 0;
     while (1)
@@ -301,7 +287,9 @@ cmd_show_host(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
-    fal_host_entry_t *host_entry = (fal_host_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
+    fal_host_entry_t *host_entry = (fal_host_entry_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
     aos_mem_zero(host_entry, sizeof (fal_host_entry_t));
     host_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
@@ -335,7 +323,9 @@ cmd_show_host_ipv4(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
-    fal_host_entry_t *host_entry = (fal_host_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
+    fal_host_entry_t *host_entry = (fal_host_entry_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
     aos_mem_zero(host_entry, sizeof (fal_host_entry_t));
     host_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
@@ -367,7 +357,9 @@ cmd_show_host_ipv6(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
-    fal_host_entry_t *host_entry = (fal_host_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
+    fal_host_entry_t *host_entry = (fal_host_entry_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
     aos_mem_zero(host_entry, sizeof (fal_host_entry_t));
     host_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
@@ -399,7 +391,9 @@ cmd_show_host_ipv4M(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
-    fal_host_entry_t *host_entry = (fal_host_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
+    fal_host_entry_t *host_entry = (fal_host_entry_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
     aos_mem_zero(host_entry, sizeof (fal_host_entry_t));
     host_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
@@ -431,7 +425,9 @@ cmd_show_host_ipv6M(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
-    fal_host_entry_t *host_entry = (fal_host_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
+    fal_host_entry_t *host_entry = (fal_host_entry_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
     aos_mem_zero(host_entry, sizeof (fal_host_entry_t));
     host_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
@@ -463,7 +459,9 @@ cmd_show_flow_entry(a_ulong_t *arg_val, a_uint32_t type)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
-    fal_flow_entry_t *flow_entry = (fal_flow_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
+    fal_flow_entry_t *flow_entry = (fal_flow_entry_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
     aos_mem_zero(flow_entry, sizeof (fal_flow_entry_t));
     flow_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
@@ -519,7 +517,10 @@ cmd_show_intfmac(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
-    fal_intf_mac_entry_t *intfmac_entry = (fal_intf_mac_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
+    fal_intf_mac_entry_t *intfmac_entry =
+	    (fal_intf_mac_entry_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
     aos_mem_zero(intfmac_entry, sizeof (fal_intf_mac_entry_t));
     intfmac_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
@@ -553,7 +554,10 @@ cmd_show_pubaddr(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
-    fal_nat_pub_addr_t *pubaddr_entry = (fal_nat_pub_addr_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
+    fal_nat_pub_addr_t *pubaddr_entry =
+	    (fal_nat_pub_addr_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
     aos_mem_zero(pubaddr_entry, sizeof (fal_nat_pub_addr_t));
     pubaddr_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
@@ -588,7 +592,9 @@ cmd_show_nat(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
-    fal_nat_entry_t *nat_entry = (fal_nat_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
+    fal_nat_entry_t *nat_entry = (fal_nat_entry_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
     aos_mem_zero(nat_entry, sizeof (fal_nat_entry_t));
     nat_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
@@ -623,7 +629,9 @@ cmd_show_napt(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
-    fal_napt_entry_t *napt_entry = (fal_napt_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
+    fal_napt_entry_t *napt_entry = (fal_napt_entry_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
     aos_mem_zero(napt_entry, sizeof (fal_napt_entry_t));
     napt_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
@@ -657,7 +665,9 @@ cmd_show_flow(a_ulong_t *arg_val)
 {
     sw_error_t rtn;
     a_uint32_t cnt = 0;
-    fal_napt_entry_t *napt_entry = (fal_napt_entry_t *) (ioctl_buf + sizeof(sw_error_t) / 4);
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
+    fal_napt_entry_t *napt_entry = (fal_napt_entry_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
     aos_mem_zero(napt_entry, sizeof (fal_napt_entry_t));
     napt_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;

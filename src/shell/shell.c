@@ -92,20 +92,21 @@ cmd_input_parser(a_ulong_t *arg_val, a_uint32_t arg_index, sw_api_param_t *pp)
 {
     a_int16_t i;
     a_ulong_t *pbuf;
-    a_uint16_t rtn_size = 1;
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
     sw_api_param_t *pptmp = pp;
 
-    pbuf = ioctl_buf + rtn_size;    /*reserve for return value */
+    pbuf = ioctl_buf + (rtn_size + p_size -1) / p_size;    /*reserve for return value */
 
     for (i = 0; i < arg_index; i++)
     {
         pptmp = pp + i;
         if (pptmp->param_type & SW_PARAM_PTR)
         {
-            pbuf += (pptmp->data_size + 3) / 4;
+            pbuf += (pptmp->data_size + p_size -1) / p_size;
         }
     }
-    if ((pbuf - ioctl_buf + (pptmp->data_size + 3) / 4) > (IOCTL_BUF_SIZE/4))
+    if ((pbuf - ioctl_buf + (pptmp->data_size + p_size -1) / p_size) > (IOCTL_BUF_SIZE / p_size))
     {
         return SW_NO_RESOURCE;
     }
@@ -174,7 +175,8 @@ cmd_api_output(sw_api_param_t *pp, a_uint32_t nr_param, a_ulong_t * args)
 {
     a_uint16_t i;
     a_ulong_t *pbuf;
-    a_uint16_t rtn_size = 1;
+    a_uint16_t rtn_size = sizeof(sw_error_t);
+    a_uint16_t p_size = sizeof(a_ulong_t);
     sw_error_t rtn = (sw_error_t) (*ioctl_buf);
     sw_api_param_t *pptmp = NULL;
 
@@ -184,7 +186,7 @@ cmd_api_output(sw_api_param_t *pp, a_uint32_t nr_param, a_ulong_t * args)
         return rtn;
     }
 
-    pbuf = ioctl_buf + rtn_size;
+    pbuf = ioctl_buf + (rtn_size + p_size -1) / p_size;
     for (i = 0; i < nr_param; i++)
     {
         pptmp = pp + i;
@@ -215,10 +217,10 @@ cmd_api_output(sw_api_param_t *pp, a_uint32_t nr_param, a_ulong_t * args)
             }
 
             if ((pbuf - ioctl_buf +
-                    (pptmp->data_size + 3) / 4) > (IOCTL_BUF_SIZE/4))
+                    (pptmp->data_size + p_size - 1) / p_size) > (IOCTL_BUF_SIZE / p_size))
                 return SW_NO_RESOURCE;
 
-            pbuf += (pptmp->data_size + 3) / 4;
+            pbuf += (pptmp->data_size + p_size -1) / p_size;
 
         }
     }
