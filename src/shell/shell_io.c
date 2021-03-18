@@ -16171,6 +16171,51 @@ cmd_data_print_vsi_counter(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
     return;
 }
 
+static const a_char_t *udp_zero_csumcmd_str[FAL_UDP_ZERO_CSUM_BUTT] = {
+	"forward",
+	"drop",
+	"recalc_mapt",
+	"rdtcpu"
+};
+
+sw_error_t
+cmd_data_check_udp_zero_csumcmd(char *cmd_str,
+		fal_udp_zero_csum_cmd_t *arg_val, a_uint32_t size)
+{
+	fal_udp_zero_csum_cmd_t type;
+	for (type = FAL_UDP_ZERO_CSUM_FRWRD;
+			type < FAL_UDP_ZERO_CSUM_BUTT; type++) {
+		if (!strcasecmp(cmd_str, udp_zero_csumcmd_str[type])) {
+			*arg_val = type;
+			break;
+		}
+	}
+
+	if (type == FAL_UDP_ZERO_CSUM_BUTT) {
+		return SW_BAD_VALUE;
+	} else {
+		return SW_OK;
+	}
+}
+
+void
+cmd_data_print_udp_zero_csumcmd(a_char_t *param_name,
+		fal_udp_zero_csum_cmd_t buf, a_uint32_t size)
+{
+    dprintf("%s:", param_name);
+    switch (buf) {
+	    case FAL_UDP_ZERO_CSUM_FRWRD:
+	    case FAL_UDP_ZERO_CSUM_DROP:
+	    case FAL_UDP_ZERO_CSUM_RECALC_MAPT:
+	    case FAL_UDP_ZERO_CSUM_RDT_TO_CPU:
+		    dprintf("%s", udp_zero_csumcmd_str[buf]);
+		    break;
+	    default:
+		    dprintf("unknown value %d", buf);
+		    break;
+    }
+}
+
 sw_error_t
 cmd_data_check_intf(char *cmd_str, void * val, a_uint32_t size)
 {
@@ -16412,6 +16457,113 @@ cmd_data_check_intf(char *cmd_str, void * val, a_uint32_t size)
                            "usage: the format is xx-xx-xx-xx-xx-xx \n",
                            cmd_data_check_macaddr, (cmd, &(entry.mac_addr),
                                    sizeof (fal_mac_addr_t)));
+
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	    do {
+		    cmd = get_sub_cmd("dmac_check_en", "no");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: <yes/no/y/n>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_confirm(cmd, A_FALSE,
+					    &(entry.dmac_check_en), sizeof(a_bool_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <yes/no/y/n>\n");
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+
+	    do {
+		    cmd = get_sub_cmd("ipv6_mru", "0x5dc");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: ipv6 mru \n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+			    if (SW_OK != rv) {
+				    dprintf("usage: mru \n");
+			    }
+			    else {
+				    entry.ip6_mru = tmp;
+			    }
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+
+	    do {
+		    cmd = get_sub_cmd("ipv6_mtu", "0x5dc");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: ipv6 mtu \n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+			    if (SW_OK != rv) {
+				    dprintf("usage: mtu \n");
+			    }
+			    else {
+				    entry.ip6_mtu = tmp;
+			    }
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+
+	    do {
+		    cmd = get_sub_cmd("udp_zero_csum_action", "forward");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: <forward/drop/recalc_mapt/rdtcpu>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_udp_zero_csumcmd(cmd,
+					    &(entry.udp_zero_csum_action),
+					    sizeof(fal_udp_zero_csum_cmd_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <forward/drop/recalc_mapt/rdtcpu>\n");
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+
+	    do {
+		    cmd = get_sub_cmd("vpn_id", "0");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: vpn id 0 \n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+			    if (SW_OK != rv) {
+				    dprintf("usage: vpn id 0 \n");
+			    }
+			    else {
+				    entry.vpn_id = tmp;
+			    }
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+    }
 
     *(fal_intf_entry_t *)val = entry;
     return SW_OK;
@@ -17666,6 +17818,27 @@ cmd_data_check_ip_global(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	    do {
+		    cmd = get_sub_cmd("route_fail_no_eth_action", "forward");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_maccmd(cmd, &(entry.rt_fail_no_eth_action),
+					    sizeof (fal_fwd_cmd_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+    }
+
     *(fal_ip_global_cfg_t *)val = entry;
     return SW_OK;
 
@@ -17678,13 +17851,21 @@ cmd_data_print_ip_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
 
     entry = (fal_ip_global_cfg_t *) buf;
 
-    dprintf("\n[mru_fail_action]:0x%x [mru_deacclr_en]:0x%x [mtu_fail_action]:0x%x [mtu_deacclr_en]:0x%x [mtu_nonfrag_fail_action]:0x%x ",
-			entry->mru_fail_action, entry->mru_deacclr_en, entry->mtu_fail_action, entry->mtu_deacclr_en, entry->mtu_nonfrag_fail_action);
-    dprintf("\n[mtu_df_deacclr_en]:0x%x [prefix_bc_action]:0x%x [prefix_bc_deacclr_en]:0x%x [icmp_rdt_action]:0x%x [icmp_rdt_deacclr]:0x%x ",
-			entry->mtu_df_deacclr_en, entry->prefix_bc_action, entry->prefix_deacclr_en, entry->icmp_rdt_action, entry->icmp_rdt_deacclr_en);
+    dprintf("\n[mru_fail_action]:0x%x [mru_deacclr_en]:0x%x [mtu_fail_action]:0x%x "
+		    "[mtu_deacclr_en]:0x%x [mtu_nonfrag_fail_action]:0x%x ",
+		    entry->mru_fail_action, entry->mru_deacclr_en, entry->mtu_fail_action,
+		    entry->mtu_deacclr_en, entry->mtu_nonfrag_fail_action);
+    dprintf("\n[mtu_df_deacclr_en]:0x%x [prefix_bc_action]:0x%x [prefix_bc_deacclr_en]:0x%x "
+		    "[icmp_rdt_action]:0x%x [icmp_rdt_deacclr]:0x%x ",
+		    entry->mtu_df_deacclr_en, entry->prefix_bc_action, entry->prefix_deacclr_en,
+		    entry->icmp_rdt_action, entry->icmp_rdt_deacclr_en);
     dprintf("\n[hash_mode_0]:0x%x [hash_mode_1]:0x%x ",
 			entry->hash_mode_0, entry->hash_mode_1);
 
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	    cmd_data_print_maccmd("route_fail_no_eth_action",
+			    (a_uint32_t *)&(entry->rt_fail_no_eth_action), sizeof(fal_fwd_cmd_t));
+    }
 }
 
 sw_error_t
@@ -20232,6 +20413,130 @@ cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	    do {
+		    cmd = get_sub_cmd("ptmu_fail_action", "forward");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_maccmd(cmd, &(entry.ptmu_fail_action),
+					    sizeof (fal_fwd_cmd_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+
+	    do {
+		    cmd = get_sub_cmd("ptmu_fail_deacclr_en", "no");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: <yes/no/y/n>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_confirm(cmd, A_FALSE,
+					    &(entry.ptmu_fail_deacclr_en),
+					    sizeof (a_bool_t));
+			    if (SW_OK != rv) {
+				    dprintf("usage: <yes/no/y/n>\n");
+			    }
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+
+	    do {
+		    cmd = get_sub_cmd("ptmu_fail_df_action", "forward");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_maccmd(cmd, &(entry.ptmu_fail_df_action),
+					    sizeof (fal_fwd_cmd_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+
+	    do {
+		    cmd = get_sub_cmd("ptmu_fail_df_deacclr_en", "no");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: <yes/no/y/n>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_confirm(cmd, A_FALSE,
+					    &(entry.ptmu_fail_df_deacclr_en),
+					    sizeof (a_bool_t));
+			    if (SW_OK != rv) {
+				    dprintf("usage: <yes/no/y/n>\n");
+			    }
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+
+	    do {
+		    cmd = get_sub_cmd("l2_vpn_en", "no");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: <yes/no/y/n>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_confirm(cmd, A_FALSE,
+					    &(entry.l2_vpn_en),
+					    sizeof (a_bool_t));
+			    if (SW_OK != rv) {
+				    dprintf("usage: <yes/no/y/n>\n");
+			    }
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+
+	    do {
+		    cmd = get_sub_cmd("l3_vpn_en", "no");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: <yes/no/y/n>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_confirm(cmd, A_FALSE,
+					    &(entry.l3_vpn_en),
+					    sizeof (a_bool_t));
+			    if (SW_OK != rv) {
+				    dprintf("usage: <yes/no/y/n>\n");
+			    }
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+    }
+
     *(fal_flow_global_cfg_t *)val = entry;
     return SW_OK;
 
@@ -20256,7 +20561,19 @@ cmd_data_print_flow_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
 		    entry->flow_deacclr_action, entry->sync_mismatch_action,
 		    entry->sync_mismatch_deacclr_en, entry->hash_mode_0,
 		    entry->hash_mode_1, entry->flow_mismatch_copy_escape_en);
-
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	    dprintf("\n");
+	    cmd_data_print_maccmd("ptmu_fail_action", (a_uint32_t *)&(entry->ptmu_fail_action),
+			    sizeof(fal_fwd_cmd_t));
+	    cmd_data_print_confirm(" [ptmu_fail_deacclr_en]", entry->ptmu_fail_deacclr_en,
+			    sizeof(a_bool_t));
+	    cmd_data_print_maccmd("ptmu_fail_df_action",
+			    (a_uint32_t *)&(entry->ptmu_fail_df_action), sizeof(fal_fwd_cmd_t));
+	    cmd_data_print_confirm(" [l2_vpn_en]", entry->l2_vpn_en,
+			    sizeof(a_bool_t));
+	    cmd_data_print_confirm(" [l3_vpn_en]", entry->l3_vpn_en,
+			    sizeof(a_bool_t));
+    }
 }
 
 
@@ -21130,6 +21447,43 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 		    }
 	    }
 	    while (talk_mode && (SW_OK != rv));
+
+	    do {
+		    cmd = get_sub_cmd("wifi_qos_en", "no");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: <yes/no/y/n>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_confirm(cmd, A_TRUE, &(entry.wifi_qos_en),
+					    sizeof (a_bool_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <yes/no/y/n>\n");
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+
+	    do {
+		    cmd = get_sub_cmd("wifi_qos", "0");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: wifi qos profile\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_uint32(cmd, &(entry.wifi_qos), sizeof(a_uint32_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: wifi qos profile\n");
+		    }
+	    } while (talk_mode && (SW_OK != rv));
     }
 
     *(fal_flow_entry_t *)val = entry;
@@ -21168,6 +21522,8 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 	    dprintf("\n[bridge_vlan_format_valid]:0x%x [bridge_svlan_format]:0x%x \
 			    [bridge_cvlan_format]:0x%x",
 			    entry->vlan_fmt_valid, entry->svlan_fmt, entry->cvlan_fmt);
+	    cmd_data_print_confirm(" [wifi_qos_en]:", entry->wifi_qos_en, sizeof(a_bool_t));
+	    dprintf(" [wifi_qos]:%d", entry->wifi_qos);
     }
     if ((entry->entry_type & FAL_FLOW_IP4_5TUPLE_ADDR) ||
 		    (entry->entry_type & FAL_FLOW_IP4_3TUPLE_ADDR)) {
@@ -22329,6 +22685,17 @@ cmd_data_print_intf(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     cmd_data_print_macaddr("\n[mac_addr]:",
                            (a_uint32_t *) & (entry->mac_addr),
                            sizeof (fal_mac_addr_t));
+
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	    cmd_data_print_confirm("\n[dmac_check_en]", entry->dmac_check_en,
+			    sizeof(a_bool_t));
+	    dprintf(" [ipv6_mru]:0x%x [ipv6_mtu]:0x%x ", entry->ip6_mru, entry->ip6_mtu);
+	    cmd_data_print_udp_zero_csumcmd("[udp_zero_csum_action]",
+			    (entry->udp_zero_csum_action),
+			    sizeof(fal_udp_zero_csum_cmd_t));
+	    dprintf(" [vpn_id]:%d", entry->vpn_id);
+    }
+
     dprintf("\n[rx_pkt]:0x%x  [rx_byte]:0x%x  [rx_drop_pkt]:0x%x "
 				"[rx_drop_byte]:0x%x  ",
 				entry->counter.rx_pkt_counter, entry->counter.rx_byte_counter,
