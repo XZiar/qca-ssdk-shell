@@ -667,8 +667,6 @@ static sw_data_type_t sw_data_type[] =
 		    cmd_data_print_tunnel_global_cfg),
     SW_TYPE_DEF(SW_TUNNEL_ENCAP_HEADER_CTRL, cmd_data_check_tunnel_encap_header_ctrl,
 		    cmd_data_print_tunnel_encap_header_ctrl),
-    SW_TYPE_DEF(SW_TUNNEL_DECAP_HEADER_CTRL, cmd_data_check_tunnel_decap_header_ctrl,
-		    cmd_data_print_tunnel_decap_header_ctrl),
     SW_TYPE_DEF(SW_TUNNEL_UDF_PROFILE_ENTRY, cmd_data_check_tunnel_udf_profile_entry,
 		    cmd_data_print_tunnel_udf_profile_entry),
     SW_TYPE_DEF(SW_TUNNEL_UDF_TYPE, cmd_data_check_tunnel_udf_type,
@@ -701,6 +699,14 @@ static sw_data_type_t sw_data_type[] =
                            cmd_data_print_policer_ctrl),
     SW_TYPE_DEF(SW_VPORT_STATE, cmd_data_check_vport_state,
 		    cmd_data_print_vport_state),
+    SW_TYPE_DEF(SW_TUNNEL_DECAP_ECN_RULE, cmd_data_check_decap_ecn_rule,
+		    cmd_data_print_decap_ecn_rule),
+    SW_TYPE_DEF(SW_TUNNEL_DECAP_ECN_ACTION, cmd_data_check_decap_ecn_action,
+		    cmd_data_print_decap_ecn_action),
+    SW_TYPE_DEF(SW_TUNNEL_ENCAP_ECN_RULE, cmd_data_check_encap_ecn_rule,
+		    cmd_data_print_encap_ecn_rule),
+    SW_TYPE_DEF(SW_TUNNEL_ECN_VAL, cmd_data_check_ecn_val,
+		    cmd_data_print_ecn_val),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -36331,66 +36337,6 @@ cmd_data_check_tunnel_encap_header_ctrl(char *cmd_str,
 	aos_mem_zero(&entry, sizeof(fal_tunnel_encap_header_ctrl_t));
 
 	do {
-		cmd = get_sub_cmd("ecn_profile1", "0");
-		SW_RTN_ON_NULL_PARAM(cmd);
-
-		if (!strncasecmp(cmd, "quit", 4)) {
-			return SW_BAD_VALUE;
-		}
-		else if (!strncasecmp(cmd, "help", 4)) {
-			dprintf("usage: ecn_profile1 data\n");
-			rv = SW_BAD_VALUE;
-		}
-		else {
-			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-			if (SW_OK != rv)
-				dprintf("usage: ecn_profile1 data\n");
-			else
-				entry.ecn_profile[0] = tmp;
-		}
-	} while(talk_mode && (SW_OK != rv));
-
-	do {
-		cmd = get_sub_cmd("ecn_profile2", "0");
-		SW_RTN_ON_NULL_PARAM(cmd);
-
-		if (!strncasecmp(cmd, "quit", 4)) {
-			return SW_BAD_VALUE;
-		}
-		else if (!strncasecmp(cmd, "help", 4)) {
-			dprintf("usage: ecn_profile2 data\n");
-			rv = SW_BAD_VALUE;
-		}
-		else {
-			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-			if (SW_OK != rv)
-				dprintf("usage: ecn_profile2 data\n");
-			else
-				entry.ecn_profile[1] = tmp;
-		}
-	} while(talk_mode && (SW_OK != rv));
-
-	do {
-		cmd = get_sub_cmd("ecn_profile3", "0");
-		SW_RTN_ON_NULL_PARAM(cmd);
-
-		if (!strncasecmp(cmd, "quit", 4)) {
-			return SW_BAD_VALUE;
-		}
-		else if (!strncasecmp(cmd, "help", 4)) {
-			dprintf("usage: ecn_profile3 data\n");
-			rv = SW_BAD_VALUE;
-		}
-		else {
-			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-			if (SW_OK != rv)
-				dprintf("usage: ecn_profile3 data\n");
-			else
-				entry.ecn_profile[2] = tmp;
-		}
-	} while(talk_mode && (SW_OK != rv));
-
-	do {
 		cmd = get_sub_cmd("ipv4_id_seed", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
@@ -36562,9 +36508,6 @@ cmd_data_print_tunnel_encap_header_ctrl(a_uint8_t *param_name, a_ulong_t *buf, a
 	dprintf("\n[%s] \n", param_name);
 
 	entry = (fal_tunnel_encap_header_ctrl_t *)buf;
-	dprintf("[ecn_profile1]:0x%x", entry->ecn_profile[0]);
-	dprintf(" [ecn_profile2]:0x%x", entry->ecn_profile[1]);
-	dprintf(" [ecn_profile3]:0x%x", entry->ecn_profile[2]);
 	dprintf(" [ipv4_id_seed]:0x%x", entry->ipv4_id_seed);
 	dprintf(" [ipv4_df_set]:0x%x", entry->ipv4_df_set);
 	dprintf(" [udp_sport_base]:0x%x", entry->udp_sport_base);
@@ -36573,96 +36516,6 @@ cmd_data_print_tunnel_encap_header_ctrl(a_uint8_t *param_name, a_ulong_t *buf, a
 	dprintf(" [ipv4_proto_map_data]:0x%x", entry->proto_map_data[1]);
 	dprintf(" [ipv6_addr_map_data]:0x%x", entry->proto_map_data[2]);
 	dprintf(" [ipv6_proto_map_data]:0x%x", entry->proto_map_data[3]);
-
-	dprintf("\n");
-}
-
-sw_error_t
-cmd_data_check_tunnel_decap_header_ctrl(char *cmd_str,
-		fal_tunnel_decap_header_ctrl_t *arg_val, a_uint32_t size)
-{
-	char *cmd;
-	sw_error_t rv;
-	fal_tunnel_decap_header_ctrl_t entry;
-	a_uint32_t tmp = 0;
-
-	aos_mem_zero(&entry, sizeof(fal_tunnel_decap_header_ctrl_t));
-
-	do {
-		cmd = get_sub_cmd("ecn_profile1", "0");
-		SW_RTN_ON_NULL_PARAM(cmd);
-
-		if (!strncasecmp(cmd, "quit", 4)) {
-			return SW_BAD_VALUE;
-		}
-		else if (!strncasecmp(cmd, "help", 4)) {
-			dprintf("usage: ecn_profile1 data\n");
-			rv = SW_BAD_VALUE;
-		}
-		else {
-			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-			if (SW_OK != rv)
-				dprintf("usage: ecn_profile1 data\n");
-			else
-				entry.ecn_map_data[0] = tmp;
-		}
-	} while(talk_mode && (SW_OK != rv));
-
-	do {
-		cmd = get_sub_cmd("ecn_profile2", "0");
-		SW_RTN_ON_NULL_PARAM(cmd);
-
-		if (!strncasecmp(cmd, "quit", 4)) {
-			return SW_BAD_VALUE;
-		}
-		else if (!strncasecmp(cmd, "help", 4)) {
-			dprintf("usage: ecn_profile2 data\n");
-			rv = SW_BAD_VALUE;
-		}
-		else {
-			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-			if (SW_OK != rv)
-				dprintf("usage: ecn_profile2 data\n");
-			else
-				entry.ecn_map_data[1] = tmp;
-		}
-	} while(talk_mode && (SW_OK != rv));
-
-	do {
-		cmd = get_sub_cmd("ecn_profile3", "0");
-		SW_RTN_ON_NULL_PARAM(cmd);
-
-		if (!strncasecmp(cmd, "quit", 4)) {
-			return SW_BAD_VALUE;
-		}
-		else if (!strncasecmp(cmd, "help", 4)) {
-			dprintf("usage: ecn_profile3 data\n");
-			rv = SW_BAD_VALUE;
-		}
-		else {
-			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
-			if (SW_OK != rv)
-				dprintf("usage: ecn_profile3 data\n");
-			else
-				entry.ecn_map_data[2] = tmp;
-		}
-	} while(talk_mode && (SW_OK != rv));
-
-	*(fal_tunnel_decap_header_ctrl_t *)arg_val = entry;
-	return SW_OK;
-}
-
-void
-cmd_data_print_tunnel_decap_header_ctrl(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
-{
-	fal_tunnel_decap_header_ctrl_t *entry;
-
-	dprintf("\n[%s] \n", param_name);
-
-	entry = (fal_tunnel_decap_header_ctrl_t *)buf;
-	dprintf("[ecn_profile1]:0x%x", entry->ecn_map_data[0]);
-	dprintf(" [ecn_profile2]:0x%x", entry->ecn_map_data[1]);
-	dprintf(" [ecn_profile3]:0x%x", entry->ecn_map_data[2]);
 
 	dprintf("\n");
 }
@@ -38932,6 +38785,321 @@ cmd_data_print_vport_state(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t siz
 			sizeof(a_bool_t));
 	cmd_data_print_confirm(" [tunnel_active]:", entry->eg_data_valid,
 			sizeof(a_bool_t));
+	dprintf("\n");
+}
+
+static const a_char_t *ecn_type_str[FAL_TUNNEL_ECN_INVALID] = {
+	"no_ect",
+	"ect_0",
+	"ect_1",
+	"ce",
+};
+
+sw_error_t
+cmd_data_check_ecn_type(char *cmd_str,
+		fal_tunnel_ecn_val_t *arg_val, a_uint32_t size)
+{
+	fal_tunnel_ecn_val_t type;
+	for (type = FAL_TUNNEL_ECN_NOT_ECT;
+			type < FAL_TUNNEL_ECN_INVALID; type++) {
+		if (!strcasecmp(cmd_str, ecn_type_str[type])) {
+			*arg_val = type;
+			break;
+		}
+	}
+
+	if (type == FAL_TUNNEL_ECN_INVALID) {
+		return SW_BAD_VALUE;
+	} else {
+		return SW_OK;
+	}
+}
+
+void
+cmd_data_print_ecn_type(a_char_t *param_name,
+		fal_tunnel_ecn_val_t buf, a_uint32_t size)
+{
+    dprintf("%s:", param_name);
+    switch (buf) {
+	    case FAL_TUNNEL_ECN_NOT_ECT:
+	    case FAL_TUNNEL_ECN_ECT_0:
+	    case FAL_TUNNEL_ECN_ECT_1:
+	    case FAL_TUNNEL_ECN_CE:
+		    dprintf("%s", ecn_type_str[buf]);
+		    break;
+	    default:
+		    dprintf("unknown value %d\n", buf);
+		    break;
+    }
+}
+
+sw_error_t
+cmd_data_check_ecn_val(char *cmd_str, fal_tunnel_ecn_val_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	sw_error_t rv;
+	fal_tunnel_ecn_val_t ecn_val;
+
+	do {
+		cmd = get_sub_cmd("ecn_val", "no_ect");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: no_ect, ect_0, ect_1, ce\n");
+			rv = SW_BAD_VALUE;
+		} else {
+			rv = cmd_data_check_ecn_type(cmd, &ecn_val,
+					sizeof(fal_tunnel_ecn_val_t));
+			if (SW_OK != rv)
+				dprintf("usage: no_ect, ect_0, ect_1, ce\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	*arg_val = ecn_val;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_ecn_val(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_tunnel_ecn_val_t *ecn_val;
+
+	ecn_val = (fal_tunnel_ecn_val_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_ecn_type("[ecn_val]", *ecn_val,
+			sizeof(fal_tunnel_ecn_val_t));
+
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_decap_ecn_rule(char *cmd_str, fal_tunnel_decap_ecn_rule_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	sw_error_t rv;
+	fal_tunnel_decap_ecn_rule_t entry;
+	a_uint32_t tmp = 0;
+
+	aos_mem_zero(&entry, sizeof(fal_tunnel_decap_ecn_rule_t));
+
+	do {
+		cmd = get_sub_cmd("ecn_mode", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: 0:rfc3168_mode, 1:rfc4301_mode, 2:rfc6040_mode\n");
+			rv = SW_BAD_VALUE;
+		} else {
+			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: 0:rfc3168_mode, 1:rfc4301_mode, 2:rfc6040_mode\n");
+			else
+				entry.ecn_mode = tmp;
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("outer_ecn", "no_ect");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: no_ect, ect_0, ect_1, ce\n");
+			rv = SW_BAD_VALUE;
+		} else {
+			rv = cmd_data_check_ecn_type(cmd, &entry.outer_ecn,
+					sizeof(fal_tunnel_ecn_val_t));
+			if (SW_OK != rv)
+				dprintf("usage: no_ect, ect_0, ect_1, ce\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("inner_ecn", "no_ect");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: no_ect, ect_0, ect_1, ce\n");
+			rv = SW_BAD_VALUE;
+		} else {
+			rv = cmd_data_check_ecn_type(cmd, &entry.outer_ecn,
+					sizeof(fal_tunnel_ecn_val_t));
+			if (SW_OK != rv)
+				dprintf("usage: no_ect, ect_0, ect_1, ce\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	*(fal_tunnel_decap_ecn_rule_t *)arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_decap_ecn_rule(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_tunnel_decap_ecn_rule_t *entry;
+
+	entry = (fal_tunnel_decap_ecn_rule_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	dprintf("[ecn_mode]:%d", entry->ecn_mode);
+	cmd_data_print_ecn_type(" [outer_ecn]", entry->outer_ecn,
+			sizeof(fal_tunnel_ecn_val_t));
+	cmd_data_print_ecn_type(" [inner_ecn]", entry->inner_ecn,
+			sizeof(fal_tunnel_ecn_val_t));
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_decap_ecn_action(char *cmd_str,
+		fal_tunnel_decap_ecn_action_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	sw_error_t rv;
+	fal_tunnel_decap_ecn_action_t entry;
+
+	aos_mem_zero(&entry, sizeof(fal_tunnel_decap_ecn_action_t));
+
+	do {
+		cmd = get_sub_cmd("ecn_value", "no_ect");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: no_ect, ect_0, ect_1, ce\n");
+			rv = SW_BAD_VALUE;
+		} else {
+			rv = cmd_data_check_ecn_type(cmd, &entry.ecn_value,
+					sizeof(fal_tunnel_ecn_val_t));
+			if (SW_OK != rv)
+				dprintf("usage: no_ect, ect_0, ect_1, ce\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("ecn_exp_en", "n");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.ecn_exp),
+					sizeof(a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	*(fal_tunnel_decap_ecn_action_t *)arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_decap_ecn_action(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_tunnel_decap_ecn_action_t *entry;
+
+	entry = (fal_tunnel_decap_ecn_action_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_ecn_type("[ecn_value]", entry->ecn_value,
+			sizeof(fal_tunnel_ecn_val_t));
+	cmd_data_print_confirm(" [ecn_exp_en]:", entry->ecn_exp,
+			sizeof(a_bool_t));
+
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_encap_ecn_rule(char *cmd_str, fal_tunnel_encap_ecn_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	sw_error_t rv;
+	fal_tunnel_encap_ecn_t entry;
+	a_uint32_t tmp = 0;
+
+	aos_mem_zero(&entry, sizeof(fal_tunnel_encap_ecn_t));
+
+	do {
+		cmd = get_sub_cmd("ecn_mode", "1");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: 1:rfc3168_limit_rfc6040_cmpat_mode, "
+					"2:rfc3168_full_mode, 3:rfc4301_rfc6040_normal_mode\n");
+			rv = SW_BAD_VALUE;
+		} else {
+			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: 1:rfc3168_limit_rfc6040_cmpat_mode, "
+					"2:rfc3168_full_mode, 3:rfc4301_rfc6040_normal_mode\n");
+			else
+				entry.ecn_mode = tmp;
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("inner_ecn", "no_ect");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: no_ect, ect_0, ect_1, ce\n");
+			rv = SW_BAD_VALUE;
+		} else {
+			rv = cmd_data_check_ecn_type(cmd, &entry.inner_ecn,
+					sizeof(fal_tunnel_ecn_val_t));
+			if (SW_OK != rv)
+				dprintf("usage: no_ect, ect_0, ect_1, ce\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	*(fal_tunnel_encap_ecn_t *)arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_encap_ecn_rule(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_tunnel_encap_ecn_t *entry;
+
+	entry = (fal_tunnel_encap_ecn_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	dprintf("[ecn_mode]:%d", entry->ecn_mode);
+	cmd_data_print_ecn_type(" [inner_ecn]", entry->inner_ecn,
+			sizeof(fal_tunnel_ecn_val_t));
 	dprintf("\n");
 }
 

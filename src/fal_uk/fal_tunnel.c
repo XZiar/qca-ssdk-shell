@@ -305,21 +305,45 @@ fal_tunnel_port_intf_get(a_uint32_t dev_id,
 }
 
 sw_error_t
-fal_tunnel_decap_header_ctrl_set(a_uint32_t dev_id, fal_tunnel_decap_header_ctrl_t *header_ctrl)
+fal_tunnel_decap_ecn_mode_set(a_uint32_t dev_id, fal_tunnel_decap_ecn_rule_t *ecn_rule,
+		fal_tunnel_decap_ecn_action_t *ecn_action)
 {
 	sw_error_t rv;
 
-	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_HEADER_CTRL_SET, dev_id, header_ctrl);
+	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_ECN_MODE_SET, dev_id, ecn_rule, ecn_action);
 
 	return rv;
 }
 
 sw_error_t
-fal_tunnel_decap_header_ctrl_get(a_uint32_t dev_id, fal_tunnel_decap_header_ctrl_t *header_ctrl)
+fal_tunnel_decap_ecn_mode_get(a_uint32_t dev_id, fal_tunnel_decap_ecn_rule_t *ecn_rule,
+		fal_tunnel_decap_ecn_action_t *ecn_action)
 {
 	sw_error_t rv;
 
-	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_HEADER_CTRL_GET, dev_id, header_ctrl);
+	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_ECN_MODE_GET, dev_id, ecn_rule, ecn_action);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_encap_ecn_mode_get(a_uint32_t dev_id, fal_tunnel_encap_ecn_t *ecn_rule,
+		fal_tunnel_ecn_val_t *ecn_value)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_ENCAP_ECN_MODE_GET, dev_id, ecn_rule, ecn_value);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_encap_ecn_mode_set(a_uint32_t dev_id, fal_tunnel_encap_ecn_t *ecn_rule,
+		fal_tunnel_ecn_val_t *ecn_value)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_ENCAP_ECN_MODE_SET, dev_id, ecn_rule, ecn_value);
 
 	return rv;
 }
