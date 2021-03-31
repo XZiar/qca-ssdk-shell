@@ -1101,7 +1101,7 @@ static void cmd_data_print_vport_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_tunnel_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_TUNNEL_UDF_PROFILE_CFG_GET+1] = {
+	char *func_name[FUNC_TUNNEL_EXP_DECAP_GET+1] = {
 		"FUNC_TUNNEL_INTF_SET",
 		"FUNC_TUNNEL_INTF_GET",
 		"FUNC_TUNNEL_ENCAP_RULE_ENTRY_SET",
@@ -1139,10 +1139,12 @@ static void cmd_data_print_tunnel_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_TUNNEL_UDF_PROFILE_ENTRY_GETFIRST",
 		"FUNC_TUNNEL_UDF_PROFILE_ENTRY_GETNEXT",
 		"FUNC_TUNNEL_UDF_PROFILE_CFG_SET",
-		"FUNC_TUNNEL_UDF_PROFILE_CFG_GET"
+		"FUNC_TUNNEL_UDF_PROFILE_CFG_GET",
+		"FUNC_TUNNEL_EXP_DECAP_SET",
+		"FUNC_TUNNEL_EXP_DECAP_GET",
 	};
 
-	for(func = FUNC_TUNNEL_INTF_SET; func <= FUNC_TUNNEL_UDF_PROFILE_CFG_GET; func++)
+	for(func = FUNC_TUNNEL_INTF_SET; func <= FUNC_TUNNEL_EXP_DECAP_GET; func++)
 	{
 		if(p->bitmap[func/32] & ((1 << (func % 32))))
 		{

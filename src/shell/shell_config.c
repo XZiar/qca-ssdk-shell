@@ -1618,6 +1618,11 @@ struct cmd_des_t gcmd_des[] =
 				"<ecn_rule> <ecn_value>", SW_API_TUNNEL_ENCAP_ECN_MODE_SET, NULL},
 			{"encap_ecn", "get", "get encap ecn of tunnel",
 				"<ecn_rule>", SW_API_TUNNEL_ENCAP_ECN_MODE_GET, NULL},
+			{"decap_exp_fmt_ctrl", "set", "set excep format control of tunnel decap",
+				"<port_id> <enable/disable>",
+				SW_API_TUNNEL_EXP_DECAP_SET, NULL},
+			{"decap_exp_fmt_ctrl", "get", "get excep format control of tunnel decap",
+				"<port_id>", SW_API_TUNNEL_EXP_DECAP_GET, NULL},
 			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
 		},
 	},

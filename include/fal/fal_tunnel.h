@@ -70,6 +70,8 @@ enum {
 	FUNC_TUNNEL_UDF_PROFILE_ENTRY_GETNEXT,
 	FUNC_TUNNEL_UDF_PROFILE_CFG_SET,
 	FUNC_TUNNEL_UDF_PROFILE_CFG_GET,
+	FUNC_TUNNEL_EXP_DECAP_SET,
+	FUNC_TUNNEL_EXP_DECAP_GET
 };
 
 /* tunnel type */
@@ -282,11 +284,11 @@ typedef enum {
 } fal_tunnel_decap_ecn_mode_t;
 
 typedef enum {
-	FAL_TUNNEL_ECN_NOT_ECT = 0, /* Not ECN-capable transport */
+	FAL_TUNNEL_ECN_NOT_ECT, /* Not ECN-capable transport */
 	FAL_TUNNEL_ECN_ECT_0, /* ECN-capable transport */
 	FAL_TUNNEL_ECN_ECT_1, /* ECN-capable transport */
 	FAL_TUNNEL_ECN_CE, /* Congestion experienced */
-	FAL_TUNNEL_ECN_INVALID, /* Congestion experienced */
+	FAL_TUNNEL_ECN_INVALID /* Congestion experienced */
 } fal_tunnel_ecn_val_t;
 
 typedef struct {
@@ -651,6 +653,12 @@ fal_tunnel_encap_ecn_mode_set(a_uint32_t dev_id, fal_tunnel_encap_ecn_t *ecn_rul
 sw_error_t
 fal_tunnel_encap_ecn_mode_get(a_uint32_t dev_id, fal_tunnel_encap_ecn_t *ecn_rule,
 		fal_tunnel_ecn_val_t *ecn_value);
+
+sw_error_t
+fal_tunnel_exp_decap_set(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *enable);
+
+sw_error_t
+fal_tunnel_exp_decap_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *enable);
 #ifdef __cplusplus
 }
 #endif                          /* __cplusplus */

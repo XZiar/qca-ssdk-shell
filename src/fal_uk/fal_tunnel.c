@@ -428,4 +428,25 @@ fal_tunnel_udf_profile_cfg_get(a_uint32_t dev_id, a_uint32_t profile_id,
     rv = sw_uk_exec(SW_API_TUNNEL_UDF_PROFILE_CFG_GET, dev_id, profile_id,
 			udf_idx, udf_type, offset);
     return rv;
+
+}
+
+sw_error_t
+fal_tunnel_exp_decap_set(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *enable)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_EXP_DECAP_SET, dev_id, port_id, enable);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_exp_decap_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *enable)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_EXP_DECAP_GET, dev_id, port_id, enable);
+
+	return rv;
 }
