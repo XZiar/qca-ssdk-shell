@@ -1495,6 +1495,10 @@ struct cmd_des_t gcmd_des[] =
 				SW_API_VPORT_PHYSICAL_PORT_SET, NULL},
 			{"phyport", "get", "get physical port of vport",
 				"<port_id>", SW_API_VPORT_PHYSICAL_PORT_GET, NULL},
+			{"state_check", "set", "set check state of vport",
+				"<port_id> <state>", SW_API_VPORT_STATE_CHECK_SET, NULL},
+			{"state_check", "get", "get check state of vport",
+				"<port_id>", SW_API_VPORT_STATE_CHECK_GET, NULL},
 			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
 		},
 	},

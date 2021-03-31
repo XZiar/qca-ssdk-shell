@@ -1072,12 +1072,14 @@ static void cmd_data_print_policer_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_vport_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_VPORT_PHYSICAL_PORT_GET+1] = {
+	char *func_name[FUNC_VPORT_STATE_CHECK_GET+1] = {
 		"FUNC_VPORT_PHYSICAL_PORT_SET",
 		"FUNC_VPORT_PHYSICAL_PORT_GET",
+		"FUNC_VPORT_STATE_CHECK_SET",
+		"FUNC_VPORT_STATE_CHECK_GET",
 	};
 
-	for(func = FUNC_VPORT_PHYSICAL_PORT_SET; func <= FUNC_VPORT_PHYSICAL_PORT_GET; func++)
+	for(func = FUNC_VPORT_PHYSICAL_PORT_SET; func <= FUNC_VPORT_STATE_CHECK_GET; func++)
 	{
 		if(p->bitmap[0] & (1<<func))
 		{

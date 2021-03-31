@@ -42,3 +42,22 @@ fal_vport_physical_port_id_get(a_uint32_t dev_id,
 	return rv;
 }
 
+sw_error_t
+fal_vport_state_check_set(a_uint32_t dev_id, fal_port_t port_id, fal_vport_state_t *vp_state)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_VPORT_STATE_CHECK_SET, dev_id, port_id, vp_state);
+
+	return rv;
+}
+
+sw_error_t
+fal_vport_state_check_get(a_uint32_t dev_id, fal_port_t port_id, fal_vport_state_t *vp_state)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_VPORT_STATE_CHECK_GET, dev_id, port_id, vp_state);
+
+	return rv;
+}
