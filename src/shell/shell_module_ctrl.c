@@ -940,7 +940,7 @@ static void cmd_data_print_trunk_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_portvlan_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_PORT_VLAN_VPGROUP_GET+1] ={
+	char *func_name[FUNC_PORT_VLAN_ISOL_GROUP_GET+1] ={
 		"FUNC_PORT_INVLAN_MODE_SET",
 		"FUNC_PORT_INVLAN_MODE_GET",
 		"FUNC_PORT_VLAN_TRANS_ADD",
@@ -984,23 +984,16 @@ static void cmd_data_print_portvlan_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_PORT_VLAN_MEMBER_UPDATE",
 		"FUNC_PORT_VLAN_MEMBER_GET",
 		"FUNC_PORT_VLAN_VPGROUP_SET",
-		"FUNC_PORT_VLAN_VPGROUP_GET"
+		"FUNC_PORT_VLAN_VPGROUP_GET",
+		"FUNC_PORT_VLAN_ISOL_SET",
+		"FUNC_PORT_VLAN_ISOL_GET",
+		"FUNC_PORT_VLAN_ISOL_GROUP_SET",
+		"FUNC_PORT_VLAN_ISOL_GROUP_GET",
 	};
 
-	for(func = FUNC_PORT_INVLAN_MODE_SET; func <= FUNC_PORT_VLANTAG_VSI_EGMODE_ENABLE_GET; func++)
+	for(func = FUNC_PORT_INVLAN_MODE_SET; func <= FUNC_PORT_VLAN_ISOL_GROUP_GET; func++)
 	{
-		if (p->bitmap[0] & (1<<func))
-		{
-			dprintf("%d  %s  registered\n", func, func_name[func]);
-		}
-		else
-		{
-			dprintf("%d  %s  unregistered\n", func, func_name[func]);
-		}
-	}
-	for(func = FUNC_PORT_VLAN_TRANS_ADV_ADD; func <= FUNC_PORT_VLAN_VPGROUP_GET; func++)
-	{
-		if (p->bitmap[1] & (1<<(func % 32)))
+		if (p->bitmap[func / 32] & (1<<(func % 32)))
 		{
 			dprintf("%d  %s  registered\n", func, func_name[func]);
 		}

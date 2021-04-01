@@ -729,6 +729,8 @@ static sw_data_type_t sw_data_type[] =
             cmd_data_print_tunnel_exp_ctrl),
     SW_TYPE_DEF(SW_TUNNEL_FLAGS_PARSER, cmd_data_check_tunnel_flags_parser,
             cmd_data_print_tunnel_flags_parser),
+    SW_TYPE_DEF(SW_ISOL_CTRL, cmd_data_check_isol_ctrl,
+		    cmd_data_print_isol_ctrl),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -39511,6 +39513,75 @@ cmd_data_print_tunnel_flags_parser(a_uint8_t * param_name, a_uint32_t * buf, a_u
     tmpdata = entry->hdr_type;
     cmd_data_print_attr("tunnel_overlay_type", " [tunnel header type]:", &tmpdata, sizeof(tmpdata));
     dprintf("\n[flags]:0x%x [mask]:0x%x ", entry->flags, entry->mask);
+}
+
+sw_error_t
+cmd_data_check_isol_ctrl(char *cmd_str, fal_portvlan_isol_ctrl_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	sw_error_t rv;
+	fal_portvlan_isol_ctrl_t entry;
+	a_uint32_t tmp = 0;
+
+	aos_mem_zero(&entry, sizeof(fal_portvlan_isol_ctrl_t));
+
+	do {
+		cmd = get_sub_cmd("isol_en", "n");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.enable),
+					sizeof(a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("group_id", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: isolation group id\n");
+			rv = SW_BAD_VALUE;
+		} else {
+			rv = cmd_data_check_uint8(cmd, &tmp, sizeof(a_uint8_t));
+			if (SW_OK != rv)
+				dprintf("usage: isolation group id\n");
+			else
+				entry.group_id = tmp;
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	*(fal_portvlan_isol_ctrl_t *)arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_isol_ctrl(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_portvlan_isol_ctrl_t *entry;
+
+	entry = (fal_portvlan_isol_ctrl_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_confirm("[isol_en]:", entry->enable, sizeof(a_bool_t));
+
+	dprintf(" [group_id]:%d\n", entry->group_id);
+
+	dprintf("\n");
 }
 
 /* auto_insert_flag_1 */

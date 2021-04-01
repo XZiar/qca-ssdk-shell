@@ -771,3 +771,43 @@ fal_port_vlan_vpgroup_get(a_uint32_t dev_id, a_uint32_t vport,
     rv = sw_uk_exec(SW_API_PT_VLAN_VPGROUP_GET, dev_id, vport, direction, vpgroup_id);
     return rv;
 }
+
+sw_error_t
+fal_portvlan_isol_set(a_uint32_t dev_id,
+		fal_port_t port_id, fal_portvlan_isol_ctrl_t *isol_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_ISOL_SET, dev_id, port_id, isol_ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_portvlan_isol_get(a_uint32_t dev_id,
+		fal_port_t port_id, fal_portvlan_isol_ctrl_t *isol_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_ISOL_GET, dev_id, port_id, isol_ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_portvlan_isol_group_set(a_uint32_t dev_id,
+		a_uint8_t isol_group_id, a_uint64_t *isol_group_bmp)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_ISOL_GROUP_SET, dev_id, isol_group_id, isol_group_bmp);
+    return rv;
+}
+
+sw_error_t
+fal_portvlan_isol_group_get(a_uint32_t dev_id,
+		a_uint8_t isol_group_id, a_uint64_t *isol_group_bmp)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_VLAN_ISOL_GROUP_GET, dev_id, isol_group_id, isol_group_bmp);
+    return rv;
+}
