@@ -265,3 +265,22 @@ fal_acl_udf_profile_cfg_get(a_uint32_t dev_id, a_uint32_t profile_id,
     return rv;
 }
 
+sw_error_t
+fal_acl_vpgroup_set(a_uint32_t dev_id, a_uint32_t vport_id,
+		fal_vport_type_t vport_type, a_uint32_t vpgroup_id)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_ACL_VPGROUP_SET, dev_id, vport_id, vport_type, vpgroup_id);
+    return rv;
+}
+
+sw_error_t
+fal_acl_vpgroup_get(a_uint32_t dev_id, a_uint32_t vport_id,
+		fal_vport_type_t vport_type, a_uint32_t * vpgroup_id)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_ACL_VPGROUP_GET, dev_id, vport_id, vport_type, vpgroup_id);
+    return rv;
+}

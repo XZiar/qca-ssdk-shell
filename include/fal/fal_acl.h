@@ -27,6 +27,7 @@ extern "C" {
 #include "common/sw.h"
 #include "fal/fal_type.h"
 #include "fal_tunnel.h"
+#include "fal_vport.h"
 
 
     /**
@@ -758,6 +759,8 @@ enum
 	FUNC_ACL_UDF_PROFILE_ENTRY_GETNEXT,
 	FUNC_ACL_UDF_PROFILE_CFG_SET,
 	FUNC_ACL_UDF_PROFILE_CFG_GET,
+	FUNC_ACL_VPGROUP_SET,
+	FUNC_ACL_VPGROUP_GET,
 };
 
 
@@ -837,6 +840,14 @@ fal_acl_udf_profile_cfg_set(a_uint32_t dev_id, a_uint32_t profile_id,
 sw_error_t
 fal_acl_udf_profile_cfg_get(a_uint32_t dev_id, a_uint32_t profile_id,
 	a_uint32_t udf_idx, fal_acl_udf_type_t * udf_type, a_uint32_t * offset);
+
+sw_error_t
+fal_acl_vpgroup_set(a_uint32_t dev_id, a_uint32_t vport_id,
+	fal_vport_type_t vport_type, a_uint32_t vpgroup_id);
+
+sw_error_t
+fal_acl_vpgroup_get(a_uint32_t dev_id, a_uint32_t vport_id,
+	fal_vport_type_t vport_type, a_uint32_t * vpgroup_id);
 
 #ifdef __cplusplus
 }

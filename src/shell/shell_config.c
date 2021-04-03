@@ -534,6 +534,10 @@ struct cmd_des_t gcmd_des[] =
                     "<profile_id> <0-3> <l2/l3/l4> <offset>", SW_API_ACL_UDF_PROFILE_CFG_SET, NULL},
             {"udfprofilecfg", "get", "get udfprofile cfg",
                     "<profile_id> <0-3>", SW_API_ACL_UDF_PROFILE_CFG_GET, NULL},
+            {"vpgroup", "set", "set vpgroup", "<vport_id> <vport_type> <vpgroup_id>",
+                    SW_API_ACL_VPGROUP_SET, NULL},
+            {"vpgroup", "get", "get vpgroup", "<vport_id> <vport_type>",
+                    SW_API_ACL_VPGROUP_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

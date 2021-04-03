@@ -195,7 +195,7 @@ cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 static void cmd_data_print_acl_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_ACL_UDF_PROFILE_CFG_GET+1] ={
+	char *func_name[FUNC_ACL_VPGROUP_GET+1] ={
 		"FUNC_ACL_LIST_CREAT",
 		"FUNC_ACL_LIST_DESTROY",
 		"FUNC_ACL_RULE_ADD",
@@ -212,10 +212,12 @@ static void cmd_data_print_acl_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_ACL_UDF_PROFILE_ENTRY_GETFIRST",
 		"FUNC_ACL_UDF_PROFIILE_ENTRY_GETNEXT",
 		"FUNC_ACL_UDF_PROFILE_CFG_SET",
-		"FUNC_ACL_UDF_PROFILE_CFG_GET"
+		"FUNC_ACL_UDF_PROFILE_CFG_GET",
+		"FUNC_ACL_VPGROUP_SET",
+		"FUNC_ACL_VPGROUP_GET"
 	};
 
-	for(func = FUNC_ACL_LIST_CREAT; func <= FUNC_ACL_UDF_PROFILE_CFG_GET; func++)
+	for(func = FUNC_ACL_LIST_CREAT; func <= FUNC_ACL_VPGROUP_GET; func++)
 	{
 		if(p->bitmap[0] & (1<<func))
 		{

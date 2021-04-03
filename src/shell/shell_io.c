@@ -265,7 +265,17 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
 
+		"vport_type",
+		{
+			{"tunnel", FAL_VPORT_TYPE_TUNNEL},
+			{"0", FAL_VPORT_TYPE_TUNNEL},
+			{"normal", FAL_VPORT_TYPE_NORMAL},
+			{"1", FAL_VPORT_TYPE_NORMAL},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -763,6 +773,7 @@ static sw_data_type_t sw_data_type[] =
 		    cmd_data_print_isol_ctrl),
     SW_TYPE_DEF(SW_EGRESS_FILTER, cmd_data_check_egress_filter,
 		    cmd_data_print_egress_filter),
+    SW_TYPE_DEF(SW_VPORT_TYPE, cmd_data_check_vport_type, NULL),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -39539,45 +39550,11 @@ cmd_data_print_enqueue_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t siz
 	dprintf("\n");
 }
 
-static const a_char_t *vport_type_str[FUNC_VPORT_TYPE_BUTT] = {
-	"tunnel",
-	"normal",
-};
-
 sw_error_t
-cmd_data_check_vport_type(char *cmd_str,
-		fal_vport_type_t *arg_val, a_uint32_t size)
+cmd_data_check_vport_type(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
 {
-	fal_vport_type_t type;
-	for (type = FUNC_VPORT_TYPE_TUNNEL;
-			type < FUNC_VPORT_TYPE_BUTT; type++) {
-		if (!strcasecmp(cmd_str, vport_type_str[type])) {
-			*arg_val = type;
-			break;
-		}
-	}
-
-	if (type == FUNC_VPORT_TYPE_BUTT) {
-		return SW_BAD_VALUE;
-	} else {
-		return SW_OK;
-	}
-}
-
-void
-cmd_data_print_vport_type(a_char_t *param_name,
-		fal_vport_type_t buf, a_uint32_t size)
-{
-    dprintf("%s:", param_name);
-    switch (buf) {
-	    case FUNC_VPORT_TYPE_TUNNEL:
-	    case FUNC_VPORT_TYPE_NORMAL:
-		    dprintf("%s", vport_type_str[buf]);
-		    break;
-	    default:
-		    dprintf("unknown value %d\n", buf);
-		    break;
-    }
+    return cmd_data_check_attr("vport_type", cmd_str,
+                       arg_val, sizeof(*arg_val));
 }
 
 sw_error_t
@@ -39619,8 +39596,8 @@ cmd_data_check_vport_state(char *cmd_str, fal_vport_state_t *arg_val, a_uint32_t
 			dprintf("usage: normal or tunnel\n");
 			rv = SW_BAD_VALUE;
 		} else {
-			rv = cmd_data_check_vport_type(cmd, &(entry.vp_type),
-					sizeof(fal_vport_type_t));
+			rv = cmd_data_check_attr("vport_type", cmd,
+					&(entry.vp_type), sizeof(entry.vp_type));
 			if (SW_OK != rv)
 				dprintf("usage: normal or tunnel\n");
 		}
@@ -39680,8 +39657,8 @@ cmd_data_print_vport_state(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t siz
 
 	cmd_data_print_confirm("[check_en]:", entry->check_en,
 			sizeof(a_bool_t));
-	cmd_data_print_vport_type(" [vport_type]", entry->vp_type, sizeof(fal_vport_type_t));
-
+	cmd_data_print_attr("vport_type", " [vport_type]:",
+			&(entry->vp_type), sizeof(entry->vp_type));
 	cmd_data_print_confirm(" [vport_active]:", entry->vp_active,
 			sizeof(a_bool_t));
 	cmd_data_print_confirm(" [tunnel_active]:", entry->eg_data_valid,

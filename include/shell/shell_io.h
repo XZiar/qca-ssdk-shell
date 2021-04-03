@@ -1267,6 +1267,9 @@ void
 cmd_data_print_isol_ctrl(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 
 sw_error_t
+cmd_data_check_vport_type(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size);
+
+sw_error_t
 cmd_data_check_egress_filter(char *cmd_str, fal_egress_vlan_filter_t *arg_val, a_uint32_t size);
 void
 cmd_data_print_egress_filter(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
