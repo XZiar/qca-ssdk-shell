@@ -228,6 +228,14 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+        "flow_excep_type",
+        {
+            {"flow_aware", FAL_FLOW_AWARE},
+            {"flow_hit", FAL_FLOW_HIT},
+            {"flow_miss", FAL_FLOW_MISS},
+        }
+    },
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -700,11 +708,11 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_ENQUEUE_CFG, cmd_data_check_enqueue_cfg,
 		    cmd_data_print_enqueue_cfg),
     SW_TYPE_DEF(SW_POLICER_REMAP, cmd_data_check_policer_remap,
-                           cmd_data_print_policer_remap),
+            cmd_data_print_policer_remap),
     SW_TYPE_DEF(SW_POLICER_PRIORITY, cmd_data_check_policer_priority,
-                           cmd_data_print_policer_priority),
+            cmd_data_print_policer_priority),
     SW_TYPE_DEF(SW_POLICER_CTRL, cmd_data_check_policer_ctrl,
-                           cmd_data_print_policer_ctrl),
+			cmd_data_print_policer_ctrl),
     SW_TYPE_DEF(SW_VPORT_STATE, cmd_data_check_vport_state,
 		    cmd_data_print_vport_state),
     SW_TYPE_DEF(SW_TUNNEL_DECAP_ECN_RULE, cmd_data_check_decap_ecn_rule,
@@ -715,6 +723,12 @@ static sw_data_type_t sw_data_type[] =
 		    cmd_data_print_encap_ecn_rule),
     SW_TYPE_DEF(SW_TUNNEL_ECN_VAL, cmd_data_check_ecn_val,
 		    cmd_data_print_ecn_val),
+    SW_TYPE_DEF(SW_L2_EXP_CTRL, cmd_data_check_l2_exp_ctrl,
+            cmd_data_print_l2_exp_ctrl),
+    SW_TYPE_DEF(SW_TUNNEL_EXP_CTRL, cmd_data_check_tunnel_exp_ctrl,
+            cmd_data_print_tunnel_exp_ctrl),
+    SW_TYPE_DEF(SW_TUNNEL_FLAGS_PARSER, cmd_data_check_tunnel_flags_parser,
+            cmd_data_print_tunnel_flags_parser),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -16410,7 +16424,7 @@ cmd_data_print_vsi_counter(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
     dprintf("[fwd_packets]:%d\n", entry->fwd_packet_counter);
     dprintf("[drop_bytes]:%lld\n", entry->drop_byte_counter);
     dprintf("[drop_packets]:%d\n", entry->drop_packet_counter);
-    
+
     return;
 }
 
@@ -17231,7 +17245,7 @@ cmd_data_check_ac_dynamic_thresh(char *cmd_str, void * val, a_uint32_t size)
         }
     }
     while (talk_mode && (SW_OK != rv));
-	
+
     *(fal_ac_dynamic_threshold_t *)val = entry;
     return SW_OK;
 }
@@ -17737,7 +17751,7 @@ cmd_data_check_ac_static_thresh(char *cmd_str, void * val, a_uint32_t size)
         }
     }
     while (talk_mode && (SW_OK != rv));
-	
+
     *(fal_ac_static_threshold_t *)val = entry;
     return SW_OK;
 }
@@ -18641,6 +18655,7 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
     char *cmd;
     sw_error_t rv;
     fal_l3_excep_ctrl_t entry;
+    a_uint32_t tmpdata = 0;
 
     aos_mem_zero(&entry, sizeof (fal_l3_excep_ctrl_t));
 
@@ -18819,6 +18834,58 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
+        {
+            cmd = get_sub_cmd("l2flow_type", "flow_aware");
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+               return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+               dprintf("usage: flow_aware, flow_hit, flow_miss\n");
+               rv = SW_BAD_VALUE;
+            }
+            else
+            {
+               rv = cmd_data_check_attr("flow_excep_type", cmd,
+                                                      &tmpdata, sizeof(tmpdata));
+               if (SW_OK != rv)
+                   dprintf("usage: flow_aware, flow_hit, flow_miss\n");
+               entry.l2flow_type = tmpdata & 0x3;
+            }
+
+        }
+        while (talk_mode && (SW_OK != rv));
+
+        do
+        {
+            cmd = get_sub_cmd("l3flow_type", "flow_aware");
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+               return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+               dprintf("usage: flow_aware, flow_hit, flow_miss\n");
+               rv = SW_BAD_VALUE;
+            }
+            else
+            {
+               rv = cmd_data_check_attr("flow_excep_type", cmd,
+                                                      &tmpdata, sizeof(tmpdata));
+               if (SW_OK != rv)
+                   dprintf("usage: flow_aware, flow_hit, flow_miss\n");
+               entry.l3flow_type = tmpdata & 0x3;
+            }
+        }
+        while (talk_mode && (SW_OK != rv));
+    }
     *(fal_l3_excep_ctrl_t *)val = entry;
     return SW_OK;
 }
@@ -18827,13 +18894,24 @@ void
 cmd_data_print_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 {
     fal_l3_excep_ctrl_t *entry;
+    a_uint32_t tmpdata = 0;
 
     entry = (fal_l3_excep_ctrl_t *) buf;
-    
-    dprintf("\n[except_cmd]:0x%x [deacclr_en]:0x%x [l3route_only_en]:0x%x [l2fwd_only_en]:0x%x ",
-			entry->cmd, entry->deacclr_en, entry->l3route_only_en, entry->l2fwd_only_en);
+
+    dprintf("\n");
+    cmd_data_print_maccmd("except_cmd", (a_uint32_t *)&(entry->cmd), sizeof(fal_fwd_cmd_t));
+
+    dprintf(" [deacclr_en]:0x%x [l3route_only_en]:0x%x [l2fwd_only_en]:0x%x ",
+            entry->deacclr_en, entry->l3route_only_en, entry->l2fwd_only_en);
     dprintf("\n[l3flow_en]:0x%x [l2flow_en]:0x%x [multicast_en]:0x%x ",
 			entry->l3flow_en, entry->l2flow_en, entry->multicast_en);
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        dprintf("\n");
+        tmpdata = entry->l3flow_type;
+        cmd_data_print_attr("flow_excep_type", "[l3flow_type]:", &tmpdata, sizeof(tmpdata));
+        tmpdata = entry->l2flow_type;
+        cmd_data_print_attr("flow_excep_type", " [l2flow_type]:", &tmpdata, sizeof(tmpdata));
+    }
 }
 
 sw_error_t
@@ -18949,7 +19027,7 @@ cmd_data_print_port_group(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t s
     fal_qos_group_t *entry;
 
     entry = (fal_qos_group_t *) buf;
-    
+
     dprintf("\n[pcp_group]:0x%x [dscp_group]:0x%x [flow_group]:0x%x ",
 			entry->pcp_group, entry->dscp_group, entry->flow_group);
 }
@@ -19365,7 +19443,7 @@ cmd_data_print_port_remark(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
     fal_qos_remark_enable_t *entry;
 
     entry = (fal_qos_remark_enable_t *) buf;
-    
+
     dprintf("\n[pcp_change_en]:0x%x [dei_chage_en]:0x%x [dscp_change_en]:0x%x ",
 			entry->pcp_change_en, entry->dei_chage_en, entry->dscp_change_en);
 }
@@ -19732,7 +19810,7 @@ cmd_data_print_cosmap(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     fal_qos_cosmap_t *entry;
 
     entry = (fal_qos_cosmap_t *) buf;
-    
+
     dprintf("\n[internal_pcp]:0x%x [internal_dei]:0x%x [internal_pri]:0x%x ",
 			entry->internal_pcp, entry->internal_dei, entry->internal_pri);
     dprintf("\n[internal_dscp]:0x%x [internal_dp]:0x%x [dscp_mask]:0x%x ",
@@ -19749,7 +19827,7 @@ cmd_data_print_port_scheduler_resource(a_uint8_t * param_name, a_uint32_t * buf,
     fal_portscheduler_resource_t *entry;
 
     entry = (fal_portscheduler_resource_t *) buf;
-    
+
     dprintf("\n[ucastq_start]:0x%x [ucastq_num]:0x%x [mcastq_start]:0x%x [mcastq_num]:0x%x ",
 			entry->ucastq_start, entry->ucastq_num, entry->mcastq_start, entry->mcastq_num);
     dprintf("\n[l0sp_start]:0x%x [l0sp_num]:0x%x [l0cdrr_start]:0x%x [l0cdrr_num]:0x%x ",
@@ -20084,7 +20162,7 @@ cmd_data_print_queue_scheduler(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
     fal_qos_scheduler_cfg_t *entry;
 
     entry = (fal_qos_scheduler_cfg_t *) buf;
-    
+
     dprintf("\n[sp_id]:0x%x [e_pri]:0x%x [c_pri]:0x%x [c_drr_id]:0x%x [e_drr_id]:0x%x ",
 			entry->sp_id, entry->e_pri, entry->c_pri, entry->c_drr_id, entry->e_drr_id);
     dprintf("\n[e_drr_wt]:0x%x [c_drr_wt]:0x%x [c_drr_unit]:0x%x [e_drr_unit]:0x%x [drr_frame_mode]:0x%x ",
@@ -20412,7 +20490,7 @@ cmd_data_print_ring_queue(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t s
     entry = (fal_queue_bmp_t *) buf;
 
     for (i = 0; i < 10; i++)
-    
+
     dprintf("\n[bmp%d]:0x%x ", i, entry->bmp[i]);
 
 }
@@ -21131,7 +21209,7 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    
+
     do
     {
         cmd = get_sub_cmd("snat nexthop", "0");
@@ -21570,7 +21648,7 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
         cmd_data_check_element("ip addr", NULL,
                                "usage: the format is xx.xx.xx.xx \n",
                                cmd_data_check_ip4addr, (cmd, &(entry.flow_ip.ipv4), 4));
-		
+
     } else if (entry.entry_type & FAL_FLOW_IP6_5TUPLE_ADDR || entry.entry_type &
 				FAL_FLOW_IP6_3TUPLE_ADDR) {
         cmd_data_check_element("ip addr", NULL,
@@ -21791,7 +21869,7 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     fal_flow_entry_t *entry;
 
     entry = (fal_flow_entry_t *) buf;
-    
+
     dprintf("\n[entry_id]:0x%x [entry_type]:0x%x [host_addr_type]:0x%x [host_addr_index]:0x%x ",
 		    entry->entry_id, entry->entry_type,
 		    entry->host_addr_type, entry->host_addr_index);
@@ -21840,7 +21918,7 @@ cmd_data_print_ac_static_thresh(a_uint8_t * param_name, a_uint32_t * buf, a_uint
     fal_ac_static_threshold_t *entry;
 
     entry = (fal_ac_static_threshold_t *) buf;
-    
+
     dprintf("\n[color_en]:0x%x [wred_en]:0x%x [green_max]:0x%x ",
 			entry->color_enable, entry->wred_enable, entry->green_max);
     dprintf("\n[green_min_off]:0x%x [yel_max_off]:0x%x [yel_min_off]:0x%x [red_max_off]:0x%x [red_min_off]:0x%x ",
@@ -21855,7 +21933,7 @@ cmd_data_print_ac_dynamic_thresh(a_uint8_t * param_name, a_uint32_t * buf, a_uin
     fal_ac_dynamic_threshold_t *entry;
 
     entry = (fal_ac_dynamic_threshold_t *) buf;
-    
+
     dprintf("\n[color_en]:0x%x [wred_en]:0x%x [shared_weight]:0x%x ",
 			entry->color_enable, entry->wred_enable, entry->shared_weight);
     dprintf("\n[green_min_off]:0x%x [yel_max_off]:0x%x [yel_min_off]:0x%x [red_max_off]:0x%x [red_min_off]:0x%x ",
@@ -21870,7 +21948,7 @@ cmd_data_print_ac_group_buff(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
     fal_ac_group_buffer_t *entry;
 
     entry = (fal_ac_group_buffer_t *) buf;
-    
+
     dprintf("\n[prealloc_buffer]:0x%x [total_buffer]:0x%x ",
 			entry->prealloc_buffer, entry->total_buffer);
 }
@@ -21881,7 +21959,7 @@ cmd_data_print_ac_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size
     fal_ac_ctrl_t *entry;
 
     entry = (fal_ac_ctrl_t *) buf;
-    
+
     dprintf("\n[ac_en]:0x%x [ac_fc_en]:0x%x ",
 			entry->ac_en, entry->ac_fc_en);
 }
@@ -21892,7 +21970,7 @@ cmd_data_print_ac_obj(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     fal_ac_obj_t *entry;
 
     entry = (fal_ac_obj_t *) buf;
-    
+
     dprintf("\n[obj_type]:0x%x [obj_id]:0x%x ",
 			entry->type, entry->obj_id);
 }
@@ -22036,7 +22114,7 @@ cmd_data_print_flow_age(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
     fal_flow_age_timer_t *entry;
 
     entry = (fal_flow_age_timer_t *) buf;
-    
+
     dprintf("\n[age_time]:0x%x [age_unit]:0x%x ",
 			entry->age_time, entry->unit);
 }
@@ -22047,7 +22125,7 @@ cmd_data_print_flow_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
     fal_flow_mgmt_t *entry;
 
     entry = (fal_flow_mgmt_t *) buf;
-    
+
     dprintf("\n[frag_bypass_en]:0x%x [tcp_spec_bypass_en]:0x%x [all_bypass_en]:0x%x "
 			"[key_sel]:0x%x [miss_action]:0x%x ",
 			entry->frag_bypass_en, entry->tcp_spec_bypass_en,
@@ -22165,7 +22243,7 @@ cmd_data_print_ip_mcmode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
     fal_mc_mode_cfg_t *entry;
 
     entry = (fal_mc_mode_cfg_t *) buf;
-    
+
     dprintf("\n[ipv4_mc_en]:0x%x [ipv4_igmpv3_mode]:0x%x [ipv6_mc_en]:0x%x [ipv6_mldv2_mode]:0x%x ",
 			entry->l2_ipv4_mc_en, entry->l2_ipv4_mc_mode,
 			entry->l2_ipv6_mc_en, entry->l2_ipv6_mc_mode);
@@ -22219,7 +22297,7 @@ cmd_data_print_ip_portmac(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t s
     fal_macaddr_entry_t *entry;
 
     entry = (fal_macaddr_entry_t *) buf;
-    
+
     dprintf("\n[entry_valid]:0x%x", entry->valid);
     cmd_data_print_macaddr("\n[mac_addr]:",
                            (a_uint32_t *) & (entry->mac_addr),
@@ -22248,7 +22326,7 @@ cmd_data_print_ip_pub(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     fal_ip_pub_addr_t *entry;
 
     entry = (fal_ip_pub_addr_t *) buf;
-    
+
     cmd_data_print_ip4addr("\n[pub_ip_addr]:",
                                (a_uint32_t *) & (entry->pub_ip_addr),
                                sizeof (fal_ip4_addr_t));
@@ -22557,7 +22635,7 @@ cmd_data_print_ip_sg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     fal_sg_cfg_t *entry;
 
     entry = (fal_sg_cfg_t *) buf;
-    
+
     dprintf("\n[ipv4_sg_en]:0x%x  [ipv4_sg_violation_action]:0x%x [ipv4_sg_port_en]:0x%x ",
             entry->ipv4_sg_en, entry->ipv4_sg_vio_action, entry->ipv4_sg_port_en);
     dprintf("\n[ipv4_sg_svlan_en]:0x%x  [ipv4_sg_cvlan_en]:0x%x [ipv4_src_unk_action]:0x%x ",
@@ -22915,8 +22993,8 @@ cmd_data_check_nexthop(char *cmd_str, void * val, a_uint32_t size)
                             cmd_data_check_ip4addr, &(entry.dnat_ip),
                             4);
     if (rv)
-        return rv;   
-	
+        return rv;
+
 
     *(fal_ip_nexthop_t *)val = entry;
     return SW_OK;
@@ -22928,7 +23006,7 @@ cmd_data_print_nexthop(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size
     fal_ip_nexthop_t *entry;
 
     entry = (fal_ip_nexthop_t *) buf;
-    
+
     dprintf("\n[type]:0x%x",
             entry->type);
     if (entry->type == 0)
@@ -22956,7 +23034,7 @@ cmd_data_print_vsi_intf(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
     fal_intf_id_t *entry;
 
     entry = (fal_intf_id_t *) buf;
-    
+
     dprintf("\n[l3_if_valid]:0x%x  [l3_if_index]:0x%x",
             entry->l3_if_valid, entry->l3_if_index);
 }
@@ -22968,7 +23046,7 @@ cmd_data_print_intf(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     fal_intf_entry_t *entry;
 
     entry = (fal_intf_entry_t *) buf;
-    
+
     dprintf("\n[mru]:0x%x  [mtu]:0x%x  [ttl_dec_bypass_en]:0x%x",
             entry->mru, entry->mtu, entry->ttl_dec_bypass_en);
     dprintf("\n[ipv4_route_en]:0x%x  [ipv6_route_en]:0x%x  [icmp_trigger_en]:0x%x",
@@ -23479,7 +23557,7 @@ cmd_data_print_network_route(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
     entry = (fal_network_route_entry_t *) buf;
     dprintf("\n[type]:0x%x ",
             entry->type);
-    
+
     dprintf("\n[dst_info]:0x%x  [lan_wan]:0x%x [action]:0x%x",
             entry->dst_info, entry->lan_wan, entry->action);
 
@@ -39118,6 +39196,321 @@ cmd_data_print_encap_ecn_rule(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t 
 	cmd_data_print_ecn_type(" [inner_ecn]", entry->inner_ecn,
 			sizeof(fal_tunnel_ecn_val_t));
 	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_l2_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    sw_error_t rv;
+    fal_l2_excep_ctrl_t entry;
+
+    aos_mem_zero(&entry, sizeof (fal_l2_excep_ctrl_t));
+
+    do
+    {
+        cmd = get_sub_cmd("excep_cmd", "forward");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_maccmd(cmd, &(entry.cmd),
+                                       sizeof (fal_fwd_cmd_t));
+            if (SW_OK != rv)
+                dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+        }
+
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    *(fal_l2_excep_ctrl_t *)val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_l2_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_l2_excep_ctrl_t *entry;
+
+    entry = (fal_l2_excep_ctrl_t *) buf;
+
+    dprintf("\n");
+    cmd_data_print_maccmd("except_cmd", (a_uint32_t *)&(entry->cmd),
+        sizeof(fal_fwd_cmd_t));
+}
+
+sw_error_t
+cmd_data_check_tunnel_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    sw_error_t rv;
+    int i = 0;
+    char Idstr[20];
+    fal_tunnel_excep_ctrl_t entry;
+
+
+    aos_mem_zero(&entry, sizeof (fal_tunnel_excep_ctrl_t));
+
+    do
+    {
+        cmd = get_sub_cmd("excep_cmd", "forward");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_maccmd(cmd, &(entry.cmd),
+                                       sizeof (fal_fwd_cmd_t));
+            if (SW_OK != rv)
+                dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+        }
+
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("deacclr_en", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: 0 for disable and 1 for enable\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint8(cmd, &(entry.deacclr_en),
+                                       sizeof (a_uint8_t));
+            if (SW_OK != rv)
+                dprintf("usage: 0 for disable and 1 for enable\n");
+        }
+
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    for(i = 0; i < EXP_PROFILE_ID_MAX; i++) {
+        memset(Idstr, 0, sizeof(Idstr));
+        snprintf(Idstr, sizeof(Idstr), "profile%d_en", i);
+
+        do
+        {
+            cmd = get_sub_cmd(Idstr, "0");
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+                dprintf("usage: 0 for disable and 1 for enable\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint8(cmd, &(entry.profile_exp_en[i]),
+                                           sizeof (a_uint8_t));
+                if (SW_OK != rv)
+                    dprintf("usage: 0 for disable and 1 for enable\n");
+            }
+        }
+        while (talk_mode && (SW_OK != rv));
+    }
+
+    *(fal_tunnel_excep_ctrl_t *)val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_tunnel_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_tunnel_excep_ctrl_t *entry;
+
+    entry = (fal_tunnel_excep_ctrl_t *) buf;
+
+    dprintf("\n");
+    cmd_data_print_maccmd("except_cmd", (a_uint32_t *)&(entry->cmd),
+            sizeof(fal_fwd_cmd_t));
+    dprintf(" [deacclr_en]:0x%x ", entry->deacclr_en);
+    dprintf("\n[profile0_en]:0x%x [profile1_en]:0x%x [profile2_en]:0x%x [profile3_en]:0x%x ",
+            entry->profile_exp_en[0], entry->profile_exp_en[1], entry->profile_exp_en[2], entry->profile_exp_en[3]);
+}
+
+sw_error_t
+cmd_data_check_tunnel_flags_parser(char *cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    a_bool_t tmpbool;
+    a_uint32_t tmpdata = 0;
+    sw_error_t rv;
+    fal_tunnel_flags_excep_parser_ctrl_t entry;
+
+    aos_mem_zero(&entry, sizeof (fal_tunnel_flags_excep_parser_ctrl_t));
+
+    do
+    {
+        cmd = get_sub_cmd("entry_valid", "no");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &entry.entry_valid,
+                                           sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+       }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("equal", "yes");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &tmpbool, sizeof(tmpbool));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+            entry.comp_mode = !tmpbool;
+       }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("tunnel header type", "vxlan");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: gre-tap, vxlan, vxlan-gpe, geneve\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_attr("tunnel_overlay_type", cmd,
+                                                   &tmpdata, sizeof(tmpdata));
+            if (SW_OK != rv)
+                dprintf("usage: gre-tap, vxlan, vxlan-gpe, geneve\n");
+            entry.hdr_type = tmpdata & 0x3;
+        }
+
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("flags", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: tunnel header flags value\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint16(cmd, &tmpdata,
+                                       sizeof (tmpdata));
+            if (SW_OK != rv)
+                dprintf("usage: tunnel header flags value\n");
+            entry.flags = tmpdata&0xffff;
+        }
+
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("mask", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: tunnel header flags mask value\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint16(cmd, &tmpdata,
+                                       sizeof (tmpdata));
+            if (SW_OK != rv)
+                dprintf("usage: tunnel header flags mask value\n");
+            entry.mask = tmpdata&0xffff;
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    *(fal_tunnel_flags_excep_parser_ctrl_t *)val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_tunnel_flags_parser(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_tunnel_flags_excep_parser_ctrl_t *entry;
+    a_uint32_t tmpdata = 0;
+
+    entry = (fal_tunnel_flags_excep_parser_ctrl_t *) buf;
+
+    dprintf("\n[entry_valid]:%s [comp_mode]:%s",
+            entry->entry_valid?"valid":"invalid", entry->comp_mode? "Not equal":"equal");
+    tmpdata = entry->hdr_type;
+    cmd_data_print_attr("tunnel_overlay_type", " [tunnel header type]:", &tmpdata, sizeof(tmpdata));
+    dprintf("\n[flags]:0x%x [mask]:0x%x ", entry->flags, entry->mask);
 }
 
 /* auto_insert_flag_1 */
