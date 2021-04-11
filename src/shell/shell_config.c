@@ -1159,6 +1159,8 @@ struct cmd_des_t gcmd_des[] =
             {"appprofile", "show", "show whole app profile entries", "", SW_CMD_CTRLPKT_SHOW, cmd_show_ctrlpkt},
             {"vpgroup", "set", "set the vpgroup", "<port_id> <vpgroup_id>", SW_API_MGMTCTRL_VPGROUP_SET, NULL},
             {"vpgroup", "get", "get the vpgroup", "<port_id>", SW_API_MGMTCTRL_VPGROUP_GET, NULL},
+            {"tunneldecap", "set", "set tunnel decap", "<cpu_code> <enable>", SW_API_MGMTCTRL_TUNNEL_DECAP_SET, NULL},
+            {"tunneldecap", "get", "get tunnel decap", "<cpu_code>", SW_API_MGMTCTRL_TUNNEL_DECAP_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },
