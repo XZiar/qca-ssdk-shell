@@ -497,6 +497,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_FIBER_MODE, cmd_data_check_fiber_mode, cmd_data_print_fiber_mode),
     SW_TYPE_DEF(SW_SRC_FILTER_CONFIG, cmd_data_check_src_filter_config, cmd_data_print_src_filter_config),
     SW_TYPE_DEF(SW_PORT_LOOPBACK_CONFIG, cmd_data_check_switch_port_loopback_config, cmd_data_print_switch_port_loopback_config),
+    SW_TYPE_DEF(SW_PORT_8023AH_CTRL, cmd_data_check_port_8023ah_ctrl, cmd_data_print_port_8023ah_ctrl),
 /*qca808x_start*/
     SW_TYPE_DEF(SW_INTERFACE_MODE, cmd_data_check_interface_mode, cmd_data_print_interface_mode),
     SW_TYPE_DEF(SW_COUNTER_INFO, NULL, cmd_data_print_counter_info),
@@ -9962,6 +9963,38 @@ cmd_data_print_switch_port_loopback_config(a_uint8_t * param_name,
     }
 
     dprintf("\n[loopback_rate]:%d[Mpps]", cfg->loopback_rate);
+
+    return;
+}
+
+sw_error_t
+cmd_data_check_port_8023ah_ctrl(char *cmd_str, void * val,
+	a_uint32_t size)
+{
+    char *cmd;
+    fal_port_8023ah_ctrl_t port_8023ah_ctrl;
+
+    aos_mem_zero(&port_8023ah_ctrl, sizeof (fal_port_8023ah_ctrl_t));
+
+    cmd_data_check_element("loopback_en", "disable",
+                        "usage:loopback_en,enable/disable\n",
+                        cmd_data_check_enable, (cmd, &(port_8023ah_ctrl.loopback_enable),
+                        sizeof (port_8023ah_ctrl.loopback_enable)));
+
+    *(fal_port_8023ah_ctrl_t *)val = port_8023ah_ctrl;
+    return SW_OK;
+}
+
+void
+cmd_data_print_port_8023ah_ctrl(a_uint8_t * param_name,
+	a_uint32_t * buf, a_uint32_t size)
+{
+    fal_port_8023ah_ctrl_t *port_8023ah_ctrl;
+
+    port_8023ah_ctrl = (fal_port_8023ah_ctrl_t *) buf;
+
+    cmd_data_print_enable("loopback_en", &(port_8023ah_ctrl->loopback_enable),
+        sizeof(port_8023ah_ctrl->loopback_enable));
 
     return;
 }

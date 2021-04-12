@@ -660,6 +660,14 @@ void
 cmd_data_print_switch_port_loopback_config(a_uint8_t * param_name,
 	a_uint32_t * buf, a_uint32_t size);
 sw_error_t
+cmd_data_check_port_8023ah_ctrl(char *cmd_str, void * val,
+	a_uint32_t size);
+
+void
+cmd_data_print_port_8023ah_ctrl(a_uint8_t * param_name,
+	a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
 cmd_data_check_newadr_lrn(char *cmd_str, void * val, a_uint32_t size);
 
 void

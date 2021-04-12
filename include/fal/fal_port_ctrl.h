@@ -408,6 +408,10 @@ enum
 		a_uint32_t loopback_rate; /*Mpps*/
 	}fal_loopback_config_t;
 
+	typedef struct {
+		a_bool_t loopback_enable;
+	} fal_port_8023ah_ctrl_t;
+
 	sw_error_t
 	fal_port_max_frame_size_set(a_uint32_t dev_id, fal_port_t port_id,
 			a_uint32_t max_frame);
@@ -775,6 +779,13 @@ sw_error_t
 fal_switch_port_loopback_set(a_uint32_t dev_id, fal_port_t port_id,
 	fal_loopback_config_t *loopback_cfg);
 
+sw_error_t
+fal_port_8023ah_set(a_uint32_t dev_id, fal_port_t port_id,
+	fal_port_8023ah_ctrl_t *port_8023ah_ctrl);
+
+sw_error_t
+fal_port_8023ah_get(a_uint32_t dev_id, fal_port_t port_id,
+	fal_port_8023ah_ctrl_t *port_8023ah_ctrl);
 /*qca808x_start*/
 #ifdef __cplusplus
 }
