@@ -7153,6 +7153,15 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
     if (A_TRUE == tmpdata)
     {
         FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_METADATA_EN);
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+        {
+            /*policy id action configuration */
+            cmd_data_check_element("policy id", "0",
+                           "usage: the format is 0x0-0xffff or 0-65535\n",
+                           cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
+                                   0x0));
+            entry->policy_id= tmpdata & 0xffff;
+        }
     }
 
     cmd_data_check_element("qos res prec", "0",
@@ -8444,6 +8453,10 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_METADATA_EN))
     {
         dprintf("\n[meta_data]:yes");
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+        {
+            dprintf("\n[policy_id]:0x%x", rule->policy_id);
+        }
     }
     else
     {

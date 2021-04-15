@@ -698,11 +698,12 @@ typedef struct
         fal_acl_field_op_t udf2_op;
         a_uint8_t udfprofile_val;
         a_uint8_t udfprofile_mask;
-        /*new add pre acl action for alder*/
+        /*new add acl action for alder*/
         a_uint8_t             cascade_data;
         a_uint8_t             vpn_type; /*0 vsi; 1 vrf*/
         a_uint8_t             vpn_id;
         a_uint16_t            napt_l4_port; /*l4 port for NAPT*/
+        a_uint16_t            policy_id;/*policy id used for tunnel encapsulation*/
 
         /*new add acl rule fields for alder*/
         fal_acl_tunnel_info_t  tunnel_info; /*tunnel info fields*/
