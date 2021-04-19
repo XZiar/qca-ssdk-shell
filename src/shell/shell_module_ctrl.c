@@ -940,7 +940,7 @@ static void cmd_data_print_trunk_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_portvlan_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_PORT_VLAN_ISOL_GROUP_GET+1] ={
+	char *func_name[FUNC_PORT_EGRESS_VLAN_FILTER_GET+1] ={
 		"FUNC_PORT_INVLAN_MODE_SET",
 		"FUNC_PORT_INVLAN_MODE_GET",
 		"FUNC_PORT_VLAN_TRANS_ADD",
@@ -989,9 +989,11 @@ static void cmd_data_print_portvlan_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_PORT_VLAN_ISOL_GET",
 		"FUNC_PORT_VLAN_ISOL_GROUP_SET",
 		"FUNC_PORT_VLAN_ISOL_GROUP_GET",
+		"FUNC_PORT_EGRESS_VLAN_FILTER_SET",
+		"FUNC_PORT_EGRESS_VLAN_FILTER_GET",
 	};
 
-	for(func = FUNC_PORT_INVLAN_MODE_SET; func <= FUNC_PORT_VLAN_ISOL_GROUP_GET; func++)
+	for(func = FUNC_PORT_INVLAN_MODE_SET; func <= FUNC_PORT_EGRESS_VLAN_FILTER_GET; func++)
 	{
 		if (p->bitmap[func / 32] & (1<<(func % 32)))
 		{

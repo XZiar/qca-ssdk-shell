@@ -731,6 +731,8 @@ static sw_data_type_t sw_data_type[] =
             cmd_data_print_tunnel_flags_parser),
     SW_TYPE_DEF(SW_ISOL_CTRL, cmd_data_check_isol_ctrl,
 		    cmd_data_print_isol_ctrl),
+    SW_TYPE_DEF(SW_EGRESS_FILTER, cmd_data_check_egress_filter,
+		    cmd_data_print_egress_filter),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -39581,6 +39583,53 @@ cmd_data_print_isol_ctrl(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 
 	dprintf(" [group_id]:%d\n", entry->group_id);
 
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_egress_filter(char *cmd_str, fal_egress_vlan_filter_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	sw_error_t rv;
+	fal_egress_vlan_filter_t entry;
+
+	aos_mem_zero(&entry, sizeof(fal_egress_vlan_filter_t));
+
+	do {
+		cmd = get_sub_cmd("membership_filter_en", "disable");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: <enable/disable>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_enable(cmd, &(entry.membership_filter),
+					sizeof(entry.membership_filter));
+			if (SW_OK != rv)
+				dprintf("usage: <enable/disable>\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	*(fal_egress_vlan_filter_t *)arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_egress_filter(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_egress_vlan_filter_t *entry;
+
+	entry = (fal_egress_vlan_filter_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_enable("membership_filter_en", &entry->membership_filter,
+			sizeof(entry->membership_filter));
 	dprintf("\n");
 }
 

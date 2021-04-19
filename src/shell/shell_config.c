@@ -429,6 +429,10 @@ struct cmd_des_t gcmd_des[] =
 		    SW_API_PT_VLAN_ISOL_GROUP_SET, NULL},
 	    {"isol_group", "get", "get isolation group member", "<group_id>",
 		    SW_API_PT_VLAN_ISOL_GROUP_GET, NULL},
+            {"egressfilter", "set", "set port egress filter",
+		    "<port_id> <filter_cmd>", SW_API_PT_EGRESS_VLAN_FILTER_SET, NULL},
+            {"egressfilter", "get", "get port egress filter",
+		    "<port_id>", SW_API_PT_EGRESS_VLAN_FILTER_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

@@ -811,3 +811,23 @@ fal_portvlan_isol_group_get(a_uint32_t dev_id,
     rv = sw_uk_exec(SW_API_PT_VLAN_ISOL_GROUP_GET, dev_id, isol_group_id, isol_group_bmp);
     return rv;
 }
+
+sw_error_t
+fal_port_egress_vlan_filter_set(a_uint32_t dev_id,
+		fal_port_t port_id, fal_egress_vlan_filter_t *filter)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_EGRESS_VLAN_FILTER_SET, dev_id, port_id, filter);
+    return rv;
+}
+
+sw_error_t
+fal_port_egress_vlan_filter_get(a_uint32_t dev_id,
+		fal_port_t port_id, fal_egress_vlan_filter_t *filter)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_EGRESS_VLAN_FILTER_GET, dev_id, port_id, filter);
+    return rv;
+}
