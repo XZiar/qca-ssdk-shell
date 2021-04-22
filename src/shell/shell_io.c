@@ -26227,6 +26227,30 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
+    do
+    {
+        cmd = get_sub_cmd("8023ah_oam_en", "no");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_types.mgt_8023ah_oam),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
     /* get mgt_mld */
     do
     {
@@ -26460,6 +26484,9 @@ cmd_data_print_ctrlpkt_profile(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
     cmd_data_print_enable("dhcp4_en", (a_uint32_t *) & (entry->protocol_types.mgt_dhcp4), 4);
     dprintf(" ");
     cmd_data_print_enable("dhcp6_en", (a_uint32_t *) & (entry->protocol_types.mgt_dhcp6), 4);
+    dprintf(" ");
+    cmd_data_print_enable("8023ah_oam_en", (a_uint32_t *) & (entry->protocol_types.mgt_8023ah_oam),
+		4);
     dprintf(" ");
     cmd_data_print_enable("mld_en", (a_uint32_t *) & (entry->protocol_types.mgt_mld), 4);
     dprintf(" ");
