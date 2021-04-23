@@ -19184,6 +19184,52 @@ cmd_data_check_port_pri(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	    do {
+		    cmd = get_sub_cmd("pre_acl_outer_pri_prece", "0");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: priority\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_uint8(cmd, &tmp, sizeof(a_uint32_t));
+			    if (SW_OK != rv) {
+				    dprintf("usage: priority\n");
+			    }
+			    else {
+				    entry.pre_acl_outer_pri = tmp;
+			    }
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+
+	    do {
+		    cmd = get_sub_cmd("pre_acl_inner_pri_prece", "0");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4)) {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4)) {
+			    dprintf("usage: priority\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else {
+			    rv = cmd_data_check_uint8(cmd, &tmp, sizeof(a_uint32_t));
+			    if (SW_OK != rv) {
+				    dprintf("usage: priority\n");
+			    }
+			    else {
+				    entry.pre_acl_inner_pri = tmp;
+			    }
+		    }
+	    } while (talk_mode && (SW_OK != rv));
+    }
+
     *(fal_qos_pri_precedence_t *)val = entry;
     return SW_OK;
 }
@@ -19191,16 +19237,22 @@ cmd_data_check_port_pri(char *cmd_str, void * val, a_uint32_t size)
 void
 cmd_data_print_port_pri(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 {
-    fal_qos_pri_precedence_t *entry;
+	fal_qos_pri_precedence_t *entry;
 
-    entry = (fal_qos_pri_precedence_t *) buf;
-    
-    dprintf("\n[pcp_pri_prece]:0x%x [dscp_pri_prece]:0x%x [preheader_pri_prece]:0x%x ",
+	entry = (fal_qos_pri_precedence_t *) buf;
+
+	dprintf("\n[pcp_pri_prece]:0x%x [dscp_pri_prece]:0x%x [preheader_pri_prece]:0x%x ",
 			entry->pcp_pri, entry->dscp_pri, entry->preheader_pri);
-    dprintf("\n[flow_pri_prece]:0x%x [acl_pri_prece]:0x%x [post_acl_pri_prece]:0x%x ",
+	dprintf("\n[flow_pri_prece]:0x%x [acl_pri_prece]:0x%x [post_acl_pri_prece]:0x%x ",
 			entry->flow_pri, entry->acl_pri, entry->post_acl_pri);
-    dprintf("\n[pcp_pri_force]:0x%x [dscp_pri_force]:0x%x ",
+	dprintf("\n[pcp_pri_force]:0x%x [dscp_pri_force]:0x%x ",
 			entry->pcp_pri_force, entry->dscp_pri_force);
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+		dprintf("\n[pre_acl_outer_pri_prece]:0x%x [pre_acl_inner_pri_prece]:0x%x",
+				entry->pre_acl_outer_pri, entry->pre_acl_inner_pri);
+	}
+
+	dprintf("\n");
 }
 
 sw_error_t
