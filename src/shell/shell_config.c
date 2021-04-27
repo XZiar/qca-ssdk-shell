@@ -214,6 +214,10 @@ struct cmd_des_t gcmd_des[] =
                 SW_API_PT_SWITCH_PORT_LOOPBACK_SET, NULL},
             {"switchportloopback", "get", "get switch port loopback", "<port_id>",
                 SW_API_PT_SWITCH_PORT_LOOPBACK_GET, NULL},
+            {"port8023ah", "set", "set port 8023ah", "<port_id>",
+                SW_API_PT_8023AH_SET, NULL},
+            {"port8023ah", "get", "get port 8023ah", "<port_id>",
+                SW_API_PT_8023AH_GET, NULL},
 /*qca808x_start*/
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL},/*end of desc*/
         },

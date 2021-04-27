@@ -954,3 +954,27 @@ fal_switch_port_loopback_get(a_uint32_t dev_id, fal_port_t port_id,
 	return rv;
 }
 
+sw_error_t
+fal_port_8023ah_set(a_uint32_t dev_id, fal_port_t port_id,
+	fal_port_8023ah_ctrl_t *port_8023ah_ctrl)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_8023AH_SET, dev_id,
+			port_id, port_8023ah_ctrl);
+
+	return rv;
+}
+sw_error_t
+fal_port_8023ah_get(a_uint32_t dev_id, fal_port_t port_id,
+	fal_port_8023ah_ctrl_t *port_8023ah_ctrl)
+
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_8023AH_GET, dev_id, port_id,
+			port_8023ah_ctrl);
+
+	return rv;
+}
+
