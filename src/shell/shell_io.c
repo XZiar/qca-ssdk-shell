@@ -15097,8 +15097,8 @@ cmd_data_check_host_route_entry(char *cmd_str, void * val, a_uint32_t size)
     else if (entry.ip_version == 1) /*IPv6*/
     {
         cmd_data_check_element("ip6 addr", NULL,
-                               "usage: the format is xx.xx.xx.xx \n",
-                               cmd_data_check_ip4addr, (cmd, &(entry.route_addr.ip6_addr), 16));
+			"usage: the format is xxxx::xxxx \n",
+			cmd_data_check_ip6addr, (cmd, &(entry.route_addr.ip6_addr), 16));
     }
     else
     {
