@@ -112,3 +112,21 @@ fal_mgmtctrl_vpgroup_get(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t *vpgr
     rv = sw_uk_exec(SW_API_MGMTCTRL_VPGROUP_GET, dev_id, port_id, vpgroup_id);
     return rv;
 }
+
+sw_error_t
+fal_mgmtctrl_tunnel_decap_set(a_uint32_t dev_id, a_uint32_t cpu_code_id, a_bool_t enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_MGMTCTRL_TUNNEL_DECAP_SET, dev_id, cpu_code_id, enable);
+    return rv;
+}
+
+sw_error_t
+fal_mgmtctrl_tunnel_decap_get(a_uint32_t dev_id, a_uint32_t cpu_code_id, a_bool_t *enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_MGMTCTRL_TUNNEL_DECAP_GET, dev_id, cpu_code_id, enable);
+    return rv;
+}
