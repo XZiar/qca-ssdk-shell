@@ -128,6 +128,7 @@ extern "C" {
 	    CHIP_HPPE,
 	    CHIP_SCOMPHY,
 	    CHIP_APPE,
+	    CHIP_MHT,
     } ssdk_chip_type;
 /*qca808x_end*/
     typedef struct
