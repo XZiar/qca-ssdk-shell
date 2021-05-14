@@ -448,7 +448,7 @@ fal_port_congestion_drop_get(a_uint32_t dev_id, fal_port_t port_id,
 
 sw_error_t
 fal_ring_flow_ctrl_thres_set(a_uint32_t dev_id, a_uint32_t ring_id,
-			a_uint8_t on_thres, a_uint8_t off_thres)
+			a_uint16_t on_thres, a_uint16_t off_thres)
 {
     sw_error_t rv;
 
@@ -459,7 +459,7 @@ fal_ring_flow_ctrl_thres_set(a_uint32_t dev_id, a_uint32_t ring_id,
 
 sw_error_t
 fal_ring_flow_ctrl_thres_get(a_uint32_t dev_id, a_uint32_t ring_id,
-			a_uint8_t *on_thres, a_uint8_t *off_thres)
+			a_uint16_t *on_thres, a_uint16_t *off_thres)
 {
     sw_error_t rv;
 
