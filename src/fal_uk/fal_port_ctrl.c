@@ -978,3 +978,12 @@ fal_port_8023ah_get(a_uint32_t dev_id, fal_port_t port_id,
 	return rv;
 }
 
+sw_error_t
+fal_ring_flow_ctrl_status_get(a_uint32_t dev_id, a_uint32_t ring_id, a_bool_t *status)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_RING_FLOW_CTRL_STATUS_GET, dev_id, ring_id, status);
+
+	return rv;
+}
