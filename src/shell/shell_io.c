@@ -234,6 +234,7 @@ struct attr_des_t g_attr_des[] =
             {"flow_aware", FAL_FLOW_AWARE},
             {"flow_hit", FAL_FLOW_HIT},
             {"flow_miss", FAL_FLOW_MISS},
+            {NULL, INVALID_ARRT_VALUE}
         }
     },
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
@@ -39480,7 +39481,7 @@ cmd_data_check_tunnel_flags_parser(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tunnel header type", "vxlan");
+        cmd = get_sub_cmd("tunnel_header_type", "vxlan");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -39570,7 +39571,7 @@ cmd_data_print_tunnel_flags_parser(a_uint8_t * param_name, a_uint32_t * buf, a_u
     dprintf("\n[entry_valid]:%s [comp_mode]:%s",
             entry->entry_valid?"valid":"invalid", entry->comp_mode? "Not equal":"equal");
     tmpdata = entry->hdr_type;
-    cmd_data_print_attr("tunnel_overlay_type", " [tunnel header type]:", &tmpdata, sizeof(tmpdata));
+    cmd_data_print_attr("tunnel_overlay_type", " [tunnel_header_type]:", &tmpdata, sizeof(tmpdata));
     dprintf("\n[flags]:0x%x [mask]:0x%x ", entry->flags, entry->mask);
 }
 
