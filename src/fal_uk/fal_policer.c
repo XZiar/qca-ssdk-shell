@@ -196,5 +196,3 @@ fal_policer_ctrl_get(a_uint32_t dev_id, fal_policer_ctrl_t *ctrl)
     rv = sw_uk_exec(SW_API_POLICER_CTRL_GET, dev_id, ctrl);
     return rv;
 }
-
-

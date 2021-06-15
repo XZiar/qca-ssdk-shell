@@ -214,6 +214,7 @@ fal_policer_ctrl_set(a_uint32_t dev_id, fal_policer_ctrl_t *ctrl);
 
 sw_error_t
 fal_policer_ctrl_get(a_uint32_t dev_id, fal_policer_ctrl_t *ctrl);
+
 #ifdef __cplusplus
 }
 #endif                          /* __cplusplus */

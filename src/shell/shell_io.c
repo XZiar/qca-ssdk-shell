@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2021, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -5060,7 +5060,7 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry)
         FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_VSI);
     }
 
-    /* get vsi field configuration */
+    /* get pppoe session id field configuration */
     cmd_data_check_element("pppoe session id field", "no", "usage: <yes/no/y/n>\n",
                            cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
@@ -7796,6 +7796,22 @@ cmd_data_check_ledpattern(char *info, void * val, a_uint32_t size)
             pattern.map |= (1 << POWER_ON_LIGHT_EN);
         }
 
+        cmd_data_check_element("active_high", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if (1 == tmpdata)
+        {
+            pattern.map |= (1 << LED_ACTIVE_HIGH);
+        }
+
+        cmd_data_check_element("link_2500m_light", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if (1 == tmpdata)
+        {
+            pattern.map |= (1 << LINK_2500M_LIGHT_EN);
+        }
+
         cmd_data_check_element("link_1000m_light", "no", "usage: <yes/no/y/n>\n",
                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
                                        sizeof (a_bool_t)));
@@ -7905,6 +7921,18 @@ cmd_data_print_ledpattern(a_uint8_t * param_name, a_uint32_t * buf,
         if (pattern->map & (1 << POWER_ON_LIGHT_EN))
         {
             cmd_data_print_confirm("[power_on_light]:", A_TRUE, sizeof (a_bool_t));
+            dprintf("\n");
+        }
+
+        if (pattern->map & (1 << LED_ACTIVE_HIGH))
+        {
+            cmd_data_print_confirm("[active_high]:", A_TRUE, sizeof (a_bool_t));
+            dprintf("\n");
+        }
+
+        if (pattern->map & (1 << LINK_2500M_LIGHT_EN))
+        {
+            cmd_data_print_confirm("[link_2500m_light]:", A_TRUE, sizeof (a_bool_t));
             dprintf("\n");
         }
 
@@ -15673,8 +15701,8 @@ cmd_data_check_host_route_entry(char *cmd_str, void * val, a_uint32_t size)
     else if (entry.ip_version == 1) /*IPv6*/
     {
         cmd_data_check_element("ip6 addr", NULL,
-                               "usage: the format is xx.xx.xx.xx \n",
-                               cmd_data_check_ip4addr, (cmd, &(entry.route_addr.ip6_addr), 16));
+			"usage: the format is xxxx::xxxx \n",
+			cmd_data_check_ip6addr, (cmd, &(entry.route_addr.ip6_addr), 16));
     }
     else
     {
@@ -23603,14 +23631,16 @@ cmd_data_check_global_qinqmode(char *info, void *val, a_uint32_t size)
         }
         else if (!strncasecmp(cmd, "help", 4))
         {
-            dprintf("usage: <bit 0 for ingress and bit 1 for egress>\n");
+            dprintf("usage: <bit 0 for ingress and bit 1 for egress, \
+			    bit 2 for untouched with cpu code>\n");
             rv = SW_BAD_VALUE;
         }
         else
         {
             rv = cmd_data_check_uint32(cmd, &(pEntry->mask), sizeof(a_uint32_t));
             if (SW_OK != rv)
-                dprintf("usage: <bit 0 for ingress and bit 1 for egress>\n");
+                dprintf("usage: <bit 0 for ingress and bit 1 for egress, \
+				bit 2 for untouched with cpu code>\n");
         }
     }while (talk_mode && (SW_OK != rv));
 
@@ -23660,6 +23690,24 @@ cmd_data_check_global_qinqmode(char *info, void *val, a_uint32_t size)
         }
     }while (talk_mode && (SW_OK != rv));
 
+    /* get untouched with cpu code */
+    do {
+	    cmd = get_sub_cmd("untouched_for_cpucode", "enable");
+	    SW_RTN_ON_NULL_PARAM(cmd);
+
+	    if (!strncasecmp(cmd, "quit", 4)) {
+		    return SW_BAD_VALUE;
+	    } else if (!strncasecmp(cmd, "help", 4)) {
+		    dprintf("usage: <enable/disable>\n");
+		    rv = SW_BAD_VALUE;
+	    } else {
+		    rv = cmd_data_check_enable(cmd, &(pEntry->untouched_for_cpucode),
+				    sizeof(a_bool_t));
+		    if (SW_OK != rv)
+			    dprintf("usage: <enable/disable>\n");
+	    }
+    } while (talk_mode && (SW_OK != rv));
+
     return SW_OK;
 }
 
@@ -23679,6 +23727,8 @@ cmd_data_print_global_qinqmode(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
     cmd_data_print_qinq_mode("egress_qinq_mode",
 				(a_uint32_t *) & (entry->egress_mode),
 				sizeof(a_uint32_t));
+    cmd_data_print_enable("untouched_for_cpucode", &entry->untouched_for_cpucode,
+		    sizeof(entry->untouched_for_cpucode));
 
 }
 
