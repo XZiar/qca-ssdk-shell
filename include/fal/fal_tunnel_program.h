@@ -171,7 +171,7 @@ fal_tunnel_program_udf_getnext(a_uint32_t dev_id,
 #ifdef __cplusplus
 }
 #endif                          /* __cplusplus */
-#endif                          /* _FAL_VXLAN_H_ */
+#endif                          /* _FAL_TUNNEL_PROGRAM_H_ */
 /**
  * @}
  */
