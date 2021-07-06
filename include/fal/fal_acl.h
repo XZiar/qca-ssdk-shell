@@ -181,7 +181,7 @@ extern "C" {
 #define    FAL_ACL_FIELD_UDF1            54
 #define    FAL_ACL_FIELD_UDF2            55
 #define    FAL_ACL_FIELD_UDF3            56
-/*new add for alder*/
+/*new add for IPQ95xx*/
 #define    FAL_ACL_FIELD_UDFPROFILE      57
 
 #define    FAL_ACL_FIELD_NUM             58
@@ -218,10 +218,11 @@ extern "C" {
 #define    FAL_ACL_ACTION_CPU_CODE 28
 #define    FAL_ACL_ACTION_SYN_TOGGLE 29
 #define    FAL_ACL_ACTION_METADATA_EN 30
-/*new add for alder*/
-#define    FAL_ACL_ACTION_CASCADE   31
-#define    FAL_ACL_ACTION_VPN       32
-#define    FAL_ACL_ACTION_LEARN_DIS 33
+/*extend action flg*/
+/*new add for IPQ95xx*/
+#define    FAL_ACL_ACTION_CASCADE   0
+#define    FAL_ACL_ACTION_VPN       1
+#define    FAL_ACL_ACTION_LEARN_DIS 2
 
 enum{
 	FAL_ACL_BYPASS_IN_VLAN_MISS = 0,
@@ -252,16 +253,16 @@ enum{
       *  It's a bit map type, we can access it through macro FAL_ACTION_FLG_SET,
       * FAL_ACTION_FLG_CLR and FAL_ACTION_FLG_TST.
     */
-    typedef a_uint32_t fal_acl_action_map_t[2];
+    typedef a_uint32_t fal_acl_action_map_t;
 
 #define FAL_ACTION_FLG_SET(flag, action) \
-    ((flag[(action) / 32]) |= (0x1UL << ((action) % 32)))
+    (flag) |= (0x1UL << (action))
 
 #define FAL_ACTION_FLG_CLR(flag, action) \
-    ((flag[(action) / 32]) &= (~(0x1UL << ((action) % 32))))
+    (flag) &= (~(0x1UL << (action)))
 
 #define FAL_ACTION_FLG_TST(flag, action) \
-    (((flag[(action) / 32]) & (0x1UL << ((action) % 32))) ? 1 : 0)
+    ((flag) & (0x1UL << (action))) ? 1 : 0
 
 
     /**
@@ -695,18 +696,19 @@ typedef struct
         a_uint8_t             dscp_mask;
         a_uint8_t             qos_res_prec;
 
-        /*new add acl udf for alder*/
+        /*new add acl udf for IPQ95xx*/
         fal_acl_field_op_t udf2_op;
         a_uint8_t udfprofile_val;
         a_uint8_t udfprofile_mask;
-        /*new add acl action for alder*/
+        /*new add acl action for IPQ95xx*/
+        fal_acl_action_map_t  action_flg_ext;
         a_uint8_t             cascade_data;
         a_uint8_t             vpn_type; /*0 vsi; 1 vrf*/
         a_uint8_t             vpn_id;
         a_uint16_t            napt_l4_port; /*l4 port for NAPT*/
         a_uint16_t            policy_id;/*policy id used for tunnel encapsulation*/
 
-        /*new add acl rule fields for alder*/
+        /*new add acl rule fields for IPQ95xx*/
         fal_acl_tunnel_info_t  tunnel_info; /*tunnel info fields*/
         fal_acl_rule_field_t   inner_rule_field; /*tunnel inner packet rule fields*/
     } fal_acl_rule_t;

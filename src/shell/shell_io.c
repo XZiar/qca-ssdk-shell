@@ -7200,7 +7200,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                                            0x0));
             entry->cascade_data = tmpdata & 0x7f;
 
-            FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_CASCADE);
+            FAL_ACTION_FLG_SET(entry->action_flg_ext, FAL_ACL_ACTION_CASCADE);
         }
         /* vpn action configuration */
         cmd_data_check_element("vpn change", "no", "usage: <yes/no/y/n>\n",
@@ -7220,7 +7220,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                                            0x0));
             entry->vpn_id= tmpdata & 0x3f;
 
-            FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_VPN);
+            FAL_ACTION_FLG_SET(entry->action_flg_ext, FAL_ACL_ACTION_VPN);
         }
         /*learn_dis action configuration */
         cmd_data_check_element("learn_dis enable", "no", "usage: <yes/no/y/n>\n",
@@ -7228,7 +7228,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                                        sizeof (a_bool_t)));
         if (A_TRUE == tmpdata)
         {
-            FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_LEARN_DIS);
+            FAL_ACTION_FLG_SET(entry->action_flg_ext, FAL_ACL_ACTION_LEARN_DIS);
         }
     }
     return SW_OK;
@@ -8482,12 +8482,12 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
         FAL_ACL_RULE_TUNNEL_UDF == rule->rule_type) &&
         (ssdk_cfg.init_cfg.chip_type == CHIP_APPE))
     {
-        if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_CASCADE))
+        if (FAL_ACTION_FLG_TST(rule->action_flg_ext, FAL_ACL_ACTION_CASCADE))
         {
             dprintf("\n[cascade_data]:0x%x", rule->cascade_data);
         }
 
-        if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_VPN))
+        if (FAL_ACTION_FLG_TST(rule->action_flg_ext, FAL_ACL_ACTION_VPN))
         {
             tmpdata = rule->vpn_type;
             cmd_data_print_attr("vpn_type", "\n[vpn_type]:",
@@ -8495,7 +8495,7 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
             dprintf("\n[vpn_id]:0x%x", rule->vpn_id);
         }
 
-        if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_LEARN_DIS))
+        if (FAL_ACTION_FLG_TST(rule->action_flg_ext, FAL_ACL_ACTION_LEARN_DIS))
         {
             dprintf("\n[learn_dis]:yes");
         }
