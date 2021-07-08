@@ -28621,10 +28621,12 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
 
     aos_mem_zero(&entry, sizeof (fal_shaper_config_t));
 
-    cmd_data_check_element("meter_type", "rfc",
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        cmd_data_check_element("meter_type", "rfc",
                         "usage:meter_type:rfc/mef10_3, etc\n",
                         cmd_data_check_attr, ("shaper_meter_type", cmd,
                         &(entry.meter_type), sizeof(entry.meter_type)));
+    }
 
     do
     {
@@ -28722,28 +28724,29 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("cir_max", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: integer\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(entry.cir_max), sizeof (a_uint32_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("cir_max", "0");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: integer\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &(entry.cir_max), sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: integer\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     do
     {
@@ -28816,28 +28819,29 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("eir_max", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: integer\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(entry.eir_max), sizeof (a_uint32_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("eir_max", "0");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: integer\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &(entry.eir_max), sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: integer\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     do
     {
@@ -28862,78 +28866,75 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("next_ptr", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: integer\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(entry.next_ptr), sizeof (a_uint32_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("next_ptr", "0");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: integer\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &(entry.next_ptr), sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: integer\n");
+            }
         }
-    }
-    while (talk_mode && (SW_OK != rv));
+        while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("grp_end", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+        do
         {
-
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_end),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("grp_end", "no");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: <yes/no/y/n>\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_end),
+                                            sizeof (a_bool_t));
+                if (SW_OK != rv)
+                    dprintf("usage: <yes/no/y/n>\n");
+            }
         }
-    }
-    while (talk_mode && (SW_OK != rv));
+        while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("grp_couple_enable", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+        do
         {
-
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_couple_en),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("grp_couple_enable", "no");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: <yes/no/y/n>\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_couple_en),
+                                            sizeof (a_bool_t));
+                if (SW_OK != rv)
+                    dprintf("usage: <yes/no/y/n>\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     do
     {
@@ -28975,7 +28976,6 @@ cmd_data_check_queue_shaper_ctrl(char *cmd_str, void * val, a_uint32_t size)
     {
         cmd = get_sub_cmd("head", "0-299");
 		SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29136,8 +29136,10 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 
     entry = (fal_shaper_config_t *) buf;
 
-    cmd_data_print_attr("shaper_meter_type", "\n[shaper_meter_type]:",
-	    &(entry->meter_type), sizeof(entry->meter_type));
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        cmd_data_print_attr("shaper_meter_type", "\n[shaper_meter_type]:",
+        &(entry->meter_type), sizeof(entry->meter_type));
+    }
 
     if (A_TRUE == entry->couple_en)
     {
@@ -29160,7 +29162,9 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
     }
 
     dprintf("\n[shaper_cir]:0x%x", entry->cir);
-    dprintf("\n[shaper_cir_max]:0x%x", entry->cir_max);
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        dprintf("\n[shaper_cir_max]:0x%x", entry->cir_max);
+    }
     dprintf("\n[shaper_cbs]:0x%x", entry->cbs);
 
     if (A_TRUE == entry->e_shaper_en)
@@ -29173,27 +29177,29 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
     }
 
     dprintf("\n[shaper_eir]:0x%x", entry->eir);
-    dprintf("\n[shaper_eir_max]:0x%x", entry->eir_max);
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        dprintf("\n[shaper_eir_max]:0x%x", entry->eir_max);
+    }
     dprintf("\n[shaper_ebs]:0x%x", entry->ebs);
 
-    dprintf("\n[next_ptr]:%d", entry->next_ptr);
-
-    if (A_TRUE == entry->grp_end)
-    {
-        dprintf("\n[grp_end]:yes  ");
-    }
-    else
-    {
-        dprintf("\n[grp_end]:no  ");
-    }
-
-    if (A_TRUE == entry->grp_couple_en)
-    {
-        dprintf("\n[grp_coupling_enable]:yes  ");
-    }
-    else
-    {
-        dprintf("\n[grp_coupling_enable]:no  ");
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        dprintf("\n[next_ptr]:%d", entry->next_ptr);
+        if (A_TRUE == entry->grp_end)
+        {
+            dprintf("\n[grp_end]:yes  ");
+        }
+        else
+        {
+            dprintf("\n[grp_end]:no  ");
+        }
+        if (A_TRUE == entry->grp_couple_en)
+        {
+            dprintf("\n[grp_coupling_enable]:yes  ");
+        }
+        else
+        {
+            dprintf("\n[grp_coupling_enable]:no  ");
+        }
     }
 
     dprintf("\n[shaper_frame_mode]:0x%x", entry->shaper_frame_mode);
@@ -29249,16 +29255,17 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
 
     aos_mem_zero(&entry, sizeof (fal_policer_config_t));
 
-    cmd_data_check_element("meter_type", "rfc",
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        cmd_data_check_element("meter_type", "rfc",
                         "usage:meter_type:rfc/mef10_3, etc\n",
                         cmd_data_check_attr, ("policer_meter_type", cmd,
                         &(entry.meter_type), sizeof(entry.meter_type)));
+    }
 
     do
     {
         cmd = get_sub_cmd("meter_enable", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
 
@@ -29279,37 +29286,36 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("vp_policer_index", "0-511");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: integer\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(entry.vp_meter_index), sizeof (a_uint32_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("vp_policer_index", "0-511");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: integer\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &(entry.vp_meter_index), sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: integer\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     do
     {
         cmd = get_sub_cmd("couple_enable", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
-
             return SW_BAD_VALUE;
         }
         else if (!strncasecmp(cmd, "help", 4))
@@ -29331,7 +29337,6 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     {
         cmd = get_sub_cmd("color_mode", "0-1");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29354,7 +29359,6 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     {
         cmd = get_sub_cmd("frame_type", "0-0x1f");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29377,7 +29381,6 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     {
         cmd = get_sub_cmd("meter_mode", "0-1");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29396,12 +29399,10 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-
     do
     {
         cmd = get_sub_cmd("meter_unit", "0-1");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29424,7 +29425,6 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     {
         cmd = get_sub_cmd("cir", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29443,34 +29443,34 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("cir_max", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: integer\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(entry.cir_max), sizeof (a_uint32_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("cir_max", "0");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: integer\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &(entry.cir_max), sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: integer\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     do
     {
         cmd = get_sub_cmd("cbs", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29493,7 +29493,6 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     {
         cmd = get_sub_cmd("eir", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29512,34 +29511,34 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("eir_max", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: integer\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(entry.eir_max), sizeof (a_uint32_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("eir_max", "0");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: integer\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &(entry.eir_max), sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: integer\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     do
     {
         cmd = get_sub_cmd("ebs", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29558,78 +29557,75 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("next_ptr", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: integer\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(entry.next_ptr), sizeof (a_uint32_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("next_ptr", "0");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: integer\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &(entry.next_ptr), sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: integer\n");
+            }
         }
-    }
-    while (talk_mode && (SW_OK != rv));
+        while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("grp_end", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+        do
         {
-
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_end),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("grp_end", "no");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: <yes/no/y/n>\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_end),
+                                            sizeof (a_bool_t));
+                if (SW_OK != rv)
+                    dprintf("usage: <yes/no/y/n>\n");
+            }
         }
-    }
-    while (talk_mode && (SW_OK != rv));
+        while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("grp_couple_enable", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+        do
         {
-
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_couple_en),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("grp_couple_enable", "no");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: <yes/no/y/n>\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_couple_en),
+                                            sizeof (a_bool_t));
+                if (SW_OK != rv)
+                    dprintf("usage: <yes/no/y/n>\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     *(fal_policer_config_t *)val = entry;
     return SW_OK;
@@ -29644,19 +29640,19 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
 
     aos_mem_zero(&entry, sizeof (fal_policer_config_t));
 
-    cmd_data_check_element("meter_type", "rfc",
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        cmd_data_check_element("meter_type", "rfc",
                         "usage:meter_type:rfc/mef10_3, etc\n",
                         cmd_data_check_attr, ("policer_meter_type", cmd,
                         &(entry.meter_type), sizeof(entry.meter_type)));
+    }
 
     do
     {
         cmd = get_sub_cmd("meter_enable", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
-
             return SW_BAD_VALUE;
         }
         else if (!strncasecmp(cmd, "help", 4))
@@ -29678,10 +29674,8 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
     {
         cmd = get_sub_cmd("couple_enable", "no");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
-
             return SW_BAD_VALUE;
         }
         else if (!strncasecmp(cmd, "help", 4))
@@ -29703,7 +29697,6 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
     {
         cmd = get_sub_cmd("color_mode", "0-1");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29726,7 +29719,6 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
     {
         cmd = get_sub_cmd("meter_mode", "0-1");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29745,12 +29737,10 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-
     do
     {
         cmd = get_sub_cmd("meter_unit", "0-1");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29773,7 +29763,6 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
     {
         cmd = get_sub_cmd("cir", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29792,34 +29781,34 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("cir_max", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: integer\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(entry.cir_max), sizeof (a_uint32_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("cir_max", "0");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: integer\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &(entry.cir_max), sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: integer\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     do
     {
         cmd = get_sub_cmd("cbs", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29842,7 +29831,6 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
     {
         cmd = get_sub_cmd("eir", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29861,34 +29849,34 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("eir_max", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: integer\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(entry.eir_max), sizeof (a_uint32_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("eir_max", "0");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: integer\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &(entry.eir_max), sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: integer\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     do
     {
         cmd = get_sub_cmd("ebs", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
-
         if (!strncasecmp(cmd, "quit", 4))
         {
             return SW_BAD_VALUE;
@@ -29907,78 +29895,75 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("next_ptr", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: integer\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(entry.next_ptr), sizeof (a_uint32_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("next_ptr", "0");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: integer\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &(entry.next_ptr), sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: integer\n");
+            }
         }
-    }
-    while (talk_mode && (SW_OK != rv));
+        while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("grp_end", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+        do
         {
-
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_end),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("grp_end", "no");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: <yes/no/y/n>\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_end),
+                                            sizeof (a_bool_t));
+                if (SW_OK != rv)
+                    dprintf("usage: <yes/no/y/n>\n");
+            }
         }
-    }
-    while (talk_mode && (SW_OK != rv));
+        while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("grp_couple_enable", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+        do
         {
-
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_couple_en),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("grp_couple_enable", "no");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: <yes/no/y/n>\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.grp_couple_en),
+                                            sizeof (a_bool_t));
+                if (SW_OK != rv)
+                    dprintf("usage: <yes/no/y/n>\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     *(fal_policer_config_t *)val = entry;
     return SW_OK;
@@ -30095,55 +30080,53 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("yellow_dscp_remark", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.yellow_dscp_en),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("yellow_dscp_remark", "no");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: <yes/no/y/n>\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.yellow_dscp_en),
+                                            sizeof (a_bool_t));
+                if (SW_OK != rv)
+                    dprintf("usage: <yes/no/y/n>\n");
+            }
         }
-    }
-    while (talk_mode && (SW_OK != rv));
+        while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("yellow_remap", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+        do
         {
-
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.yellow_remap_en),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("yellow_remap", "no");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: <yes/no/y/n>\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.yellow_remap_en),
+                                            sizeof (a_bool_t));
+                if (SW_OK != rv)
+                    dprintf("usage: <yes/no/y/n>\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     do
     {
@@ -30237,28 +30220,29 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("yellow_dscp", "0-63");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: integer\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(entry.yellow_dscp), sizeof (a_uint32_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("yellow_dscp", "0-63");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: integer\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &(entry.yellow_dscp), sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: integer\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     do
     {
@@ -30383,55 +30367,53 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("red_dscp_remark", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.red_dscp_en),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("red_dscp_remark", "no");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: <yes/no/y/n>\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.red_dscp_en),
+                                            sizeof (a_bool_t));
+                if (SW_OK != rv)
+                    dprintf("usage: <yes/no/y/n>\n");
+            }
         }
-    }
-    while (talk_mode && (SW_OK != rv));
+        while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("red_remap", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+        do
         {
-
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.red_remap_en),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("red_remap", "no");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: <yes/no/y/n>\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.red_remap_en),
+                                            sizeof (a_bool_t));
+                if (SW_OK != rv)
+                    dprintf("usage: <yes/no/y/n>\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     do
     {
@@ -30525,28 +30507,29 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    do
-    {
-        cmd = get_sub_cmd("red_dscp", "0-63");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        do
         {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: integer\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(entry.red_dscp), sizeof (a_uint32_t));
-            if (SW_OK != rv)
+            cmd = get_sub_cmd("red_dscp", "0-63");
+            SW_RTN_ON_NULL_PARAM(cmd);
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: integer\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &(entry.red_dscp), sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: integer\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
 
     *(fal_policer_action_t *)val = entry;
     return SW_OK;
@@ -30560,8 +30543,10 @@ cmd_data_print_port_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_u
 
     entry = (fal_policer_config_t *) buf;
 
-    cmd_data_print_attr("policer_meter_type", "\n[meter_type]:",
-	    &(entry->meter_type), sizeof(entry->meter_type));
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        cmd_data_print_attr("policer_meter_type", "\n[meter_type]:",
+    	    &(entry->meter_type), sizeof(entry->meter_type));
+    }
 
     if (A_TRUE == entry->meter_en)
     {
@@ -30572,7 +30557,9 @@ cmd_data_print_port_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_u
         dprintf("\n[meter_enable]:no  ");
     }
 
-    dprintf("\n[vp_policer_index]:0x%x", entry->vp_meter_index);
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        dprintf("\n[vp_policer_index]:0x%x", entry->vp_meter_index);
+    }
 
     if (A_TRUE == entry->couple_en)
     {
@@ -30596,26 +30583,32 @@ cmd_data_print_port_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_u
         dprintf("\n[meter_unit]:frame_based  ");
     }
 
-    dprintf("\n[cir]:0x%08x  [cir_max]:0x%08x  [cbs]:0x%08x  ", entry->cir, entry->cir_max, entry->cbs);
-    dprintf("\n[eir]:0x%08x  [eir_max]:0x%08x  [ebs]:0x%08x  ", entry->eir, entry->eir_max, entry->ebs);
-    dprintf("\n[next_ptr]:%d", entry->next_ptr);
-
-    if (A_TRUE == entry->grp_end)
-    {
-        dprintf("\n[grp_end]:yes  ");
+    dprintf("\n[cir]:0x%08x  [cbs]:0x%08x  ", entry->cir, entry->cbs);
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        dprintf("\n[cir_max]:0x%08x  ", entry->cir_max);
     }
-    else
-    {
-        dprintf("\n[grp_end]:no  ");
+    dprintf("\n[eir]:0x%08x  [ebs]:0x%08x  ", entry->eir, entry->ebs);
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        dprintf("\n[eir_max]:0x%08x  ", entry->eir_max);
     }
-
-    if (A_TRUE == entry->grp_couple_en)
-    {
-        dprintf("\n[grp_coupling_enable]:yes  ");
-    }
-    else
-    {
-        dprintf("\n[grp_coupling_enable]:no  ");
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        dprintf("\n[next_ptr]:%d", entry->next_ptr);
+        if (A_TRUE == entry->grp_end)
+        {
+            dprintf("\n[grp_end]:yes  ");
+        }
+        else
+        {
+            dprintf("\n[grp_end]:no  ");
+        }
+        if (A_TRUE == entry->grp_couple_en)
+        {
+            dprintf("\n[grp_coupling_enable]:yes  ");
+        }
+        else
+        {
+            dprintf("\n[grp_coupling_enable]:no  ");
+        }
     }
 
     return;
@@ -30664,29 +30657,32 @@ cmd_data_print_policer_cmd_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
         dprintf("\n[yellow_dei_remark]:no  ");
     }
 
-    if (A_TRUE == entry->yellow_dscp_en)
-    {
-        dprintf("\n[yellow_dscp_remark]:yes  ");
-    }
-    else
-    {
-        dprintf("\n[yellow_dscp_remark]:no  ");
-    }
-
-    if (A_TRUE == entry->yellow_remap_en)
-    {
-        dprintf("\n[yellow_remap]:yes  ");
-    }
-    else
-    {
-        dprintf("\n[yellow_remap]:no  ");
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        if (A_TRUE == entry->yellow_dscp_en)
+        {
+            dprintf("\n[yellow_dscp_remark]:yes  ");
+        }
+        else
+        {
+            dprintf("\n[yellow_dscp_remark]:no  ");
+        }
+        if (A_TRUE == entry->yellow_remap_en)
+        {
+            dprintf("\n[yellow_remap]:yes  ");
+        }
+        else
+        {
+            dprintf("\n[yellow_remap]:no  ");
+        }
     }
 
     dprintf("\n[yellow_priority]:0x%x", entry->yellow_priority);
     dprintf("\n[yellow_drop_priority]:0x%x", entry->yellow_drop_priority);
     dprintf("\n[yellow_pcp]:0x%x", entry->yellow_pcp);
     dprintf("\n[yellow_dei]:0x%x", entry->yellow_dei);
-    dprintf("\n[yellow_dscp]:0x%x", entry->yellow_dscp);
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        dprintf("\n[yellow_dscp]:0x%x", entry->yellow_dscp);
+    }
 
     if (FAL_MAC_DROP == entry->red_action)
     {
@@ -30733,29 +30729,32 @@ cmd_data_print_policer_cmd_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
         dprintf("\n[red_dei_remark]:no  ");
     }
 
-    if (A_TRUE == entry->red_dscp_en)
-    {
-        dprintf("\n[red_dscp_remark]:yes  ");
-    }
-    else
-    {
-        dprintf("\n[red_dscp_remark]:no  ");
-    }
-
-    if (A_TRUE == entry->red_remap_en)
-    {
-        dprintf("\n[red_remap]:yes  ");
-    }
-    else
-    {
-        dprintf("\n[red_remap]:no  ");
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        if (A_TRUE == entry->red_dscp_en)
+        {
+            dprintf("\n[red_dscp_remark]:yes  ");
+        }
+        else
+        {
+            dprintf("\n[red_dscp_remark]:no  ");
+        }
+        if (A_TRUE == entry->red_remap_en)
+        {
+            dprintf("\n[red_remap]:yes  ");
+        }
+        else
+        {
+            dprintf("\n[red_remap]:no  ");
+        }
     }
 
     dprintf("\n[red_priority]:0x%x", entry->red_priority);
     dprintf("\n[red_drop_priority]:0x%x", entry->red_drop_priority);
     dprintf("\n[red_pcp]:0x%x", entry->red_pcp);
     dprintf("\n[red_dei]:0x%x", entry->red_dei);
-    dprintf("\n[red_dscp]:0x%x", entry->red_dscp);
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        dprintf("\n[red_dscp]:0x%x", entry->red_dscp);
+    }
 
     return;
 }
@@ -30767,8 +30766,10 @@ cmd_data_print_acl_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 
     entry = (fal_policer_config_t *) buf;
 
-    cmd_data_print_attr("policer_meter_type", "\n[meter_type]:",
-	    &(entry->meter_type), sizeof(entry->meter_type));
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        cmd_data_print_attr("policer_meter_type", "\n[meter_type]:",
+        &(entry->meter_type), sizeof(entry->meter_type));
+    }
 
     if (A_TRUE == entry->meter_en)
     {
@@ -30801,28 +30802,33 @@ cmd_data_print_acl_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
         dprintf("\n[meter_unit]:frame_based  ");
     }
 
-    dprintf("\n[cir]:0x%08x  [cir_max]:0x%08x  [cbs]:0x%08x  ", entry->cir, entry->cir_max, entry->cbs);
-    dprintf("\n[eir]:0x%08x  [eir_max]:0x%08x  [ebs]:0x%08x  ", entry->eir, entry->eir_max, entry->ebs);
-    dprintf("\n[next_ptr]:%d", entry->next_ptr);
-
-    if (A_TRUE == entry->grp_end)
-    {
-        dprintf("\n[grp_end]:yes  ");
+    dprintf("\n[cir]:0x%08x  [cbs]:0x%08x  ", entry->cir, entry->cbs);
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        dprintf("\n[cir_max]:0x%08x  ", entry->cir_max);
     }
-    else
-    {
-        dprintf("\n[grp_end]:no  ");
+    dprintf("\n[eir]:0x%08x  [ebs]:0x%08x  ", entry->eir, entry->ebs);
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        dprintf("\n[eir_max]:0x%08x  ", entry->eir_max);
     }
-
-    if (A_TRUE == entry->grp_couple_en)
-    {
-        dprintf("\n[grp_coupling_enable]:yes  ");
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+        dprintf("\n[next_ptr]:%d", entry->next_ptr);
+        if (A_TRUE == entry->grp_end)
+        {
+            dprintf("\n[grp_end]:yes  ");
+        }
+        else
+        {
+            dprintf("\n[grp_end]:no  ");
+        }
+        if (A_TRUE == entry->grp_couple_en)
+        {
+            dprintf("\n[grp_coupling_enable]:yes  ");
+        }
+        else
+        {
+            dprintf("\n[grp_coupling_enable]:no  ");
+        }
     }
-    else
-    {
-        dprintf("\n[grp_coupling_enable]:no  ");
-    }
-
     return;
 }
 
