@@ -1815,17 +1815,20 @@ cmd_data_print_mtu_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 		dprintf("mtu_action:rdtcpu\n");
 	else
 		dprintf("mtu_action:unknown\n");
-	cmd_data_print_enable("mtu_enable", &mtu->mtu_enable,
-		sizeof(mtu->mtu_enable));
-	dprintf("\n");
-	cmd_data_print_attr("mtu_type", "[mtu_type]:",
-		&(mtu->mtu_type), sizeof(mtu->mtu_type));
-	dprintf("\n");
-	cmd_data_print_uint32("extra_header_len", &mtu->extra_header_len,
-		sizeof(mtu->extra_header_len));
-	dprintf("\n");
-	cmd_data_print_uint32("eg_vlan_tag_flag", &mtu->eg_vlan_tag_flag,
-		sizeof(mtu->eg_vlan_tag_flag));
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+	{
+		cmd_data_print_enable("mtu_enable", &mtu->mtu_enable,
+			sizeof(mtu->mtu_enable));
+		dprintf("\n");
+		cmd_data_print_attr("mtu_type", "[mtu_type]:",
+			&(mtu->mtu_type), sizeof(mtu->mtu_type));
+		dprintf("\n");
+		cmd_data_print_uint32("extra_header_len", &mtu->extra_header_len,
+			sizeof(mtu->extra_header_len));
+		dprintf("\n");
+		cmd_data_print_uint32("eg_vlan_tag_flag", &mtu->eg_vlan_tag_flag,
+			sizeof(mtu->eg_vlan_tag_flag));
+	}
 }
 
 void
@@ -1915,28 +1918,30 @@ cmd_data_check_mtu_entry(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    cmd_data_check_element("mtu_enable", "enable",
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+
+        cmd_data_check_element("mtu_enable", "enable",
                         "usage: usage: enable/disable\n",
                         cmd_data_check_enable, (cmd,
                         &(entry.mtu_enable), sizeof(entry.mtu_enable)));
 
-    cmd_data_check_element("mtu_type", "ethernet",
+        cmd_data_check_element("mtu_type", "ethernet",
                         "usage:mtu_type:ethernet/ip, etc\n",
                         cmd_data_check_attr, ("mtu_type", cmd,
                         &(entry.mtu_type), sizeof(entry.mtu_type)));
 
-    cmd_data_check_element("extra_header_len", "128",
+        cmd_data_check_element("extra_header_len", "128",
                         "usage: extra_header_len\n",
                         cmd_data_check_uint32, (cmd,
                         &(entry.extra_header_len),
                         sizeof(entry.extra_header_len)));
 
-    cmd_data_check_element("eg_vlan_tag_flag", "0",
+        cmd_data_check_element("eg_vlan_tag_flag", "0",
                         "usage: eg_vlan_tag_flag,bit 0 ctag, bit 1 stag\n",
                         cmd_data_check_uint32, (cmd,
                         &(entry.eg_vlan_tag_flag),
                         sizeof(entry.eg_vlan_tag_flag)));
-
+    }
 
     *(fal_mtu_ctrl_t *)val = entry;
     return SW_OK;
@@ -17104,49 +17109,51 @@ cmd_data_check_vsi_member(char *cmd_str, void * val, a_uint32_t size)
                         sizeof (a_uint32_t));
 	if (rv)
 		return rv;
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
 
-	rv = __cmd_data_check_complex("vports_bitmap(port64-port95)", 0,
-                        "usage: Bit0-port64 Bit1-port65 ....\n",
-                        cmd_data_check_pbmp, &(entry.member_vports[0]),
-                        sizeof (a_uint32_t));
-	if (rv)
-		return rv;
+	{
+		rv = __cmd_data_check_complex("vports_bitmap(port64-port95)", 0,
+			"usage: Bit0-port64 Bit1-port65 ....\n",
+			cmd_data_check_pbmp, &(entry.member_vports[0]),
+			sizeof (a_uint32_t));
+		if (rv)
+			return rv;
 
-	rv = __cmd_data_check_complex("vports_bitmap(port96-port127)", 0,
-                        "usage: Bit0-port96 Bit1-port97 ....\n",
-                        cmd_data_check_pbmp, &(entry.member_vports[1]),
-                        sizeof (a_uint32_t));
-	if (rv)
-		return rv;
+		rv = __cmd_data_check_complex("vports_bitmap(port96-port127)", 0,
+			"usage: Bit0-port96 Bit1-port97 ....\n",
+			cmd_data_check_pbmp, &(entry.member_vports[1]),
+			sizeof (a_uint32_t));
+		if (rv)
+			return rv;
 
-	rv = __cmd_data_check_complex("vports_bitmap(port128-port159)", 0,
-                        "usage: Bit0-port128 Bit1-port129 ....\n",
-                        cmd_data_check_pbmp, &(entry.member_vports[2]),
-                        sizeof (a_uint32_t));
-	if (rv)
-		return rv;
+		rv = __cmd_data_check_complex("vports_bitmap(port128-port159)", 0,
+			"usage: Bit0-port128 Bit1-port129 ....\n",
+			cmd_data_check_pbmp, &(entry.member_vports[2]),
+			sizeof (a_uint32_t));
+		if (rv)
+			return rv;
 
-	rv = __cmd_data_check_complex("vports_bitmap(port160-port191)", 0,
-                        "usage: Bit0-port160 Bit1-port161 ....\n",
-                        cmd_data_check_pbmp, &(entry.member_vports[3]),
-                        sizeof (a_uint32_t));
-	if (rv)
-		return rv;
+		rv = __cmd_data_check_complex("vports_bitmap(port160-port191)", 0,
+			"usage: Bit0-port160 Bit1-port161 ....\n",
+			cmd_data_check_pbmp, &(entry.member_vports[3]),
+			sizeof (a_uint32_t));
+		if (rv)
+			return rv;
 
-	rv = __cmd_data_check_complex("vports_bitmap(port192-port223)", 0,
-                        "usage: Bit0-port192 Bit1-port193 ...\n",
-                        cmd_data_check_pbmp, &(entry.member_vports[4]),
-                        sizeof (a_uint32_t));
-	if (rv)
-		return rv;
+		rv = __cmd_data_check_complex("vports_bitmap(port192-port223)", 0,
+			"usage: Bit0-port192 Bit1-port193 ...\n",
+			cmd_data_check_pbmp, &(entry.member_vports[4]),
+			sizeof (a_uint32_t));
+		if (rv)
+			return rv;
 
-	rv = __cmd_data_check_complex("vports_bitmap(port224-port255)", 0,
-                        "usage: Bit0-port224 Bit1-port225 ....\n",
-                        cmd_data_check_pbmp, &(entry.member_vports[5]),
-                        sizeof (a_uint32_t));
-	if (rv)
-		return rv;
-
+		rv = __cmd_data_check_complex("vports_bitmap(port224-port255)", 0,
+			"usage: Bit0-port224 Bit1-port225 ....\n",
+			cmd_data_check_pbmp, &(entry.member_vports[5]),
+			sizeof (a_uint32_t));
+		if (rv)
+			return rv;
+	}
 	*(fal_vsi_member_t *)val = entry;
 	return SW_OK;
 }
@@ -17163,14 +17170,16 @@ cmd_data_print_vsi_member_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint
     dprintf("[unknown_unicast_membership]:0x%x\n", entry->uuc_ports);
     dprintf("[unknown_multicast_membership]:0x%x\n", entry->umc_ports);
     dprintf("[broadcast_membership]:0x%x\n", entry->bc_ports);
-    for(vports_bmp_index = 0;
-        vports_bmp_index < sizeof(entry->member_vports)/sizeof(a_uint32_t);
-        vports_bmp_index ++)
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
     {
-        dprintf("[vports_membership[%d]:0x%x\n", vports_bmp_index,
-            entry->member_vports[vports_bmp_index]);
+        for(vports_bmp_index = 0;
+            vports_bmp_index < sizeof(entry->member_vports)/sizeof(a_uint32_t);
+            vports_bmp_index ++)
+        {
+            dprintf("[vports_membership[%d]:0x%x\n", vports_bmp_index,
+                entry->member_vports[vports_bmp_index]);
+        }
     }
-
     return;
 }
 
@@ -27382,31 +27391,32 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
     }
     while (talk_mode && (SW_OK != rv));
-
-    do
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
     {
-        cmd = get_sub_cmd("8023ah_oam_en", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
+        do
+        {
+            cmd = get_sub_cmd("8023ah_oam_en", "no");
+            SW_RTN_ON_NULL_PARAM(cmd);
 
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_types.mgt_8023ah_oam),
-                                        sizeof (a_bool_t));
-            if (SW_OK != rv)
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
                 dprintf("usage: <yes/no/y/n>\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_confirm(cmd, A_FALSE, &(pEntry->protocol_types.mgt_8023ah_oam),
+                                        sizeof (a_bool_t));
+                if (SW_OK != rv)
+                    dprintf("usage: <yes/no/y/n>\n");
+            }
         }
+        while (talk_mode && (SW_OK != rv));
     }
-    while (talk_mode && (SW_OK != rv));
-
     /* get mgt_mld */
     do
     {
@@ -27641,9 +27651,12 @@ cmd_data_print_ctrlpkt_profile(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
     dprintf(" ");
     cmd_data_print_enable("dhcp6_en", (a_uint32_t *) & (entry->protocol_types.mgt_dhcp6), 4);
     dprintf(" ");
-    cmd_data_print_enable("8023ah_oam_en", (a_uint32_t *) & (entry->protocol_types.mgt_8023ah_oam),
-		4);
-    dprintf(" ");
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+    {
+        cmd_data_print_enable("8023ah_oam_en", (a_uint32_t *) &
+            (entry->protocol_types.mgt_8023ah_oam), 4);
+        dprintf(" ");
+    }
     cmd_data_print_enable("mld_en", (a_uint32_t *) & (entry->protocol_types.mgt_mld), 4);
     dprintf(" ");
     cmd_data_print_enable("ip6ns_en", (a_uint32_t *) & (entry->protocol_types.mgt_ns), 4);
