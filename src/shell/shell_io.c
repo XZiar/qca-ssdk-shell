@@ -774,6 +774,9 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_EGRESS_FILTER, cmd_data_check_egress_filter,
 		    cmd_data_print_egress_filter),
     SW_TYPE_DEF(SW_VPORT_TYPE, cmd_data_check_vport_type, NULL),
+    SW_TYPE_DEF(SW_VPORT_CNT_CFG, cmd_data_check_vport_cnt_cfg,
+		    cmd_data_print_vport_cnt_cfg),
+    SW_TYPE_DEF(SW_VPORT_CNT, NULL,cmd_data_print_vport_cnt),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -39833,7 +39836,7 @@ cmd_data_check_decap_ecn_rule(char *cmd_str, fal_tunnel_decap_ecn_rule_t *arg_va
 			dprintf("usage: no_ect, ect_0, ect_1, ce\n");
 			rv = SW_BAD_VALUE;
 		} else {
-			rv = cmd_data_check_ecn_type(cmd, &entry.outer_ecn,
+			rv = cmd_data_check_ecn_type(cmd, &entry.inner_ecn,
 					sizeof(fal_tunnel_ecn_val_t));
 			if (SW_OK != rv)
 				dprintf("usage: no_ect, ect_0, ect_1, ce\n");
@@ -40428,6 +40431,133 @@ cmd_data_print_egress_filter(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t s
 
 	cmd_data_print_enable("membership_filter_en", &entry->membership_filter,
 			sizeof(entry->membership_filter));
+	dprintf("\n");
+}
+
+static const a_char_t *vport_cnt_mode_str[FAL_VPORT_CNT_MODE_BUTT] = {
+	"ip_pkt",
+	"full_pkt",
+};
+
+sw_error_t
+cmd_data_check_vport_cnt_mode(char *cmd_str,
+		fal_vport_cnt_mode_t *arg_val, a_uint32_t size)
+{
+	fal_vport_cnt_mode_t type;
+	for (type = FAL_VPORT_CNT_MODE_IP_PKT;
+			type < FAL_VPORT_CNT_MODE_BUTT; type++) {
+		if (!strcasecmp(cmd_str, vport_cnt_mode_str[type])) {
+			*arg_val = type;
+			break;
+		}
+	}
+
+	if (type == FAL_VPORT_CNT_MODE_BUTT) {
+		return SW_BAD_VALUE;
+	} else {
+		return SW_OK;
+	}
+}
+
+void
+cmd_data_print_vport_cnt_mode(a_char_t *param_name,
+		fal_vport_cnt_mode_t buf, a_uint32_t size)
+{
+    dprintf("%s:", param_name);
+    switch (buf) {
+	    case FAL_VPORT_CNT_MODE_IP_PKT:
+	    case FAL_VPORT_CNT_MODE_FULL_PKT:
+		    dprintf("%s", vport_cnt_mode_str[buf]);
+		    break;
+	    default:
+		    dprintf("unknown value %d\n", buf);
+		    break;
+    }
+}
+
+sw_error_t
+cmd_data_check_vport_cnt_cfg(char *cmd_str, fal_vport_cnt_cfg_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	sw_error_t rv;
+	fal_vport_cnt_cfg_t entry;
+
+	aos_mem_zero(&entry, sizeof(fal_vport_cnt_cfg_t));
+
+	do {
+		cmd = get_sub_cmd("rx_cnt_mode", "full_pkt");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: full_pkt or ip_pkt\n");
+			rv = SW_BAD_VALUE;
+		} else {
+			rv = cmd_data_check_vport_cnt_mode(cmd, &(entry.rx_cnt_mode),
+					sizeof(fal_vport_cnt_mode_t));
+			if (SW_OK != rv)
+				dprintf("usage: full_pkt or ip_pkt\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("tx_cnt_mode", "full_pkt");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: full_pkt or ip_pkt\n");
+			rv = SW_BAD_VALUE;
+		} else {
+			rv = cmd_data_check_vport_cnt_mode(cmd, &(entry.tx_cnt_mode),
+					sizeof(fal_vport_cnt_mode_t));
+			if (SW_OK != rv)
+				dprintf("usage: full_pkt or ip_pkt\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	*(fal_vport_cnt_cfg_t *)arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_vport_cnt_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_vport_cnt_cfg_t *entry;
+
+	entry = (fal_vport_cnt_cfg_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_vport_cnt_mode("[rx_cnt_mode]",
+			entry->rx_cnt_mode, sizeof(fal_vport_cnt_mode_t));
+	cmd_data_print_vport_cnt_mode(" [tx_cnt_mode]",
+			entry->tx_cnt_mode, sizeof(fal_vport_cnt_mode_t));
+
+	dprintf("\n");
+}
+
+void
+cmd_data_print_vport_cnt(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_vport_cnt_t *entry;
+
+	entry = (fal_vport_cnt_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	dprintf("[rx_pkt_cnt]:%ld [rx_byte_cnt]:%lld"
+			" [rx_drop_pkt_cnt]:%ld [rx_drop_byte_cnt]:%lld\n",
+			entry->rx_pkt_cnt, entry->rx_byte_cnt,
+			entry->rx_drop_pkt_cnt, entry->rx_drop_byte_cnt);
+	dprintf("[tx_pkt_cnt]:%ld [tx_byte_cnt]:%lld\n",
+			entry->tx_pkt_cnt, entry->tx_byte_cnt);
+
 	dprintf("\n");
 }
 
