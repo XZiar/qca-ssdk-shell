@@ -1135,10 +1135,22 @@ void
 cmd_data_print_tunnel_encap_header_ctrl(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
 
 sw_error_t
-cmd_data_check_tunnel_decap_header_ctrl(char *info,
-		fal_tunnel_decap_header_ctrl_t *val, a_uint32_t size);
+cmd_data_check_decap_ecn_rule(char *info,
+		fal_tunnel_decap_ecn_rule_t *arg_val, a_uint32_t size);
 void
-cmd_data_print_tunnel_decap_header_ctrl(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+cmd_data_print_decap_ecn_rule(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_decap_ecn_action(char *cmd_str,
+		fal_tunnel_decap_ecn_action_t *arg_val, a_uint32_t size);
+void
+cmd_data_print_decap_ecn_action(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_encap_ecn_rule(char *cmd_str, fal_tunnel_encap_ecn_t *arg_val, a_uint32_t size);
+
+void
+cmd_data_print_encap_ecn_rule(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 
 sw_error_t
 cmd_data_check_tunnel_global_cfg(char *info, fal_tunnel_global_cfg_t *val, a_uint32_t size);
@@ -1220,8 +1232,54 @@ cmd_data_print_enqueue_cfg(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
 
 sw_error_t
 cmd_data_check_vport_state(char *cmd_str, fal_vport_state_t *arg_val, a_uint32_t size);
+
 void
 cmd_data_print_vport_state(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_ecn_val(char *cmd_str, fal_tunnel_ecn_val_t *arg_val, a_uint32_t size);
+
+void
+cmd_data_print_ecn_val(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_l2_exp_ctrl(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_l2_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_exp_ctrl(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_tunnel_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_flags_parser(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_tunnel_flags_parser(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_isol_ctrl(char *cmd_str, fal_portvlan_isol_ctrl_t *arg_val, a_uint32_t size);
+
+void
+cmd_data_print_isol_ctrl(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_vport_type(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_egress_filter(char *cmd_str, fal_egress_vlan_filter_t *arg_val, a_uint32_t size);
+void
+cmd_data_print_egress_filter(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_vport_cnt_cfg(char *cmd_str, fal_vport_cnt_cfg_t *arg_val, a_uint32_t size);
+void
+cmd_data_print_vport_cnt_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+void
+cmd_data_print_vport_cnt(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 /* auto_insert_flag */
 
 /*qca808x_start*/

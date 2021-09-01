@@ -91,4 +91,95 @@ fal_sec_l3_excep_parser_ctrl_get(a_uint32_t dev_id, fal_l3_excep_parser_ctrl *ct
     return rv;
 }
 
+sw_error_t
+fal_sec_l2_excep_ctrl_set(a_uint32_t dev_id, a_uint32_t excep_type, fal_l2_excep_ctrl_t *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_L2_EXP_CTRL_SET, dev_id, excep_type, ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_l2_excep_ctrl_get(a_uint32_t dev_id, a_uint32_t excep_type, fal_l2_excep_ctrl_t *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_L2_EXP_CTRL_GET, dev_id, excep_type, ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_tunnel_excep_ctrl_set(a_uint32_t dev_id, a_uint32_t excep_type, fal_tunnel_excep_ctrl_t *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_TUNNEL_EXP_CTRL_SET, dev_id, excep_type, ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_tunnel_excep_ctrl_get(a_uint32_t dev_id, a_uint32_t excep_type, fal_tunnel_excep_ctrl_t *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_TUNNEL_EXP_CTRL_GET, dev_id, excep_type, ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_tunnel_l3_excep_parser_ctrl_set(a_uint32_t dev_id, fal_l3_excep_parser_ctrl *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_TUNNEL_L3_PARSER_CTRL_SET, dev_id, ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_tunnel_l3_excep_parser_ctrl_get(a_uint32_t dev_id, fal_l3_excep_parser_ctrl *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_TUNNEL_L3_PARSER_CTRL_GET, dev_id, ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_tunnel_l4_excep_parser_ctrl_set(a_uint32_t dev_id, fal_l4_excep_parser_ctrl *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_TUNNEL_L4_PARSER_CTRL_SET, dev_id, ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_tunnel_l4_excep_parser_ctrl_get(a_uint32_t dev_id, fal_l4_excep_parser_ctrl *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_TUNNEL_L4_PARSER_CTRL_GET, dev_id, ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_tunnel_flags_excep_parser_ctrl_set(a_uint32_t dev_id, a_uint32_t index, fal_tunnel_flags_excep_parser_ctrl_t *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_TUNNEL_FLAGS_PARSER_CTRL_SET, dev_id, index, ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_sec_tunnel_flags_excep_parser_ctrl_get(a_uint32_t dev_id, a_uint32_t index, fal_tunnel_flags_excep_parser_ctrl_t *ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_SEC_TUNNEL_FLAGS_PARSER_CTRL_GET, dev_id, index, ctrl);
+    return rv;
+}
+
+
 

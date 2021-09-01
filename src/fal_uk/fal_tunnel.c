@@ -305,21 +305,45 @@ fal_tunnel_port_intf_get(a_uint32_t dev_id,
 }
 
 sw_error_t
-fal_tunnel_decap_header_ctrl_set(a_uint32_t dev_id, fal_tunnel_decap_header_ctrl_t *header_ctrl)
+fal_tunnel_decap_ecn_mode_set(a_uint32_t dev_id, fal_tunnel_decap_ecn_rule_t *ecn_rule,
+		fal_tunnel_decap_ecn_action_t *ecn_action)
 {
 	sw_error_t rv;
 
-	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_HEADER_CTRL_SET, dev_id, header_ctrl);
+	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_ECN_MODE_SET, dev_id, ecn_rule, ecn_action);
 
 	return rv;
 }
 
 sw_error_t
-fal_tunnel_decap_header_ctrl_get(a_uint32_t dev_id, fal_tunnel_decap_header_ctrl_t *header_ctrl)
+fal_tunnel_decap_ecn_mode_get(a_uint32_t dev_id, fal_tunnel_decap_ecn_rule_t *ecn_rule,
+		fal_tunnel_decap_ecn_action_t *ecn_action)
 {
 	sw_error_t rv;
 
-	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_HEADER_CTRL_GET, dev_id, header_ctrl);
+	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_ECN_MODE_GET, dev_id, ecn_rule, ecn_action);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_encap_ecn_mode_get(a_uint32_t dev_id, fal_tunnel_encap_ecn_t *ecn_rule,
+		fal_tunnel_ecn_val_t *ecn_value)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_ENCAP_ECN_MODE_GET, dev_id, ecn_rule, ecn_value);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_encap_ecn_mode_set(a_uint32_t dev_id, fal_tunnel_encap_ecn_t *ecn_rule,
+		fal_tunnel_ecn_val_t *ecn_value)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_ENCAP_ECN_MODE_SET, dev_id, ecn_rule, ecn_value);
 
 	return rv;
 }
@@ -404,4 +428,25 @@ fal_tunnel_udf_profile_cfg_get(a_uint32_t dev_id, a_uint32_t profile_id,
     rv = sw_uk_exec(SW_API_TUNNEL_UDF_PROFILE_CFG_GET, dev_id, profile_id,
 			udf_idx, udf_type, offset);
     return rv;
+
+}
+
+sw_error_t
+fal_tunnel_exp_decap_set(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *enable)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_EXP_DECAP_SET, dev_id, port_id, enable);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_exp_decap_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *enable)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_EXP_DECAP_GET, dev_id, port_id, enable);
+
+	return rv;
 }

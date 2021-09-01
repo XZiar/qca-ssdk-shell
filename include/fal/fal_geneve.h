@@ -55,7 +55,7 @@ fal_geneve_entry_getnext(a_uint32_t dev_id, fal_tunnel_udp_entry_t * entry);
 #ifdef __cplusplus
 }
 #endif                          /* __cplusplus */
-#endif                          /* _FAL_VXLAN_H_ */
+#endif                          /* _FAL_GENEVE_H_ */
 /**
  * @}
  */

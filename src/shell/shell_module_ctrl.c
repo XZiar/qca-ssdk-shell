@@ -195,7 +195,7 @@ cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 static void cmd_data_print_acl_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_ACL_UDF_PROFILE_CFG_GET+1] ={
+	char *func_name[FUNC_ACL_VPGROUP_GET+1] ={
 		"FUNC_ACL_LIST_CREAT",
 		"FUNC_ACL_LIST_DESTROY",
 		"FUNC_ACL_RULE_ADD",
@@ -212,10 +212,12 @@ static void cmd_data_print_acl_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_ACL_UDF_PROFILE_ENTRY_GETFIRST",
 		"FUNC_ACL_UDF_PROFIILE_ENTRY_GETNEXT",
 		"FUNC_ACL_UDF_PROFILE_CFG_SET",
-		"FUNC_ACL_UDF_PROFILE_CFG_GET"
+		"FUNC_ACL_UDF_PROFILE_CFG_GET",
+		"FUNC_ACL_VPGROUP_SET",
+		"FUNC_ACL_VPGROUP_GET"
 	};
 
-	for(func = FUNC_ACL_LIST_CREAT; func <= FUNC_ACL_UDF_PROFILE_CFG_GET; func++)
+	for(func = FUNC_ACL_LIST_CREAT; func <= FUNC_ACL_VPGROUP_GET; func++)
 	{
 		if(p->bitmap[0] & (1<<func))
 		{
@@ -878,16 +880,26 @@ static void cmd_data_print_stp_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_sec_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_SEC_L4_EXCEP_PARSER_CTRL_GET+1] ={
+	char *func_name[FUNC_SEC_TUNNEL_FLAGS_EXCEP_PARSER_CTRL_GET+1] ={
 		"FUNC_SEC_L3_EXCEP_CTRL_SET",
 		"FUNC_SEC_L3_EXCEP_CTRL_GET",
 		"FUNC_SEC_L3_EXCEP_PARSER_CTRL_SET",
 		"FUNC_SEC_L3_EXCEP_PARSER_CTRL_GET",
 		"FUNC_SEC_L4_EXCEP_PARSER_CTRL_SET",
-		"FUNC_SEC_L4_EXCEP_PARSER_CTRL_GET"
+		"FUNC_SEC_L4_EXCEP_PARSER_CTRL_GET",
+		"FUNC_SEC_L2_EXCEP_CTRL_SET",
+		"FUNC_SEC_L2_EXCEP_CTRL_GET",
+		"FUNC_SEC_TUNNEL_EXCEP_CTRL_SET",
+		"FUNC_SEC_TUNNEL_EXCEP_CTRL_GET",
+		"FUNC_SEC_TUNNEL_L3_EXCEP_PARSER_CTRL_SET",
+		"FUNC_SEC_TUNNEL_L3_EXCEP_PARSER_CTRL_GET",
+		"FUNC_SEC_TUNNEL_L4_EXCEP_PARSER_CTRL_SET",
+		"FUNC_SEC_TUNNEL_L4_EXCEP_PARSER_CTRL_GET",
+		"FUNC_SEC_TUNNEL_FLAGS_EXCEP_PARSER_CTRL_SET",
+		"FUNC_SEC_TUNNEL_FLAGS_EXCEP_PARSER_CTRL_GET"
 	};
 
-	for(func = FUNC_SEC_L3_EXCEP_CTRL_SET; func <= FUNC_SEC_L4_EXCEP_PARSER_CTRL_GET; func++)
+	for(func = FUNC_SEC_L3_EXCEP_CTRL_SET; func <= FUNC_SEC_TUNNEL_FLAGS_EXCEP_PARSER_CTRL_GET; func++)
 	{
 		if (p->bitmap[0] & (1<<func))
 		{
@@ -930,7 +942,7 @@ static void cmd_data_print_trunk_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_portvlan_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_PORT_VLAN_VPGROUP_GET+1] ={
+	char *func_name[FUNC_PORT_EGRESS_VLAN_FILTER_GET+1] ={
 		"FUNC_PORT_INVLAN_MODE_SET",
 		"FUNC_PORT_INVLAN_MODE_GET",
 		"FUNC_PORT_VLAN_TRANS_ADD",
@@ -974,23 +986,18 @@ static void cmd_data_print_portvlan_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_PORT_VLAN_MEMBER_UPDATE",
 		"FUNC_PORT_VLAN_MEMBER_GET",
 		"FUNC_PORT_VLAN_VPGROUP_SET",
-		"FUNC_PORT_VLAN_VPGROUP_GET"
+		"FUNC_PORT_VLAN_VPGROUP_GET",
+		"FUNC_PORT_VLAN_ISOL_SET",
+		"FUNC_PORT_VLAN_ISOL_GET",
+		"FUNC_PORT_VLAN_ISOL_GROUP_SET",
+		"FUNC_PORT_VLAN_ISOL_GROUP_GET",
+		"FUNC_PORT_EGRESS_VLAN_FILTER_SET",
+		"FUNC_PORT_EGRESS_VLAN_FILTER_GET",
 	};
 
-	for(func = FUNC_PORT_INVLAN_MODE_SET; func <= FUNC_PORT_VLANTAG_VSI_EGMODE_ENABLE_GET; func++)
+	for(func = FUNC_PORT_INVLAN_MODE_SET; func <= FUNC_PORT_EGRESS_VLAN_FILTER_GET; func++)
 	{
-		if (p->bitmap[0] & (1<<func))
-		{
-			dprintf("%d  %s  registered\n", func, func_name[func]);
-		}
-		else
-		{
-			dprintf("%d  %s  unregistered\n", func, func_name[func]);
-		}
-	}
-	for(func = FUNC_PORT_VLAN_TRANS_ADV_ADD; func <= FUNC_PORT_VLAN_VPGROUP_GET; func++)
-	{
-		if (p->bitmap[1] & (1<<(func % 32)))
+		if (p->bitmap[func / 32] & (1<<(func % 32)))
 		{
 			dprintf("%d  %s  registered\n", func, func_name[func]);
 		}
@@ -1074,14 +1081,18 @@ static void cmd_data_print_policer_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_vport_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_VPORT_STATE_CHECK_GET+1] = {
+	char *func_name[FUNC_VPORT_CNT_GET+1] = {
 		"FUNC_VPORT_PHYSICAL_PORT_SET",
 		"FUNC_VPORT_PHYSICAL_PORT_GET",
 		"FUNC_VPORT_STATE_CHECK_SET",
 		"FUNC_VPORT_STATE_CHECK_GET",
+		"FUNC_VPORT_CNT_CFG_SET",
+		"FUNC_VPORT_CNT_CFG_GET",
+		"FUNC_VPORT_CNT_FLUSH",
+		"FUNC_VPORT_CNT_GET",
 	};
 
-	for(func = FUNC_VPORT_PHYSICAL_PORT_SET; func <= FUNC_VPORT_STATE_CHECK_GET; func++)
+	for(func = FUNC_VPORT_PHYSICAL_PORT_SET; func <= FUNC_VPORT_CNT_GET; func++)
 	{
 		if(p->bitmap[0] & (1<<func))
 		{
@@ -1098,7 +1109,7 @@ static void cmd_data_print_vport_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_tunnel_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_TUNNEL_UDF_PROFILE_CFG_GET+1] = {
+	char *func_name[FUNC_TUNNEL_EXP_DECAP_GET+1] = {
 		"FUNC_TUNNEL_INTF_SET",
 		"FUNC_TUNNEL_INTF_GET",
 		"FUNC_TUNNEL_ENCAP_RULE_ENTRY_SET",
@@ -1125,19 +1136,23 @@ static void cmd_data_print_tunnel_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_TUNNEL_GLOBAL_CFG_GET",
 		"FUNC_TUNNEL_ENCAP_HEADER_CTRL_SET",
 		"FUNC_TUNNEL_ENCAP_HEADER_CTRL_GET",
-		"FUNC_TUNNEL_DECAP_HEADER_CTRL_SET",
-		"FUNC_TUNNEL_DECAP_HEADER_CTRL_GET",
 		"FUNC_TUNNEL_PORT_INTF_SET",
 		"FUNC_TUNNEL_PORT_INTF_GET",
+		"FUNC_TUNNEL_DECAP_ECN_SET",
+		"FUNC_TUNNEL_DECAP_ECN_GET",
+		"FUNC_TUNNEL_ENCAP_ECN_SET",
+		"FUNC_TUNNEL_ENCAP_ECN_GET",
 		"FUNC_TUNNEL_UDF_PROFILE_ENTRY_ADD",
 		"FUNC_TUNNEL_UDF_PROFILE_ENTRY_DEL",
 		"FUNC_TUNNEL_UDF_PROFILE_ENTRY_GETFIRST",
 		"FUNC_TUNNEL_UDF_PROFILE_ENTRY_GETNEXT",
 		"FUNC_TUNNEL_UDF_PROFILE_CFG_SET",
-		"FUNC_TUNNEL_UDF_PROFILE_CFG_GET"
+		"FUNC_TUNNEL_UDF_PROFILE_CFG_GET",
+		"FUNC_TUNNEL_EXP_DECAP_SET",
+		"FUNC_TUNNEL_EXP_DECAP_GET",
 	};
 
-	for(func = FUNC_TUNNEL_INTF_SET; func <= FUNC_TUNNEL_UDF_PROFILE_CFG_GET; func++)
+	for(func = FUNC_TUNNEL_INTF_SET; func <= FUNC_TUNNEL_EXP_DECAP_GET; func++)
 	{
 		if(p->bitmap[func/32] & ((1 << (func % 32))))
 		{
