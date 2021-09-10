@@ -5965,7 +5965,7 @@ cmd_data_print_udf_type(a_char_t * param_name, a_uint32_t * buf,
     fal_acl_udf_type_t *val;
 
     val = (fal_acl_udf_type_t *) buf;
-    dprintf("[%s]:", param_name);
+    dprintf("%s", param_name);
 
     if (FAL_ACL_UDF_TYPE_L2 == *val)
     {
