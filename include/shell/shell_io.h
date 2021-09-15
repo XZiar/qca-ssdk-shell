@@ -936,12 +936,6 @@ void
 cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p);
 
 sw_error_t
-cmd_data_check_debug_port_counter_status(char *info, fal_counter_en_t *val, a_uint32_t size);
-
-void
-cmd_data_print_debug_port_counter_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
-sw_error_t
 cmd_data_check_ptp_config(char *info, void *val, a_uint32_t size);
 
 void
@@ -1275,11 +1269,11 @@ void
 cmd_data_print_egress_filter(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 
 sw_error_t
-cmd_data_check_vport_cnt_cfg(char *cmd_str, fal_vport_cnt_cfg_t *arg_val, a_uint32_t size);
+cmd_data_check_port_cnt_cfg(char *cmd_str, fal_port_cnt_cfg_t *arg_val, a_uint32_t size);
 void
-cmd_data_print_vport_cnt_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+cmd_data_print_port_cnt_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 void
-cmd_data_print_vport_cnt(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+cmd_data_print_port_cnt(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 /* auto_insert_flag */
 
 /*qca808x_start*/

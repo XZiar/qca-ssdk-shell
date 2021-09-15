@@ -606,7 +606,7 @@ static void cmd_data_print_pppoe_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_ADPT_PORT_FLOWCTRL_FORCEMODE_GET+1] ={
+	char *func_name[FUNC_ADPT_PORT_CNT_FLUSH+1] ={
 		"FUNC_ADPT_PORT_LOCAL_LOOPBACK_GET",
 		"FUNC_ADPT_PORT_AUTONEG_RESTART",
 		"FUNC_ADPT_PORT_DUPLEX_SET",
@@ -680,6 +680,10 @@ static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_ADPT_PORT_PROMISC_MODE_GET",
 		"FUNC_ADPT_PORT_FLOWCTRL_FORCEMODE_SET",
 		"FUNC_ADPT_PORT_FLOWCTRL_FORCEMODE_GET",
+		"FUNC_ADPT_PORT_CNT_CFG_SET",
+		"FUNC_ADPT_PORT_CNT_CFG_GET",
+		"FUNC_ADPT_PORT_CNT_GET",
+		"FUNC_ADPT_PORT_CNT_FLUSH",
 	};
 
 	for(func = FUNC_ADPT_PORT_LOCAL_LOOPBACK_GET; func <= FUNC_ADPT_PORT_LINK_STATUS_GET; func++)
@@ -706,7 +710,7 @@ static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 		}
 	}
 
-	for(func = FUNC_ADPT_PORT_INTERFACE_MODE_APPLY; func <= FUNC_ADPT_PORT_FLOWCTRL_FORCEMODE_GET; func++)
+	for(func = FUNC_ADPT_PORT_INTERFACE_MODE_APPLY; func <= FUNC_ADPT_PORT_CNT_FLUSH; func++)
 	{
 		if(p->bitmap[2] & (1<<(func % 32)))
 		{
@@ -1085,18 +1089,14 @@ static void cmd_data_print_policer_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_vport_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_VPORT_CNT_GET+1] = {
+	char *func_name[FUNC_VPORT_STATE_CHECK_GET+1] = {
 		"FUNC_VPORT_PHYSICAL_PORT_SET",
 		"FUNC_VPORT_PHYSICAL_PORT_GET",
 		"FUNC_VPORT_STATE_CHECK_SET",
 		"FUNC_VPORT_STATE_CHECK_GET",
-		"FUNC_VPORT_CNT_CFG_SET",
-		"FUNC_VPORT_CNT_CFG_GET",
-		"FUNC_VPORT_CNT_FLUSH",
-		"FUNC_VPORT_CNT_GET",
 	};
 
-	for(func = FUNC_VPORT_PHYSICAL_PORT_SET; func <= FUNC_VPORT_CNT_GET; func++)
+	for(func = FUNC_VPORT_PHYSICAL_PORT_SET; func <= FUNC_VPORT_STATE_CHECK_GET; func++)
 	{
 		if(p->bitmap[0] & (1<<func))
 		{

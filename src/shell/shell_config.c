@@ -218,6 +218,14 @@ struct cmd_des_t gcmd_des[] =
                 SW_API_PT_8023AH_SET, NULL},
             {"port8023ah", "get", "get port 8023ah", "<port_id>",
                 SW_API_PT_8023AH_GET, NULL},
+            {"cnt_cfg", "set", "set counter config of port",
+                "<port_id> <cnt_cfg>", SW_API_PT_CNT_CFG_SET, NULL},
+            {"cnt_cfg", "get", "get counter config of port",
+                "<port_id>", SW_API_PT_CNT_CFG_GET, NULL},
+            {"counter", "get", "get counter of port",
+                "<port_id>", SW_API_PT_CNT_GET, NULL},
+            {"counter", "flush", "flush counter of port",
+                "<port_id>", SW_API_PT_CNT_FLUSH, NULL},
 /*qca808x_start*/
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL},/*end of desc*/
         },
@@ -1342,8 +1350,6 @@ struct cmd_des_t gcmd_des[] =
             {"module_func",  "set", "set the module function bitmap", "<module>", SW_API_MODULE_FUNC_CTRL_SET, NULL},
             {"module_func",  "get", "set the module function bitmap", "<module>", SW_API_MODULE_FUNC_CTRL_GET, NULL},
             {"ssdk",  "config", "show ssdk configuration",     "", SW_API_SSDK_CFG, NULL},
-            {"portCounterEn", "get", "get counter status based on port", "<port_id>", SW_API_DEBUG_PORT_COUNTER_STATUS_GET, NULL},
-            {"portCounterEn", "set", "set counter status based on port", "<port_id>", SW_API_DEBUG_PORT_COUNTER_ENABLE, NULL},
 /*qca808x_start*/
             {"phycounter",  "set", "set counter status of a port",   "<port_id> <enable|disable>", SW_API_DEBUG_PHYCOUNTER_SET, NULL},
             {"phycounter",  "get", "get counter status of a port",   "<port_id>", SW_API_DEBUG_PHYCOUNTER_GET, NULL},
@@ -1527,14 +1533,6 @@ struct cmd_des_t gcmd_des[] =
 				"<port_id> <state>", SW_API_VPORT_STATE_CHECK_SET, NULL},
 			{"state_check", "get", "get check state of vport",
 				"<port_id>", SW_API_VPORT_STATE_CHECK_GET, NULL},
-			{"cnt_cfg", "set", "set counter config of vport",
-				"<port_id> <cnt_cfg>", SW_API_VPORT_CNT_CFG_SET, NULL},
-			{"cnt_cfg", "get", "get counter config of vport",
-				"<port_id>", SW_API_VPORT_CNT_CFG_GET, NULL},
-			{"counter", "get", "get counter of vport",
-				"<port_id>", SW_API_VPORT_CNT_GET, NULL},
-			{"counter", "flush", "flush counter of vport",
-				"<port_id>", SW_API_VPORT_CNT_FLUSH, NULL},
 			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
 		},
 	},

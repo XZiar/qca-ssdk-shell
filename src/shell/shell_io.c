@@ -276,6 +276,14 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"cnt_mode",
+		{
+			{"ip_pkt", FAL_PORT_CNT_MODE_IP_PKT},
+			{"full_pkt", FAL_PORT_CNT_MODE_FULL_PKT},
+			{NULL, FAL_PORT_CNT_MODE_BUTT}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -619,7 +627,6 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_PT_VLAN_TRANS_ADV_RULE, cmd_data_check_port_vlan_translation_adv_rule, cmd_data_print_port_vlan_translation_adv_rule),
     SW_TYPE_DEF(SW_PT_VLAN_TRANS_ADV_ACTION, cmd_data_check_port_vlan_translation_adv_action, cmd_data_print_port_vlan_translation_adv_action),
     SW_TYPE_DEF(SW_PT_VLAN_COUNTER, NULL, cmd_data_print_port_vlan_counter),
-    SW_TYPE_DEF(SW_DEBUG_COUNTER_EN, cmd_data_check_debug_port_counter_status, cmd_data_print_debug_port_counter_status),
     SW_TYPE_DEF(SW_TAG_PROPAGATION, cmd_data_check_tag_propagation, cmd_data_print_tag_propagation),
     SW_TYPE_DEF(SW_EGRESS_MODE, cmd_data_check_egress_mode, cmd_data_print_egress_mode),
     SW_TYPE_DEF(SW_CTRLPKT_PROFILE, cmd_data_check_ctrlpkt_profile, cmd_data_print_ctrlpkt_profile),
@@ -774,9 +781,9 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_EGRESS_FILTER, cmd_data_check_egress_filter,
 		    cmd_data_print_egress_filter),
     SW_TYPE_DEF(SW_VPORT_TYPE, cmd_data_check_vport_type, NULL),
-    SW_TYPE_DEF(SW_VPORT_CNT_CFG, cmd_data_check_vport_cnt_cfg,
-		    cmd_data_print_vport_cnt_cfg),
-    SW_TYPE_DEF(SW_VPORT_CNT, NULL,cmd_data_print_vport_cnt),
+    SW_TYPE_DEF(SW_PORT_CNT_CFG, cmd_data_check_port_cnt_cfg,
+		    cmd_data_print_port_cnt_cfg),
+    SW_TYPE_DEF(SW_PORT_CNT, NULL,cmd_data_print_port_cnt),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -26856,132 +26863,6 @@ cmd_data_print_port_vlan_translation_adv_action(a_uint8_t * param_name, a_uint32
 	}
 }
 
-sw_error_t
-cmd_data_check_debug_port_counter_status(char *info, fal_counter_en_t *val, a_uint32_t size)
-{
-	char *cmd = NULL;
-	sw_error_t rv;
-	fal_counter_en_t entry;
-
-	memset(&entry, 0, sizeof (fal_counter_en_t));
-
-	do
-	{
-		cmd = get_sub_cmd("rx_counter_en", "yes");
-		SW_RTN_ON_NULL_PARAM(cmd);
-
-		if (!strncasecmp(cmd, "quit", 4))
-		{
-			return SW_BAD_VALUE;
-		}
-		else if (!strncasecmp(cmd, "help", 4))
-		{
-			dprintf("usage: <yes/no/y/n>\n");
-			rv = SW_BAD_VALUE;
-		}
-		else
-		{
-			rv = cmd_data_check_confirm(cmd, A_TRUE, &entry.rx_counter_en,
-					sizeof (a_bool_t));
-			if (SW_OK != rv)
-				dprintf("usage: <yes/no/y/n>\n");
-		}
-
-	}
-	while (talk_mode && (SW_OK != rv));
-
-	do
-	{
-		cmd = get_sub_cmd("vp_uni_tx_counter_en", "yes");
-		SW_RTN_ON_NULL_PARAM(cmd);
-
-		if (!strncasecmp(cmd, "quit", 4))
-		{
-			return SW_BAD_VALUE;
-		}
-		else if (!strncasecmp(cmd, "help", 4))
-		{
-			dprintf("usage: <yes/no/y/n>\n");
-			rv = SW_BAD_VALUE;
-		}
-		else
-		{
-			rv = cmd_data_check_confirm(cmd, A_TRUE, &entry.vp_uni_tx_counter_en,
-					sizeof (a_bool_t));
-			if (SW_OK != rv)
-				dprintf("usage: <yes/no/y/n>\n");
-		}
-
-	}
-	while (talk_mode && (SW_OK != rv));
-
-	do
-	{
-		cmd = get_sub_cmd("port_mc_tx_counter_en", "yes");
-		SW_RTN_ON_NULL_PARAM(cmd);
-
-		if (!strncasecmp(cmd, "quit", 4))
-		{
-			return SW_BAD_VALUE;
-		}
-		else if (!strncasecmp(cmd, "help", 4))
-		{
-			dprintf("usage: <yes/no/y/n>\n");
-			rv = SW_BAD_VALUE;
-		}
-		else
-		{
-			rv = cmd_data_check_confirm(cmd, A_TRUE, &entry.port_mc_tx_counter_en,
-					sizeof (a_bool_t));
-			if (SW_OK != rv)
-				dprintf("usage: <yes/no/y/n>\n");
-		}
-
-	}
-	while (talk_mode && (SW_OK != rv));
-
-	do
-	{
-		cmd = get_sub_cmd("port_tx_counter_en", "yes");
-		SW_RTN_ON_NULL_PARAM(cmd);
-
-		if (!strncasecmp(cmd, "quit", 4))
-		{
-			return SW_BAD_VALUE;
-		}
-		else if (!strncasecmp(cmd, "help", 4))
-		{
-			dprintf("usage: <yes/no/y/n>\n");
-			rv = SW_BAD_VALUE;
-		}
-		else
-		{
-			rv = cmd_data_check_confirm(cmd, A_TRUE, &entry.port_tx_counter_en,
-					sizeof (a_bool_t));
-			if (SW_OK != rv)
-				dprintf("usage: <yes/no/y/n>\n");
-		}
-
-	}
-	while (talk_mode && (SW_OK != rv));
-
-	*val = entry;
-	return SW_OK;
-}
-
-void
-cmd_data_print_debug_port_counter_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
-{
-	fal_counter_en_t *entry;
-
-	entry = (fal_counter_en_t*) buf;
-
-	dprintf("rx_counter_en:%s\n", entry->rx_counter_en?"ENABLE":"DISABLE");
-	dprintf("vp_uni_tx_counter_en:%s\n", entry->vp_uni_tx_counter_en?"ENABLE":"DISABLE");
-	dprintf("port_mc_tx_counter_en:%s\n", entry->port_mc_tx_counter_en?"ENABLE":"DISABLE");
-	dprintf("port_tx_counter_en:%s\n", entry->port_tx_counter_en?"ENABLE":"DISABLE");
-}
-
 void
 cmd_data_print_port_vlan_counter(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 {
@@ -40516,129 +40397,103 @@ cmd_data_print_egress_filter(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t s
 	dprintf("\n");
 }
 
-static const a_char_t *vport_cnt_mode_str[FAL_VPORT_CNT_MODE_BUTT] = {
-	"ip_pkt",
-	"full_pkt",
-};
-
 sw_error_t
-cmd_data_check_vport_cnt_mode(char *cmd_str,
-		fal_vport_cnt_mode_t *arg_val, a_uint32_t size)
-{
-	fal_vport_cnt_mode_t type;
-	for (type = FAL_VPORT_CNT_MODE_IP_PKT;
-			type < FAL_VPORT_CNT_MODE_BUTT; type++) {
-		if (!strcasecmp(cmd_str, vport_cnt_mode_str[type])) {
-			*arg_val = type;
-			break;
-		}
-	}
-
-	if (type == FAL_VPORT_CNT_MODE_BUTT) {
-		return SW_BAD_VALUE;
-	} else {
-		return SW_OK;
-	}
-}
-
-void
-cmd_data_print_vport_cnt_mode(a_char_t *param_name,
-		fal_vport_cnt_mode_t buf, a_uint32_t size)
-{
-    dprintf("%s:", param_name);
-    switch (buf) {
-	    case FAL_VPORT_CNT_MODE_IP_PKT:
-	    case FAL_VPORT_CNT_MODE_FULL_PKT:
-		    dprintf("%s", vport_cnt_mode_str[buf]);
-		    break;
-	    default:
-		    dprintf("unknown value %d\n", buf);
-		    break;
-    }
-}
-
-sw_error_t
-cmd_data_check_vport_cnt_cfg(char *cmd_str, fal_vport_cnt_cfg_t *arg_val, a_uint32_t size)
+cmd_data_check_port_cnt_cfg(char *cmd_str, fal_port_cnt_cfg_t *arg_val, a_uint32_t size)
 {
 	char *cmd;
-	sw_error_t rv;
-	fal_vport_cnt_cfg_t entry;
+	fal_port_cnt_cfg_t entry;
 
-	aos_mem_zero(&entry, sizeof(fal_vport_cnt_cfg_t));
+	aos_mem_zero(&entry, sizeof(fal_port_cnt_cfg_t));
 
-	do {
-		cmd = get_sub_cmd("rx_cnt_mode", "full_pkt");
-		SW_RTN_ON_NULL_PARAM(cmd);
+	cmd_data_check_element("rx_cnt_enable", "disable",
+						"usage: usage: enable/disable\n",
+						cmd_data_check_enable, (cmd,
+						&(entry.rx_cnt_en), sizeof(entry.rx_cnt_en)));
+	cmd_data_check_element("uc_tx_cnt_enable", "disable",
+						"usage: usage: enable/disable\n",
+						cmd_data_check_enable, (cmd,
+						&(entry.uc_tx_cnt_en), sizeof(entry.uc_tx_cnt_en)));
+	cmd_data_check_element("mc_tx_cnt_enable", "disable",
+						"usage: usage: enable/disable\n",
+						cmd_data_check_enable, (cmd,
+						&(entry.mc_tx_cnt_en), sizeof(entry.mc_tx_cnt_en)));
 
-		if (!strncasecmp(cmd, "quit", 4)) {
-			return SW_BAD_VALUE;
-		}
-		else if (!strncasecmp(cmd, "help", 4)) {
-			dprintf("usage: full_pkt or ip_pkt\n");
-			rv = SW_BAD_VALUE;
-		} else {
-			rv = cmd_data_check_vport_cnt_mode(cmd, &(entry.rx_cnt_mode),
-					sizeof(fal_vport_cnt_mode_t));
-			if (SW_OK != rv)
-				dprintf("usage: full_pkt or ip_pkt\n");
-		}
-	} while(talk_mode && (SW_OK != rv));
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+		cmd_data_check_element("tl_rx_cnt_enable", "disable",
+							"usage: usage: enable/disable\n",
+							cmd_data_check_enable, (cmd,
+							&(entry.tl_rx_cnt_en), sizeof(entry.tl_rx_cnt_en)));
 
-	do {
-		cmd = get_sub_cmd("tx_cnt_mode", "full_pkt");
-		SW_RTN_ON_NULL_PARAM(cmd);
+		cmd_data_check_element("rx_cnt_mode", "full_pkt",
+							"usage: full_pkt or ip_pkt\n",
+							cmd_data_check_attr, ("cnt_mode", cmd,
+							&entry.rx_cnt_mode, sizeof(entry.rx_cnt_mode)));
 
-		if (!strncasecmp(cmd, "quit", 4)) {
-			return SW_BAD_VALUE;
-		}
-		else if (!strncasecmp(cmd, "help", 4)) {
-			dprintf("usage: full_pkt or ip_pkt\n");
-			rv = SW_BAD_VALUE;
-		} else {
-			rv = cmd_data_check_vport_cnt_mode(cmd, &(entry.tx_cnt_mode),
-					sizeof(fal_vport_cnt_mode_t));
-			if (SW_OK != rv)
-				dprintf("usage: full_pkt or ip_pkt\n");
-		}
-	} while(talk_mode && (SW_OK != rv));
+		cmd_data_check_element("tx_cnt_mode", "full_pkt",
+							"usage: full_pkt or ip_pkt\n",
+							cmd_data_check_attr, ("cnt_mode", cmd,
+							&entry.tx_cnt_mode, sizeof(entry.tx_cnt_mode)));
+	}
 
-	*(fal_vport_cnt_cfg_t *)arg_val = entry;
+	*(fal_port_cnt_cfg_t *)arg_val = entry;
 
 	return SW_OK;
 }
 
 void
-cmd_data_print_vport_cnt_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+cmd_data_print_port_cnt_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 {
-	fal_vport_cnt_cfg_t *entry;
+	fal_port_cnt_cfg_t *entry;
 
-	entry = (fal_vport_cnt_cfg_t *)buf;
+	entry = (fal_port_cnt_cfg_t *)buf;
 
 	dprintf("\n[%s] \n", param_name);
 
-	cmd_data_print_vport_cnt_mode("[rx_cnt_mode]",
-			entry->rx_cnt_mode, sizeof(fal_vport_cnt_mode_t));
-	cmd_data_print_vport_cnt_mode(" [tx_cnt_mode]",
-			entry->tx_cnt_mode, sizeof(fal_vport_cnt_mode_t));
+	cmd_data_print_enable("rx_cnt_enable", &entry->rx_cnt_en, sizeof(entry->rx_cnt_en));
+	dprintf("\n");
+
+	cmd_data_print_enable("uc_tx_cnt_enable", &entry->uc_tx_cnt_en, sizeof(entry->uc_tx_cnt_en));
+	dprintf("\n");
+
+	cmd_data_print_enable("mc_tx_cnt_enable", &entry->mc_tx_cnt_en, sizeof(entry->mc_tx_cnt_en));
+	dprintf("\n");
+
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+		cmd_data_print_enable("tl_rx_cnt_enable", &entry->tl_rx_cnt_en, sizeof(entry->tl_rx_cnt_en));
+		dprintf("\n");
+
+		cmd_data_print_attr("cnt_mode", "[rx_cnt_mode]:",
+			&(entry->rx_cnt_mode), sizeof(entry->rx_cnt_mode));
+		dprintf("\n");
+
+		cmd_data_print_attr("cnt_mode", "[tx_cnt_mode]:",
+			&(entry->tx_cnt_mode), sizeof(entry->tx_cnt_mode));
+		dprintf("\n");
+	}
 
 	dprintf("\n");
 }
 
 void
-cmd_data_print_vport_cnt(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+cmd_data_print_port_cnt(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 {
-	fal_vport_cnt_t *entry;
+	fal_port_cnt_t *entry;
 
-	entry = (fal_vport_cnt_t *)buf;
+	entry = (fal_port_cnt_t *)buf;
 
 	dprintf("\n[%s] \n", param_name);
 
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
 	dprintf("[rx_pkt_cnt]:%ld [rx_byte_cnt]:%lld"
 			" [rx_drop_pkt_cnt]:%ld [rx_drop_byte_cnt]:%lld\n",
 			entry->rx_pkt_cnt, entry->rx_byte_cnt,
 			entry->rx_drop_pkt_cnt, entry->rx_drop_byte_cnt);
-	dprintf("[tx_pkt_cnt]:%ld [tx_byte_cnt]:%lld\n",
-			entry->tx_pkt_cnt, entry->tx_byte_cnt);
+	}
+
+	dprintf("[tx_pkt_cnt]:%ld [tx_byte_cnt]:%lld"
+			" [tx_drop_pkt_cnt]:%ld [tx_drop_byte_cnt]:%lld\n",
+			entry->tx_pkt_cnt, entry->tx_byte_cnt,
+			entry->tx_drop_pkt_cnt, entry->tx_drop_byte_cnt);
 
 	dprintf("\n");
 }
