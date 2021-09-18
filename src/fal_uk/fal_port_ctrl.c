@@ -800,6 +800,26 @@ fal_port_mru_get(a_uint32_t dev_id, fal_port_t port_id,
 }
 
 sw_error_t
+fal_port_mtu_cfg_set(a_uint32_t dev_id, fal_port_t port_id,
+                       fal_mtu_cfg_t *mtu_cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_MTU_CFG_SET, dev_id, port_id, mtu_cfg);
+    return rv;
+}
+
+sw_error_t
+fal_port_mtu_cfg_get(a_uint32_t dev_id, fal_port_t port_id,
+                       fal_mtu_cfg_t *mtu_cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_MTU_CFG_GET, dev_id, port_id, mtu_cfg);
+    return rv;
+}
+
+sw_error_t
 fal_port_source_filter_enable(a_uint32_t dev_id, fal_port_t port_id,
                        a_bool_t enable)
 {

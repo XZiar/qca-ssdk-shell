@@ -596,6 +596,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_MRU_INFO, NULL, cmd_data_print_mru_info),
     SW_TYPE_DEF(SW_MTU_ENTRY, cmd_data_check_mtu_entry, NULL),
     SW_TYPE_DEF(SW_MRU_ENTRY, cmd_data_check_mru_entry, NULL),
+    SW_TYPE_DEF(SW_MTU_CFG, cmd_data_check_mtu_cfg, cmd_data_print_mtu_cfg),
     SW_TYPE_DEF(SW_ARP_SG_CFG, cmd_data_check_arp_sg, cmd_data_print_arp_sg),
     SW_TYPE_DEF(SW_IP_NETWORK_ROUTE, cmd_data_check_network_route, cmd_data_print_network_route),
     SW_TYPE_DEF(SW_IP_INTF, cmd_data_check_intf, cmd_data_print_intf),
@@ -1825,19 +1826,29 @@ cmd_data_print_mtu_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 		dprintf("mtu_action:rdtcpu\n");
 	else
 		dprintf("mtu_action:unknown\n");
+}
+
+void
+cmd_data_print_mtu_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_mtu_cfg_t *mtu_cfg;
+	mtu_cfg = (fal_mtu_cfg_t *) buf;
+
+	dprintf("\n[%s] \n", param_name);
+
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
 	{
-		cmd_data_print_enable("mtu_enable", &mtu->mtu_enable,
-			sizeof(mtu->mtu_enable));
+		cmd_data_print_enable("mtu_enable", &mtu_cfg->mtu_enable,
+			sizeof(mtu_cfg->mtu_enable));
 		dprintf("\n");
 		cmd_data_print_attr("mtu_type", "[mtu_type]:",
-			&(mtu->mtu_type), sizeof(mtu->mtu_type));
+			&(mtu_cfg->mtu_type), sizeof(mtu_cfg->mtu_type));
 		dprintf("\n");
-		cmd_data_print_uint32("extra_header_len", &mtu->extra_header_len,
-			sizeof(mtu->extra_header_len));
+		cmd_data_print_uint32("extra_header_len", &mtu_cfg->extra_header_len,
+			sizeof(mtu_cfg->extra_header_len));
 		dprintf("\n");
-		cmd_data_print_uint32("eg_vlan_tag_flag", &mtu->eg_vlan_tag_flag,
-			sizeof(mtu->eg_vlan_tag_flag));
+		cmd_data_print_uint32("eg_vlan_tag_flag", &mtu_cfg->eg_vlan_tag_flag,
+			sizeof(mtu_cfg->eg_vlan_tag_flag));
 	}
 }
 
@@ -1928,6 +1939,18 @@ cmd_data_check_mtu_entry(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
+    *(fal_mtu_ctrl_t *)val = entry;
+    return SW_OK;
+}
+
+sw_error_t
+cmd_data_check_mtu_cfg(char *cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_mtu_cfg_t entry;
+
+    aos_mem_zero(&entry, sizeof (fal_mtu_cfg_t));
+
     if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
 
         cmd_data_check_element("mtu_enable", "enable",
@@ -1953,7 +1976,7 @@ cmd_data_check_mtu_entry(char *cmd_str, void * val, a_uint32_t size)
                         sizeof(entry.eg_vlan_tag_flag)));
     }
 
-    *(fal_mtu_ctrl_t *)val = entry;
+    *(fal_mtu_cfg_t *)val = entry;
     return SW_OK;
 }
 
