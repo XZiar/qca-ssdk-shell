@@ -618,7 +618,7 @@ static void cmd_data_print_pppoe_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_ADPT_PORT_MTU_CFG_GET+1] ={
+	char *func_name[FUNC_ADPT_PORT_MRU_MTU_GET+1] ={
 		"FUNC_ADPT_PORT_LOCAL_LOOPBACK_GET",
 		"FUNC_ADPT_PORT_AUTONEG_RESTART",
 		"FUNC_ADPT_PORT_DUPLEX_SET",
@@ -700,6 +700,7 @@ static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_ADPT_PORT_8023AH_GET",
 		"FUNC_ADPT_PORT_MTU_CFG_SET",
 		"FUNC_ADPT_PORT_MTU_CFG_GET",
+		"FUNC_ADPT_PORT_MRU_MTU_GET",
 	};
 
 	for(func = FUNC_ADPT_PORT_LOCAL_LOOPBACK_GET; func <= FUNC_ADPT_PORT_LINK_STATUS_GET; func++)
@@ -726,7 +727,7 @@ static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 		}
 	}
 
-	for(func = FUNC_ADPT_PORT_INTERFACE_MODE_APPLY; func <= FUNC_ADPT_PORT_MTU_CFG_GET; func++)
+	for(func = FUNC_ADPT_PORT_INTERFACE_MODE_APPLY; func <= FUNC_ADPT_PORT_MRU_MTU_GET; func++)
 	{
 		if(p->bitmap[2] & (1<<(func % 32)))
 		{
