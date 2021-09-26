@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2020, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2021, The Linux Foundation. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -6147,158 +6147,206 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                                    sizeof (a_bool_t)));
     if (A_TRUE == tmpdata)
     {
-	cmd_data_check_element("bypass in vlan miss", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_IN_VLAN_MISS);
-	}
+        cmd_data_check_element("bypass in vlan miss", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_IN_VLAN_MISS);
+        }
 
-	cmd_data_check_element("bypass source guard", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_SOUCE_GUARD);
-	}
+        cmd_data_check_element("bypass source guard", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_SOUCE_GUARD);
+        }
 
-	cmd_data_check_element("bypass MRU/MTU check", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_MRU_MTU_CHECK);
-	}
+        cmd_data_check_element("bypass MRU/MTU check", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_MRU_MTU_CHECK);
+        }
 
-	cmd_data_check_element("bypass egress VSI member check", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_VSI_MEMBER_CHECK);
-	}
+        cmd_data_check_element("bypass egress VSI member check", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_VSI_MEMBER_CHECK);
+        }
 
-	cmd_data_check_element("bypass egress vlan translation", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_VLAN_TRANSLATION);
-	}
+        cmd_data_check_element("bypass egress vlan translation", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_VLAN_TRANSLATION);
+        }
 
-	cmd_data_check_element("bypass egress vlan tag control", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_VLAN_TAG_CTRL);
-	}
+        cmd_data_check_element("bypass egress vlan tag control", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_VLAN_TAG_CTRL);
+        }
 
-	cmd_data_check_element("bypass fdb learning", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_FDB_LEARNING);
-	}
+        cmd_data_check_element("bypass fdb learning", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_FDB_LEARNING);
+        }
 
-	cmd_data_check_element("bypass fdb refresh", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_FDB_REFRESH);
-	}
+        cmd_data_check_element("bypass fdb refresh", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_FDB_REFRESH);
+        }
 
-	cmd_data_check_element("bypass L2 security", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L2_SECURITY);
-	}
+        cmd_data_check_element("bypass L2 security", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L2_SECURITY);
+        }
 
-	cmd_data_check_element("bypass management forward", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_MANAGEMENT_FWD);
-	}
+        cmd_data_check_element("bypass management forward", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_MANAGEMENT_FWD);
+        }
 
-	cmd_data_check_element("bypass L2 forward", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L2_FWD);
-	}
+        cmd_data_check_element("bypass L2 forward", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L2_FWD);
+        }
 
+        cmd_data_check_element("bypass ingress STP check", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_IN_STP_CHECK);
+        }
 
-	cmd_data_check_element("bypass ingress STP check", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_IN_STP_CHECK);
-	}
+        cmd_data_check_element("bypass egress STP check", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_STP_CHECK);
+        }
 
-	cmd_data_check_element("bypass egress STP check", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_STP_CHECK);
-	}
+        cmd_data_check_element("bypass source filter", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_SOURCE_FILTER);
+        }
 
-	cmd_data_check_element("bypass source filter", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_SOURCE_FILTER);
-	}
+        cmd_data_check_element("bypass policer", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_POLICYER);
+        }
 
-	cmd_data_check_element("bypass policer", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_POLICYER);
-	}
+        cmd_data_check_element("bypass L2 edit", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L2_EDIT);
+        }
 
-	cmd_data_check_element("bypass L2 edit", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L2_EDIT);
-	}
+        cmd_data_check_element("bypass L3 edit", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L3_EDIT);
+        }
 
-	cmd_data_check_element("bypass L3 edit", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L3_EDIT);
-	}
+        cmd_data_check_element("bypass post acl routing check", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_POST_ACL_CHECK_ROUTING);
+        }
 
-	cmd_data_check_element("bypass post acl routing check", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_POST_ACL_CHECK_ROUTING);
-	}
+        cmd_data_check_element("bypass port isolation", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_PORT_ISOLATION);
+        }
 
-	cmd_data_check_element("bypass port isolation", "no", "usage: <yes/no/y/n>\n",
-			cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-			   sizeof (a_bool_t)));
-	if (tmpdata)
-	{
-		entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_PORT_ISOLATION);
-	}
+        /*new add bypass for IPQ60xx*/
+        cmd_data_check_element("bypass flow qos", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_FLOW_QOS);
+        }
+
+        cmd_data_check_element("bypass pre acl qos", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_PRE_ACL_QOS);
+        }
+
+        cmd_data_check_element("bypass post acl qos", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_POST_ACL_QOS);
+        }
+
+        cmd_data_check_element("bypass dscp qos", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_DSCP_QOS);
+        }
+
+        cmd_data_check_element("bypass pcp qos", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_PCP_QOS);
+        }
+
+        cmd_data_check_element("bypass preheader qos", "no", "usage: <yes/no/y/n>\n",
+                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                   sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_PREHEADER_QOS);
+        }
     }
 
     /*enqueue priority action configuration */
@@ -6519,6 +6567,13 @@ static void cmd_data_print_acl_bypass_bitmap(a_uint32_t bitmap)
         dprintf("\t[bypass_l3_edit]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_L3_EDIT)&0x1);
         dprintf("\t[bypass_post_acl_check_routing]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_POST_ACL_CHECK_ROUTING)&0x1);
         dprintf("\t[bypass_port_isolation]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_PORT_ISOLATION)&0x1);
+        /*new add bypass for IPQ60xx*/
+        dprintf("\t[bypass_flow_qos]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_FLOW_QOS)&0x1);
+        dprintf("\t[bypass_pre_acl_qos]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_PRE_ACL_QOS)&0x1);
+        dprintf("\t[bypass_post_acl_qos]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_POST_ACL_QOS)&0x1);
+        dprintf("\t[bypass_dscp_qos]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_DSCP_QOS)&0x1);
+        dprintf("\t[bypass_pcp_qos]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_PCP_QOS)&0x1);
+        dprintf("\t[bypass_preheader_qos]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_PREHEADER_QOS)&0x1);
 	return;
 }
 void
