@@ -274,7 +274,8 @@ static void cmd_data_print_vsi_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_ip_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_IP_GLOBAL_CTRL_SET+1] ={
+
+	char *func_name[FUNC_IP_INTF_DMAC_CHECK_GET+1] ={
 		"FUNC_IP_NETWORK_ROUTE_GET",
 		"FUNC_IP_HOST_ADD",
 		"FUNC_IP_VSI_SG_CFG_GET",
@@ -307,12 +308,22 @@ static void cmd_data_print_ip_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_IP_PORT_ARP_SG_CFG_GET",
 		"FUNC_IP_NEXTHOP_SET",
 		"FUNC_IP_GLOBAL_CTRL_GET",
-		"FUNC_IP_GLOBAL_CTRL_SET"
+		"FUNC_IP_GLOBAL_CTRL_SET",
+		"FUNC_IP_INTF_MTU_MRU_SET",
+		"FUNC_IP_INTF_MTU_MRU_GET",
+		"FUNC_IP6_INTF_MTU_MRU_SET",
+		"FUNC_IP6_INTF_MTU_MRU_GET",
+		"FUNC_IP_INTF_MACADDR_ADD",
+		"FUNC_IP_INTF_MACADDR_DEL",
+		"FUNC_IP_INTF_MACADDR_GET_FIRST",
+		"FUNC_IP_INTF_MACADDR_GET_NEXT",
+		"FUNC_IP_INTF_DMAC_CHECK_SET",
+		"FUNC_IP_INTF_DMAC_CHECK_GET",
 	};
 
-	for(func = FUNC_IP_NETWORK_ROUTE_GET; func <= FUNC_IP_GLOBAL_CTRL_SET; func++)
+	for(func = FUNC_IP_NETWORK_ROUTE_GET; func <= FUNC_IP_INTF_DMAC_CHECK_GET; func++)
 	{
-		if (p->bitmap[0] & (1<<func))
+		if(p->bitmap[func/32] & ((1 << (func % 32))))
 		{
 			dprintf("%d  %s  registered\n", func, func_name[func]);
 		}
@@ -321,11 +332,7 @@ static void cmd_data_print_ip_func_ctrl(fal_func_ctrl_t *p)
 			dprintf("%d  %s  unregistered\n", func, func_name[func]);
 		}
 	}
-	func = FUNC_IP_GLOBAL_CTRL_SET;
-	if (p->bitmap[1] & (1 << (func % 32)))
-		dprintf("%d  %s  registered\n", func, func_name[func]);
-	else
-		dprintf("%d  %s  unregistered\n", func, func_name[func]);
+
 	return;
 }
 

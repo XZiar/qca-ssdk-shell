@@ -1274,6 +1274,12 @@ void
 cmd_data_print_port_cnt_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 void
 cmd_data_print_port_cnt(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_ip_intf_mac_entry(char *cmd_str, fal_intf_macaddr_t *arg_val, a_uint32_t size);
+void
+cmd_data_print_ip_intf_mac_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
 /* auto_insert_flag */
 
 /*qca808x_start*/

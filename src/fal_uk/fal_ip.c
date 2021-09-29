@@ -726,3 +726,93 @@ fal_ip_global_ctrl_set(a_uint32_t dev_id, fal_ip_global_cfg_t *cfg)
 	return rv;
 }
 
+sw_error_t
+fal_ip_intf_mtu_mru_set(a_uint32_t dev_id, a_uint32_t l3_if, a_uint32_t mtu, a_uint32_t mru)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_INTF_MTU_MRU_SET, dev_id, l3_if, mtu, mru);
+	return rv;
+}
+
+sw_error_t
+fal_ip_intf_mtu_mru_get(a_uint32_t dev_id, a_uint32_t l3_if, a_uint32_t *mtu, a_uint32_t *mru)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_INTF_MTU_MRU_GET, dev_id, l3_if, mtu, mru);
+	return rv;
+}
+
+sw_error_t
+fal_ip6_intf_mtu_mru_set(a_uint32_t dev_id, a_uint32_t l3_if, a_uint32_t mtu, a_uint32_t mru)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP6_INTF_MTU_MRU_SET, dev_id, l3_if, mtu, mru);
+	return rv;
+}
+
+sw_error_t
+fal_ip6_intf_mtu_mru_get(a_uint32_t dev_id, a_uint32_t l3_if, a_uint32_t *mtu, a_uint32_t *mru)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP6_INTF_MTU_MRU_GET, dev_id, l3_if, mtu, mru);
+	return rv;
+}
+
+sw_error_t
+fal_ip_intf_macaddr_add(a_uint32_t dev_id, a_uint32_t l3_if, fal_intf_macaddr_t *mac)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_INTF_MACADDR_ADD, dev_id, l3_if, mac);
+	return rv;
+}
+
+sw_error_t
+fal_ip_intf_macaddr_del(a_uint32_t dev_id, a_uint32_t l3_if, fal_intf_macaddr_t *mac)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_INTF_MACADDR_DEL, dev_id, l3_if, mac);
+	return rv;
+}
+
+sw_error_t
+fal_ip_intf_macaddr_get_first(a_uint32_t dev_id, a_uint32_t l3_if, fal_intf_macaddr_t *mac)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_INTF_MACADDR_GET_FIRST, dev_id, l3_if, mac);
+	return rv;
+}
+
+sw_error_t
+fal_ip_intf_macaddr_get_next(a_uint32_t dev_id, a_uint32_t l3_if, fal_intf_macaddr_t *mac)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_INTF_MACADDR_GET_NEXT, dev_id, l3_if, mac);
+	return rv;
+}
+
+sw_error_t
+fal_ip_intf_dmac_check_set(a_uint32_t dev_id, a_uint32_t l3_if, a_bool_t enable)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_INTF_DMAC_CHECK_SET, dev_id, l3_if, enable);
+	return rv;
+}
+
+sw_error_t
+fal_ip_intf_dmac_check_get(a_uint32_t dev_id, a_uint32_t l3_if, a_bool_t *enable)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_IP_INTF_DMAC_CHECK_GET, dev_id, l3_if, enable);
+	return rv;
+}
+

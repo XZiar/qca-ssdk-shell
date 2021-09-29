@@ -284,6 +284,16 @@ struct attr_des_t g_attr_des[] =
 			{NULL, FAL_PORT_CNT_MODE_BUTT}
 		}
 	},
+	{
+
+		"direction",
+		{
+			{"both", FAL_IP_BOTH},
+			{"ingress", FAL_IP_INGRESS},
+			{"egress", FAL_IP_EGRESS},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -784,6 +794,8 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_PORT_CNT_CFG, cmd_data_check_port_cnt_cfg,
 		    cmd_data_print_port_cnt_cfg),
     SW_TYPE_DEF(SW_PORT_CNT, NULL,cmd_data_print_port_cnt),
+    SW_TYPE_DEF(SW_INTF_MAC_ENTRY, cmd_data_check_ip_intf_mac_entry,
+		    cmd_data_print_ip_intf_mac_entry),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -40494,6 +40506,45 @@ cmd_data_print_port_cnt(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 			" [tx_drop_pkt_cnt]:%ld [tx_drop_byte_cnt]:%lld\n",
 			entry->tx_pkt_cnt, entry->tx_byte_cnt,
 			entry->tx_drop_pkt_cnt, entry->tx_drop_byte_cnt);
+
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_ip_intf_mac_entry(char *cmd_str, fal_intf_macaddr_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	fal_intf_macaddr_t entry;
+
+	aos_mem_zero(&entry, sizeof(fal_intf_macaddr_t));
+
+        cmd_data_check_element("direction", "ingress",
+                        "usage: direction is both, ingress or egress\n",
+                        cmd_data_check_attr, ("direction", cmd,
+                        &(entry.direction), sizeof(entry.direction)));
+
+	cmd_data_check_element("mac_addr", "0-0-0-0-0-0",
+			"usage: the format is xx-xx-xx-xx-xx-xx \n",
+			cmd_data_check_macaddr, (cmd, &(entry.mac_addr), sizeof(fal_mac_addr_t)));
+
+	*arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_ip_intf_mac_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_intf_macaddr_t *entry;
+
+	entry = (fal_intf_macaddr_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_attr("direction", "[direction]: ",
+			&(entry->direction), sizeof(entry->direction));
+	cmd_data_print_macaddr(" [mac_addr]: ",
+			(a_uint32_t *)&(entry->mac_addr), sizeof(fal_mac_addr_t));
 
 	dprintf("\n");
 }
