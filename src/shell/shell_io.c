@@ -796,6 +796,8 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_PORT_CNT, NULL,cmd_data_print_port_cnt),
     SW_TYPE_DEF(SW_INTF_MAC_ENTRY, cmd_data_check_ip_intf_mac_entry,
 		    cmd_data_print_ip_intf_mac_entry),
+    SW_TYPE_DEF(SW_ENTRY_COUNTER, NULL, cmd_data_print_entry_counter),
+    SW_TYPE_DEF(SW_FLOW_QOS, cmd_data_check_flow_qos, cmd_data_print_flow_qos),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -40549,4 +40551,62 @@ cmd_data_print_ip_intf_mac_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint32
 	dprintf("\n");
 }
 
+void
+cmd_data_print_entry_counter(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_entry_counter_t *entry;
+
+	entry = (fal_entry_counter_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	dprintf("[pkt_cnt]:%ld [byte_cnt]:%lld\n",
+			entry->matched_pkts, entry->matched_bytes);
+
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_flow_qos(char *cmd_str, fal_flow_qos_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	fal_flow_qos_t entry;
+
+	aos_mem_zero(&entry, sizeof(fal_flow_qos_t));
+
+        cmd_data_check_element("tree_id", "0",
+			"usage: tree id for qos\n",
+			cmd_data_check_uint32,
+			(cmd, &(entry.tree_id), sizeof(entry.tree_id)));
+
+        cmd_data_check_element("wifi_qos_en", "disable",
+			"usage: usage: enable/disable\n",
+			cmd_data_check_enable,
+			(cmd, &(entry.wifi_qos_en), sizeof(entry.wifi_qos_en)));
+
+        cmd_data_check_element("wifi_qos", "0",
+			"usage: wifi qos value\n",
+			cmd_data_check_uint32,
+			(cmd, &(entry.wifi_qos), sizeof(entry.wifi_qos)));
+
+	*arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_flow_qos(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_flow_qos_t *entry;
+
+	entry = (fal_flow_qos_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_uint32("tree_id", &entry->tree_id, sizeof(entry->tree_id));
+	cmd_data_print_enable("wifi_qos_en", &entry->wifi_qos_en, sizeof(entry->wifi_qos_en));
+	cmd_data_print_uint32("wifi_qos", &entry->wifi_qos, sizeof(entry->wifi_qos));
+
+	dprintf("\n");
+}
 /* auto_insert_flag_1 */

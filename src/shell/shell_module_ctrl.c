@@ -339,7 +339,7 @@ static void cmd_data_print_ip_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_flow_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_FLOW_ENTRY_NEXT+1] ={
+	char *func_name[FUNC_FLOW_QOS_GET+1] ={
 		"FUNC_FLOW_HOST_ADD",
 		"FUNC_FLOW_ENTRY_GET",
 		"FUNC_FLOW_ENTRY_DEL",
@@ -354,10 +354,15 @@ static void cmd_data_print_flow_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_FLOW_ENTRY_ADD",
 		"FUNC_FLOW_GLOBAL_CFG_GET",
 		"FUNC_FLOW_GLOBAL_CFG_SET",
-		"FUNC_FLOW_ENTRY_NEXT"
+		"FUNC_FLOW_ENTRY_NEXT",
+		"FUNC_FLOW_COUNTER_GET",
+		"FUNC_FLOW_ENTRY_EN_SET",
+		"FUNC_FLOW_ENTRY_EN_GET",
+		"FUNC_FLOW_QOS_SET",
+		"FUNC_FLOW_QOS_GET",
 	};
 
-	for(func = FUNC_FLOW_HOST_ADD; func <= FUNC_FLOW_ENTRY_NEXT; func++)
+	for(func = FUNC_FLOW_HOST_ADD; func <= FUNC_FLOW_QOS_GET; func++)
 	{
 		if(p->bitmap[0] & (1 << func))
 		{
