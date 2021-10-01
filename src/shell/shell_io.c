@@ -294,6 +294,14 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"intf_type",
+		{
+			{"tunnel", FAL_INTF_TYPE_TUNNEL},
+			{"normal", FAL_INTF_TYPE_NORMAL},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -799,6 +807,8 @@ static sw_data_type_t sw_data_type[] =
 		    cmd_data_print_ip_intf_mac_entry),
     SW_TYPE_DEF(SW_ENTRY_COUNTER, NULL, cmd_data_print_entry_counter),
     SW_TYPE_DEF(SW_FLOW_QOS, cmd_data_check_flow_qos, cmd_data_print_flow_qos),
+    SW_TYPE_DEF(SW_INTF_TYPE, cmd_data_check_intf_type, cmd_data_print_intf_type),
+    SW_TYPE_DEF(SW_PPPOE_CTRL, cmd_data_check_pppoe_ctrl, cmd_data_print_pppoe_ctrl),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -40629,6 +40639,78 @@ cmd_data_print_flow_qos(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 	cmd_data_print_uint32("tree_id", &entry->tree_id, sizeof(entry->tree_id));
 	cmd_data_print_enable("wifi_qos_en", &entry->wifi_qos_en, sizeof(entry->wifi_qos_en));
 	cmd_data_print_uint32("wifi_qos", &entry->wifi_qos, sizeof(entry->wifi_qos));
+
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_intf_type(char *cmd_str, fal_intf_type_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	fal_intf_type_t intf_type;
+
+	intf_type = FAL_INTF_TYPE_NORMAL;
+
+        cmd_data_check_element("intf_type", "normal",
+                        "usage: intf type tunnel or normal \n",
+                        cmd_data_check_attr, ("intf_type", cmd,
+                        &intf_type, sizeof(fal_intf_type_t)));
+
+	*arg_val = intf_type;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_intf_type(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_intf_type_t *intf_type;
+
+	intf_type = (fal_intf_type_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_attr("intf_type", "[intf_type]: ",
+			intf_type, sizeof(fal_intf_type_t));
+
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_pppoe_ctrl(char *cmd_str, fal_pppoe_global_cfg_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	fal_pppoe_global_cfg_t entry;
+
+	aos_mem_zero(&entry, sizeof(fal_pppoe_global_cfg_t));
+
+	cmd_data_check_element("multicast_cmd", "forward", "usage: forward/drop/cpycpu/rdtcpu\n",
+			cmd_data_check_maccmd, (cmd,
+				&(entry.pppoe_multicast_cmd), sizeof(fal_fwd_cmd_t)));
+
+        cmd_data_check_element("multicast_deacclr", "enable",
+                        "usage: usage: enable/disable\n",
+                        cmd_data_check_enable, (cmd,
+                        &(entry.pppoe_multicast_deacclr_en), sizeof(a_bool_t)));
+
+	*arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_pppoe_ctrl(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_pppoe_global_cfg_t *entry;
+
+	entry = (fal_pppoe_global_cfg_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_maccmd("multicast_cmd",
+			&entry->pppoe_multicast_cmd, sizeof(fal_fwd_cmd_t));
+	cmd_data_print_enable("multicast_deacclr",
+			&entry->pppoe_multicast_deacclr_en, sizeof(a_bool_t));
 
 	dprintf("\n");
 }

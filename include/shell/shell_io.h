@@ -1295,6 +1295,16 @@ cmd_data_check_flow_qos(char *cmd_str, fal_flow_qos_t *arg_val, a_uint32_t size)
 void
 cmd_data_print_flow_qos(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 
+sw_error_t
+cmd_data_check_intf_type(char *cmd_str, fal_intf_type_t *arg_val, a_uint32_t size);
+void
+cmd_data_print_intf_type(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_pppoe_ctrl(char *cmd_str, fal_pppoe_global_cfg_t *arg_val, a_uint32_t size);
+void
+cmd_data_print_pppoe_ctrl(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
 /* auto_insert_flag */
 
 /*qca808x_start*/

@@ -593,15 +593,19 @@ static void cmd_data_print_rss_hash_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_pppoe_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_PPPOE_EN_GET+1] ={
+	char *func_name[FUNC_PPPOE_GLOBAL_CTRL_GET+1] ={
 		"FUNC_PPPOE_SESSION_TABLE_ADD",
 		"FUNC_PPPOE_SESSION_TABLE_DEL",
 		"FUNC_PPPOE_SESSION_TABLE_GET",
 		"FUNC_PPPOE_EN_SET",
-		"FUNC_PPPOE_EN_GET"
+		"FUNC_PPPOE_EN_GET",
+		"FUNC_PPPOE_L3_INTF_SET",
+		"FUNC_PPPOE_L3_INTF_GET",
+		"FUNC_PPPOE_GLOBAL_CTRL_SET",
+		"FUNC_PPPOE_GLOBAL_CTRL_GET",
 	};
 
-	for(func = FUNC_PPPOE_SESSION_TABLE_ADD; func <= FUNC_PPPOE_EN_GET; func++)
+	for(func = FUNC_PPPOE_SESSION_TABLE_ADD; func <= FUNC_PPPOE_GLOBAL_CTRL_GET; func++)
 	{
 		if(p->bitmap[0] & (1 << func))
 		{
