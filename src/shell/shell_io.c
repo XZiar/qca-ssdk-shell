@@ -39820,7 +39820,7 @@ cmd_data_check_ecn_val(char *cmd_str, fal_tunnel_ecn_val_t *arg_val, a_uint32_t 
 {
 	char *cmd;
 	sw_error_t rv;
-	fal_tunnel_ecn_val_t ecn_val;
+	fal_tunnel_ecn_val_t ecn_val = FAL_TUNNEL_ECN_NOT_ECT;
 
 	do {
 		cmd = get_sub_cmd("ecn_val", "no_ect");
