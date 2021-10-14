@@ -978,3 +978,43 @@ fal_port_8023ah_get(a_uint32_t dev_id, fal_port_t port_id,
 	return rv;
 }
 
+sw_error_t
+fal_port_cnt_cfg_set(a_uint32_t dev_id, fal_port_t port_id, fal_port_cnt_cfg_t *cnt_cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_CNT_CFG_SET, dev_id, port_id, cnt_cfg);
+
+	return rv;
+}
+
+sw_error_t
+fal_port_cnt_cfg_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_cnt_cfg_t *cnt_cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_CNT_CFG_GET, dev_id, port_id, cnt_cfg);
+
+	return rv;
+}
+
+sw_error_t
+fal_port_cnt_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_cnt_t *port_cnt)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_CNT_GET, dev_id, port_id, port_cnt);
+
+	return rv;
+}
+
+sw_error_t
+fal_port_cnt_flush(a_uint32_t dev_id, fal_port_t port_id)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_CNT_FLUSH, dev_id, port_id);
+
+	return rv;
+}
+
