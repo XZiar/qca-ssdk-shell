@@ -267,6 +267,15 @@ extern "C" {
     SW_PARAM_DEF(SW_API_PT_RING_FLOW_CTRL_STATUS_GET, SW_ENABLE, sizeof(a_bool_t), \
 		    SW_PARAM_PTR|SW_PARAM_OUT, "BackPressure status"),
 
+#define SW_API_PT_RING_UNION_SET_DESC \
+    SW_PARAM_DEF(SW_API_PT_RING_UNION_SET, SW_UINT32, 4, SW_PARAM_IN, "Dev ID"), \
+    SW_PARAM_DEF(SW_API_PT_RING_UNION_SET, SW_ENABLE, sizeof(a_bool_t), \
+		    SW_PARAM_IN, "port0 port5 ring union"),
+
+#define SW_API_PT_RING_UNION_GET_DESC \
+    SW_PARAM_DEF(SW_API_PT_RING_UNION_GET, SW_UINT32, 4, SW_PARAM_IN, "Dev ID"), \
+    SW_PARAM_DEF(SW_API_PT_RING_UNION_GET, SW_ENABLE, sizeof(a_bool_t), \
+		    SW_PARAM_PTR|SW_PARAM_OUT, "port0 port5 ring union"),
 
 #define SW_API_PTS_LINK_STATUS_GET_DESC \
     SW_PARAM_DEF(SW_API_PTS_LINK_STATUS_GET, SW_UINT32, 4, SW_PARAM_IN, "Dev ID"), \

@@ -130,6 +130,10 @@ struct cmd_des_t gcmd_des[] =
             {"ringfcstatus", "get", "get ring backpressure status of ring",
 		    "<ring_id:0-7 for port0, 8-15 for port5>",
 		    SW_API_PT_RING_FLOW_CTRL_STATUS_GET, NULL},
+            {"ringunion", "set", "set ring union for port0 and port5",
+		    "<enable/disable>", SW_API_PT_RING_UNION_SET, NULL},
+            {"ringunion", "get", "get ring union for port0 and port5",
+		    "", SW_API_PT_RING_UNION_GET, NULL},
 /*qca808x_start*/
             {"Ieee8023az", "set", "set 8023az status of a port", "<port_id> <enable|disable>",
                 SW_API_PT_8023AZ_SET, NULL},

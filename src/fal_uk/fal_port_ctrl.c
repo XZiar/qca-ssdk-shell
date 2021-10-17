@@ -987,3 +987,23 @@ fal_ring_flow_ctrl_status_get(a_uint32_t dev_id, a_uint32_t ring_id, a_bool_t *s
 
 	return rv;
 }
+
+sw_error_t
+fal_ring_union_set(a_uint32_t dev_id, a_bool_t en)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_RING_UNION_SET, dev_id, en);
+
+	return rv;
+}
+
+sw_error_t
+fal_ring_union_get(a_uint32_t dev_id, a_bool_t *en)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_RING_UNION_GET, dev_id, en);
+
+	return rv;
+}
