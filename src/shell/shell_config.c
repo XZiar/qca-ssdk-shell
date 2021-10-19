@@ -1421,6 +1421,7 @@ struct cmd_des_t gcmd_des[] =
         "device", "set device id",
         {
             {"id", "set", "set device id", "<dev_id>", SW_CMD_SET_DEVID, cmd_set_devid},
+            {"ppe_capacity", "get", "get ppe capacity", "", SW_API_PPE_CAPACITY_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

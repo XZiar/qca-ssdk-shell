@@ -1320,6 +1320,8 @@ cmd_data_check_tunnel_action(char *cmd_str, fal_tunnel_action_t *arg_val, a_uint
 void
 cmd_data_print_tunnel_action(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 
+void
+cmd_data_print_ppe_capacity(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 /* auto_insert_flag */
 
 /*qca808x_start*/

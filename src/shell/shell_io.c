@@ -813,6 +813,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_TUNNEL_KEY, cmd_data_check_tunnel_key, cmd_data_print_tunnel_key),
     SW_TYPE_DEF(SW_TUNNEL_DECAP_ACTION, cmd_data_check_tunnel_action,
 		    cmd_data_print_tunnel_action),
+    SW_TYPE_DEF(SW_PPE_CAPACITY, NULL, cmd_data_print_ppe_capacity),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -40787,6 +40788,30 @@ cmd_data_print_tunnel_action(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t s
 	cmd_data_print_uint32("update_fields", &entry->update_bmp, sizeof(a_uint32_t));
 	cmd_data_print_tunnel_decap_action_entry(param_name,
 			(a_ulong_t *)entry, sizeof(fal_tunnel_action_t));
+
+	dprintf("\n");
+}
+
+void
+cmd_data_print_ppe_capacity(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_ppe_tbl_caps_t *entry;
+
+	entry = (fal_ppe_tbl_caps_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	dprintf("[flow_table_capacity]:%d\n", entry->flow_caps);
+	dprintf("[host_table_capacity]:%d\n", entry->host_caps);
+	dprintf("[nexthop_table_capacity]:%d\n", entry->nexthop_caps);
+	dprintf("[pub_ip_table_capacity]:%d\n", entry->pub_ip_caps);
+	dprintf("[vsi_capacity]:%d\n", entry->vsi_caps);
+	dprintf("[port_capacity]:%d\n", entry->port_caps);
+	dprintf("[l3_if_capacity]:%d\n", entry->l3_if_caps);
+	dprintf("[my_mac_table_capacity]:%d\n", entry->my_mac_caps);
+	dprintf("[queues_capacity]:%d\n", entry->queue_caps);
+	dprintf("[service_codes_capacity]:%d\n", entry->service_code_caps);
+	dprintf("[pppoe_session_capacity]:%d\n", entry->pppoe_session_caps);
 
 	dprintf("\n");
 }
