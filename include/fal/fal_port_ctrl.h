@@ -361,6 +361,10 @@ enum
 	FUNC_ADPT_PORT_CNT_CFG_GET,
 	FUNC_ADPT_PORT_CNT_GET,
 	FUNC_ADPT_PORT_CNT_FLUSH,
+	FUNC_ADPT_PORT_8023AH_SET,
+	FUNC_ADPT_PORT_8023AH_GET,
+	FUNC_ADPT_PORT_MTU_CFG_SET,
+	FUNC_ADPT_PORT_MTU_CFG_GET,
 };
 
 	typedef enum {
@@ -385,11 +389,14 @@ enum
 	typedef struct {
 		a_uint32_t	mtu_size;
 		fal_mtu_action_t	action;
+	} fal_mtu_ctrl_t;
+
+	typedef struct {
 		a_bool_t	mtu_enable;/*add it for ipq95xx*/
 		fal_mtu_type_t	mtu_type;/*add it for ipq95xx*/
 		a_uint32_t	extra_header_len;/*add it for ipq95xx*/
 		a_uint32_t	eg_vlan_tag_flag;/*bit 0 ctag, bit 1 stag,add it for ipq95xx*/
-	} fal_mtu_ctrl_t;
+	} fal_mtu_cfg_t;
 
 	typedef struct {
 		a_uint32_t		mru_size;
@@ -467,6 +474,13 @@ enum
 	sw_error_t
 	fal_port_mru_get(a_uint32_t dev_id, fal_port_t port_id,
 			fal_mru_ctrl_t *ctrl);
+	sw_error_t
+	fal_port_mtu_cfg_set(a_uint32_t dev_id, fal_port_t port_id,
+			fal_mtu_cfg_t *mtu_cfg);
+
+	sw_error_t
+	fal_port_mtu_cfg_get(a_uint32_t dev_id, fal_port_t port_id,
+			fal_mtu_cfg_t *mtu_cfg);
 /*qca808x_start*/
     sw_error_t
     fal_port_duplex_set(a_uint32_t dev_id, fal_port_t port_id,
