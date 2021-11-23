@@ -116,6 +116,8 @@ extern "C" {
     SW_API_DEF(SW_API_PT_MRU_GET, fal_port_mru_get), \
     SW_API_DEF(SW_API_PT_MTU_CFG_SET, fal_port_mtu_cfg_set), \
     SW_API_DEF(SW_API_PT_MTU_CFG_GET, fal_port_mtu_cfg_get), \
+    SW_API_DEF(SW_API_PT_MRU_MTU_SET, fal_port_mru_mtu_set), \
+    SW_API_DEF(SW_API_PT_MRU_MTU_GET, fal_port_mru_mtu_get), \
     SW_API_DEF(SW_API_PT_SOURCE_FILTER_GET, fal_port_source_filter_status_get), \
     SW_API_DEF(SW_API_PT_SOURCE_FILTER_SET, fal_port_source_filter_enable), \
     SW_API_DEF(SW_API_PT_FRAME_MAX_SIZE_GET, fal_port_max_frame_size_get), \
@@ -231,6 +233,8 @@ extern "C" {
     SW_API_DESC(SW_API_PT_MRU_GET) \
     SW_API_DESC(SW_API_PT_MTU_CFG_SET) \
     SW_API_DESC(SW_API_PT_MTU_CFG_GET) \
+    SW_API_DESC(SW_API_PT_MRU_MTU_SET) \
+    SW_API_DESC(SW_API_PT_MRU_MTU_GET) \
     SW_API_DESC(SW_API_PT_SOURCE_FILTER_GET) \
     SW_API_DESC(SW_API_PT_SOURCE_FILTER_SET) \
     SW_API_DESC(SW_API_PT_FRAME_MAX_SIZE_GET) \
