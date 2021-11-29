@@ -40567,20 +40567,9 @@ cmd_data_print_pppoe_ctrl(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size
 sw_error_t
 cmd_data_check_tunnel_type(char *cmd_str, fal_tunnel_type_t *arg_val, a_uint32_t size)
 {
-	char *cmd;
-	a_uint32_t tmp = 0;
 
-        cmd_data_check_element("tunnel type", "gre_tap_ipv4",
-               "usage: gre_tap_ipv4, gre_tap_ipv6, vxlan_ipv4, vxlan_ipv6, "
-               "vxlan_gpe_ipv4, vxlan_gpe_ipv6, ipv4_ipv6, program0, "
-               "program1, program2, program3, program4, program5, "
-               "geneve_ipv4, geneve_ipv6\n",
-               cmd_data_check_attr, ("tunnel_type", cmd,
-                             &tmp, sizeof(tmp)));
-
-	*arg_val = (fal_tunnel_type_t)tmp;
-
-	return SW_OK;
+	return cmd_data_check_attr("tunnel_type", cmd_str,
+			arg_val, sizeof(*arg_val));
 }
 
 void
