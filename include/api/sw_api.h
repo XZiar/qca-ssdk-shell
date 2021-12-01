@@ -296,6 +296,11 @@ typedef enum
 	SW_INTF_MAC_ENTRY,
 	SW_ENTRY_COUNTER,
 	SW_FLOW_QOS,
+	SW_INTF_TYPE,
+	SW_PPPOE_CTRL,
+	SW_TUNNEL_TYPE,
+	SW_TUNNEL_KEY,
+	SW_TUNNEL_DECAP_ACTION,
 /* auto_insert_flag */
 } sw_data_type_e;
 

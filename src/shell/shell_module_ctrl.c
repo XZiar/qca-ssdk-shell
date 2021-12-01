@@ -593,15 +593,19 @@ static void cmd_data_print_rss_hash_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_pppoe_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_PPPOE_EN_GET+1] ={
+	char *func_name[FUNC_PPPOE_GLOBAL_CTRL_GET+1] ={
 		"FUNC_PPPOE_SESSION_TABLE_ADD",
 		"FUNC_PPPOE_SESSION_TABLE_DEL",
 		"FUNC_PPPOE_SESSION_TABLE_GET",
 		"FUNC_PPPOE_EN_SET",
-		"FUNC_PPPOE_EN_GET"
+		"FUNC_PPPOE_EN_GET",
+		"FUNC_PPPOE_L3_INTF_SET",
+		"FUNC_PPPOE_L3_INTF_GET",
+		"FUNC_PPPOE_GLOBAL_CTRL_SET",
+		"FUNC_PPPOE_GLOBAL_CTRL_GET",
 	};
 
-	for(func = FUNC_PPPOE_SESSION_TABLE_ADD; func <= FUNC_PPPOE_EN_GET; func++)
+	for(func = FUNC_PPPOE_SESSION_TABLE_ADD; func <= FUNC_PPPOE_GLOBAL_CTRL_GET; func++)
 	{
 		if(p->bitmap[0] & (1 << func))
 		{
@@ -618,7 +622,7 @@ static void cmd_data_print_pppoe_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_ADPT_PORT_MTU_CFG_GET+1] ={
+	char *func_name[FUNC_ADPT_PORT_MRU_MTU_GET+1] ={
 		"FUNC_ADPT_PORT_LOCAL_LOOPBACK_GET",
 		"FUNC_ADPT_PORT_AUTONEG_RESTART",
 		"FUNC_ADPT_PORT_DUPLEX_SET",
@@ -700,6 +704,7 @@ static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_ADPT_PORT_8023AH_GET",
 		"FUNC_ADPT_PORT_MTU_CFG_SET",
 		"FUNC_ADPT_PORT_MTU_CFG_GET",
+		"FUNC_ADPT_PORT_MRU_MTU_GET",
 	};
 
 	for(func = FUNC_ADPT_PORT_LOCAL_LOOPBACK_GET; func <= FUNC_ADPT_PORT_LINK_STATUS_GET; func++)
@@ -726,7 +731,7 @@ static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 		}
 	}
 
-	for(func = FUNC_ADPT_PORT_INTERFACE_MODE_APPLY; func <= FUNC_ADPT_PORT_MTU_CFG_GET; func++)
+	for(func = FUNC_ADPT_PORT_INTERFACE_MODE_APPLY; func <= FUNC_ADPT_PORT_MRU_MTU_GET; func++)
 	{
 		if(p->bitmap[2] & (1<<(func % 32)))
 		{
@@ -1129,7 +1134,7 @@ static void cmd_data_print_vport_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_tunnel_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_TUNNEL_EXP_DECAP_GET+1] = {
+	char *func_name[FUNC_TUNNEL_DECAP_COUNTER_GET+1] = {
 		"FUNC_TUNNEL_INTF_SET",
 		"FUNC_TUNNEL_INTF_GET",
 		"FUNC_TUNNEL_ENCAP_RULE_ENTRY_SET",
@@ -1170,9 +1175,15 @@ static void cmd_data_print_tunnel_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_TUNNEL_UDF_PROFILE_CFG_GET",
 		"FUNC_TUNNEL_EXP_DECAP_SET",
 		"FUNC_TUNNEL_EXP_DECAP_GET",
+		"FUNC_TUNNEL_DECAP_KEY_SET",
+		"FUNC_TUNNEL_DECAP_KEY_GET",
+		"FUNC_TUNNEL_DECAP_EN_SET",
+		"FUNC_TUNNEL_DECAP_EN_GET",
+		"FUNC_TUNNEL_DECAP_ACTION_UPDATE",
+		"FUNC_TUNNEL_DECAP_COUNTER_GET",
 	};
 
-	for(func = FUNC_TUNNEL_INTF_SET; func <= FUNC_TUNNEL_EXP_DECAP_GET; func++)
+	for(func = FUNC_TUNNEL_INTF_SET; func <= FUNC_TUNNEL_DECAP_COUNTER_GET; func++)
 	{
 		if(p->bitmap[func/32] & ((1 << (func % 32))))
 		{
