@@ -116,6 +116,8 @@ extern "C" {
     SW_API_DEF(SW_API_PT_MRU_GET, fal_port_mru_get), \
     SW_API_DEF(SW_API_PT_MTU_CFG_SET, fal_port_mtu_cfg_set), \
     SW_API_DEF(SW_API_PT_MTU_CFG_GET, fal_port_mtu_cfg_get), \
+    SW_API_DEF(SW_API_PT_MRU_MTU_SET, fal_port_mru_mtu_set), \
+    SW_API_DEF(SW_API_PT_MRU_MTU_GET, fal_port_mru_mtu_get), \
     SW_API_DEF(SW_API_PT_SOURCE_FILTER_GET, fal_port_source_filter_status_get), \
     SW_API_DEF(SW_API_PT_SOURCE_FILTER_SET, fal_port_source_filter_enable), \
     SW_API_DEF(SW_API_PT_FRAME_MAX_SIZE_GET, fal_port_max_frame_size_get), \
@@ -231,6 +233,8 @@ extern "C" {
     SW_API_DESC(SW_API_PT_MRU_GET) \
     SW_API_DESC(SW_API_PT_MTU_CFG_SET) \
     SW_API_DESC(SW_API_PT_MTU_CFG_GET) \
+    SW_API_DESC(SW_API_PT_MRU_MTU_SET) \
+    SW_API_DESC(SW_API_PT_MRU_MTU_GET) \
     SW_API_DESC(SW_API_PT_SOURCE_FILTER_GET) \
     SW_API_DESC(SW_API_PT_SOURCE_FILTER_SET) \
     SW_API_DESC(SW_API_PT_FRAME_MAX_SIZE_GET) \
@@ -2203,7 +2207,13 @@ extern "C" {
 	SW_API_DEF(SW_API_TUNNEL_UDF_PROFILE_CFG_SET, fal_tunnel_udf_profile_cfg_set),\
 	SW_API_DEF(SW_API_TUNNEL_UDF_PROFILE_CFG_GET, fal_tunnel_udf_profile_cfg_get), \
 	SW_API_DEF(SW_API_TUNNEL_EXP_DECAP_SET, fal_tunnel_exp_decap_set), \
-	SW_API_DEF(SW_API_TUNNEL_EXP_DECAP_GET, fal_tunnel_exp_decap_get),
+	SW_API_DEF(SW_API_TUNNEL_EXP_DECAP_GET, fal_tunnel_exp_decap_get), \
+	SW_API_DEF(SW_API_TUNNEL_DECAP_KEY_SET, fal_tunnel_decap_key_set), \
+	SW_API_DEF(SW_API_TUNNEL_DECAP_KEY_GET, fal_tunnel_decap_key_get), \
+	SW_API_DEF(SW_API_TUNNEL_DECAP_EN_SET, fal_tunnel_decap_en_set), \
+	SW_API_DEF(SW_API_TUNNEL_DECAP_EN_GET, fal_tunnel_decap_en_get), \
+	SW_API_DEF(SW_API_TUNNEL_DECAP_ACTION_UPDATE, fal_tunnel_decap_action_update), \
+	SW_API_DEF(SW_API_TUNNEL_DECAP_COUNTER_GET, fal_tunnel_decap_counter_get),
 #define TUNNEL_API_PARAM \
 	SW_API_DESC(SW_API_TUNNEL_INTF_SET) \
 	SW_API_DESC(SW_API_TUNNEL_INTF_GET) \
@@ -2244,7 +2254,13 @@ extern "C" {
 	SW_API_DESC(SW_API_TUNNEL_UDF_PROFILE_CFG_SET) \
 	SW_API_DESC(SW_API_TUNNEL_UDF_PROFILE_CFG_GET) \
 	SW_API_DESC(SW_API_TUNNEL_EXP_DECAP_SET) \
-	SW_API_DESC(SW_API_TUNNEL_EXP_DECAP_GET)
+	SW_API_DESC(SW_API_TUNNEL_EXP_DECAP_GET) \
+	SW_API_DESC(SW_API_TUNNEL_DECAP_KEY_SET) \
+	SW_API_DESC(SW_API_TUNNEL_DECAP_KEY_GET) \
+	SW_API_DESC(SW_API_TUNNEL_DECAP_EN_SET) \
+	SW_API_DESC(SW_API_TUNNEL_DECAP_EN_GET) \
+	SW_API_DESC(SW_API_TUNNEL_DECAP_ACTION_UPDATE) \
+	SW_API_DESC(SW_API_TUNNEL_DECAP_COUNTER_GET)
 #else
 #define TUNNEL_API
 #define TUNNEL_API_PARAM

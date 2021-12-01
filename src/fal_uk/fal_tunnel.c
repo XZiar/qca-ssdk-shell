@@ -450,3 +450,69 @@ fal_tunnel_exp_decap_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *enable
 
 	return rv;
 }
+
+sw_error_t
+fal_tunnel_decap_key_set(a_uint32_t dev_id,
+		fal_tunnel_type_t tunnel_type, fal_tunnel_decap_key_t *key_gen)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_KEY_SET, dev_id, tunnel_type, key_gen);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_decap_key_get(a_uint32_t dev_id,
+		fal_tunnel_type_t tunnel_type, fal_tunnel_decap_key_t *key_gen)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_KEY_GET, dev_id, tunnel_type, key_gen);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_decap_en_set(a_uint32_t dev_id,
+		a_uint32_t tunnel_index, a_bool_t en)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_EN_SET, dev_id, tunnel_index, en);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_decap_en_get(a_uint32_t dev_id,
+		a_uint32_t tunnel_index, a_bool_t *en)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_EN_GET, dev_id, tunnel_index, en);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_decap_action_update(a_uint32_t dev_id,
+		a_uint32_t tunnel_index, fal_tunnel_action_t *update_action)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_ACTION_UPDATE, dev_id, tunnel_index, update_action);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_decap_counter_get(a_uint32_t dev_id,
+		a_uint32_t tunnel_index, fal_entry_counter_t *decap_counter)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_DECAP_COUNTER_GET, dev_id, tunnel_index, decap_counter);
+
+	return rv;
+}
