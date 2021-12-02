@@ -820,6 +820,28 @@ fal_port_mtu_cfg_get(a_uint32_t dev_id, fal_port_t port_id,
 }
 
 sw_error_t
+fal_port_mru_mtu_set(a_uint32_t dev_id, fal_port_t port_id,
+                       a_uint32_t mru_size, a_uint32_t mtu_size)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_MRU_MTU_SET, dev_id, port_id, mru_size,
+        mtu_size);
+    return rv;
+}
+
+sw_error_t
+fal_port_mru_mtu_get(a_uint32_t dev_id, fal_port_t port_id,
+                       a_uint32_t *mru_size, a_uint32_t *mtu_size)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_MRU_MTU_GET, dev_id, port_id, mru_size,
+        mtu_size);
+    return rv;
+}
+
+sw_error_t
 fal_port_source_filter_enable(a_uint32_t dev_id, fal_port_t port_id,
                        a_bool_t enable)
 {

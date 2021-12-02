@@ -77,13 +77,13 @@ sw_error_t cmd_data_check_maclimit_ctrl(char *cmdstr, void *val, a_uint32_t size
 /*qca808x_start*/
 sw_error_t cmd_data_check_macaddr(char *cmdstr, void *val, a_uint32_t size);
 
-void cmd_data_print_uint64(a_uint8_t * param_name, a_uint64_t * buf,
+void cmd_data_print_uint64(a_char_t * param_name, a_uint64_t * buf,
                            a_uint32_t size);
 void cmd_data_print_uint32(a_char_t * param_name, a_uint32_t * buf,
                            a_uint32_t size);
 void cmd_data_print_uint16(a_char_t * param_name, a_uint32_t * buf,
                            a_uint32_t size);
-void cmd_data_print_uint8(a_uint8_t * param_name, a_uint32_t * buf,
+void cmd_data_print_uint8(a_char_t * param_name, a_uint32_t * buf,
                            a_uint32_t size);
 void cmd_data_print_enable(a_char_t * param_name, a_uint32_t * buf,
                            a_uint32_t size);
@@ -1294,6 +1294,31 @@ sw_error_t
 cmd_data_check_flow_qos(char *cmd_str, fal_flow_qos_t *arg_val, a_uint32_t size);
 void
 cmd_data_print_flow_qos(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_intf_type(char *cmd_str, fal_intf_type_t *arg_val, a_uint32_t size);
+void
+cmd_data_print_intf_type(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_pppoe_ctrl(char *cmd_str, fal_pppoe_global_cfg_t *arg_val, a_uint32_t size);
+void
+cmd_data_print_pppoe_ctrl(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_type(char *cmd_str, fal_tunnel_type_t *arg_val, a_uint32_t size);
+void
+cmd_data_print_tunnel_type(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_key(char *cmd_str, fal_tunnel_decap_key_t *arg_val, a_uint32_t size);
+void
+cmd_data_print_tunnel_key(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_tunnel_action(char *cmd_str, fal_tunnel_action_t *arg_val, a_uint32_t size);
+void
+cmd_data_print_tunnel_action(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 
 /* auto_insert_flag */
 
