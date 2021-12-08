@@ -1073,6 +1073,8 @@ struct cmd_des_t gcmd_des[] =
             {"global", "set", "set flow global cfg", "", SW_API_FLOW_GLOBAL_CFG_SET, NULL},
             {"counter", "get", "get flow counter", "<flow_index>",
 		    SW_API_FLOW_COUNTER_GET, NULL},
+            {"counter", "cleanup", "clean up flow counter", "<flow_index>",
+		    SW_API_FLOW_COUNTER_CLEANUP, NULL},
             {"entry_en", "set", "set flow entry status", "<flow_index> <en>",
 		    SW_API_FLOW_ENTRY_EN_SET, NULL},
             {"entry_en", "get", "get flow entry status", "<flow_index>",
