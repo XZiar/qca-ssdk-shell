@@ -1432,7 +1432,7 @@ extern "C" {
     SW_PARAM_DEF(SW_API_ACL_UDF_GET, SW_UINT32, 4, SW_PARAM_IN, "Dev ID"),\
     SW_PARAM_DEF(SW_API_ACL_UDF_GET, SW_ACL_UDF_PKT_TYPE, sizeof(fal_acl_udf_pkt_type_t), SW_PARAM_IN, "udf_packet_type"),\
     SW_PARAM_DEF(SW_API_ACL_UDF_GET, SW_UINT32, 4, SW_PARAM_IN, "udf_index"),\
-    SW_PARAM_DEF(SW_API_ACL_UDF_GET, SW_ACL_UDF_TYPE, sizeof(fal_acl_udf_type_t), SW_PARAM_PTR|SW_PARAM_OUT, "udf_type"),\
+    SW_PARAM_DEF(SW_API_ACL_UDF_GET, SW_ACL_UDF_TYPE, sizeof(fal_acl_udf_type_t), SW_PARAM_PTR|SW_PARAM_OUT, "[udf_type]:"),\
     SW_PARAM_DEF(SW_API_ACL_UDF_GET, SW_UINT32, 4, SW_PARAM_PTR|SW_PARAM_OUT, "udf_offset"),
 
 #define SW_API_ACL_UDF_PROFILE_ENTRY_ADD_DESC \
@@ -1473,7 +1473,7 @@ extern "C" {
     SW_PARAM_DEF(SW_API_ACL_UDF_PROFILE_CFG_GET, SW_UINT32, 4, SW_PARAM_IN, "udf_profile"),\
     SW_PARAM_DEF(SW_API_ACL_UDF_PROFILE_CFG_GET, SW_UINT32, 4, SW_PARAM_IN, "udf_index"),\
     SW_PARAM_DEF(SW_API_ACL_UDF_PROFILE_CFG_GET, SW_ACL_UDF_TYPE, \
-        sizeof(fal_acl_udf_type_t), SW_PARAM_PTR|SW_PARAM_OUT, "udf_type"),\
+        sizeof(fal_acl_udf_type_t), SW_PARAM_PTR|SW_PARAM_OUT, "[udf_type]:"),\
     SW_PARAM_DEF(SW_API_ACL_UDF_PROFILE_CFG_GET, SW_UINT32, 4, \
         SW_PARAM_PTR|SW_PARAM_OUT, "udf_offset"),
 

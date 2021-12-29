@@ -5962,20 +5962,12 @@ cmd_data_print_acl_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf, a
         dprintf("\n[l3_type_incl]:yes");
         cmd_data_print_attr("l3_type", " [l3_type]:", &tmpdata, sizeof(tmpdata));
     }
-    else
-    {
-        dprintf("\n[l3_type]:all");
-    }
 
     if (FAL_FIELD_FLG_TST(entry->field_flag, FAL_ACL_UDF_PROFILE_ENTRY_FIELD_L4_TYPE))
     {
         tmpdata = entry->l4_type;
         dprintf("\n[l4_type_incl]:yes");
         cmd_data_print_attr("l4_type", " [l4_type]:", &tmpdata, sizeof(tmpdata));
-    }
-    else
-    {
-        dprintf("\n[l4_type]:all");
     }
     dprintf("\n");
     return;
@@ -37670,10 +37662,6 @@ cmd_data_print_tunnel_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf
         dprintf("\n[l3_type_incl]:yes");
         cmd_data_print_attr("l3_type", " [l3_type]:", &tmpdata, sizeof(tmpdata));
     }
-    else
-    {
-        dprintf("\n[l3_type]:all");
-    }
 
     if (FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_TST(entry->field_flag,
         FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_L4_TYPE))
@@ -37682,10 +37670,7 @@ cmd_data_print_tunnel_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf
         dprintf("\n[l4_type_incl]:yes");
         cmd_data_print_attr("l4_type", " [l4_type]:", &tmpdata, sizeof(tmpdata));
     }
-    else
-    {
-        dprintf("\n[l4_type]:all");
-    }
+
     if (FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_TST(entry->field_flag,
         FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_OVERLAY_TYPE))
     {
@@ -37693,20 +37678,13 @@ cmd_data_print_tunnel_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf
         dprintf("\n[overlay_type_incl]:yes");
         cmd_data_print_attr("tunnel_overlay_type", " [overlay_type]:", &tmpdata, sizeof(tmpdata));
     }
-    else
-    {
-        dprintf("\n[overlay_type]:all");
-    }
+
     if (FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_TST(entry->field_flag,
         FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_PROGRAM_TYPE))
     {
         tmpdata = entry->program_type;
         dprintf("\n[program_type_incl]:yes");
         cmd_data_print_attr("tunnel_program_type", " [program_type]:", &tmpdata, sizeof(tmpdata));
-    }
-    else
-    {
-        dprintf("\n[program_type]:all");
     }
     dprintf("\n");
     return;
@@ -38027,14 +38005,11 @@ cmd_data_check_tunnel_program_cfg(char * cmd_str, void * val, a_uint32_t size)
                                &tmpdata, sizeof(tmpdata)));
     entry.inner_type_mode = tmpdata & 0x1;
 
-    if(entry.inner_type_mode == 0)
-    {
-        cmd_data_check_element("inner hdr type", "ethernet",
-                           "usage: ethernet, ethernet-tag, ipv4, ipv6\n",
-                           cmd_data_check_attr, ("hdr_type", cmd,
-                                   &tmpdata, sizeof(tmpdata)));
-        entry.inner_hdr_type = tmpdata & 0x3;
-    }
+    cmd_data_check_element("inner hdr type", "ethernet",
+                       "usage: ethernet, ethernet-tag, ipv4, ipv6\n",
+                       cmd_data_check_attr, ("hdr_type", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.inner_hdr_type = tmpdata & 0x3;
 
     cmd_data_check_element("basic hdr length", "0",
                        "usage: the format is 0x0-0x7e or 0-126, must be even\n",
@@ -38089,12 +38064,9 @@ cmd_data_print_tunnel_program_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_ui
     tmpdata = entry->inner_type_mode;
     cmd_data_print_attr("tunnel_program_inner_type_mode", "  [inner_type_mode]:",
                     &tmpdata, sizeof(tmpdata));
-    if(entry->inner_type_mode == 0)
-    {
-        tmpdata = entry->inner_hdr_type;
-        cmd_data_print_attr("hdr_type", " [inner_type]:",
+    tmpdata = entry->inner_hdr_type;
+    cmd_data_print_attr("hdr_type", " [inner_type]:",
                     &tmpdata, sizeof(tmpdata));
-    }
     dprintf("\n[basic_hdr_len]:0x%x", entry->basic_hdr_len);
     tmpdata = entry->opt_len_unit;
     cmd_data_print_attr("tunnel_program_opt_len_unit", "  [opt_len_unit]:",
