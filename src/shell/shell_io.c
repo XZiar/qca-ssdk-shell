@@ -1,5 +1,8 @@
 /*
  * Copyright (c) 2014-2021, The Linux Foundation. All rights reserved.
+ *
+ * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -550,6 +553,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_ACL_UDF_TYPE, cmd_data_check_udf_type, cmd_data_print_udf_type),
     SW_TYPE_DEF(SW_ACL_UDF_PROFILE_ENTRY, cmd_data_check_acl_udf_profile_entry,
             cmd_data_print_acl_udf_profile_entry),
+    SW_TYPE_DEF(SW_ACL_MAC_ENTRY, cmd_data_check_acl_mac_entry, cmd_data_print_acl_mac_entry),
     SW_TYPE_DEF(SW_IP_HOSTENTRY, cmd_data_check_host_entry, cmd_data_print_host_entry),
     SW_TYPE_DEF(SW_ARP_LEARNMODE, cmd_data_check_arp_learn_mode, cmd_data_print_arp_learn_mode),
     SW_TYPE_DEF(SW_IP_GUARDMODE, cmd_data_check_ip_guard_mode, cmd_data_print_ip_guard_mode),
@@ -5971,6 +5975,65 @@ cmd_data_print_acl_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf, a
     }
     dprintf("\n");
     return;
+}
+
+sw_error_t
+cmd_data_check_acl_mac_entry(char *info, void *val, a_uint32_t size)
+{
+    char *cmd;
+    a_uint32_t tmp = 0;
+    fal_acl_mac_entry_t entry;
+    sw_error_t rv;
+
+    memset(&entry, 0, sizeof (fal_acl_mac_entry_t));
+
+    cmd_data_check_element("src mac addr", NULL,
+                               "usage: the format is xx-xx-xx-xx-xx-xx \n",
+                               cmd_data_check_macaddr, (cmd,
+                                       &(entry.src_mac),
+                                       sizeof(fal_mac_addr_t)));
+
+    do
+    {
+        cmd = get_sub_cmd("ifname", "eth0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: ifname \n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            strlcpy(entry.ifname, cmd, IFNAMSIZ);
+            rv = SW_OK;
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    cmd_data_check_element("acl_policy", "0", "usage: 0 deny, 1 accept\n",
+                           cmd_data_check_uint8, (cmd, &tmp, sizeof (tmp)));
+    entry.acl_policy = tmp;
+    *(fal_acl_mac_entry_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_acl_mac_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_acl_mac_entry_t *entry;
+
+    entry = (fal_acl_mac_entry_t *) buf;
+    dprintf("\n[acl mac entry]:");
+    cmd_data_print_macaddr("\n[mac_src_addr]:",
+                               (a_uint32_t *) &(entry->src_mac),
+                               sizeof (fal_mac_addr_t));
+    dprintf("\n[ifname]:%s", entry->ifname);
+    dprintf("\n[acl_policy]:0x%x", entry->acl_policy);
 }
 
 sw_error_t
