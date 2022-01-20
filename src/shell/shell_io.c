@@ -38153,7 +38153,7 @@ cmd_data_check_tunnel_program_udf(char * cmd_str, void * val, a_uint32_t size)
     memset(&entry, 0, sizeof (fal_tunnel_program_udf_t));
 
     /* get udf0 field configuration */
-    cmd_data_check_element("udf0", "no",
+    cmd_data_check_element("udf0 field", "no",
                        "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
                        (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if(tmpdata)
@@ -38173,7 +38173,7 @@ cmd_data_check_tunnel_program_udf(char * cmd_str, void * val, a_uint32_t size)
     }
 
     /* get udf1 field configuration */
-    cmd_data_check_element("udf1", "no",
+    cmd_data_check_element("udf1 field", "no",
                        "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
                        (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if(tmpdata)
@@ -38193,7 +38193,7 @@ cmd_data_check_tunnel_program_udf(char * cmd_str, void * val, a_uint32_t size)
     }
 
     /* get udf2 field configuration */
-    cmd_data_check_element("udf2", "no",
+    cmd_data_check_element("udf2 field", "no",
                        "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
                        (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if(tmpdata)
@@ -38255,8 +38255,8 @@ cmd_data_check_tunnel_program_udf(char * cmd_str, void * val, a_uint32_t size)
                         FAL_TUNNEL_PROGRAM_UDF_ACTION_UDF_HDR_LEN);
     }
 
-    /* get exceptioin en*/
-    cmd_data_check_element("exceptioin", "no", "usage: <yes/no/y/n>\n",
+    /* get exception en */
+    cmd_data_check_element("exception", "no", "usage: <yes/no/y/n>\n",
                        cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
                                sizeof (a_bool_t)));
 
@@ -38321,7 +38321,7 @@ cmd_data_print_tunnel_program_udf(a_uint8_t * param_name, a_uint32_t * buf, a_ui
     if (FAL_TUNNEL_PROGRAM_UDF_ACTION_FLG_TST(entry->action_flag,
                         FAL_TUNNEL_PROGRAM_UDF_ACTION_EXCEPTION_EN))
     {
-        dprintf("\n[exceptioin_en]:yes");
+        dprintf("\n[exception_en]:yes");
     }
     dprintf("\n");
     return;
