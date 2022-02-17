@@ -109,6 +109,7 @@ typedef struct {
 	a_bool_t cvlan_fmt; /*egress with cvlan tag of bridge, added for ipq95xx */
 	a_bool_t wifi_qos_en; /* enable wifi qos or not, added for ipq95xx */
 	a_uint32_t wifi_qos; /* wifi qos value, added for ipq95xx */
+	a_bool_t invalid; /* added for host data path */
 } fal_flow_entry_t;
 
 typedef struct {
@@ -165,7 +166,38 @@ enum  {
 	FUNC_FLOW_GLOBAL_CFG_GET,
 	FUNC_FLOW_GLOBAL_CFG_SET,
 	FUNC_FLOW_ENTRY_NEXT,
+	FUNC_FLOW_COUNTER_GET,
+	FUNC_FLOW_COUNTER_CLEANUP,
+	FUNC_FLOW_ENTRY_EN_SET,
+	FUNC_FLOW_ENTRY_EN_GET,
+	FUNC_FLOW_QOS_SET,
+	FUNC_FLOW_QOS_GET,
 };
+
+typedef struct {
+	a_uint32_t tree_id; /*for qos*/
+	a_bool_t wifi_qos_en; /* enable wifi qos or not, added for ipq95xx */
+	a_uint32_t wifi_qos; /* wifi qos value, added for ipq95xx */
+} fal_flow_qos_t;
+
+sw_error_t
+fal_flow_counter_get(a_uint32_t dev_id, a_uint32_t flow_index, fal_entry_counter_t *flow_counter);
+
+sw_error_t
+fal_flow_counter_cleanup(a_uint32_t dev_id, a_uint32_t flow_index);
+
+sw_error_t
+fal_flow_entry_en_set(a_uint32_t dev_id, a_uint32_t flow_index, a_bool_t enable);
+
+sw_error_t
+fal_flow_entry_en_get(a_uint32_t dev_id, a_uint32_t flow_index, a_bool_t *enable);
+
+sw_error_t
+fal_flow_qos_set(a_uint32_t dev_id, a_uint32_t flow_index, fal_flow_qos_t *flow_qos);
+
+sw_error_t
+fal_flow_qos_get(a_uint32_t dev_id, a_uint32_t flow_index, fal_flow_qos_t *flow_qos);
+
 
 sw_error_t
 fal_flow_status_set(a_uint32_t dev_id, a_bool_t enable);

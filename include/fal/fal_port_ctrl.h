@@ -360,6 +360,16 @@ enum
 	FUNC_ADPT_PORT_PROMISC_MODE_GET,
 	FUNC_ADPT_PORT_FLOWCTRL_FORCEMODE_SET,
 	FUNC_ADPT_PORT_FLOWCTRL_FORCEMODE_GET,
+	FUNC_ADPT_PORT_CNT_CFG_SET,
+	FUNC_ADPT_PORT_CNT_CFG_GET,
+	FUNC_ADPT_PORT_CNT_GET,
+	FUNC_ADPT_PORT_CNT_FLUSH,
+	FUNC_ADPT_PORT_8023AH_SET,
+	FUNC_ADPT_PORT_8023AH_GET,
+	FUNC_ADPT_PORT_MTU_CFG_SET,
+	FUNC_ADPT_PORT_MTU_CFG_GET,
+	FUNC_ADPT_PORT_MRU_MTU_SET,
+	FUNC_ADPT_PORT_MRU_MTU_GET,
 };
 
 	typedef enum {
@@ -384,11 +394,14 @@ enum
 	typedef struct {
 		a_uint32_t	mtu_size;
 		fal_mtu_action_t	action;
+	} fal_mtu_ctrl_t;
+
+	typedef struct {
 		a_bool_t	mtu_enable;/*add it for ipq95xx*/
 		fal_mtu_type_t	mtu_type;/*add it for ipq95xx*/
 		a_uint32_t	extra_header_len;/*add it for ipq95xx*/
 		a_uint32_t	eg_vlan_tag_flag;/*bit 0 ctag, bit 1 stag,add it for ipq95xx*/
-	} fal_mtu_ctrl_t;
+	} fal_mtu_cfg_t;
 
 	typedef struct {
 		a_uint32_t		mru_size;
@@ -415,6 +428,34 @@ enum
 		a_bool_t loopback_enable;
 	} fal_port_8023ah_ctrl_t;
 
+	typedef enum {
+		FAL_PORT_CNT_MODE_IP_PKT, /* the outer IP header + innder packet counted */
+		FAL_PORT_CNT_MODE_FULL_PKT, /* for RX, inner packet length,
+						  * for TX vport, the full packet(outer header + inner packet)
+						  * lenght counter */
+		FAL_PORT_CNT_MODE_BUTT,
+	} fal_port_cnt_mode_t;
+
+	typedef struct {
+		a_bool_t rx_cnt_en; /* Enable/disable port rx counter */
+		a_bool_t tl_rx_cnt_en; /* Enable/disable tunnel source port rx counter */
+		a_bool_t uc_tx_cnt_en; /* Enable/disable port unicast tx and l3_if tx counter */
+		a_bool_t mc_tx_cnt_en; /* Enable/disable physical port multicast tx counter */
+		fal_port_cnt_mode_t rx_cnt_mode; /* as described as fal_port_cnt_mode_t */
+		fal_port_cnt_mode_t tx_cnt_mode; /* as described as fal_port_cnt_mode_t */
+	} fal_port_cnt_cfg_t;
+
+	typedef struct {
+		a_uint32_t rx_pkt_cnt; /* rx packet counter */
+		a_uint64_t rx_byte_cnt; /* rx byte counter */
+		a_uint32_t rx_drop_pkt_cnt; /* rx drop packet counter */
+		a_uint64_t rx_drop_byte_cnt; /* rx drop byte counter */
+		a_uint32_t tx_pkt_cnt; /* tx packet counter */
+		a_uint64_t tx_byte_cnt; /* tx byte counter */
+		a_uint32_t tx_drop_pkt_cnt; /* tx drop packet counter */
+		a_uint64_t tx_drop_byte_cnt; /* tx drop byte counter */
+	} fal_port_cnt_t;
+
 	sw_error_t
 	fal_port_max_frame_size_set(a_uint32_t dev_id, fal_port_t port_id,
 			a_uint32_t max_frame);
@@ -438,6 +479,20 @@ enum
 	sw_error_t
 	fal_port_mru_get(a_uint32_t dev_id, fal_port_t port_id,
 			fal_mru_ctrl_t *ctrl);
+	sw_error_t
+	fal_port_mtu_cfg_set(a_uint32_t dev_id, fal_port_t port_id,
+			fal_mtu_cfg_t *mtu_cfg);
+
+	sw_error_t
+	fal_port_mtu_cfg_get(a_uint32_t dev_id, fal_port_t port_id,
+			fal_mtu_cfg_t *mtu_cfg);
+	sw_error_t
+	fal_port_mru_mtu_set(a_uint32_t dev_id, fal_port_t port_id,
+			a_uint32_t mru_size, a_uint32_t mtu_size);
+
+	sw_error_t
+	fal_port_mru_mtu_get(a_uint32_t dev_id, fal_port_t port_id,
+			a_uint32_t *mru_size, a_uint32_t *mtu_size);
 /*qca808x_start*/
     sw_error_t
     fal_port_duplex_set(a_uint32_t dev_id, fal_port_t port_id,
@@ -806,6 +861,18 @@ sw_error_t
 fal_ring_flow_ctrl_config_get(a_uint32_t dev_id, a_uint32_t ring_id, a_bool_t *status);
 sw_error_t
 fal_ring_flow_ctrl_config_set(a_uint32_t dev_id, a_uint32_t ring_id, a_bool_t status);
+sw_error_t
+fal_port_cnt_cfg_set(a_uint32_t dev_id, fal_port_t port_id, fal_port_cnt_cfg_t *cnt_cfg);
+
+sw_error_t
+fal_port_cnt_cfg_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_cnt_cfg_t *cnt_cfg);
+
+sw_error_t
+fal_port_cnt_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_cnt_t *port_cnt);
+
+sw_error_t
+fal_port_cnt_flush(a_uint32_t dev_id, fal_port_t port_id);
+
 /*qca808x_start*/
 #ifdef __cplusplus
 }

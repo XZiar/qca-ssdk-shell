@@ -257,12 +257,6 @@ typedef struct {
 	a_uint16_t vpn_id; /* vpn id, added for ipq95xx */
 } fal_intf_entry_t;
 
-typedef struct
-{
-	a_bool_t l3_if_valid; /*0 for disable and 1 for enable*/
-	a_uint32_t l3_if_index; /*index for interface table*/        	  
-} fal_intf_id_t;
-
 typedef enum
 {
 	FAL_NEXTHOP_L3 = 0,
@@ -363,7 +357,28 @@ enum {
 	FUNC_IP_NEXTHOP_SET,
 	FUNC_IP_GLOBAL_CTRL_GET,
 	FUNC_IP_GLOBAL_CTRL_SET,
+	FUNC_IP_INTF_MTU_MRU_SET,
+	FUNC_IP_INTF_MTU_MRU_GET,
+	FUNC_IP6_INTF_MTU_MRU_SET,
+	FUNC_IP6_INTF_MTU_MRU_GET,
+	FUNC_IP_INTF_MACADDR_ADD,
+	FUNC_IP_INTF_MACADDR_DEL,
+	FUNC_IP_INTF_MACADDR_GET_FIRST,
+	FUNC_IP_INTF_MACADDR_GET_NEXT,
+	FUNC_IP_INTF_DMAC_CHECK_SET,
+	FUNC_IP_INTF_DMAC_CHECK_GET,
 };
+
+typedef enum {
+	FAL_IP_BOTH = 0,
+	FAL_IP_INGRESS,
+	FAL_IP_EGRESS,
+} fal_ip_direction_t;
+
+typedef struct {
+	fal_ip_direction_t direction;
+	fal_mac_addr_t mac_addr; /* mac address */
+} fal_intf_macaddr_t;
 
     sw_error_t
     fal_ip_host_add(a_uint32_t dev_id, fal_host_entry_t * host_entry);
@@ -639,6 +654,36 @@ fal_ip_global_ctrl_get(a_uint32_t dev_id, fal_ip_global_cfg_t *cfg);
 
 sw_error_t
 fal_ip_global_ctrl_set(a_uint32_t dev_id, fal_ip_global_cfg_t *cfg);
+
+sw_error_t
+fal_ip_intf_mtu_mru_set(a_uint32_t dev_id, a_uint32_t l3_if, a_uint32_t mtu, a_uint32_t mru);
+
+sw_error_t
+fal_ip_intf_mtu_mru_get(a_uint32_t dev_id, a_uint32_t l3_if, a_uint32_t *mtu, a_uint32_t *mru);
+
+sw_error_t
+fal_ip6_intf_mtu_mru_set(a_uint32_t dev_id, a_uint32_t l3_if, a_uint32_t mtu, a_uint32_t mru);
+
+sw_error_t
+fal_ip6_intf_mtu_mru_get(a_uint32_t dev_id, a_uint32_t l3_if, a_uint32_t *mtu, a_uint32_t *mru);
+
+sw_error_t
+fal_ip_intf_macaddr_add(a_uint32_t dev_id, a_uint32_t l3_if, fal_intf_macaddr_t *mac);
+
+sw_error_t
+fal_ip_intf_macaddr_del(a_uint32_t dev_id, a_uint32_t l3_if, fal_intf_macaddr_t *mac);
+
+sw_error_t
+fal_ip_intf_macaddr_get_first(a_uint32_t dev_id, a_uint32_t l3_if, fal_intf_macaddr_t *mac);
+
+sw_error_t
+fal_ip_intf_macaddr_get_next(a_uint32_t dev_id, a_uint32_t l3_if, fal_intf_macaddr_t *mac);
+
+sw_error_t
+fal_ip_intf_dmac_check_set(a_uint32_t dev_id, a_uint32_t l3_if, a_bool_t enable);
+
+sw_error_t
+fal_ip_intf_dmac_check_get(a_uint32_t dev_id, a_uint32_t l3_if, a_bool_t *enable);
 
 #ifdef __cplusplus
 }

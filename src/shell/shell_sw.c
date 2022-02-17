@@ -1,5 +1,8 @@
 /*
  * Copyright (c) 2014, 2016-2018, The Linux Foundation. All rights reserved.
+ *
+ * Copyright (c) 2021 Qualcomm Innovation Center, Inc. All rights reserved.
+ *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -11,6 +14,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
 /*qca808x_start*/
 #include <stdio.h>
 #include "shell.h"
@@ -1155,6 +1159,59 @@ cmd_show_acl_udf_profile_entry(a_ulong_t *arg_val)
 		cmd_print_error(rtn);
 	} else {
 		dprintf("\nacl udf profile total %d entries\n", cnt);
+	}
+
+	return SW_OK;
+}
+
+sw_error_t
+cmd_show_ptp_timestamp(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t port_id, direction, seq_id;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_ptp_pkt_info_t *pkt_info = (fal_ptp_pkt_info_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+	fal_ptp_time_t *ptp_time = (fal_ptp_time_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size +
+			(sizeof(fal_ptp_pkt_info_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(pkt_info, sizeof(fal_ptp_pkt_info_t));
+	aos_mem_zero(ptp_time, sizeof(fal_ptp_time_t));
+
+	port_id = arg_val[1];
+	direction = arg_val[2];
+	seq_id = 0;
+
+	if (direction != FAL_RX_DIRECTION &&
+			direction != FAL_TX_DIRECTION) {
+		return SW_BAD_PARAM;
+	}
+
+	while (seq_id < 4) {
+		pkt_info->msg_type = FAL_PTP_MSG_INVALID;
+		pkt_info->sequence_id = seq_id;
+
+		arg_val[0] = SW_API_PTP_TIMESTAMP_GET;
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = port_id;
+		arg_val[4] = direction;
+		arg_val[5] = (a_ulong_t)pkt_info;
+		arg_val[6] = (a_ulong_t)ptp_time;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+		seq_id++;
+	}
+
+	if((rtn != SW_OK) && (rtn != SW_NOT_FOUND)) {
+		cmd_print_error(rtn);
+	} else {
+		dprintf("\ntimestamped total %d entries\n", seq_id);
 	}
 
 	return SW_OK;

@@ -802,6 +802,48 @@ fal_port_mru_get(a_uint32_t dev_id, fal_port_t port_id,
 }
 
 sw_error_t
+fal_port_mtu_cfg_set(a_uint32_t dev_id, fal_port_t port_id,
+                       fal_mtu_cfg_t *mtu_cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_MTU_CFG_SET, dev_id, port_id, mtu_cfg);
+    return rv;
+}
+
+sw_error_t
+fal_port_mtu_cfg_get(a_uint32_t dev_id, fal_port_t port_id,
+                       fal_mtu_cfg_t *mtu_cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_MTU_CFG_GET, dev_id, port_id, mtu_cfg);
+    return rv;
+}
+
+sw_error_t
+fal_port_mru_mtu_set(a_uint32_t dev_id, fal_port_t port_id,
+                       a_uint32_t mru_size, a_uint32_t mtu_size)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_MRU_MTU_SET, dev_id, port_id, mru_size,
+        mtu_size);
+    return rv;
+}
+
+sw_error_t
+fal_port_mru_mtu_get(a_uint32_t dev_id, fal_port_t port_id,
+                       a_uint32_t *mru_size, a_uint32_t *mtu_size)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_MRU_MTU_GET, dev_id, port_id, mru_size,
+        mtu_size);
+    return rv;
+}
+
+sw_error_t
 fal_port_source_filter_enable(a_uint32_t dev_id, fal_port_t port_id,
                        a_bool_t enable)
 {
@@ -991,11 +1033,31 @@ fal_ring_flow_ctrl_status_get(a_uint32_t dev_id, a_uint32_t ring_id, a_bool_t *s
 }
 
 sw_error_t
+fal_port_cnt_cfg_set(a_uint32_t dev_id, fal_port_t port_id, fal_port_cnt_cfg_t *cnt_cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_CNT_CFG_SET, dev_id, port_id, cnt_cfg);
+
+	return rv;
+}
+
+sw_error_t
 fal_ring_union_set(a_uint32_t dev_id, a_bool_t en)
 {
 	sw_error_t rv;
 
 	rv = sw_uk_exec(SW_API_PT_RING_UNION_SET, dev_id, en);
+
+	return rv;
+}
+
+sw_error_t
+fal_port_cnt_cfg_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_cnt_cfg_t *cnt_cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_CNT_CFG_GET, dev_id, port_id, cnt_cfg);
 
 	return rv;
 }
@@ -1011,11 +1073,31 @@ fal_ring_union_get(a_uint32_t dev_id, a_bool_t *en)
 }
 
 sw_error_t
+fal_port_cnt_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_cnt_t *port_cnt)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_CNT_GET, dev_id, port_id, port_cnt);
+
+	return rv;
+}
+
+sw_error_t
 fal_ring_flow_ctrl_config_set(a_uint32_t dev_id, a_uint32_t ring_id, a_bool_t status)
 {
 	sw_error_t rv;
 
 	rv = sw_uk_exec(SW_API_PT_RING_FLOW_CTRL_SET, dev_id, ring_id, status);
+
+	return rv;
+}
+
+sw_error_t
+fal_port_cnt_flush(a_uint32_t dev_id, fal_port_t port_id)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_CNT_FLUSH, dev_id, port_id);
 
 	return rv;
 }

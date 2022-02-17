@@ -274,7 +274,8 @@ static void cmd_data_print_vsi_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_ip_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_IP_GLOBAL_CTRL_SET+1] ={
+
+	char *func_name[FUNC_IP_INTF_DMAC_CHECK_GET+1] ={
 		"FUNC_IP_NETWORK_ROUTE_GET",
 		"FUNC_IP_HOST_ADD",
 		"FUNC_IP_VSI_SG_CFG_GET",
@@ -307,12 +308,22 @@ static void cmd_data_print_ip_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_IP_PORT_ARP_SG_CFG_GET",
 		"FUNC_IP_NEXTHOP_SET",
 		"FUNC_IP_GLOBAL_CTRL_GET",
-		"FUNC_IP_GLOBAL_CTRL_SET"
+		"FUNC_IP_GLOBAL_CTRL_SET",
+		"FUNC_IP_INTF_MTU_MRU_SET",
+		"FUNC_IP_INTF_MTU_MRU_GET",
+		"FUNC_IP6_INTF_MTU_MRU_SET",
+		"FUNC_IP6_INTF_MTU_MRU_GET",
+		"FUNC_IP_INTF_MACADDR_ADD",
+		"FUNC_IP_INTF_MACADDR_DEL",
+		"FUNC_IP_INTF_MACADDR_GET_FIRST",
+		"FUNC_IP_INTF_MACADDR_GET_NEXT",
+		"FUNC_IP_INTF_DMAC_CHECK_SET",
+		"FUNC_IP_INTF_DMAC_CHECK_GET",
 	};
 
-	for(func = FUNC_IP_NETWORK_ROUTE_GET; func <= FUNC_IP_GLOBAL_CTRL_SET; func++)
+	for(func = FUNC_IP_NETWORK_ROUTE_GET; func <= FUNC_IP_INTF_DMAC_CHECK_GET; func++)
 	{
-		if (p->bitmap[0] & (1<<func))
+		if(p->bitmap[func/32] & ((1 << (func % 32))))
 		{
 			dprintf("%d  %s  registered\n", func, func_name[func]);
 		}
@@ -321,18 +332,14 @@ static void cmd_data_print_ip_func_ctrl(fal_func_ctrl_t *p)
 			dprintf("%d  %s  unregistered\n", func, func_name[func]);
 		}
 	}
-	func = FUNC_IP_GLOBAL_CTRL_SET;
-	if (p->bitmap[1] & (1 << (func % 32)))
-		dprintf("%d  %s  registered\n", func, func_name[func]);
-	else
-		dprintf("%d  %s  unregistered\n", func, func_name[func]);
+
 	return;
 }
 
 static void cmd_data_print_flow_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_FLOW_ENTRY_NEXT+1] ={
+	char *func_name[FUNC_FLOW_QOS_GET+1] ={
 		"FUNC_FLOW_HOST_ADD",
 		"FUNC_FLOW_ENTRY_GET",
 		"FUNC_FLOW_ENTRY_DEL",
@@ -347,10 +354,16 @@ static void cmd_data_print_flow_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_FLOW_ENTRY_ADD",
 		"FUNC_FLOW_GLOBAL_CFG_GET",
 		"FUNC_FLOW_GLOBAL_CFG_SET",
-		"FUNC_FLOW_ENTRY_NEXT"
+		"FUNC_FLOW_ENTRY_NEXT",
+		"FUNC_FLOW_COUNTER_GET",
+		"FUNC_FLOW_COUNTER_CLEANUP",
+		"FUNC_FLOW_ENTRY_EN_SET",
+		"FUNC_FLOW_ENTRY_EN_GET",
+		"FUNC_FLOW_QOS_SET",
+		"FUNC_FLOW_QOS_GET",
 	};
 
-	for(func = FUNC_FLOW_HOST_ADD; func <= FUNC_FLOW_ENTRY_NEXT; func++)
+	for(func = FUNC_FLOW_HOST_ADD; func <= FUNC_FLOW_QOS_GET; func++)
 	{
 		if(p->bitmap[0] & (1 << func))
 		{
@@ -581,15 +594,19 @@ static void cmd_data_print_rss_hash_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_pppoe_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_PPPOE_EN_GET+1] ={
+	char *func_name[FUNC_PPPOE_GLOBAL_CTRL_GET+1] ={
 		"FUNC_PPPOE_SESSION_TABLE_ADD",
 		"FUNC_PPPOE_SESSION_TABLE_DEL",
 		"FUNC_PPPOE_SESSION_TABLE_GET",
 		"FUNC_PPPOE_EN_SET",
-		"FUNC_PPPOE_EN_GET"
+		"FUNC_PPPOE_EN_GET",
+		"FUNC_PPPOE_L3_INTF_SET",
+		"FUNC_PPPOE_L3_INTF_GET",
+		"FUNC_PPPOE_GLOBAL_CTRL_SET",
+		"FUNC_PPPOE_GLOBAL_CTRL_GET",
 	};
 
-	for(func = FUNC_PPPOE_SESSION_TABLE_ADD; func <= FUNC_PPPOE_EN_GET; func++)
+	for(func = FUNC_PPPOE_SESSION_TABLE_ADD; func <= FUNC_PPPOE_GLOBAL_CTRL_GET; func++)
 	{
 		if(p->bitmap[0] & (1 << func))
 		{
@@ -606,7 +623,7 @@ static void cmd_data_print_pppoe_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_ADPT_PORT_FLOWCTRL_FORCEMODE_GET+1] ={
+	char *func_name[FUNC_ADPT_PORT_MRU_MTU_GET+1] ={
 		"FUNC_ADPT_PORT_LOCAL_LOOPBACK_GET",
 		"FUNC_ADPT_PORT_AUTONEG_RESTART",
 		"FUNC_ADPT_PORT_DUPLEX_SET",
@@ -680,6 +697,15 @@ static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_ADPT_PORT_PROMISC_MODE_GET",
 		"FUNC_ADPT_PORT_FLOWCTRL_FORCEMODE_SET",
 		"FUNC_ADPT_PORT_FLOWCTRL_FORCEMODE_GET",
+		"FUNC_ADPT_PORT_CNT_CFG_SET",
+		"FUNC_ADPT_PORT_CNT_CFG_GET",
+		"FUNC_ADPT_PORT_CNT_GET",
+		"FUNC_ADPT_PORT_CNT_FLUSH",
+		"FUNC_ADPT_PORT_8023AH_SET",
+		"FUNC_ADPT_PORT_8023AH_GET",
+		"FUNC_ADPT_PORT_MTU_CFG_SET",
+		"FUNC_ADPT_PORT_MTU_CFG_GET",
+		"FUNC_ADPT_PORT_MRU_MTU_GET",
 	};
 
 	for(func = FUNC_ADPT_PORT_LOCAL_LOOPBACK_GET; func <= FUNC_ADPT_PORT_LINK_STATUS_GET; func++)
@@ -706,7 +732,7 @@ static void cmd_data_print_port_ctrl_func_ctrl(fal_func_ctrl_t *p)
 		}
 	}
 
-	for(func = FUNC_ADPT_PORT_INTERFACE_MODE_APPLY; func <= FUNC_ADPT_PORT_FLOWCTRL_FORCEMODE_GET; func++)
+	for(func = FUNC_ADPT_PORT_INTERFACE_MODE_APPLY; func <= FUNC_ADPT_PORT_MRU_MTU_GET; func++)
 	{
 		if(p->bitmap[2] & (1<<(func % 32)))
 		{
@@ -1085,18 +1111,14 @@ static void cmd_data_print_policer_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_vport_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_VPORT_CNT_GET+1] = {
+	char *func_name[FUNC_VPORT_STATE_CHECK_GET+1] = {
 		"FUNC_VPORT_PHYSICAL_PORT_SET",
 		"FUNC_VPORT_PHYSICAL_PORT_GET",
 		"FUNC_VPORT_STATE_CHECK_SET",
 		"FUNC_VPORT_STATE_CHECK_GET",
-		"FUNC_VPORT_CNT_CFG_SET",
-		"FUNC_VPORT_CNT_CFG_GET",
-		"FUNC_VPORT_CNT_FLUSH",
-		"FUNC_VPORT_CNT_GET",
 	};
 
-	for(func = FUNC_VPORT_PHYSICAL_PORT_SET; func <= FUNC_VPORT_CNT_GET; func++)
+	for(func = FUNC_VPORT_PHYSICAL_PORT_SET; func <= FUNC_VPORT_STATE_CHECK_GET; func++)
 	{
 		if(p->bitmap[0] & (1<<func))
 		{
@@ -1113,7 +1135,7 @@ static void cmd_data_print_vport_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_tunnel_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_TUNNEL_EXP_DECAP_GET+1] = {
+	char *func_name[FUNC_TUNNEL_DECAP_COUNTER_GET+1] = {
 		"FUNC_TUNNEL_INTF_SET",
 		"FUNC_TUNNEL_INTF_GET",
 		"FUNC_TUNNEL_ENCAP_RULE_ENTRY_SET",
@@ -1154,9 +1176,15 @@ static void cmd_data_print_tunnel_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_TUNNEL_UDF_PROFILE_CFG_GET",
 		"FUNC_TUNNEL_EXP_DECAP_SET",
 		"FUNC_TUNNEL_EXP_DECAP_GET",
+		"FUNC_TUNNEL_DECAP_KEY_SET",
+		"FUNC_TUNNEL_DECAP_KEY_GET",
+		"FUNC_TUNNEL_DECAP_EN_SET",
+		"FUNC_TUNNEL_DECAP_EN_GET",
+		"FUNC_TUNNEL_DECAP_ACTION_UPDATE",
+		"FUNC_TUNNEL_DECAP_COUNTER_GET",
 	};
 
-	for(func = FUNC_TUNNEL_INTF_SET; func <= FUNC_TUNNEL_EXP_DECAP_GET; func++)
+	for(func = FUNC_TUNNEL_INTF_SET; func <= FUNC_TUNNEL_DECAP_COUNTER_GET; func++)
 	{
 		if(p->bitmap[func/32] & ((1 << (func % 32))))
 		{
