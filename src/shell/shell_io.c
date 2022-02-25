@@ -1,5 +1,8 @@
 /*
  * Copyright (c) 2014-2021, The Linux Foundation. All rights reserved.
+ *
+ * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -11,6 +14,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
 /*qca808x_start*/
 #include <stdio.h>
 #include "shell_io.h"
@@ -24,7 +28,7 @@
     do { if ((rtn) == NULL) return SW_BAD_PARAM; } while(0);
 
 #define DEFAULT_FLAG "default"
-#define MAX_ARRT_NUM 32
+#define MAX_ARRT_NUM 16
 #define INVALID_ARRT_VALUE 0xFFFFFFFF
 static char **full_cmdstrp;
 static int talk_mode = 1;
@@ -550,6 +554,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_ACL_UDF_TYPE, cmd_data_check_udf_type, cmd_data_print_udf_type),
     SW_TYPE_DEF(SW_ACL_UDF_PROFILE_ENTRY, cmd_data_check_acl_udf_profile_entry,
             cmd_data_print_acl_udf_profile_entry),
+    SW_TYPE_DEF(SW_ACL_MAC_ENTRY, cmd_data_check_acl_mac_entry, cmd_data_print_acl_mac_entry),
     SW_TYPE_DEF(SW_IP_HOSTENTRY, cmd_data_check_host_entry, cmd_data_print_host_entry),
     SW_TYPE_DEF(SW_ARP_LEARNMODE, cmd_data_check_arp_learn_mode, cmd_data_print_arp_learn_mode),
     SW_TYPE_DEF(SW_IP_GUARDMODE, cmd_data_check_ip_guard_mode, cmd_data_print_ip_guard_mode),
@@ -5962,10 +5967,6 @@ cmd_data_print_acl_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf, a
         dprintf("\n[l3_type_incl]:yes");
         cmd_data_print_attr("l3_type", " [l3_type]:", &tmpdata, sizeof(tmpdata));
     }
-    else
-    {
-        dprintf("\n[l3_type]:all");
-    }
 
     if (FAL_FIELD_FLG_TST(entry->field_flag, FAL_ACL_UDF_PROFILE_ENTRY_FIELD_L4_TYPE))
     {
@@ -5973,12 +5974,67 @@ cmd_data_print_acl_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf, a
         dprintf("\n[l4_type_incl]:yes");
         cmd_data_print_attr("l4_type", " [l4_type]:", &tmpdata, sizeof(tmpdata));
     }
-    else
-    {
-        dprintf("\n[l4_type]:all");
-    }
     dprintf("\n");
     return;
+}
+
+sw_error_t
+cmd_data_check_acl_mac_entry(char *info, void *val, a_uint32_t size)
+{
+    char *cmd;
+    a_uint32_t tmp = 0;
+    fal_acl_mac_entry_t entry;
+    sw_error_t rv;
+
+    memset(&entry, 0, sizeof (fal_acl_mac_entry_t));
+
+    cmd_data_check_element("src mac addr", NULL,
+                               "usage: the format is xx-xx-xx-xx-xx-xx \n",
+                               cmd_data_check_macaddr, (cmd,
+                                       &(entry.src_mac),
+                                       sizeof(fal_mac_addr_t)));
+
+    do
+    {
+        cmd = get_sub_cmd("ifname", "eth0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: ifname \n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            strlcpy(entry.ifname, cmd, IFNAMSIZ);
+            rv = SW_OK;
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    cmd_data_check_element("acl_policy", "0", "usage: 0 deny, 1 accept\n",
+                           cmd_data_check_uint8, (cmd, &tmp, sizeof (tmp)));
+    entry.acl_policy = tmp;
+    *(fal_acl_mac_entry_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_acl_mac_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_acl_mac_entry_t *entry;
+
+    entry = (fal_acl_mac_entry_t *) buf;
+    dprintf("\n[acl mac entry]:");
+    cmd_data_print_macaddr("\n[mac_src_addr]:",
+                               (a_uint32_t *) &(entry->src_mac),
+                               sizeof (fal_mac_addr_t));
+    dprintf("\n[ifname]:%s", entry->ifname);
+    dprintf("\n[acl_policy]:0x%x", entry->acl_policy);
 }
 
 sw_error_t
@@ -31543,16 +31599,17 @@ cmd_data_check_ptp_pkt_info(char *info, void *val, a_uint32_t size)
 }
 
 void
-cmd_data_print_ptp_pkt_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+cmd_data_print_ptp_pkt_info(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size)
 {
 	fal_ptp_pkt_info_t *entry;
 
-	entry = (fal_ptp_pkt_info_t *) buf;
-	dprintf("[sequence_id]:%s\n", entry->sequence_id);
-	dprintf("[clock_identify]:0x%llx\n", entry->clock_identify);
-	dprintf("[port_number]:%d [msg_type]:%d\n", entry->port_number, entry->msg_type);
-	dprintf("\n");
+	dprintf("\n[%s] \n", param_name);
 
+	entry = (fal_ptp_pkt_info_t *) buf;
+	dprintf("[sequence_id]:%lx\n", entry->sequence_id);
+	dprintf("[clock_identify]:0x%llx\n", entry->clock_identify);
+	dprintf("[port_number]:0x%x\n", entry->port_number);
+	dprintf("[msg_type]:0x%x\n", entry->msg_type);
 }
 
 sw_error_t
@@ -37670,10 +37727,6 @@ cmd_data_print_tunnel_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf
         dprintf("\n[l3_type_incl]:yes");
         cmd_data_print_attr("l3_type", " [l3_type]:", &tmpdata, sizeof(tmpdata));
     }
-    else
-    {
-        dprintf("\n[l3_type]:all");
-    }
 
     if (FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_TST(entry->field_flag,
         FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_L4_TYPE))
@@ -37682,10 +37735,7 @@ cmd_data_print_tunnel_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf
         dprintf("\n[l4_type_incl]:yes");
         cmd_data_print_attr("l4_type", " [l4_type]:", &tmpdata, sizeof(tmpdata));
     }
-    else
-    {
-        dprintf("\n[l4_type]:all");
-    }
+
     if (FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_TST(entry->field_flag,
         FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_OVERLAY_TYPE))
     {
@@ -37693,20 +37743,13 @@ cmd_data_print_tunnel_udf_profile_entry(a_uint8_t * param_name, a_uint32_t * buf
         dprintf("\n[overlay_type_incl]:yes");
         cmd_data_print_attr("tunnel_overlay_type", " [overlay_type]:", &tmpdata, sizeof(tmpdata));
     }
-    else
-    {
-        dprintf("\n[overlay_type]:all");
-    }
+
     if (FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_FLG_TST(entry->field_flag,
         FAL_TUNNEL_UDF_PROFILE_ENTRY_FIELD_PROGRAM_TYPE))
     {
         tmpdata = entry->program_type;
         dprintf("\n[program_type_incl]:yes");
         cmd_data_print_attr("tunnel_program_type", " [program_type]:", &tmpdata, sizeof(tmpdata));
-    }
-    else
-    {
-        dprintf("\n[program_type]:all");
     }
     dprintf("\n");
     return;
@@ -38027,14 +38070,11 @@ cmd_data_check_tunnel_program_cfg(char * cmd_str, void * val, a_uint32_t size)
                                &tmpdata, sizeof(tmpdata)));
     entry.inner_type_mode = tmpdata & 0x1;
 
-    if(entry.inner_type_mode == 0)
-    {
-        cmd_data_check_element("inner hdr type", "ethernet",
-                           "usage: ethernet, ethernet-tag, ipv4, ipv6\n",
-                           cmd_data_check_attr, ("hdr_type", cmd,
-                                   &tmpdata, sizeof(tmpdata)));
-        entry.inner_hdr_type = tmpdata & 0x3;
-    }
+    cmd_data_check_element("inner hdr type", "ethernet",
+                       "usage: ethernet, ethernet-tag, ipv4, ipv6\n",
+                       cmd_data_check_attr, ("hdr_type", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.inner_hdr_type = tmpdata & 0x3;
 
     cmd_data_check_element("basic hdr length", "0",
                        "usage: the format is 0x0-0x7e or 0-126, must be even\n",
@@ -38089,12 +38129,9 @@ cmd_data_print_tunnel_program_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_ui
     tmpdata = entry->inner_type_mode;
     cmd_data_print_attr("tunnel_program_inner_type_mode", "  [inner_type_mode]:",
                     &tmpdata, sizeof(tmpdata));
-    if(entry->inner_type_mode == 0)
-    {
-        tmpdata = entry->inner_hdr_type;
-        cmd_data_print_attr("hdr_type", " [inner_type]:",
+    tmpdata = entry->inner_hdr_type;
+    cmd_data_print_attr("hdr_type", " [inner_type]:",
                     &tmpdata, sizeof(tmpdata));
-    }
     dprintf("\n[basic_hdr_len]:0x%x", entry->basic_hdr_len);
     tmpdata = entry->opt_len_unit;
     cmd_data_print_attr("tunnel_program_opt_len_unit", "  [opt_len_unit]:",
@@ -38118,7 +38155,7 @@ cmd_data_check_tunnel_program_udf(char * cmd_str, void * val, a_uint32_t size)
     memset(&entry, 0, sizeof (fal_tunnel_program_udf_t));
 
     /* get udf0 field configuration */
-    cmd_data_check_element("udf0", "no",
+    cmd_data_check_element("udf0 field", "no",
                        "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
                        (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if(tmpdata)
@@ -38138,7 +38175,7 @@ cmd_data_check_tunnel_program_udf(char * cmd_str, void * val, a_uint32_t size)
     }
 
     /* get udf1 field configuration */
-    cmd_data_check_element("udf1", "no",
+    cmd_data_check_element("udf1 field", "no",
                        "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
                        (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if(tmpdata)
@@ -38158,7 +38195,7 @@ cmd_data_check_tunnel_program_udf(char * cmd_str, void * val, a_uint32_t size)
     }
 
     /* get udf2 field configuration */
-    cmd_data_check_element("udf2", "no",
+    cmd_data_check_element("udf2 field", "no",
                        "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
                        (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if(tmpdata)
@@ -38220,8 +38257,8 @@ cmd_data_check_tunnel_program_udf(char * cmd_str, void * val, a_uint32_t size)
                         FAL_TUNNEL_PROGRAM_UDF_ACTION_UDF_HDR_LEN);
     }
 
-    /* get exceptioin en*/
-    cmd_data_check_element("exceptioin", "no", "usage: <yes/no/y/n>\n",
+    /* get exception en */
+    cmd_data_check_element("exception", "no", "usage: <yes/no/y/n>\n",
                        cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
                                sizeof (a_bool_t)));
 
@@ -38286,7 +38323,7 @@ cmd_data_print_tunnel_program_udf(a_uint8_t * param_name, a_uint32_t * buf, a_ui
     if (FAL_TUNNEL_PROGRAM_UDF_ACTION_FLG_TST(entry->action_flag,
                         FAL_TUNNEL_PROGRAM_UDF_ACTION_EXCEPTION_EN))
     {
-        dprintf("\n[exceptioin_en]:yes");
+        dprintf("\n[exception_en]:yes");
     }
     dprintf("\n");
     return;
