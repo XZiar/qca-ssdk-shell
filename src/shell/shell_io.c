@@ -306,6 +306,16 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"rtc_src_type",
+		{
+			{"pre", FAL_PTP_RTC_SRC_PRE_PORT},
+			{"mht", FAL_PTP_RTC_SRC_MHT_PORT},
+			{"ext", FAL_PTP_RTC_SRC_EXT},
+			{"dis", FAL_PTP_RTC_SRC_DIS},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -819,6 +829,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_TUNNEL_DECAP_ACTION, cmd_data_check_tunnel_action,
 		    cmd_data_print_tunnel_action),
     SW_TYPE_DEF(SW_PPE_CAPACITY, NULL, cmd_data_print_ppe_capacity),
+    SW_TYPE_DEF(SW_RTC_SRC_TYPE, cmd_data_check_rtc_src_type, cmd_data_print_rtc_src_type),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -31620,7 +31631,7 @@ cmd_data_print_ptp_pkt_info(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t s
 	dprintf("\n[%s] \n", param_name);
 
 	entry = (fal_ptp_pkt_info_t *) buf;
-	dprintf("[sequence_id]:%lx\n", entry->sequence_id);
+	dprintf("[sequence_id]:0x%lx\n", entry->sequence_id);
 	dprintf("[clock_identify]:0x%llx\n", entry->clock_identify);
 	dprintf("[port_number]:0x%x\n", entry->port_number);
 	dprintf("[msg_type]:0x%x\n\n", entry->msg_type);
@@ -40858,6 +40869,26 @@ cmd_data_print_ppe_capacity(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t si
 	dprintf("[queues_capacity]:%d\n", entry->queue_caps);
 	dprintf("[service_codes_capacity]:%d\n", entry->service_code_caps);
 	dprintf("[pppoe_session_capacity]:%d\n", entry->pppoe_session_caps);
+
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_rtc_src_type(char *cmd_str, fal_ptp_rtc_src_type_t *arg_val, a_uint32_t size)
+{
+	return cmd_data_check_attr("rtc_src_type", cmd_str,
+			arg_val, sizeof(*arg_val));
+}
+
+void
+cmd_data_print_rtc_src_type(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_ptp_rtc_src_type_t *rtc_src_type;
+
+	rtc_src_type = (fal_ptp_rtc_src_type_t *)buf;
+
+	cmd_data_print_attr("rtc_src_type", "[rtc_src_type]:",
+			rtc_src_type, sizeof(fal_ptp_rtc_src_type_t));
 
 	dprintf("\n");
 }

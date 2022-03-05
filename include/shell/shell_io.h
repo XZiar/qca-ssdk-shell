@@ -1330,6 +1330,11 @@ cmd_data_print_tunnel_action(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t s
 
 void
 cmd_data_print_ppe_capacity(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_rtc_src_type(char *cmd_str, fal_ptp_rtc_src_type_t *arg_val, a_uint32_t size);
+void
+cmd_data_print_rtc_src_type(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
 /* auto_insert_flag */
 
 /*qca808x_start*/
