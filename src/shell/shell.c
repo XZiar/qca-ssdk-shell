@@ -645,7 +645,10 @@ cmd_init(void)
     int dev_id_value = 0;
     if((dev_id_fd = fopen(dev_id_path, "r")) != NULL)
     {
-        fscanf(dev_id_fd, "%d", &dev_id_value);
+        if (1 != fscanf(dev_id_fd, "%d", &dev_id_value))
+        {
+            dprintf("\n fail to get dev_id_value!");
+        }
     }
 
     set_devid(dev_id_value);
