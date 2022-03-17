@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
  *
- * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2022, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -11,10 +11,9 @@
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
- * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-
 
 /*qca808x_start*/
 #ifndef _FAL_API_H_
@@ -78,6 +77,13 @@ extern "C" {
     SW_API_DEF(SW_API_PT_CONGESTION_DROP_GET, fal_port_congestion_drop_get), \
     SW_API_DEF(SW_API_PT_RING_FLOW_CTRL_THRES_SET, fal_ring_flow_ctrl_thres_set), \
     SW_API_DEF(SW_API_PT_RING_FLOW_CTRL_THRES_GET, fal_ring_flow_ctrl_thres_get), \
+    SW_API_DEF(SW_API_PT_RING_FLOW_CTRL_STATUS_GET, fal_ring_flow_ctrl_status_get), \
+    SW_API_DEF(SW_API_PT_RING_UNION_SET, fal_ring_union_set), \
+    SW_API_DEF(SW_API_PT_RING_UNION_GET, fal_ring_union_get), \
+    SW_API_DEF(SW_API_PT_FLOW_CTRL_THRES_SET, fal_port_flow_ctrl_thres_set), \
+    SW_API_DEF(SW_API_PT_FLOW_CTRL_THRES_GET, fal_port_flow_ctrl_thres_get), \
+    SW_API_DEF(SW_API_PT_RING_FLOW_CTRL_SET, fal_ring_flow_ctrl_config_set), \
+    SW_API_DEF(SW_API_PT_RING_FLOW_CTRL_GET, fal_ring_flow_ctrl_config_get), \
 /*qca808x_start*/\
     SW_API_DEF(SW_API_PT_8023AZ_SET, fal_port_8023az_set), \
     SW_API_DEF(SW_API_PT_8023AZ_GET, fal_port_8023az_get), \
@@ -195,6 +201,13 @@ extern "C" {
     SW_API_DESC(SW_API_PT_CONGESTION_DROP_GET) \
     SW_API_DESC(SW_API_PT_RING_FLOW_CTRL_THRES_SET) \
     SW_API_DESC(SW_API_PT_RING_FLOW_CTRL_THRES_GET) \
+    SW_API_DESC(SW_API_PT_RING_FLOW_CTRL_STATUS_GET) \
+    SW_API_DESC(SW_API_PT_RING_UNION_SET) \
+    SW_API_DESC(SW_API_PT_RING_UNION_GET) \
+    SW_API_DESC(SW_API_PT_FLOW_CTRL_THRES_SET) \
+    SW_API_DESC(SW_API_PT_FLOW_CTRL_THRES_GET) \
+    SW_API_DESC(SW_API_PT_RING_FLOW_CTRL_SET) \
+    SW_API_DESC(SW_API_PT_RING_FLOW_CTRL_GET) \
 /*qca808x_start*/\
     SW_API_DESC(SW_API_PT_8023AZ_SET) \
     SW_API_DESC(SW_API_PT_8023AZ_GET) \

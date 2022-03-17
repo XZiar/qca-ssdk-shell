@@ -31609,7 +31609,13 @@ cmd_data_print_ptp_pkt_info(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t s
 	dprintf("[sequence_id]:%lx\n", entry->sequence_id);
 	dprintf("[clock_identify]:0x%llx\n", entry->clock_identify);
 	dprintf("[port_number]:0x%x\n", entry->port_number);
-	dprintf("[msg_type]:0x%x\n", entry->msg_type);
+	dprintf("[msg_type]:0x%x\n\n", entry->msg_type);
+
+	dprintf("[domain_number]:0x%x ", entry->domain_number);
+	dprintf("[minor_ver_ptp]:0x%x ", entry->minor_ver);
+	dprintf("[major_sdoid]:0x%x ", entry->major_sdoid);
+	dprintf("[minor_sdoid]:0x%x ", entry->minor_sdoid);
+	dprintf("[msgtype_spec]:0x%x\n", entry->msgtype_spec);
 }
 
 sw_error_t
