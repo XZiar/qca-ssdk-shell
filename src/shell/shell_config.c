@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
  *
- * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2022, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -11,9 +11,10 @@
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
- * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+
 /*qca808x_start*/
 #include "shell_config.h"
 #include "shell_sw.h"
@@ -123,11 +124,31 @@ struct cmd_des_t gcmd_des[] =
                 NULL},
             {"congedrop", "get", "get congestion drop of port queue",
                 "<port_id> <queue_id>", SW_API_PT_CONGESTION_DROP_GET, NULL},
-                {"ringfcthres", "set", "set ring flow ctrl of ring",
-                "<ring_id> <on_thres> <off_thres>", SW_API_PT_RING_FLOW_CTRL_THRES_SET,
-                NULL},
-            {"ringfcthres", "get", "get ring flow ctrl of ring", "<ring_id>",
-                SW_API_PT_RING_FLOW_CTRL_THRES_GET, NULL},
+	    {"ringfcthres", "set", "set ring flow ctrl threshold",
+		    "<ring_id:0-7 for port0, 8-15 for port5> <on_thres> <off_thres>",
+		    SW_API_PT_RING_FLOW_CTRL_THRES_SET, NULL},
+            {"ringfcthres", "get", "get ring flow ctrl threshold",
+		    "<ring_id:0-7 for port0, 8-15 for port5>",
+		    SW_API_PT_RING_FLOW_CTRL_THRES_GET, NULL},
+            {"ptfcthres", "set", "set port flow ctrl threshold",
+		    "<port_id> <on_thres> <off_thres>",
+		    SW_API_PT_FLOW_CTRL_THRES_SET, NULL},
+            {"ptfcthres", "get", "get port flow ctrl threshold",
+		    "<port_id>",
+		    SW_API_PT_FLOW_CTRL_THRES_GET, NULL},
+            {"ringfcstatus", "get", "get ring backpressure status",
+		    "<ring_id:0-7 for port0, 8-15 for port5>",
+		    SW_API_PT_RING_FLOW_CTRL_STATUS_GET, NULL},
+            {"ringunion", "set", "set ring union for port0 and port5",
+		    "<enable/disable>", SW_API_PT_RING_UNION_SET, NULL},
+            {"ringunion", "get", "get ring union for port0 and port5",
+		    "", SW_API_PT_RING_UNION_GET, NULL},
+            {"ringfcen", "set", "set ring flow contrl config for port0 and port5",
+		    "<ring_id:0-7 for port0, 8-15 for port5> <enable/disable>",
+		    SW_API_PT_RING_FLOW_CTRL_SET, NULL},
+            {"ringfcen", "get", "get ring flow contrl config for port0 and port5",
+		    "<ring_id:0-7 for port0, 8-15 for port5>",
+		    SW_API_PT_RING_FLOW_CTRL_GET, NULL},
 /*qca808x_start*/
             {"Ieee8023az", "set", "set 8023az status of a port", "<port_id> <enable|disable>",
                 SW_API_PT_8023AZ_SET, NULL},

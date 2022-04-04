@@ -1,5 +1,8 @@
 /*
  * Copyright (c) 2014, 2017-2019, 2021, The Linux Foundation. All rights reserved.
+ *
+ * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+ *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -25,8 +28,8 @@ extern "C" {
 /*qca808x_end*/
 #include "fal_led.h"
 
-#define SSDK_MIN_VIRTUAL_PORT_ID    64
-#define SSDK_MAX_VIRTUAL_PORT_ID    255
+#define SSDK_MIN_VIRTUAL_PORT_ID	64
+#define SSDK_MAX_VIRTUAL_PORT_ID	255
 
 #define SSDK_MAX_VIRTUAL_PORT_NUM   \
 	(SSDK_MAX_VIRTUAL_PORT_ID-SSDK_MIN_VIRTUAL_PORT_ID+1)
@@ -128,6 +131,7 @@ extern "C" {
 	    CHIP_HPPE,
 	    CHIP_SCOMPHY,
 	    CHIP_APPE,
+	    CHIP_MHT,
     } ssdk_chip_type;
 /*qca808x_end*/
     typedef struct
@@ -257,7 +261,7 @@ typedef struct
         a_bool_t in_interfacectrl;
     } ssdk_features;
 /*qca808x_start*/
-#define CFG_STR_SIZE 20
+#define CFG_STR_SIZE	20
     typedef struct
     {
         a_uint8_t build_ver[CFG_STR_SIZE];

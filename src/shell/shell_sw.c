@@ -62,6 +62,7 @@ cmd_show_fdb(a_ulong_t *arg_val)
 {
     if ((ssdk_cfg.init_cfg.chip_type == CHIP_ISISC) ||
 		    (ssdk_cfg.init_cfg.chip_type == CHIP_ISIS) ||
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_MHT) ||
 		    (ssdk_cfg.init_cfg.chip_type == CHIP_DESS) ||
 		    (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) ||
 		    (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE)) {
@@ -208,6 +209,7 @@ cmd_show_vlan(a_ulong_t *arg_val)
 	switch (ssdk_cfg.init_cfg.chip_type) {
 		case CHIP_ISIS:
 		case CHIP_ISISC:
+		case CHIP_MHT:
 		case CHIP_DESS:
 			tmp_vid = FAL_NEXT_ENTRY_FIRST_ID;
 			break;
