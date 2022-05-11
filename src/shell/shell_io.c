@@ -15946,6 +15946,8 @@ cmd_data_check_sec_tcp(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
         *arg_val = FAL_NROM_TCP_RST_SCAN_CMD;
     else if (!strcasecmp(cmd_str, "rst_with_data"))
         *arg_val = FAL_NROM_TCP_RST_WITH_DATA_CMD;
+    else if (!strcasecmp(cmd_str, "syn_with_data"))
+        *arg_val = FAL_NROM_TCP_SYN_WITH_DATA_CMD;
     else if (!strcasecmp(cmd_str, "fa_block"))
         *arg_val = FAL_NROM_TCP_FA_BLOCK_CMD;
     else if (!strcasecmp(cmd_str, "pa_block"))
