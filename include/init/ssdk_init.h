@@ -134,6 +134,8 @@ extern "C" {
 	    CHIP_MHT,
     } ssdk_chip_type;
 /*qca808x_end*/
+#define MPPE_REVISION		0x1
+
     typedef struct
     {
         a_uint32_t  cpu_bmp;

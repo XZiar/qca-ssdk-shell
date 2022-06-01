@@ -22059,11 +22059,13 @@ sw_error_t
 cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 {
     char *cmd;
-    a_uint32_t tmp;
+    a_uint32_t tmp = 0;
     sw_error_t rv;
     fal_flow_entry_t entry;
+    fal_flow_qos_t *flow_qos;
 
     aos_mem_zero(&entry, sizeof (fal_flow_entry_t));
+    flow_qos = &(entry.flow_qos);
 
     do
     {
@@ -22777,7 +22779,7 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint32(cmd, &(entry.tree_id), sizeof (a_uint32_t));
+            rv = cmd_data_check_uint32(cmd, &(flow_qos->tree_id), sizeof (a_uint32_t));
             if (SW_OK != rv)
                 dprintf("usage: tree id \n");
         }
@@ -22938,7 +22940,7 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 			    rv = SW_BAD_VALUE;
 		    }
 		    else {
-			    rv = cmd_data_check_confirm(cmd, A_TRUE, &(entry.wifi_qos_en),
+			    rv = cmd_data_check_confirm(cmd, A_TRUE, &(flow_qos->wifi_qos_en),
 					    sizeof (a_bool_t));
 			    if (SW_OK != rv)
 				    dprintf("usage: <yes/no/y/n>\n");
@@ -22957,11 +22959,28 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 			    rv = SW_BAD_VALUE;
 		    }
 		    else {
-			    rv = cmd_data_check_uint32(cmd, &(entry.wifi_qos), sizeof(a_uint32_t));
+			    rv = cmd_data_check_uint32(cmd, &(flow_qos->wifi_qos), sizeof(a_uint32_t));
 			    if (SW_OK != rv)
 				    dprintf("usage: wifi qos profile\n");
 		    }
 	    } while (talk_mode && (SW_OK != rv));
+
+	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+		    cmd_data_check_element("qos_type", "0",
+				    "usage: 0 for tree_id, 1 for flowcookie\n",
+				    cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		    flow_qos->qos_type = tmp;
+
+		    cmd_data_check_element("bridge_nexthop_valid", "no",
+				    "usage: <yes/no/y/n>\n",
+				    cmd_data_check_confirm, (cmd, A_FALSE, &entry.bridge_nexthop_valid,
+					    sizeof(a_bool_t)));
+
+		    cmd_data_check_element("bridge_nexthop", "0",
+				    "usage: nexthop of bridge type\n",
+				    cmd_data_check_uint16, (cmd, &tmp, sizeof(a_uint16_t)));
+		    entry.bridge_nexthop = tmp;
+	    }
     }
 
     *(fal_flow_entry_t *)val = entry;
@@ -22972,8 +22991,10 @@ void
 cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 {
     fal_flow_entry_t *entry;
+    fal_flow_qos_t *flow_qos;
 
     entry = (fal_flow_entry_t *) buf;
+    flow_qos = &(entry->flow_qos);
 
     dprintf("\n[entry_id]:0x%x [entry_type]:0x%x [host_addr_type]:0x%x [host_addr_index]:0x%x ",
 		    entry->entry_id, entry->entry_type,
@@ -22993,16 +23014,24 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     dprintf("\n[syn_toggle]:0x%x [pri_profile]:0x%x [sevice_code]:0x%x [ip_type]:0x%x \
 		    [src_port]:0x%x [dst_port]:0x%x [tree_id]:0x%x ",
 		    entry->syn_toggle, entry->pri_profile, entry->sevice_code,
-		    entry->ip_type, entry->src_port, entry->dst_port, entry->tree_id);
+		    entry->ip_type, entry->src_port, entry->dst_port, flow_qos->tree_id);
     if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
 	    dprintf("\n[pmtu_check_l3]:0x%x [pmtu]:0x%x [vpn_id]:0x%x",
 			    entry->pmtu_check_l3, entry->pmtu, entry->vpn_id);
 	    dprintf("\n[bridge_vlan_format_valid]:0x%x [bridge_svlan_format]:0x%x \
 			    [bridge_cvlan_format]:0x%x",
 			    entry->vlan_fmt_valid, entry->svlan_fmt, entry->cvlan_fmt);
-	    cmd_data_print_confirm(" [wifi_qos_en]:", entry->wifi_qos_en, sizeof(a_bool_t));
-	    dprintf(" [wifi_qos]:%d", entry->wifi_qos);
+	    cmd_data_print_confirm(" [wifi_qos_en]:", flow_qos->wifi_qos_en, sizeof(a_bool_t));
+	    dprintf(" [wifi_qos]:0x%x", flow_qos->wifi_qos);
+
+	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+		    dprintf(" [qos_type]:0x%x", flow_qos->qos_type);
+		    cmd_data_print_confirm(" [bridge_nexthop_valid]:",
+				    entry->bridge_nexthop_valid, sizeof(a_bool_t));
+		    dprintf(" [bridge_nexthop]:0x%x", entry->bridge_nexthop);
+	    }
     }
+
     if ((entry->entry_type & FAL_FLOW_IP4_5TUPLE_ADDR) ||
 		    (entry->entry_type & FAL_FLOW_IP4_3TUPLE_ADDR)) {
         cmd_data_print_ip4addr("\n[ip_addr]:",
@@ -40537,6 +40566,7 @@ cmd_data_check_flow_qos(char *cmd_str, fal_flow_qos_t *arg_val, a_uint32_t size)
 {
 	char *cmd;
 	fal_flow_qos_t entry;
+	a_uint32_t tmp = 0;
 
 	aos_mem_zero(&entry, sizeof(fal_flow_qos_t));
 
@@ -40555,6 +40585,13 @@ cmd_data_check_flow_qos(char *cmd_str, fal_flow_qos_t *arg_val, a_uint32_t size)
 			cmd_data_check_uint32,
 			(cmd, &(entry.wifi_qos), sizeof(entry.wifi_qos)));
 
+	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+		cmd_data_check_element("qos_type", "0",
+				"usage: 0 for tree_id, 1 for flowcookie\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.qos_type = tmp;
+	}
+
 	*arg_val = entry;
 
 	return SW_OK;
@@ -40572,6 +40609,11 @@ cmd_data_print_flow_qos(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 	cmd_data_print_uint32("tree_id", &entry->tree_id, sizeof(entry->tree_id));
 	cmd_data_print_enable("wifi_qos_en", &entry->wifi_qos_en, sizeof(entry->wifi_qos_en));
 	cmd_data_print_uint32("wifi_qos", &entry->wifi_qos, sizeof(entry->wifi_qos));
+
+	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+		cmd_data_print_uint8("qos_type", (a_uint32_t *)&entry->qos_type,
+				sizeof(a_uint32_t));
+	}
 
 	dprintf("\n");
 }
