@@ -1,18 +1,18 @@
 /*
  * Copyright (c) 2014, 2016-2017, 2021, The Linux Foundation. All rights reserved.
- *
  * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
  *
- * Permission to use, copy, modify, and/or distribute this software for
- * any purpose with or without fee is hereby granted, provided that the
- * above copyright notice and this permission notice appear in all copies.
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
- * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
 
@@ -670,8 +670,8 @@ typedef struct
 	/*fields of VLAN rule*/
         a_bool_t vsi_valid;
         a_uint8_t vsi_valid_mask;
-        a_uint8_t vsi; /*0-31*/
-        a_uint8_t vsi_mask; /*0-31*/
+        a_uint8_t vsi;
+        a_uint8_t vsi_mask;
         /*fields of L2 MISC rule*/
         a_uint16_t pppoe_sessionid;
         a_uint16_t pppoe_sessionid_mask;
