@@ -1,5 +1,8 @@
 /*
  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+ *
+ * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+ *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -494,4 +497,22 @@ fal_ptp_interrupt_get(a_uint32_t dev_id, a_uint32_t port_id,
     return rv;
 }
 
+sw_error_t
+fal_ptp_rtc_sync_set(a_uint32_t dev_id, a_uint32_t port_id,
+		fal_ptp_rtc_src_type_t src_type, a_uint32_t src_id)
+{
+	sw_error_t rv;
 
+	rv = sw_uk_exec(SW_API_PTP_RTC_SYNC_SET, dev_id, port_id, src_type, src_id);
+	return rv;
+}
+
+sw_error_t
+fal_ptp_rtc_sync_get(a_uint32_t dev_id, a_uint32_t port_id,
+		fal_ptp_rtc_src_type_t *src_type, a_uint32_t *src_id)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PTP_RTC_SYNC_GET, dev_id, port_id, src_type, src_id);
+	return rv;
+}
