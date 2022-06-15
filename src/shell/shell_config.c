@@ -1557,6 +1557,11 @@ struct cmd_des_t gcmd_des[] =
 				"<port_id>", SW_API_PTP_INTERRUPT_SET, NULL},
 			{"Interrupt", "get", "get PTP Interrupt mask",
 				"<port_id>", SW_API_PTP_INTERRUPT_GET, NULL},
+			{"RtcSync", "set", "set PTP RTC sync config",
+				"<port_id> <rtc_src_type> <src_id>",
+				SW_API_PTP_RTC_SYNC_SET, NULL},
+			{"RtcSync", "get", "get PTP RTC sync config",
+				"<port_id>", SW_API_PTP_RTC_SYNC_GET, NULL},
 			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
 		},
 	},
