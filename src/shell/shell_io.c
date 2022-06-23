@@ -7402,6 +7402,30 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                            cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
                                    0x0));
             entry->policy_id= tmpdata & 0xffff;
+
+            if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION)
+            {
+                /*cookie value configuration*/
+                cmd_data_check_element("cookie value", "0",
+                           "usage: the format is 0x0-0xffff or 0-65535\n",
+                           cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
+                                   0x0));
+                entry->cookie_val= tmpdata & 0xffff;
+
+                /*cookie priority configuration*/
+                cmd_data_check_element("cookie priority", "0",
+                           "usage: the format is 0x0-0xf or 0-15\n",
+                            cmd_data_check_integer, (cmd, &tmpdata, 0xf,
+                                    0x0));
+                entry->cookie_pri = tmpdata & 0xf;
+
+                /*meta data priority configuration*/
+                cmd_data_check_element("meta data priority", "0",
+                           "usage: the format is 0x0-0xf or 0-15\n",
+                            cmd_data_check_integer, (cmd, &tmpdata, 0xf,
+                                    0x0));
+                entry->metadata_pri = tmpdata & 0xf;
+            }
         }
     }
 
@@ -8711,6 +8735,12 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
         if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
         {
             dprintf("\n[policy_id]:0x%x", rule->policy_id);
+            if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION)
+            {
+                dprintf("\n[cookie_val]:0x%x", rule->cookie_val);
+                dprintf("\n[cookie_pri]:%d", rule->cookie_pri);
+                dprintf("\n[meta_data_pri]:%d", rule->metadata_pri);
+            }
         }
     }
     else
