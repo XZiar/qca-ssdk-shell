@@ -38899,6 +38899,46 @@ cmd_data_check_mapt_decap_entry(char *cmd_str, void *arg_val, a_uint32_t size)
 		}
 	} while (talk_mode && (SW_OK != rv));
 
+	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+		do {
+			cmd = get_sub_cmd("service_code_en", "n");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4)) {
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4)) {
+				dprintf("usage: <yes/no/y/n>\n");
+				rv = SW_BAD_VALUE;
+			}
+			else {
+				rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.service_code_en),
+						sizeof(a_bool_t));
+				if (SW_OK != rv)
+					dprintf("usage: <yes/no/y/n>\n");
+			}
+		} while(talk_mode && (SW_OK != rv));
+
+		do {
+			cmd = get_sub_cmd("service_code", "0");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4)) {
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4)) {
+				dprintf("usage: updated service code\n");
+				rv = SW_BAD_VALUE;
+			}
+			else {
+				rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+				if (SW_OK != rv)
+					dprintf("usage: updated service code\n");
+				else
+					entry.service_code = tmp;
+			}
+		} while(talk_mode && (SW_OK != rv));
+	}
 	*(fal_mapt_decap_entry_t *)arg_val = entry;
 
 	return SW_OK;
@@ -38950,6 +38990,12 @@ cmd_data_print_mapt_decap_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_
 	dprintf(" [edit_rule_id]:%d", entry->edit_rule_id);
 	dprintf(" [exp_profile]:%d", entry->exp_profile);
 	dprintf("\n");
+	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+		cmd_data_print_confirm("[service_code_en]", entry->service_code_en,
+			sizeof(entry->service_code_en));
+		dprintf(" [service_code]:%d", entry->service_code);
+		dprintf("\n");
+	}
 	dprintf("[hit_pkt_counter]:%ld", entry->pkt_counter);
 	dprintf(" [hit_byte_counter]:%lld", entry->byte_counter);
 	dprintf("\n");
