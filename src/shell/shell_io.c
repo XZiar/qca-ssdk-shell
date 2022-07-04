@@ -37170,6 +37170,27 @@ cmd_data_check_tunnel_encap_entry(char *cmd_str, fal_tunnel_encap_cfg_t *arg_val
 		}
 	} while(talk_mode && (SW_OK != rv));
 
+	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+		do {
+			cmd = get_sub_cmd("mapt_udp_csm0_keep", "n");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4)) {
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4)) {
+				dprintf("usage: <yes/no/y/n>\n");
+				rv = SW_BAD_VALUE;
+			}
+			else {
+				rv = cmd_data_check_confirm(cmd, A_FALSE,
+						&(entry.mapt_udp_csm0_keep), sizeof(a_bool_t));
+				if (SW_OK != rv)
+					dprintf("usage: <yes/no/y/n>\n");
+			}
+		} while(talk_mode && (SW_OK != rv));
+	}
+
 	do {
 		cmd = get_sub_cmd("eg_header_data", "0x0");
 		SW_RTN_ON_NULL_PARAM(cmd);
@@ -37266,8 +37287,12 @@ cmd_data_print_tunnel_encap_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint3
 
 	cmd_data_print_confirm(" [vport_en]", entry->vport_en,
 			sizeof(entry->vport_en));
-	dprintf(" [cpu_vport]:%d\n\n", entry->vport);
-
+	dprintf(" [cpu_vport]:%d", entry->vport);
+	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+			cmd_data_print_confirm(" [mapt_udp_csm0_keep]", entry->mapt_udp_csm0_keep,
+			sizeof(entry->mapt_udp_csm0_keep));
+	}
+	dprintf("\n\n");
 	dprintf("[eg_header_data]:");
 
 	for (bytes= 0; bytes< FAL_TUNNEL_ENCAP_HEADER_MAX_LEN; bytes++) {
