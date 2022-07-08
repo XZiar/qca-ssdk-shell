@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
- *
  * Copyright (c) 2021-2022, Qualcomm Innovation Center, Inc. All rights reserved.
  *
- * Permission to use, copy, modify, and/or distribute this software for
- * any purpose with or without fee is hereby granted, provided that the
- * above copyright notice and this permission notice appear in all copies.
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
@@ -1309,6 +1309,8 @@ struct cmd_des_t gcmd_des[] =
             {"Config", "get", "get a servcode config by index", "<servcode_index>", SW_API_SERVCODE_CONFIG_GET, NULL},
             {"Loopcheck", "set", "set servcode loopcheck status", "<enable|disable>", SW_API_SERVCODE_LOOPCHECK_EN, NULL},
             {"Loopcheck", "get", "get servcode loopcheck status", "", SW_API_SERVCODE_LOOPCHECK_STATUS_GET, NULL},
+            {"portServcode", "set", "set port servcode", "<port_id> <servcode_id>", SW_API_PORT_SERVCODE_SET, NULL},
+            {"portServcode", "get", "get port servcode", "<port_id>", SW_API_PORT_SERVCODE_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },
