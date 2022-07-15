@@ -40909,4 +40909,5 @@ cmd_data_print_rtc_src_type(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t si
 	dprintf("\n");
 }
 
+
 /* auto_insert_flag_1 */
