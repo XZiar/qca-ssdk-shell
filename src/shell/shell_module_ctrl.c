@@ -1,5 +1,7 @@
 /*
  * Copyright (c) 2016-2018, 2021, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -1281,7 +1283,7 @@ static void cmd_data_print_tunnel_program_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_mapt_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_MAPT_DECAP_ENTRY_GETNEXT+1] = {
+	char *func_name[FUNC_MAPT_DECAP_EN_GET+1] = {
 		"FUNC_MAPT_DECAP_CTRL_SET",
 		"FUNC_MAPT_DECAP_CTRL_GET",
 		"FUNC_MAPT_DECAP_RULE_ENTRY_SET",
@@ -1291,9 +1293,11 @@ static void cmd_data_print_mapt_func_ctrl(fal_func_ctrl_t *p)
 		"FUNC_MAPT_DECAP_ENTRY_DEL",
 		"FUNC_MAPT_DECAP_ENTRY_GETFIRST",
 		"FUNC_MAPT_DECAP_ENTRY_GETNEXT",
+		"FUNC_MAPT_DECAP_EN_SET",
+		"FUNC_MAPT_DECAP_EN_GET",
 	};
 
-	for(func = FUNC_MAPT_DECAP_CTRL_SET; func <= FUNC_MAPT_DECAP_ENTRY_GETNEXT; func++)
+	for(func = FUNC_MAPT_DECAP_CTRL_SET; func <= FUNC_MAPT_DECAP_EN_GET; func++)
 	{
 		if(p->bitmap[0] & (1<<func))
 		{

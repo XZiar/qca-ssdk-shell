@@ -38891,6 +38891,7 @@ cmd_data_print_mapt_decap_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_
                                sizeof (fal_ip6_addr_t));
 
 	dprintf(" [prefix_len]:%d", entry->ip6_prefix_len);
+	dprintf(" [entry_index]:%d", entry->entry_index);
 	dprintf("\n");
 
 	dprintf("[svlan_check_en]:%s ",

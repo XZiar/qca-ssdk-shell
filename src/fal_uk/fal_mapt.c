@@ -1,5 +1,6 @@
 /*
 * Copyright (c) 2021, The Linux Foundation. All rights reserved.
+* Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
 *
 * Permission to use, copy, modify, and/or distribute this software for any
 * purpose with or without fee is hereby granted, provided that the above
@@ -110,6 +111,26 @@ fal_mapt_decap_entry_getnext(a_uint32_t dev_id, fal_mapt_decap_entry_t *mapt_ent
 	sw_error_t rv;
 
 	rv = sw_uk_exec(SW_API_MAPT_DECAP_ENTRY_GETNEXT, dev_id, mapt_entry);
+
+	return rv;
+}
+
+sw_error_t
+fal_mapt_decap_en_set(a_uint32_t dev_id, a_uint32_t mapt_index, a_bool_t en)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_MAPT_DECAP_EN_SET, dev_id, mapt_index, en);
+
+	return rv;
+}
+
+sw_error_t
+fal_mapt_decap_en_get(a_uint32_t dev_id, a_uint32_t mapt_index, a_bool_t *en)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_MAPT_DECAP_EN_GET, dev_id, mapt_index, en);
 
 	return rv;
 }

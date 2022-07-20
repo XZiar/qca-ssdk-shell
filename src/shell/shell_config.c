@@ -1814,6 +1814,10 @@ struct cmd_des_t gcmd_des[] =
 				SW_API_MAPT_DECAP_ENTRY_GETNEXT, NULL},
 			{"decap_entry", "show", "show mapt decap entries", "",
 				SW_CMD_MAPT_ENTRY_SHOW, cmd_show_mapt_entry},
+			{"decap_en", "set", "set decap enable",
+				"<mapt_index> <enable>", SW_API_MAPT_DECAP_EN_SET, NULL},
+			{"decap_en", "get", "get decap enable",
+				"<mapt_index>", SW_API_MAPT_DECAP_EN_GET, NULL},
 			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
 		},
 	},
