@@ -292,9 +292,9 @@ struct attr_des_t g_attr_des[] =
 
 		"direction",
 		{
-			{"both", FAL_IP_BOTH},
-			{"ingress", FAL_IP_INGRESS},
-			{"egress", FAL_IP_EGRESS},
+			{"both", FAL_DIR_BOTH},
+			{"ingress", FAL_DIR_INGRESS},
+			{"egress", FAL_DIR_EGRESS},
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
@@ -321,6 +321,24 @@ struct attr_des_t g_attr_des[] =
 		{
 			{"tnl_decap_src_vp", FAL_QINQ_SEL_TNL_DECAP_SRC_VP},
 			{"org_src_port", FAL_QINQ_SEL_ORG_SRC_PORT},
+		}
+	},
+	{
+		"athtag_version",
+		{
+			{"v2", FAL_ATHTAG_VER2},
+			{"v3", FAL_ATHTAG_VER3},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
+		"athtag_action",
+		{
+			{"normal", FAL_ATHTAG_ACTION_NORMAL},
+			{"read_write_reg", FAL_ATHTAG_ACTION_READ_WRITE_REG},
+			{"disable_learn", FAL_ATHTAG_ACTION_DISABLE_LEARN},
+			{"disable_offload", FAL_ATHTAG_ACTION_DISABLE_OFFLOAD},
+			{"disable_learn_offload", FAL_ATHTAG_ACTION_DISABLE_LEARN_OFFLOAD},
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
@@ -843,6 +861,13 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_QM_CLASS, cmd_data_check_queue_class, cmd_data_print_queue_config),
     SW_TYPE_DEF(SW_QM_QBASE, cmd_data_check_queue_base, cmd_data_print_queue_config),
     SW_TYPE_DEF(SW_QM_HASH, cmd_data_check_queue_hash, cmd_data_print_queue_config),
+    SW_TYPE_DEF(SW_DIRECTION, cmd_data_check_direction, NULL),
+    SW_TYPE_DEF(SW_ATHTAG_PRI_MAPPING, cmd_data_check_athtag_pri_mapping,
+		    cmd_data_print_athtag_pri_mapping),
+    SW_TYPE_DEF(SW_ATHTAG_PORT_MAPPING, cmd_data_check_athtag_port_mapping,
+		    cmd_data_print_athtag_port_mapping),
+    SW_TYPE_DEF(SW_ATHTAG_RX_CFG, cmd_data_check_athtag_rx_cfg, cmd_data_print_athtag_rx_cfg),
+    SW_TYPE_DEF(SW_ATHTAG_TX_CFG, cmd_data_check_athtag_tx_cfg, cmd_data_print_athtag_tx_cfg),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -41165,4 +41190,187 @@ cmd_data_check_queue_hash(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
 	return cmd_data_check_queue_config(cmd_str, "rss_hash", arg_val);
 }
 
+sw_error_t
+cmd_data_check_direction(char * cmd_str, a_uint32_t * arg_val, a_uint32_t size)
+{
+    return cmd_data_check_attr("direction", cmd_str,
+                    arg_val, sizeof(*arg_val));
+}
+
+sw_error_t
+cmd_data_check_athtag_pri_mapping(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_athtag_pri_mapping_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_athtag_pri_mapping_t));
+
+    dprintf("\n");
+
+    cmd_data_check_element("ath pri", "0",
+                       "usage: priority in ath header,"
+                       "the format is 0x0-0x7 or 0-7\n",
+                       cmd_data_check_integer, (cmd, &tmpdata,
+                               0x7, 0x0));
+    entry.ath_pri = tmpdata;
+
+    cmd_data_check_element("int pri", "0",
+                       "usage: internal priority,"
+                       "the format is 0x0-0xf or 0-15\n",
+                       cmd_data_check_integer, (cmd, &tmpdata,
+                               0xf, 0x0));
+    entry.int_pri = tmpdata;
+
+    *(fal_athtag_pri_mapping_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_athtag_pri_mapping(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_athtag_pri_mapping_t *entry;
+
+    entry = (fal_athtag_pri_mapping_t *) buf;
+
+    dprintf("\n[ath_pri]:%d", entry->ath_pri);
+    dprintf("\n[int_pri]:%d\n", entry->int_pri);
+}
+
+sw_error_t
+cmd_data_check_athtag_port_mapping(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_athtag_port_mapping_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_athtag_port_mapping_t));
+
+    dprintf("\n");
+
+    cmd_data_check_element("ath port", "0",
+                        "usage: input port number such as 1,2\n",
+                        cmd_data_check_portmap, (cmd, &entry.ath_port,
+                        sizeof (fal_pbmp_t)));
+
+    cmd_data_check_element("int port", "0",
+                       "usage: port or vport number\n",
+                       cmd_data_check_integer, (cmd, &tmpdata,
+                               0xffffffff, 0x0));
+    entry.int_port = tmpdata;
+
+    *(fal_athtag_port_mapping_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_athtag_port_mapping(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_athtag_port_mapping_t *entry;
+
+    entry = (fal_athtag_port_mapping_t *) buf;
+
+    cmd_data_print_portmap("\n[ath_port]:", entry->ath_port, sizeof (fal_pbmp_t));
+    dprintf("\n[int_port]:%d\n", entry->int_port);
+}
+
+sw_error_t
+cmd_data_check_athtag_rx_cfg(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_athtag_rx_cfg_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_athtag_rx_cfg_t));
+
+    dprintf("\n");
+    cmd_data_check_element("athtag enable", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.athtag_en, sizeof (a_bool_t)));
+
+    cmd_data_check_element("athtag type", "0x0",
+                       "usage: the format is 0x0-0xffff or 0-65535\n",
+                       cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
+                               0x0));
+    entry.athtag_type = tmpdata & 0xffff;
+
+    *(fal_athtag_rx_cfg_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_athtag_rx_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_athtag_rx_cfg_t *entry;
+
+    entry = (fal_athtag_rx_cfg_t *) buf;
+
+    dprintf("\n[athtag_en]:%s", (entry->athtag_en) ? "YES" : "NO");
+    dprintf("  [athtag_type]:0x%x\n", entry->athtag_type);
+}
+
+sw_error_t
+cmd_data_check_athtag_tx_cfg(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_athtag_tx_cfg_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_athtag_tx_cfg_t));
+
+    dprintf("\n");
+    cmd_data_check_element("athtag enable", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.athtag_en, sizeof (a_bool_t)));
+
+    cmd_data_check_element("athtag type", "0x0",
+                       "usage: the format is 0x0-0xffff or 0-65535\n",
+                       cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
+                               0x0));
+    entry.athtag_type = tmpdata & 0xffff;
+
+    cmd_data_check_element("athtag version", "v3",
+                       "usage: v2 or v3\n",
+                       cmd_data_check_attr, ("athtag_version", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.version = tmpdata & 0x3;
+
+    cmd_data_check_element("athtag action", "normal",
+                       "usage: normal, read_write_reg, disable_learn, disable_offload "
+                       "or disable_learn_offload\n",
+                       cmd_data_check_attr, ("athtag_action", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.action = tmpdata & 0x7;
+
+    cmd_data_check_element("bypass fwd_en", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.bypass_fwd_en, sizeof (a_bool_t)));
+
+    cmd_data_check_element("disable field", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.field_disable, sizeof (a_bool_t)));
+
+    *(fal_athtag_tx_cfg_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_athtag_tx_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_athtag_tx_cfg_t *entry;
+    a_uint32_t tmpdata;
+
+    entry = (fal_athtag_tx_cfg_t *) buf;
+
+    dprintf("\n[athtag_en]:%s", (entry->athtag_en) ? "YES" : "NO");
+    dprintf("  [athtag_type]:0x%x", entry->athtag_type);
+    tmpdata = entry->version;
+    cmd_data_print_attr("athtag_version", "\n[athtag_version]:",
+                    &tmpdata, sizeof(tmpdata));
+    tmpdata = entry->action;
+    cmd_data_print_attr("athtag_action", "  [athtag_action]:",
+                    &tmpdata, sizeof(tmpdata));
+    dprintf("\n[bypass_fwd_en]:%s", (entry->bypass_fwd_en) ? "YES" : "NO");
+    dprintf("  [field_disable]:%s\n", (entry->field_disable) ? "YES" : "NO");
+}
 /* auto_insert_flag_1 */

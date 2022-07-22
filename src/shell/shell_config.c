@@ -1860,6 +1860,32 @@ struct cmd_des_t gcmd_des[] =
 	},
 #endif
 
+/* ATHTAG */
+#ifdef IN_ATHTAG
+	{
+		"athtag", "config athtag",
+		{
+			{"primapping", "set", "set athtag priority mapping base on direction",
+					"<ingress|egress|both>", SW_API_ATHTAG_PRI_MAPPING_SET, NULL},
+			{"primapping", "get", "get athtag priority mapping base on direction",
+					"<ingress|egress>", SW_API_ATHTAG_PRI_MAPPING_GET, NULL},
+			{"portmapping", "set", "set athtag port mapping base on direction",
+					"<ingress|egress|both>", SW_API_ATHTAG_PORT_MAPPING_SET, NULL},
+			{"portmapping", "get", "get athtag port mapping base on direction",
+					"<ingress|egress>", SW_API_ATHTAG_PORT_MAPPING_GET, NULL},
+			{"rx", "set", "set athtag rx configuration base on port",
+					"<port_id>", SW_API_PORT_ATHTAG_RX_SET, NULL},
+			{"rx", "get", "get athtag rx configuration base on port",
+					"<port_id>", SW_API_PORT_ATHTAG_RX_GET, NULL},
+			{"tx", "set", "set athtag tx configuration base on port",
+					"<port_id>", SW_API_PORT_ATHTAG_TX_SET, NULL},
+			{"tx", "get", "get athtag tx configuration base on port",
+					"<port_id>", SW_API_PORT_ATHTAG_TX_GET, NULL},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
+
 /* auto_insert_flag */
 
 /*qca808x_start*/
