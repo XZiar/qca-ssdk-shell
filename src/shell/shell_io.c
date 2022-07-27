@@ -21646,7 +21646,7 @@ sw_error_t
 cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
 {
     char *cmd;
-    a_uint32_t tmp;
+    a_uint32_t tmp = 0;
     sw_error_t rv;
     fal_flow_global_cfg_t entry;
 
@@ -22055,6 +22055,13 @@ cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
 			    }
 		    }
 	    } while (talk_mode && (SW_OK != rv));
+
+	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+		    cmd_data_check_element("flow_cookie_pri", "0",
+				    "usage: flow cookie priority\n",
+				    cmd_data_check_uint16, (cmd, &tmp, sizeof(a_uint16_t)));
+		    entry.flow_cookie_pri = tmp;
+	    }
     }
 
     *(fal_flow_global_cfg_t *)val = entry;
@@ -22093,6 +22100,9 @@ cmd_data_print_flow_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
 			    sizeof(a_bool_t));
 	    cmd_data_print_confirm(" [l3_vpn_en]", entry->l3_vpn_en,
 			    sizeof(a_bool_t));
+	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+		    dprintf(" [flow_cookie_pri]:0x%x", entry->flow_cookie_pri);
+	    }
     }
 }
 
