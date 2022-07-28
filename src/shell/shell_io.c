@@ -316,6 +316,14 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"port_select",
+		{
+			{"tnl_decap_src_vp", FAL_QINQ_SEL_TNL_DECAP_SRC_VP},
+			{"org_src_port", FAL_QINQ_SEL_ORG_SRC_PORT},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -24969,6 +24977,14 @@ cmd_data_check_port_qinqmode(char *info, void *val, a_uint32_t size)
 					dprintf("usage: <edge/core>\n");
 			}
 		} while (talk_mode && (SW_OK != rv));
+
+		/* select which port used for ingress_port_role */
+	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+		    cmd_data_check_element("tunnel_ingress_port_select", "tnl_decap_src_vp",
+							"usage: tnl_decap_src_vp or org_src_port\n",
+							cmd_data_check_attr, ("port_select", cmd,
+							&(pEntry->ingress_port_sel), sizeof(pEntry->ingress_port_sel)));
+	    }
 	}
 
     return SW_OK;
@@ -24995,6 +25011,13 @@ cmd_data_print_port_qinqmode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 		cmd_data_print_qinq_role("tunnel_qinq_role",
 				(a_uint32_t *) & (entry->tunnel_port_role),
 				sizeof(a_uint32_t));
+
+		/* print which port selected for ingress_port_role */
+	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+		    cmd_data_print_attr("port_select", "[tunnel_ingress_port_select]:",
+				&(entry->ingress_port_sel), sizeof(entry->ingress_port_sel));
+			dprintf("\n");
+	    }
 	}
 }
 
