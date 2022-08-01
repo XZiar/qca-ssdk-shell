@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014, 2017-2018, The Linux Foundation. All rights reserved.
  *
- * Copyright (c) 2021 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2022 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -653,6 +653,8 @@ cmd_init(void)
 
     set_devid(dev_id_value);
     cmd_socket_init(dev_id_value);
+    if (NULL != dev_id_fd)
+        fclose(dev_id_fd);
 
     return SW_OK;
 }
@@ -728,6 +730,7 @@ cmd_run_batch (char *cmd_str)
     if((out_fd = fopen(tmp_str[2], "w+")) == NULL)
     {
         dprintf("can't open result file %s\n", tmp_str[2]);
+        fclose(in_fd);
         return SW_FAIL;
     }
 
