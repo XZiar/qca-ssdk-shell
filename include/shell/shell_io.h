@@ -1335,6 +1335,18 @@ sw_error_t
 cmd_data_check_rtc_src_type(char *cmd_str, fal_ptp_rtc_src_type_t *arg_val, a_uint32_t size);
 void
 cmd_data_print_rtc_src_type(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_queue_profile(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size);
+sw_error_t
+cmd_data_check_queue_priority(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size);
+sw_error_t
+cmd_data_check_queue_class(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size);
+sw_error_t
+cmd_data_check_queue_base(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size);
+sw_error_t
+cmd_data_check_queue_hash(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size);
+void
+cmd_data_print_queue_config(a_char_t *param_name, a_uint32_t *buf, a_uint32_t size);
 /* auto_insert_flag */
 
 /*qca808x_start*/

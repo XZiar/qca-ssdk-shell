@@ -838,6 +838,11 @@ static sw_data_type_t sw_data_type[] =
 		    cmd_data_print_tunnel_action),
     SW_TYPE_DEF(SW_PPE_CAPACITY, NULL, cmd_data_print_ppe_capacity),
     SW_TYPE_DEF(SW_RTC_SRC_TYPE, cmd_data_check_rtc_src_type, cmd_data_print_rtc_src_type),
+    SW_TYPE_DEF(SW_QM_PROFILE, cmd_data_check_queue_profile, cmd_data_print_queue_config),
+    SW_TYPE_DEF(SW_QM_PRI, cmd_data_check_queue_priority, cmd_data_print_queue_config),
+    SW_TYPE_DEF(SW_QM_CLASS, cmd_data_check_queue_class, cmd_data_print_queue_config),
+    SW_TYPE_DEF(SW_QM_QBASE, cmd_data_check_queue_base, cmd_data_print_queue_config),
+    SW_TYPE_DEF(SW_QM_HASH, cmd_data_check_queue_hash, cmd_data_print_queue_config),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -925,7 +930,6 @@ cmd_data_print_uint8(a_char_t *param_name, a_uint32_t *buf, a_uint32_t size)
     dprintf("[%s]:0x%x", param_name, *(a_uint8_t *) buf);
 
 }
-
 
 sw_error_t
 cmd_data_check_uint32(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
@@ -41076,5 +41080,67 @@ cmd_data_print_rtc_src_type(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t si
 	dprintf("\n");
 }
 
+void
+cmd_data_print_queue_config(a_char_t *param_name, a_uint32_t *buf, a_uint32_t size)
+{
+    dprintf("\n[%s]:0x%x", param_name, *(a_uint32_t *)buf);
+}
+
+static inline sw_error_t
+cmd_data_check_queue_config(char *cmd_str, char *config_name, a_uint32_t *arg_val)
+{
+	sw_error_t rv = SW_OK;
+	char *cmd = cmd_str;
+
+	do {
+		if (talk_mode) {
+			cmd = get_sub_cmd(config_name, "0");
+		}
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		} else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: input %s\n", config_name);
+			rv = SW_BAD_VALUE;
+		} else {
+			rv = cmd_data_check_uint32(cmd, arg_val, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: input %s\n", config_name);
+		}
+	} while (talk_mode && (SW_OK != rv));
+
+	return rv;
+}
+
+sw_error_t
+cmd_data_check_queue_profile(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
+{
+	return cmd_data_check_queue_config(cmd_str, "profile_id", arg_val);
+}
+
+sw_error_t
+cmd_data_check_queue_priority(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
+{
+	return cmd_data_check_queue_config(cmd_str, "priority", arg_val);
+}
+
+sw_error_t
+cmd_data_check_queue_class(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
+{
+	return cmd_data_check_queue_config(cmd_str, "class", arg_val);
+}
+
+sw_error_t
+cmd_data_check_queue_base(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
+{
+	return cmd_data_check_queue_config(cmd_str, "queue_base", arg_val);
+}
+
+sw_error_t
+cmd_data_check_queue_hash(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
+{
+	return cmd_data_check_queue_config(cmd_str, "rss_hash", arg_val);
+}
 
 /* auto_insert_flag_1 */
