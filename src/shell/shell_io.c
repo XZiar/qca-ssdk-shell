@@ -29572,7 +29572,7 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
         do
         {
-            cmd = get_sub_cmd("vp_policer_index", "0-511");
+            cmd = get_sub_cmd("vp_policer_index", (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION)?"0-127":"0-511");
             SW_RTN_ON_NULL_PARAM(cmd);
             if (!strncasecmp(cmd, "quit", 4))
             {
