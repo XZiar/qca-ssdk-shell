@@ -1303,6 +1303,8 @@ struct cmd_des_t gcmd_des[] =
             {"Loopcheck", "get", "get servcode loopcheck status", "", SW_API_SERVCODE_LOOPCHECK_STATUS_GET, NULL},
             {"portServcode", "set", "set port servcode", "<port_id> <servcode_id>", SW_API_PORT_SERVCODE_SET, NULL},
             {"portServcode", "get", "get port servcode", "<port_id>", SW_API_PORT_SERVCODE_GET, NULL},
+            {"athtag", "set", "set a servcode athtag by index", "<servcode_index>", SW_API_SERVCODE_ATHTAG_SET, NULL},
+            {"athtag", "get", "get a servcode athtag by index", "<servcode_index>", SW_API_SERVCODE_ATHTAG_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

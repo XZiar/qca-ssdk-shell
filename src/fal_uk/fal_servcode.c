@@ -60,7 +60,7 @@ sw_error_t fal_servcode_loopcheck_status_get(a_uint32_t dev_id, a_bool_t *enable
 
 sw_error_t
 fal_port_servcode_set(a_uint32_t dev_id, fal_port_t port_id,
-                                        a_uint32_t servcode_index)
+					a_uint32_t servcode_index)
 {
     sw_error_t rv;
     rv = sw_uk_exec(SW_API_PORT_SERVCODE_SET, dev_id, port_id,
@@ -70,11 +70,31 @@ fal_port_servcode_set(a_uint32_t dev_id, fal_port_t port_id,
 
 sw_error_t
 fal_port_servcode_get(a_uint32_t dev_id, fal_port_t port_id,
-                                        a_uint32_t *servcode_index)
+					a_uint32_t *servcode_index)
 {
     sw_error_t rv;
     rv = sw_uk_exec(SW_API_PORT_SERVCODE_GET, dev_id, port_id,
                     servcode_index);
+    return rv;
+}
+
+sw_error_t
+fal_servcode_athtag_set(a_uint32_t dev_id, a_uint32_t servcode_index,
+					fal_servcode_athtag_t *entry)
+{
+    sw_error_t rv;
+    rv = sw_uk_exec(SW_API_SERVCODE_ATHTAG_SET, dev_id, servcode_index,
+                    entry);
+    return rv;
+}
+
+sw_error_t
+fal_servcode_athtag_get(a_uint32_t dev_id, a_uint32_t servcode_index,
+					fal_servcode_athtag_t *entry)
+{
+    sw_error_t rv;
+    rv = sw_uk_exec(SW_API_SERVCODE_ATHTAG_GET, dev_id, servcode_index,
+                    entry);
     return rv;
 }
 

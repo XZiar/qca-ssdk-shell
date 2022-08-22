@@ -1366,6 +1366,10 @@ sw_error_t
 cmd_data_check_athtag_tx_cfg(char * cmd_str, void * val, a_uint32_t size);
 void
 cmd_data_print_athtag_tx_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_servcode_athtag(char * cmd_str, void * val, a_uint32_t size);
+void
+cmd_data_print_servcode_athtag(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 /* auto_insert_flag */
 
 /*qca808x_start*/

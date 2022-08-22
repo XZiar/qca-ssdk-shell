@@ -868,6 +868,7 @@ static sw_data_type_t sw_data_type[] =
 		    cmd_data_print_athtag_port_mapping),
     SW_TYPE_DEF(SW_ATHTAG_RX_CFG, cmd_data_check_athtag_rx_cfg, cmd_data_print_athtag_rx_cfg),
     SW_TYPE_DEF(SW_ATHTAG_TX_CFG, cmd_data_check_athtag_tx_cfg, cmd_data_print_athtag_tx_cfg),
+    SW_TYPE_DEF(SW_SERVCODE_ATHTAG, cmd_data_check_servcode_athtag, cmd_data_print_servcode_athtag),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -41381,5 +41382,119 @@ cmd_data_print_athtag_tx_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
                     &tmpdata, sizeof(tmpdata));
     dprintf("\n[bypass_fwd_en]:%s", (entry->bypass_fwd_en) ? "YES" : "NO");
     dprintf("  [field_disable]:%s\n", (entry->field_disable) ? "YES" : "NO");
+}
+
+sw_error_t
+cmd_data_check_servcode_athtag(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_servcode_athtag_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_servcode_athtag_t));
+
+    dprintf("\n");
+    cmd_data_check_element("update athtag enable", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("athtag enable", "no",
+                               "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                               (cmd, A_FALSE, &entry.athtag_en, sizeof (a_bool_t)));
+        entry.athtag_update_bitmap |= BIT(FLD_UPDATE_ATH_TAG_INSERT);
+    }
+
+    cmd_data_check_element("update athtag action", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("athtag action", "normal",
+                           "usage: normal, read_write_reg, disable_learn, "
+                           "disable_offload or disable_learn_offload\n",
+                           cmd_data_check_attr, ("athtag_action", cmd,
+                                   &tmpdata, sizeof(tmpdata)));
+        entry.action = tmpdata & 0x7;
+        entry.athtag_update_bitmap |= BIT(FLD_UPDATE_ATH_TAG_ACTION);
+    }
+
+    cmd_data_check_element("update bypass fwd en", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("bypass fwd en", "no",
+                               "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                               (cmd, A_FALSE, &entry.bypass_fwd_en, sizeof (a_bool_t)));
+        entry.athtag_update_bitmap |= BIT(FLD_UPDATE_ATH_TAG_BYPASS_FWD_EN);
+    }
+
+    cmd_data_check_element("update dest port", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("dest port", "0",
+                            "usage: input port id or port bitmap\n",
+                            cmd_data_check_uint8, (cmd, &tmpdata,
+                            sizeof (a_uint32_t)));
+        entry.dest_port = tmpdata & 0x7f;
+        entry.athtag_update_bitmap |= BIT(FLD_UPDATE_ATH_TAG_DEST_PORT);
+    }
+
+    cmd_data_check_element("update disable field", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("disable field", "no",
+                               "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                               (cmd, A_FALSE, &entry.field_disable, sizeof (a_bool_t)));
+        entry.athtag_update_bitmap |= BIT(FLD_UPDATE_ATH_TAG_FIELD_DISABLE);
+    }
+    *(fal_servcode_athtag_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_servcode_athtag(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_servcode_athtag_t *entry;
+    a_uint32_t tmpdata;
+
+    entry = (fal_servcode_athtag_t *) buf;
+
+    if (entry->athtag_update_bitmap & BIT(FLD_UPDATE_ATH_TAG_INSERT))
+    {
+        dprintf("\n[update athtag en]: YES");
+        cmd_data_print_confirm("  [athtag_en]:", entry->athtag_en, sizeof(a_uint32_t));
+    }
+
+    if (entry->athtag_update_bitmap & BIT(FLD_UPDATE_ATH_TAG_ACTION))
+    {
+        tmpdata = entry->action;
+        dprintf("\n[update athtag action]: YES");
+        cmd_data_print_attr("athtag_action", "  [athtag_action]:",
+                    &tmpdata, sizeof(tmpdata));
+    }
+
+    if (entry->athtag_update_bitmap & BIT(FLD_UPDATE_ATH_TAG_BYPASS_FWD_EN))
+    {
+        dprintf("\n[update bypass_fwd_en]: YES");
+        cmd_data_print_confirm("  [bypass_fwd_en]:", entry->bypass_fwd_en, sizeof(a_uint32_t));
+    }
+
+    if (entry->athtag_update_bitmap & BIT(FLD_UPDATE_ATH_TAG_DEST_PORT))
+    {
+        dprintf("\n[update dest port]: YES");
+        dprintf("  [dest_port]:0x%x", entry->dest_port);
+    }
+
+    if (entry->athtag_update_bitmap & BIT(FLD_UPDATE_ATH_TAG_FIELD_DISABLE))
+    {
+        dprintf("\n[update disable field]: YES");
+        cmd_data_print_confirm("  [field_disable]:", entry->field_disable, sizeof(a_uint32_t));
+    }
 }
 /* auto_insert_flag_1 */

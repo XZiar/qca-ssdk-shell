@@ -555,16 +555,18 @@ static void cmd_data_print_bm_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_servcode_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_PORT_SERVCODE_GET+1] ={
+	char *func_name[FUNC_SERVCODE_ATHTAG_GET+1] ={
 		"FUNC_SERVCODE_CONFIG_SET",
 		"FUNC_SERVCODE_CONFIG_GET",
 		"FUNC_SERVCODE_LOOPCHECK_EN",
 		"FUNC_SERVCODE_LOOPCHECK_STATUS_GET",
 		"FUNC_PORT_SERVCODE_SET",
-		"FUNC_PORT_SERVCODE_GET"
+		"FUNC_PORT_SERVCODE_GET",
+		"FUNC_SERVCODE_ATHTAG_SET",
+		"FUNC_SERVCODE_ATHTAG_GET"
 	};
 
-	for(func = FUNC_SERVCODE_CONFIG_SET; func <= FUNC_PORT_SERVCODE_GET; func++)
+	for(func = FUNC_SERVCODE_CONFIG_SET; func <= FUNC_SERVCODE_ATHTAG_GET; func++)
 	{
 		if(p->bitmap[0] & (1<<func))
 		{
