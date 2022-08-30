@@ -460,6 +460,11 @@ enum
 		a_uint64_t tx_drop_byte_cnt; /* tx drop byte counter */
 	} fal_port_cnt_t;
 
+	typedef struct {
+		a_bool_t  copper_link_status; /*copper link status*/
+		a_bool_t  fiber_link_status; /*fiber link status*/
+	} fal_port_combo_link_status_t;
+
 	sw_error_t
 	fal_port_max_frame_size_set(a_uint32_t dev_id, fal_port_t port_id,
 			a_uint32_t max_frame);
@@ -877,6 +882,8 @@ fal_port_cnt_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_cnt_t *port_cnt
 sw_error_t
 fal_port_cnt_flush(a_uint32_t dev_id, fal_port_t port_id);
 
+sw_error_t fal_port_combo_link_status_get(a_uint32_t dev_id,
+				fal_port_t port_id, fal_port_combo_link_status_t * status);
 /*qca808x_start*/
 #ifdef __cplusplus
 }

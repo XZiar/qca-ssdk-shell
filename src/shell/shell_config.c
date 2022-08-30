@@ -254,6 +254,8 @@ struct cmd_des_t gcmd_des[] =
                 "<port_id>", SW_API_PT_CNT_GET, NULL},
             {"counter", "flush", "flush counter of port",
                 "<port_id>", SW_API_PT_CNT_FLUSH, NULL},
+            {"combolinkstatus", "get", "get link status of a combo port", "<port_id>",
+                SW_API_PT_COMBO_LINK_STATUS_GET, NULL},
 /*qca808x_start*/
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL},/*end of desc*/
         },
