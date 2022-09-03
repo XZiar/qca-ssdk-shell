@@ -23112,10 +23112,13 @@ cmd_data_print_ac_static_thresh(a_uint8_t * param_name, a_uint32_t * buf, a_uint
 
     dprintf("\n[color_en]:0x%x [wred_en]:0x%x [green_max]:0x%x ",
 			entry->color_enable, entry->wred_enable, entry->green_max);
-    dprintf("\n[green_min_off]:0x%x [yel_max_off]:0x%x [yel_min_off]:0x%x [red_max_off]:0x%x [red_min_off]:0x%x ",
-			entry->green_min_off, entry->yel_max_off, entry->yel_min_off, entry->red_max_off, entry->red_min_off);
-    dprintf("\n[green_resume_off]:0x%x [yel_resume_off]:0x%x [red_resume_off]:0x%x ",
-			entry->green_resume_off, entry->yel_resume_off, entry->red_resume_off);
+    dprintf("\n[green_min_off]:0x%x [yel_max_off]:0x%x [yel_min_off]:0x%x [red_max_off]:0x%x "
+		    "[red_min_off]:0x%x ",
+		    entry->green_min_off, entry->yel_max_off, entry->yel_min_off,
+		    entry->red_max_off, entry->red_min_off);
+    dprintf("\n[green_resume_off]:0x%x [yel_resume_off]:0x%x [red_resume_off]:0x%x [status]:%s",
+			entry->green_resume_off, entry->yel_resume_off, entry->red_resume_off,
+			entry->status ? "enable" : "disable");
 }
 
 void
@@ -23127,10 +23130,14 @@ cmd_data_print_ac_dynamic_thresh(a_uint8_t * param_name, a_uint32_t * buf, a_uin
 
     dprintf("\n[color_en]:0x%x [wred_en]:0x%x [shared_weight]:0x%x ",
 			entry->color_enable, entry->wred_enable, entry->shared_weight);
-    dprintf("\n[green_min_off]:0x%x [yel_max_off]:0x%x [yel_min_off]:0x%x [red_max_off]:0x%x [red_min_off]:0x%x ",
-			entry->green_min_off, entry->yel_max_off, entry->yel_min_off, entry->red_max_off, entry->red_min_off);
-    dprintf("\n[green_resume_off]:0x%x [yel_resume_off]:0x%x [red_resume_off]:0x%x [ceiling]:0x%x ",
-			entry->green_resume_off, entry->yel_resume_off, entry->red_resume_off, entry->ceiling);
+    dprintf("\n[green_min_off]:0x%x [yel_max_off]:0x%x [yel_min_off]:0x%x "
+		    "[red_max_off]:0x%x [red_min_off]:0x%x ",
+		    entry->green_min_off, entry->yel_max_off, entry->yel_min_off,
+		    entry->red_max_off, entry->red_min_off);
+    dprintf("\n[green_resume_off]:0x%x [yel_resume_off]:0x%x [red_resume_off]:0x%x "
+		    "[ceiling]:0x%x [status]:%s",
+		    entry->green_resume_off, entry->yel_resume_off, entry->red_resume_off,
+		    entry->ceiling, entry->status ? "enable" : "disable");
 }
 
 void
