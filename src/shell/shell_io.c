@@ -23022,6 +23022,17 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 				    "usage: nexthop of bridge type\n",
 				    cmd_data_check_uint16, (cmd, &tmp, sizeof(a_uint16_t)));
 		    entry.bridge_nexthop = tmp;
+
+		    cmd_data_check_element("policer_valid", "no",
+				    "usage: <yes/no/y/n>\n",
+				    cmd_data_check_confirm, (cmd, A_FALSE,
+					    &entry.policer_valid,
+					    sizeof(a_bool_t)));
+
+		    cmd_data_check_element("policer_index", "0",
+				    "usage: flow based policer index\n",
+				    cmd_data_check_uint32, (cmd, &tmp, sizeof(a_uint32_t)));
+		    entry.policer_index = tmp;
 	    }
     }
 
@@ -23071,6 +23082,10 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		    cmd_data_print_confirm(" [bridge_nexthop_valid]:",
 				    entry->bridge_nexthop_valid, sizeof(a_bool_t));
 		    dprintf(" [bridge_nexthop]:0x%x", entry->bridge_nexthop);
+
+		    cmd_data_print_confirm(" [policer_valid]:",
+				    entry->policer_valid, sizeof(a_bool_t));
+		    dprintf(" [policer_index]:0x%x", entry->policer_index);
 	    }
     }
 
