@@ -872,6 +872,53 @@ static sw_data_type_t sw_data_type[] =
 /*qca808x_start*/
 };
 
+sw_error_t
+cmd_sscanf(const char *buf, const char *fmt, void *arg_val)
+{
+	char fmt_tmp[5] = {0};
+
+	if(strspn(buf, "1234567890abcdefABCDEFXx") != strlen(buf))
+	{
+		return SW_BAD_VALUE;
+	}
+	if(buf[0] == '0' && (buf[1] == 'x' || buf[1] == 'X'))
+	{
+		if(!fmt)
+			strlcpy(fmt_tmp, "%x", sizeof(fmt_tmp));
+		else
+		{
+			if(strspn(fmt, "%lLxXhH") != strlen(fmt))
+				return SW_BAD_VALUE;
+			if(fmt[0] == '%' && ((fmt[1] == 'l' || fmt[1] == 'L') &&
+				(fmt[2] == 'l' || fmt[2] == 'L')))
+				strlcpy(fmt_tmp, "%llx", sizeof(fmt_tmp));
+			else
+				strlcpy(fmt_tmp, fmt, sizeof(fmt_tmp));
+		}
+	}
+	else
+	{
+		if(strspn(buf, "1234567890") != strlen(buf))
+			return SW_BAD_VALUE;
+		if(!fmt)
+			strlcpy(fmt_tmp, "%d", sizeof(fmt_tmp));
+		else
+		{
+			if(strspn(fmt, "%lLdD") != strlen(fmt))
+				return SW_BAD_VALUE;
+			if(fmt[0] == '%' && ((fmt[1] == 'l' || fmt[1] == 'L') &&
+				(fmt[2] == 'l' || fmt[2] == 'L')))
+				strlcpy(fmt_tmp, "%lld", sizeof(fmt_tmp));
+			else
+				strlcpy(fmt_tmp, fmt, sizeof(fmt_tmp));
+		}
+	}
+	if(sscanf(buf, fmt_tmp, arg_val) != 1)
+		return SW_FAIL;
+
+	return SW_OK;
+}
+
 sw_data_type_t *
 cmd_data_type_find(sw_data_type_e type)
 {
@@ -936,10 +983,7 @@ cmd_data_check_uint8(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
         return SW_BAD_VALUE;
     }
 
-    if (cmd_str[0] == '0' && (cmd_str[1] == 'x' || cmd_str[1] == 'X'))
-        sscanf(cmd_str, "%x", arg_val);
-    else
-        sscanf(cmd_str, "%d", arg_val);
+    SW_RTN_ON_ERROR(cmd_sscanf(cmd_str, NULL, arg_val));
 
     if (255 < *arg_val)
     {
@@ -967,14 +1011,7 @@ cmd_data_check_uint32(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
         return SW_BAD_VALUE;
     }
 
-    if (strspn(cmd_str, "1234567890abcdefABCDEFXx") != strlen(cmd_str)){
-        return SW_BAD_VALUE;
-    }
-
-    if (cmd_str[0] == '0' && (cmd_str[1] == 'x' || cmd_str[1] == 'X'))
-        sscanf(cmd_str, "%x", arg_val);
-    else
-        sscanf(cmd_str, "%d", arg_val);
+    SW_RTN_ON_ERROR(cmd_sscanf(cmd_str, NULL, arg_val));
 
     return SW_OK;
 }
@@ -996,14 +1033,7 @@ cmd_data_check_uint64(char *cmd_str, a_uint64_t * arg_val, a_uint32_t size)
         return SW_BAD_VALUE;
     }
 
-    if (strspn(cmd_str, "1234567890abcdefABCDEFXx") != strlen(cmd_str)){
-        return SW_BAD_VALUE;
-    }
-
-    if (cmd_str[0] == '0' && (cmd_str[1] == 'x' || cmd_str[1] == 'X'))
-        sscanf(cmd_str, "%llx", arg_val);
-    else
-        sscanf(cmd_str, "%lld", arg_val);
+    SW_RTN_ON_ERROR(cmd_sscanf(cmd_str, "%ll", arg_val));
 
     return SW_OK;
 }
@@ -1025,10 +1055,7 @@ cmd_data_check_uint16(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
         return SW_BAD_VALUE;
     }
 
-    if (cmd_str[0] == '0' && (cmd_str[1] == 'x' || cmd_str[1] == 'X'))
-        sscanf(cmd_str, "%x", arg_val);
-    else
-        sscanf(cmd_str, "%d", arg_val);
+    SW_RTN_ON_ERROR(cmd_sscanf(cmd_str, NULL, arg_val));
 
     if (65535 < *arg_val)
     {
@@ -1051,10 +1078,7 @@ cmd_data_check_pbmp(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
     if (cmd_str == NULL)
         return SW_BAD_PARAM;
 
-    if (cmd_str[0] == '0' && (cmd_str[1] == 'x' || cmd_str[1] == 'X'))
-        sscanf(cmd_str, "%x", arg_val);
-    else
-        sscanf(cmd_str, "%d", arg_val);
+    SW_RTN_ON_ERROR(cmd_sscanf(cmd_str, NULL, arg_val));
 
     return SW_OK;
 
@@ -2564,7 +2588,7 @@ cmd_data_check_lan_wan_cfg(char *cmdstr, void *val, a_uint32_t size)
 		else {
 			tmp = (void *) strtok_r(cmd, ",", &str_save);
 			while (tmp) {
-				sscanf(tmp, "%d", &port);
+				SW_RTN_ON_ERROR(cmd_sscanf(tmp, "%d", &port));
 				if (SW_MAX_NR_PORT <= port) {
 					return SW_BAD_VALUE;
 				}
@@ -2600,7 +2624,7 @@ cmd_data_check_lan_wan_cfg(char *cmdstr, void *val, a_uint32_t size)
 		else {
 			tmp = (void *) strtok_r(cmd, ",", &str_save);
 			while (tmp) {
-				sscanf(tmp, "%d", &vid);
+				SW_RTN_ON_ERROR(cmd_sscanf(tmp, "%d", &vid));
 				if (0xfff <= vid) {
 					return SW_BAD_VALUE;
 				}
@@ -2653,7 +2677,7 @@ cmd_data_check_lan_wan_cfg(char *cmdstr, void *val, a_uint32_t size)
 		else {
 			tmp = (void *) strtok_r(cmd, ",", &str_save);
 			while (tmp) {
-				sscanf(tmp, "%d", &port);
+				SW_RTN_ON_ERROR(cmd_sscanf(tmp, "%d", &port));
 				if (SW_MAX_NR_PORT <= port) {
 					return SW_BAD_VALUE;
 				}
@@ -2688,7 +2712,7 @@ cmd_data_check_lan_wan_cfg(char *cmdstr, void *val, a_uint32_t size)
 		else {
 			tmp = (void *) strtok_r(cmd, ",", &str_save);
 			while (tmp) {
-				sscanf(tmp, "%d", &vid);
+				SW_RTN_ON_ERROR(cmd_sscanf(tmp, "%d", &vid));
 				if (0xfff <= vid) {
 					return SW_BAD_VALUE;
 				}
@@ -3030,7 +3054,7 @@ cmd_data_check_uinta(char *cmdstr, a_uint32_t * val, a_uint32_t size)
             return SW_BAD_VALUE;
         }
 
-        sscanf(tmp_str, "%d", tmp_ptr);
+        SW_RTN_ON_ERROR(cmd_sscanf(tmp_str, "%d", tmp_ptr));
         tmp_ptr++;
 
         i++;
@@ -3323,10 +3347,7 @@ cmd_data_check_portid(char *cmdstr, fal_port_t * val, a_uint32_t size)
             return SW_BAD_VALUE;
         return SW_OK;
     }
-   if (strstr(cmdstr, "0x") == NULL)
-	sscanf(cmdstr, "%d", val);
-   else
-	sscanf(cmdstr, "%x", val);
+    SW_RTN_ON_ERROR(cmd_sscanf(cmdstr, NULL, val));
 
     return SW_OK;
 }
@@ -3349,10 +3370,10 @@ cmd_data_check_portmap(char *cmdstr, fal_pbmp_t * val, a_uint32_t size)
     tmp = (void *) strtok_r(cmdstr, ",", &str_save);
     while (tmp)
     {
-        sscanf(tmp, "%d", &port);
-	if (SW_MAX_NR_PORT <= port) {
-		return cmd_data_check_uint32(tmp_str, val, sizeof(a_uint32_t));
-	}
+        SW_RTN_ON_ERROR(cmd_sscanf(tmp, "%d", &port));
+        if (SW_MAX_NR_PORT <= port) {
+            return cmd_data_check_uint32(tmp_str, val, sizeof(a_uint32_t));
+        }
 
         *val |= (0x1 << port);
         tmp = (void *) strtok_r(NULL, ",", &str_save);
@@ -4068,7 +4089,6 @@ cmd_data_check_integer(char *cmd_str, a_uint32_t * arg_val, a_uint32_t max_val,
                        a_uint32_t min_val)
 {
     a_uint32_t tmp;
-    a_uint32_t i;
 
     if (NULL == cmd_str)
     {
@@ -4080,28 +4100,7 @@ cmd_data_check_integer(char *cmd_str, a_uint32_t * arg_val, a_uint32_t max_val,
         return SW_BAD_PARAM;
     }
 
-    if ((cmd_str[0] == '0') && ((cmd_str[1] == 'x') || (cmd_str[1] == 'X')))
-    {
-        for (i = 2; i < strlen(cmd_str); i++)
-        {
-            if (A_FALSE == is_hex(cmd_str[i]))
-            {
-                return SW_BAD_VALUE;
-            }
-        }
-        sscanf(cmd_str, "%x", &tmp);
-    }
-    else
-    {
-        for (i = 0; i < strlen(cmd_str); i++)
-        {
-            if (A_FALSE == is_dec(cmd_str[i]))
-            {
-                return SW_BAD_VALUE;
-            }
-        }
-        sscanf(cmd_str, "%d", &tmp);
-    }
+    SW_RTN_ON_ERROR(cmd_sscanf(cmd_str, NULL, &tmp));
 
     if ((tmp > max_val) || (tmp < min_val))
         return SW_BAD_PARAM;
