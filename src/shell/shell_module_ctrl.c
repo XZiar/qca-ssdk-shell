@@ -1,17 +1,18 @@
 /*
  * Copyright (c) 2016-2018, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
  *
- * Permission to use, copy, modify, and/or distribute this software for
- * any purpose with or without fee is hereby granted, provided that the
- * above copyright notice and this permission notice appear in all copies.
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
- * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 #include <stdio.h>
 #include "shell_io.h"
@@ -123,6 +124,8 @@ cmd_data_check_module(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
 		*arg_val = FAL_MODULE_TUNNEL_PROGRAM;
 	} else if (!strcasecmp(cmd_str, "led")){
 		*arg_val = FAL_MODULE_LED;
+	} else if (!strcasecmp(cmd_str, "athtag")){
+		*arg_val = FAL_MODULE_ATHTAG;
 	}
 /* auto_insert_flag_1 */
     else
@@ -194,6 +197,8 @@ cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		dprintf("tunnelprogram");
 	} else if (*(a_uint32_t *) buf == FAL_MODULE_LED) {
 		dprintf("led");
+	} else if (*(a_uint32_t *) buf == FAL_MODULE_ATHTAG) {
+		dprintf("athtag");
 	}
 /* auto_insert_flag_2 */
 }
@@ -550,14 +555,16 @@ static void cmd_data_print_bm_func_ctrl(fal_func_ctrl_t *p)
 static void cmd_data_print_servcode_func_ctrl(fal_func_ctrl_t *p)
 {
 	a_uint32_t func = 0;
-	char *func_name[FUNC_SERVCODE_LOOPCHECK_STATUS_GET+1] ={
+	char *func_name[FUNC_PORT_SERVCODE_GET+1] ={
 		"FUNC_SERVCODE_CONFIG_SET",
 		"FUNC_SERVCODE_CONFIG_GET",
 		"FUNC_SERVCODE_LOOPCHECK_EN",
 		"FUNC_SERVCODE_LOOPCHECK_STATUS_GET",
+		"FUNC_PORT_SERVCODE_SET",
+		"FUNC_PORT_SERVCODE_GET"
 	};
 
-	for(func = FUNC_SERVCODE_CONFIG_SET; func <= FUNC_SERVCODE_LOOPCHECK_STATUS_GET; func++)
+	for(func = FUNC_SERVCODE_CONFIG_SET; func <= FUNC_PORT_SERVCODE_GET; func++)
 	{
 		if(p->bitmap[0] & (1<<func))
 		{
@@ -1334,6 +1341,34 @@ static void cmd_data_print_led_func_ctrl(fal_func_ctrl_t *p)
 	return;
 }
 
+static void cmd_data_print_athtag_func_ctrl(fal_func_ctrl_t *p)
+{
+	a_uint32_t func = 0;
+	char *func_name[FUNC_PORT_ATHTAG_TX_GET+1] ={
+		"FUNC_ATHTAG_PRI_MAPPING_SET",
+		"FUNC_ATHTAG_PRI_MAPPING_GET",
+		"FUNC_ATHTAG_PORT_MAPPING_SET",
+		"FUNC_ATHTAG_PORT_MAPPING_GET",
+		"FUNC_PORT_ATHTAG_RX_SET",
+		"FUNC_PORT_ATHTAG_RX_GET",
+		"FUNC_PORT_ATHTAG_TX_SET",
+		"FUNC_PORT_ATHTAG_TX_GET"
+	};
+
+	for(func = FUNC_ATHTAG_PRI_MAPPING_SET; func <= FUNC_PORT_ATHTAG_TX_GET; func++)
+	{
+		if(p->bitmap[0] & (1<<func))
+		{
+			dprintf("%d  %s  registered\n", func, func_name[func]);
+		}
+		else
+		{
+			dprintf("%d  %s  unregistered\n", func, func_name[func]);
+		}
+	}
+	return;
+}
+
 /* auto_insert_flag_3 */
 
 void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
@@ -1394,6 +1429,8 @@ void cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p)
 		cmd_data_print_tunnel_program_func_ctrl(p);
 	} else if (module == FAL_MODULE_LED){
 		cmd_data_print_led_func_ctrl(p);
+	} else if (module == FAL_MODULE_ATHTAG) {
+		cmd_data_print_athtag_func_ctrl(p);
 	}
 /* auto_insert_flag */
 

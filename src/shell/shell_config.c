@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
- *
  * Copyright (c) 2021-2022, Qualcomm Innovation Center, Inc. All rights reserved.
  *
- * Permission to use, copy, modify, and/or distribute this software for
- * any purpose with or without fee is hereby granted, provided that the
- * above copyright notice and this permission notice appear in all copies.
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
@@ -1309,6 +1309,8 @@ struct cmd_des_t gcmd_des[] =
             {"Config", "get", "get a servcode config by index", "<servcode_index>", SW_API_SERVCODE_CONFIG_GET, NULL},
             {"Loopcheck", "set", "set servcode loopcheck status", "<enable|disable>", SW_API_SERVCODE_LOOPCHECK_EN, NULL},
             {"Loopcheck", "get", "get servcode loopcheck status", "", SW_API_SERVCODE_LOOPCHECK_STATUS_GET, NULL},
+            {"portServcode", "set", "set port servcode", "<port_id> <servcode_id>", SW_API_PORT_SERVCODE_SET, NULL},
+            {"portServcode", "get", "get port servcode", "<port_id>", SW_API_PORT_SERVCODE_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },
@@ -1853,6 +1855,32 @@ struct cmd_des_t gcmd_des[] =
 					SW_API_TUNNEL_PROGRAM_UDF_GETNEXT, NULL},
 			{"udf", "show", "show all program udf rules", "<0:program0|...|5:program5>",
 					SW_CMD_TUNNEL_PROGRAM_UDF_SHOW, cmd_show_tunnel_program_udf},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
+
+/* ATHTAG */
+#ifdef IN_ATHTAG
+	{
+		"athtag", "config athtag",
+		{
+			{"primapping", "set", "set athtag priority mapping base on direction",
+					"<ingress|egress|both>", SW_API_ATHTAG_PRI_MAPPING_SET, NULL},
+			{"primapping", "get", "get athtag priority mapping base on direction",
+					"<ingress|egress>", SW_API_ATHTAG_PRI_MAPPING_GET, NULL},
+			{"portmapping", "set", "set athtag port mapping base on direction",
+					"<ingress|egress|both>", SW_API_ATHTAG_PORT_MAPPING_SET, NULL},
+			{"portmapping", "get", "get athtag port mapping base on direction",
+					"<ingress|egress>", SW_API_ATHTAG_PORT_MAPPING_GET, NULL},
+			{"rx", "set", "set athtag rx configuration base on port",
+					"<port_id>", SW_API_PORT_ATHTAG_RX_SET, NULL},
+			{"rx", "get", "get athtag rx configuration base on port",
+					"<port_id>", SW_API_PORT_ATHTAG_RX_GET, NULL},
+			{"tx", "set", "set athtag tx configuration base on port",
+					"<port_id>", SW_API_PORT_ATHTAG_TX_SET, NULL},
+			{"tx", "get", "get athtag tx configuration base on port",
+					"<port_id>", SW_API_PORT_ATHTAG_TX_GET, NULL},
 			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
 		},
 	},
