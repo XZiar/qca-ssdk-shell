@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2014, 2016-2017, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -108,27 +109,6 @@ fal_portvlan_member_get(a_uint32_t dev_id, fal_port_t port_id,
 }
 
 sw_error_t
-fal_port_default_vid_set(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t vid)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PT_DEF_VID_SET, dev_id, port_id,
-                    vid);
-    return rv;
-}
-
-sw_error_t
-fal_port_default_vid_get(a_uint32_t dev_id, fal_port_t port_id,
-                         a_uint32_t * vid)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PT_DEF_VID_GET, dev_id, port_id,
-                    vid);
-    return rv;
-}
-
-sw_error_t
 fal_port_force_default_vid_set(a_uint32_t dev_id, fal_port_t port_id,
                                a_bool_t enable)
 {
@@ -168,26 +148,6 @@ fal_port_force_portvlan_get(a_uint32_t dev_id, fal_port_t port_id,
     sw_error_t rv;
 
     rv = sw_uk_exec(SW_API_PT_FORCE_PORTVLAN_GET, dev_id, port_id,
-                    enable);
-    return rv;
-}
-
-sw_error_t
-fal_port_nestvlan_set(a_uint32_t dev_id, fal_port_t port_id, a_bool_t enable)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PT_NESTVLAN_SET, dev_id, port_id,
-                    (a_uint32_t) enable);
-    return rv;
-}
-
-sw_error_t
-fal_port_nestvlan_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t * enable)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_PT_NESTVLAN_GET, dev_id, port_id,
                     enable);
     return rv;
 }
