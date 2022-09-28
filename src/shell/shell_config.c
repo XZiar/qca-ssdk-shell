@@ -589,7 +589,7 @@ struct cmd_des_t gcmd_des[] =
             {"ptRedEn", "get", "get status of port wred of a port", "<port_id>", SW_API_QOS_PT_RED_EN_GET, NULL},
             {"ptTxBufNr", "set", "set port tx buffer number", "<port_id> <number:0-504>", SW_API_QOS_PT_TX_BUF_NR_SET, NULL},
             {"ptTxBufNr", "get", "get port tx buffer number", "<port_id>", SW_API_QOS_PT_TX_BUF_NR_GET, NULL},
-            {"ptRxBufNr", "set", "set port rx buffer number", "<port_id> <number:0-120>", SW_API_QOS_PT_RX_BUF_NR_SET, NULL},
+            {"ptRxBufNr", "set", "set port rx buffer number", "<port_id> <number:0-120> <react_num:0-64>", SW_API_QOS_PT_RX_BUF_NR_SET, NULL},
             {"ptRxBufNr", "get", "get port rx buffer number", "<port_id>", SW_API_QOS_PT_RX_BUF_NR_GET, NULL},
             {"up2q", "set", "set user priority to queue mapping", "<up:0-7> <queueid:0-3>", SW_API_COSMAP_UP_QU_SET, NULL},
             {"up2q", "get", "get user priority to queue mapping", "<up:0-7>", SW_API_COSMAP_UP_QU_GET, NULL},
