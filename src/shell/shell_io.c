@@ -40678,8 +40678,10 @@ cmd_data_print_port_cnt(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 
 	dprintf("\n[%s] \n", param_name);
 
+	dprintf("\n[ingress_buff_empty_drop]:%ld \n", entry->buff_empty_drop);
+
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
-	dprintf("[rx_pkt_cnt]:%ld [rx_byte_cnt]:%lld"
+	dprintf("\n[rx_pkt_cnt]:%ld [rx_byte_cnt]:%lld"
 			" [rx_drop_pkt_cnt]:%ld [rx_drop_byte_cnt]:%lld\n",
 			entry->rx_pkt_cnt, entry->rx_byte_cnt,
 			entry->rx_drop_pkt_cnt, entry->rx_drop_byte_cnt);
