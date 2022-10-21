@@ -170,6 +170,10 @@ ifeq (TRUE, $(IN_TUNNEL_PROGRAM))
   MODULE_CFLAG += -DIN_TUNNEL_PROGRAM
 endif
 
+ifeq (TRUE, $(IN_ATHTAG))
+  MODULE_CFLAG += -DIN_ATHTAG
+endif
+
 #auto_insert_flag
 
 #ifdef UK_NL_PROT

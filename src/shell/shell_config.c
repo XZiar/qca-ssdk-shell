@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
- *
  * Copyright (c) 2021-2022, Qualcomm Innovation Center, Inc. All rights reserved.
  *
- * Permission to use, copy, modify, and/or distribute this software for
- * any purpose with or without fee is hereby granted, provided that the
- * above copyright notice and this permission notice appear in all copies.
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
@@ -318,10 +318,6 @@ struct cmd_des_t gcmd_des[] =
 		    "<port_id> <port_bitmap>", SW_API_PT_VLAN_MEM_UPDATE, NULL},
             {"member", "get", "get members of the port based VLAN of a port",
 		    "<port_id>", SW_API_PT_VLAN_MEM_GET, NULL},
-            {"defaultVid", "get", "get default VLAN id of a port",
-		    "<port_id>", SW_API_PT_DEF_VID_GET, NULL},
-            {"defaultVid", "set", "set default VLAN id of a port",
-		    "<port_id> <vid>", SW_API_PT_DEF_VID_SET, NULL},
             {"forceVid", "set", "set VLAN id enforcement status of a port",
 		    "<port_id> <enable|disable>", SW_API_PT_FORCE_DEF_VID_SET, NULL},
             {"forceVid", "get", "get VLAN id enforcement status of a port",
@@ -330,10 +326,6 @@ struct cmd_des_t gcmd_des[] =
 		    "<port_id> <enable|disable>", SW_API_PT_FORCE_PORTVLAN_SET, NULL},
             {"forceMode", "get", "get port based VLAN enforcement status of a port",
 		    "<port_id>", SW_API_PT_FORCE_PORTVLAN_GET, NULL},
-            {"nestVlan", "set", "set nest VLAN status of a port",
-		    "<port_id> <enable|disable>", SW_API_PT_NESTVLAN_SET, NULL},
-            {"nestVlan", "get", "get nest VLAN status of a port",
-		    "<port_id>", SW_API_PT_NESTVLAN_GET, NULL},
             {"sVlanTPID", "set", "set service VLAN tpid",
 		    "<tpid>", SW_API_NESTVLAN_TPID_SET, NULL},
             {"sVlanTPID", "get", "get service VLAN tpid",
@@ -597,7 +589,7 @@ struct cmd_des_t gcmd_des[] =
             {"ptRedEn", "get", "get status of port wred of a port", "<port_id>", SW_API_QOS_PT_RED_EN_GET, NULL},
             {"ptTxBufNr", "set", "set port tx buffer number", "<port_id> <number:0-504>", SW_API_QOS_PT_TX_BUF_NR_SET, NULL},
             {"ptTxBufNr", "get", "get port tx buffer number", "<port_id>", SW_API_QOS_PT_TX_BUF_NR_GET, NULL},
-            {"ptRxBufNr", "set", "set port rx buffer number", "<port_id> <number:0-120>", SW_API_QOS_PT_RX_BUF_NR_SET, NULL},
+            {"ptRxBufNr", "set", "set port rx buffer number", "<port_id> <number:0-120> <react_num:0-64>", SW_API_QOS_PT_RX_BUF_NR_SET, NULL},
             {"ptRxBufNr", "get", "get port rx buffer number", "<port_id>", SW_API_QOS_PT_RX_BUF_NR_GET, NULL},
             {"up2q", "set", "set user priority to queue mapping", "<up:0-7> <queueid:0-3>", SW_API_COSMAP_UP_QU_SET, NULL},
             {"up2q", "get", "get user priority to queue mapping", "<up:0-7>", SW_API_COSMAP_UP_QU_GET, NULL},
@@ -1309,6 +1301,10 @@ struct cmd_des_t gcmd_des[] =
             {"Config", "get", "get a servcode config by index", "<servcode_index>", SW_API_SERVCODE_CONFIG_GET, NULL},
             {"Loopcheck", "set", "set servcode loopcheck status", "<enable|disable>", SW_API_SERVCODE_LOOPCHECK_EN, NULL},
             {"Loopcheck", "get", "get servcode loopcheck status", "", SW_API_SERVCODE_LOOPCHECK_STATUS_GET, NULL},
+            {"portServcode", "set", "set port servcode", "<port_id> <servcode_id>", SW_API_PORT_SERVCODE_SET, NULL},
+            {"portServcode", "get", "get port servcode", "<port_id>", SW_API_PORT_SERVCODE_GET, NULL},
+            {"athtag", "set", "set a servcode athtag by index", "<servcode_index>", SW_API_SERVCODE_ATHTAG_SET, NULL},
+            {"athtag", "get", "get a servcode athtag by index", "<servcode_index>", SW_API_SERVCODE_ATHTAG_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },
@@ -1853,6 +1849,32 @@ struct cmd_des_t gcmd_des[] =
 					SW_API_TUNNEL_PROGRAM_UDF_GETNEXT, NULL},
 			{"udf", "show", "show all program udf rules", "<0:program0|...|5:program5>",
 					SW_CMD_TUNNEL_PROGRAM_UDF_SHOW, cmd_show_tunnel_program_udf},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
+
+/* ATHTAG */
+#ifdef IN_ATHTAG
+	{
+		"athtag", "config athtag",
+		{
+			{"primapping", "set", "set athtag priority mapping base on direction",
+					"<ingress|egress|both>", SW_API_ATHTAG_PRI_MAPPING_SET, NULL},
+			{"primapping", "get", "get athtag priority mapping base on direction",
+					"<ingress|egress>", SW_API_ATHTAG_PRI_MAPPING_GET, NULL},
+			{"portmapping", "set", "set athtag port mapping base on direction",
+					"<ingress|egress|both>", SW_API_ATHTAG_PORT_MAPPING_SET, NULL},
+			{"portmapping", "get", "get athtag port mapping base on direction",
+					"<ingress|egress>", SW_API_ATHTAG_PORT_MAPPING_GET, NULL},
+			{"rx", "set", "set athtag rx configuration base on port",
+					"<port_id>", SW_API_PORT_ATHTAG_RX_SET, NULL},
+			{"rx", "get", "get athtag rx configuration base on port",
+					"<port_id>", SW_API_PORT_ATHTAG_RX_GET, NULL},
+			{"tx", "set", "set athtag tx configuration base on port",
+					"<port_id>", SW_API_PORT_ATHTAG_TX_SET, NULL},
+			{"tx", "get", "get athtag tx configuration base on port",
+					"<port_id>", SW_API_PORT_ATHTAG_TX_GET, NULL},
 			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
 		},
 	},

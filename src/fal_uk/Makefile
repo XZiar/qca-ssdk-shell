@@ -158,6 +158,10 @@ ifeq (TRUE, $(IN_TUNNEL_PROGRAM))
   SRC_LIST += fal_tunnel_program.c
 endif
 
+ifeq (TRUE, $(IN_ATHTAG))
+  SRC_LIST += fal_athtag.c
+endif
+
 #auto_insert_flag
 
 include $(PRJ_PATH)/make/components.mk

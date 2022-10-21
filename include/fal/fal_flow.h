@@ -121,6 +121,8 @@ typedef struct {
 	a_bool_t bridge_nexthop_valid; /*bridge nexthop valid, added for ipq53xx */
 	a_uint16_t bridge_nexthop; /*nexthop index for bridge, added for ipq53xx */
 	a_bool_t invalid; /* added for host data path */
+	a_bool_t policer_valid; /* flow based policer valid or not, added for ipq53xx */
+	a_uint32_t policer_index; /* flow based policer index, added for ipq53xx */
 } fal_flow_entry_t;
 
 typedef struct {
@@ -149,6 +151,7 @@ typedef struct {
 			     * added for ipq95xx */
 	a_bool_t l3_vpn_en; /* enable vrf(vpn_id configured by ip globalctrl) as flow key or not
 			     * added for ipq95xx */
+	a_uint8_t flow_cookie_pri; /* flow cookie priority compared with IPO, added for ipq53xx */
 } fal_flow_global_cfg_t;
 
 typedef struct {

@@ -292,9 +292,9 @@ struct attr_des_t g_attr_des[] =
 
 		"direction",
 		{
-			{"both", FAL_IP_BOTH},
-			{"ingress", FAL_IP_INGRESS},
-			{"egress", FAL_IP_EGRESS},
+			{"both", FAL_DIR_BOTH},
+			{"ingress", FAL_DIR_INGRESS},
+			{"egress", FAL_DIR_EGRESS},
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
@@ -321,6 +321,24 @@ struct attr_des_t g_attr_des[] =
 		{
 			{"tnl_decap_src_vp", FAL_QINQ_SEL_TNL_DECAP_SRC_VP},
 			{"org_src_port", FAL_QINQ_SEL_ORG_SRC_PORT},
+		}
+	},
+	{
+		"athtag_version",
+		{
+			{"v2", FAL_ATHTAG_VER2},
+			{"v3", FAL_ATHTAG_VER3},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
+		"athtag_action",
+		{
+			{"normal", FAL_ATHTAG_ACTION_NORMAL},
+			{"read_write_reg", FAL_ATHTAG_ACTION_READ_WRITE_REG},
+			{"disable_learn", FAL_ATHTAG_ACTION_DISABLE_LEARN},
+			{"disable_offload", FAL_ATHTAG_ACTION_DISABLE_OFFLOAD},
+			{"disable_learn_offload", FAL_ATHTAG_ACTION_DISABLE_LEARN_OFFLOAD},
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
@@ -843,9 +861,64 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_QM_CLASS, cmd_data_check_queue_class, cmd_data_print_queue_config),
     SW_TYPE_DEF(SW_QM_QBASE, cmd_data_check_queue_base, cmd_data_print_queue_config),
     SW_TYPE_DEF(SW_QM_HASH, cmd_data_check_queue_hash, cmd_data_print_queue_config),
+    SW_TYPE_DEF(SW_DIRECTION, cmd_data_check_direction, NULL),
+    SW_TYPE_DEF(SW_ATHTAG_PRI_MAPPING, cmd_data_check_athtag_pri_mapping,
+		    cmd_data_print_athtag_pri_mapping),
+    SW_TYPE_DEF(SW_ATHTAG_PORT_MAPPING, cmd_data_check_athtag_port_mapping,
+		    cmd_data_print_athtag_port_mapping),
+    SW_TYPE_DEF(SW_ATHTAG_RX_CFG, cmd_data_check_athtag_rx_cfg, cmd_data_print_athtag_rx_cfg),
+    SW_TYPE_DEF(SW_ATHTAG_TX_CFG, cmd_data_check_athtag_tx_cfg, cmd_data_print_athtag_tx_cfg),
+    SW_TYPE_DEF(SW_SERVCODE_ATHTAG, cmd_data_check_servcode_athtag, cmd_data_print_servcode_athtag),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
+
+sw_error_t
+cmd_sscanf(const char *buf, const char *fmt, void *arg_val)
+{
+	char fmt_tmp[5] = {0};
+
+	if(strspn(buf, "1234567890abcdefABCDEFXx") != strlen(buf))
+	{
+		return SW_BAD_VALUE;
+	}
+	if(buf[0] == '0' && (buf[1] == 'x' || buf[1] == 'X'))
+	{
+		if(!fmt)
+			strlcpy(fmt_tmp, "%x", sizeof(fmt_tmp));
+		else
+		{
+			if(strspn(fmt, "%lLxXhH") != strlen(fmt))
+				return SW_BAD_VALUE;
+			if(fmt[0] == '%' && ((fmt[1] == 'l' || fmt[1] == 'L') &&
+				(fmt[2] == 'l' || fmt[2] == 'L')))
+				strlcpy(fmt_tmp, "%llx", sizeof(fmt_tmp));
+			else
+				strlcpy(fmt_tmp, fmt, sizeof(fmt_tmp));
+		}
+	}
+	else
+	{
+		if(strspn(buf, "1234567890") != strlen(buf))
+			return SW_BAD_VALUE;
+		if(!fmt)
+			strlcpy(fmt_tmp, "%d", sizeof(fmt_tmp));
+		else
+		{
+			if(strspn(fmt, "%lLdD") != strlen(fmt))
+				return SW_BAD_VALUE;
+			if(fmt[0] == '%' && ((fmt[1] == 'l' || fmt[1] == 'L') &&
+				(fmt[2] == 'l' || fmt[2] == 'L')))
+				strlcpy(fmt_tmp, "%lld", sizeof(fmt_tmp));
+			else
+				strlcpy(fmt_tmp, fmt, sizeof(fmt_tmp));
+		}
+	}
+	if(sscanf(buf, fmt_tmp, arg_val) != 1)
+		return SW_FAIL;
+
+	return SW_OK;
+}
 
 sw_data_type_t *
 cmd_data_type_find(sw_data_type_e type)
@@ -911,10 +984,7 @@ cmd_data_check_uint8(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
         return SW_BAD_VALUE;
     }
 
-    if (cmd_str[0] == '0' && (cmd_str[1] == 'x' || cmd_str[1] == 'X'))
-        sscanf(cmd_str, "%x", arg_val);
-    else
-        sscanf(cmd_str, "%d", arg_val);
+    SW_RTN_ON_ERROR(cmd_sscanf(cmd_str, NULL, arg_val));
 
     if (255 < *arg_val)
     {
@@ -942,14 +1012,7 @@ cmd_data_check_uint32(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
         return SW_BAD_VALUE;
     }
 
-    if (strspn(cmd_str, "1234567890abcdefABCDEFXx") != strlen(cmd_str)){
-        return SW_BAD_VALUE;
-    }
-
-    if (cmd_str[0] == '0' && (cmd_str[1] == 'x' || cmd_str[1] == 'X'))
-        sscanf(cmd_str, "%x", arg_val);
-    else
-        sscanf(cmd_str, "%d", arg_val);
+    SW_RTN_ON_ERROR(cmd_sscanf(cmd_str, NULL, arg_val));
 
     return SW_OK;
 }
@@ -971,14 +1034,7 @@ cmd_data_check_uint64(char *cmd_str, a_uint64_t * arg_val, a_uint32_t size)
         return SW_BAD_VALUE;
     }
 
-    if (strspn(cmd_str, "1234567890abcdefABCDEFXx") != strlen(cmd_str)){
-        return SW_BAD_VALUE;
-    }
-
-    if (cmd_str[0] == '0' && (cmd_str[1] == 'x' || cmd_str[1] == 'X'))
-        sscanf(cmd_str, "%llx", arg_val);
-    else
-        sscanf(cmd_str, "%lld", arg_val);
+    SW_RTN_ON_ERROR(cmd_sscanf(cmd_str, "%ll", arg_val));
 
     return SW_OK;
 }
@@ -1000,10 +1056,7 @@ cmd_data_check_uint16(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
         return SW_BAD_VALUE;
     }
 
-    if (cmd_str[0] == '0' && (cmd_str[1] == 'x' || cmd_str[1] == 'X'))
-        sscanf(cmd_str, "%x", arg_val);
-    else
-        sscanf(cmd_str, "%d", arg_val);
+    SW_RTN_ON_ERROR(cmd_sscanf(cmd_str, NULL, arg_val));
 
     if (65535 < *arg_val)
     {
@@ -1026,10 +1079,7 @@ cmd_data_check_pbmp(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
     if (cmd_str == NULL)
         return SW_BAD_PARAM;
 
-    if (cmd_str[0] == '0' && (cmd_str[1] == 'x' || cmd_str[1] == 'X'))
-        sscanf(cmd_str, "%x", arg_val);
-    else
-        sscanf(cmd_str, "%d", arg_val);
+    SW_RTN_ON_ERROR(cmd_sscanf(cmd_str, NULL, arg_val));
 
     return SW_OK;
 
@@ -2539,7 +2589,7 @@ cmd_data_check_lan_wan_cfg(char *cmdstr, void *val, a_uint32_t size)
 		else {
 			tmp = (void *) strtok_r(cmd, ",", &str_save);
 			while (tmp) {
-				sscanf(tmp, "%d", &port);
+				SW_RTN_ON_ERROR(cmd_sscanf(tmp, "%d", &port));
 				if (SW_MAX_NR_PORT <= port) {
 					return SW_BAD_VALUE;
 				}
@@ -2575,7 +2625,7 @@ cmd_data_check_lan_wan_cfg(char *cmdstr, void *val, a_uint32_t size)
 		else {
 			tmp = (void *) strtok_r(cmd, ",", &str_save);
 			while (tmp) {
-				sscanf(tmp, "%d", &vid);
+				SW_RTN_ON_ERROR(cmd_sscanf(tmp, "%d", &vid));
 				if (0xfff <= vid) {
 					return SW_BAD_VALUE;
 				}
@@ -2628,7 +2678,7 @@ cmd_data_check_lan_wan_cfg(char *cmdstr, void *val, a_uint32_t size)
 		else {
 			tmp = (void *) strtok_r(cmd, ",", &str_save);
 			while (tmp) {
-				sscanf(tmp, "%d", &port);
+				SW_RTN_ON_ERROR(cmd_sscanf(tmp, "%d", &port));
 				if (SW_MAX_NR_PORT <= port) {
 					return SW_BAD_VALUE;
 				}
@@ -2663,7 +2713,7 @@ cmd_data_check_lan_wan_cfg(char *cmdstr, void *val, a_uint32_t size)
 		else {
 			tmp = (void *) strtok_r(cmd, ",", &str_save);
 			while (tmp) {
-				sscanf(tmp, "%d", &vid);
+				SW_RTN_ON_ERROR(cmd_sscanf(tmp, "%d", &vid));
 				if (0xfff <= vid) {
 					return SW_BAD_VALUE;
 				}
@@ -3005,7 +3055,7 @@ cmd_data_check_uinta(char *cmdstr, a_uint32_t * val, a_uint32_t size)
             return SW_BAD_VALUE;
         }
 
-        sscanf(tmp_str, "%d", tmp_ptr);
+        SW_RTN_ON_ERROR(cmd_sscanf(tmp_str, "%d", tmp_ptr));
         tmp_ptr++;
 
         i++;
@@ -3298,10 +3348,7 @@ cmd_data_check_portid(char *cmdstr, fal_port_t * val, a_uint32_t size)
             return SW_BAD_VALUE;
         return SW_OK;
     }
-   if (strstr(cmdstr, "0x") == NULL)
-	sscanf(cmdstr, "%d", val);
-   else
-	sscanf(cmdstr, "%x", val);
+    SW_RTN_ON_ERROR(cmd_sscanf(cmdstr, NULL, val));
 
     return SW_OK;
 }
@@ -3324,10 +3371,10 @@ cmd_data_check_portmap(char *cmdstr, fal_pbmp_t * val, a_uint32_t size)
     tmp = (void *) strtok_r(cmdstr, ",", &str_save);
     while (tmp)
     {
-        sscanf(tmp, "%d", &port);
-	if (SW_MAX_NR_PORT <= port) {
-		return cmd_data_check_uint32(tmp_str, val, sizeof(a_uint32_t));
-	}
+        SW_RTN_ON_ERROR(cmd_sscanf(tmp, "%d", &port));
+        if (SW_MAX_NR_PORT <= port) {
+            return cmd_data_check_uint32(tmp_str, val, sizeof(a_uint32_t));
+        }
 
         *val |= (0x1 << port);
         tmp = (void *) strtok_r(NULL, ",", &str_save);
@@ -4043,7 +4090,6 @@ cmd_data_check_integer(char *cmd_str, a_uint32_t * arg_val, a_uint32_t max_val,
                        a_uint32_t min_val)
 {
     a_uint32_t tmp;
-    a_uint32_t i;
 
     if (NULL == cmd_str)
     {
@@ -4055,28 +4101,7 @@ cmd_data_check_integer(char *cmd_str, a_uint32_t * arg_val, a_uint32_t max_val,
         return SW_BAD_PARAM;
     }
 
-    if ((cmd_str[0] == '0') && ((cmd_str[1] == 'x') || (cmd_str[1] == 'X')))
-    {
-        for (i = 2; i < strlen(cmd_str); i++)
-        {
-            if (A_FALSE == is_hex(cmd_str[i]))
-            {
-                return SW_BAD_VALUE;
-            }
-        }
-        sscanf(cmd_str, "%x", &tmp);
-    }
-    else
-    {
-        for (i = 0; i < strlen(cmd_str); i++)
-        {
-            if (A_FALSE == is_dec(cmd_str[i]))
-            {
-                return SW_BAD_VALUE;
-            }
-        }
-        sscanf(cmd_str, "%d", &tmp);
-    }
+    SW_RTN_ON_ERROR(cmd_sscanf(cmd_str, NULL, &tmp));
 
     if ((tmp > max_val) || (tmp < min_val))
         return SW_BAD_PARAM;
@@ -21646,7 +21671,7 @@ sw_error_t
 cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
 {
     char *cmd;
-    a_uint32_t tmp;
+    a_uint32_t tmp = 0;
     sw_error_t rv;
     fal_flow_global_cfg_t entry;
 
@@ -22055,6 +22080,13 @@ cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
 			    }
 		    }
 	    } while (talk_mode && (SW_OK != rv));
+
+	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+		    cmd_data_check_element("flow_cookie_pri", "0",
+				    "usage: flow cookie priority\n",
+				    cmd_data_check_uint16, (cmd, &tmp, sizeof(a_uint16_t)));
+		    entry.flow_cookie_pri = tmp;
+	    }
     }
 
     *(fal_flow_global_cfg_t *)val = entry;
@@ -22093,6 +22125,9 @@ cmd_data_print_flow_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
 			    sizeof(a_bool_t));
 	    cmd_data_print_confirm(" [l3_vpn_en]", entry->l3_vpn_en,
 			    sizeof(a_bool_t));
+	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+		    dprintf(" [flow_cookie_pri]:0x%x", entry->flow_cookie_pri);
+	    }
     }
 }
 
@@ -23022,6 +23057,17 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 				    "usage: nexthop of bridge type\n",
 				    cmd_data_check_uint16, (cmd, &tmp, sizeof(a_uint16_t)));
 		    entry.bridge_nexthop = tmp;
+
+		    cmd_data_check_element("policer_valid", "no",
+				    "usage: <yes/no/y/n>\n",
+				    cmd_data_check_confirm, (cmd, A_FALSE,
+					    &entry.policer_valid,
+					    sizeof(a_bool_t)));
+
+		    cmd_data_check_element("policer_index", "0",
+				    "usage: flow based policer index\n",
+				    cmd_data_check_uint32, (cmd, &tmp, sizeof(a_uint32_t)));
+		    entry.policer_index = tmp;
 	    }
     }
 
@@ -23071,6 +23117,10 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		    cmd_data_print_confirm(" [bridge_nexthop_valid]:",
 				    entry->bridge_nexthop_valid, sizeof(a_bool_t));
 		    dprintf(" [bridge_nexthop]:0x%x", entry->bridge_nexthop);
+
+		    cmd_data_print_confirm(" [policer_valid]:",
+				    entry->policer_valid, sizeof(a_bool_t));
+		    dprintf(" [policer_index]:0x%x", entry->policer_index);
 	    }
     }
 
@@ -23097,10 +23147,13 @@ cmd_data_print_ac_static_thresh(a_uint8_t * param_name, a_uint32_t * buf, a_uint
 
     dprintf("\n[color_en]:0x%x [wred_en]:0x%x [green_max]:0x%x ",
 			entry->color_enable, entry->wred_enable, entry->green_max);
-    dprintf("\n[green_min_off]:0x%x [yel_max_off]:0x%x [yel_min_off]:0x%x [red_max_off]:0x%x [red_min_off]:0x%x ",
-			entry->green_min_off, entry->yel_max_off, entry->yel_min_off, entry->red_max_off, entry->red_min_off);
-    dprintf("\n[green_resume_off]:0x%x [yel_resume_off]:0x%x [red_resume_off]:0x%x ",
-			entry->green_resume_off, entry->yel_resume_off, entry->red_resume_off);
+    dprintf("\n[green_min_off]:0x%x [yel_max_off]:0x%x [yel_min_off]:0x%x [red_max_off]:0x%x "
+		    "[red_min_off]:0x%x ",
+		    entry->green_min_off, entry->yel_max_off, entry->yel_min_off,
+		    entry->red_max_off, entry->red_min_off);
+    dprintf("\n[green_resume_off]:0x%x [yel_resume_off]:0x%x [red_resume_off]:0x%x [status]:%s",
+			entry->green_resume_off, entry->yel_resume_off, entry->red_resume_off,
+			entry->status ? "enable" : "disable");
 }
 
 void
@@ -23112,10 +23165,14 @@ cmd_data_print_ac_dynamic_thresh(a_uint8_t * param_name, a_uint32_t * buf, a_uin
 
     dprintf("\n[color_en]:0x%x [wred_en]:0x%x [shared_weight]:0x%x ",
 			entry->color_enable, entry->wred_enable, entry->shared_weight);
-    dprintf("\n[green_min_off]:0x%x [yel_max_off]:0x%x [yel_min_off]:0x%x [red_max_off]:0x%x [red_min_off]:0x%x ",
-			entry->green_min_off, entry->yel_max_off, entry->yel_min_off, entry->red_max_off, entry->red_min_off);
-    dprintf("\n[green_resume_off]:0x%x [yel_resume_off]:0x%x [red_resume_off]:0x%x [ceiling]:0x%x ",
-			entry->green_resume_off, entry->yel_resume_off, entry->red_resume_off, entry->ceiling);
+    dprintf("\n[green_min_off]:0x%x [yel_max_off]:0x%x [yel_min_off]:0x%x "
+		    "[red_max_off]:0x%x [red_min_off]:0x%x ",
+		    entry->green_min_off, entry->yel_max_off, entry->yel_min_off,
+		    entry->red_max_off, entry->red_min_off);
+    dprintf("\n[green_resume_off]:0x%x [yel_resume_off]:0x%x [red_resume_off]:0x%x "
+		    "[ceiling]:0x%x [status]:%s",
+		    entry->green_resume_off, entry->yel_resume_off, entry->red_resume_off,
+		    entry->ceiling, entry->status ? "enable" : "disable");
 }
 
 void
@@ -41143,4 +41200,301 @@ cmd_data_check_queue_hash(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
 	return cmd_data_check_queue_config(cmd_str, "rss_hash", arg_val);
 }
 
+sw_error_t
+cmd_data_check_direction(char * cmd_str, a_uint32_t * arg_val, a_uint32_t size)
+{
+    return cmd_data_check_attr("direction", cmd_str,
+                    arg_val, sizeof(*arg_val));
+}
+
+sw_error_t
+cmd_data_check_athtag_pri_mapping(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_athtag_pri_mapping_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_athtag_pri_mapping_t));
+
+    dprintf("\n");
+
+    cmd_data_check_element("ath pri", "0",
+                       "usage: priority in ath header,"
+                       "the format is 0x0-0x7 or 0-7\n",
+                       cmd_data_check_integer, (cmd, &tmpdata,
+                               0x7, 0x0));
+    entry.ath_pri = tmpdata;
+
+    cmd_data_check_element("int pri", "0",
+                       "usage: internal priority,"
+                       "the format is 0x0-0xf or 0-15\n",
+                       cmd_data_check_integer, (cmd, &tmpdata,
+                               0xf, 0x0));
+    entry.int_pri = tmpdata;
+
+    *(fal_athtag_pri_mapping_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_athtag_pri_mapping(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_athtag_pri_mapping_t *entry;
+
+    entry = (fal_athtag_pri_mapping_t *) buf;
+
+    dprintf("\n[ath_pri]:%d", entry->ath_pri);
+    dprintf("\n[int_pri]:%d\n", entry->int_pri);
+}
+
+sw_error_t
+cmd_data_check_athtag_port_mapping(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_athtag_port_mapping_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_athtag_port_mapping_t));
+
+    dprintf("\n");
+
+    cmd_data_check_element("ath port", "0",
+                        "usage: input port number such as 1,2\n",
+                        cmd_data_check_portmap, (cmd, &entry.ath_port,
+                        sizeof (fal_pbmp_t)));
+
+    cmd_data_check_element("int port", "0",
+                       "usage: port or vport number\n",
+                       cmd_data_check_integer, (cmd, &tmpdata,
+                               0xffffffff, 0x0));
+    entry.int_port = tmpdata;
+
+    *(fal_athtag_port_mapping_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_athtag_port_mapping(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_athtag_port_mapping_t *entry;
+
+    entry = (fal_athtag_port_mapping_t *) buf;
+
+    cmd_data_print_portmap("\n[ath_port]:", entry->ath_port, sizeof (fal_pbmp_t));
+    dprintf("\n[int_port]:%d\n", entry->int_port);
+}
+
+sw_error_t
+cmd_data_check_athtag_rx_cfg(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_athtag_rx_cfg_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_athtag_rx_cfg_t));
+
+    dprintf("\n");
+    cmd_data_check_element("athtag enable", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.athtag_en, sizeof (a_bool_t)));
+
+    cmd_data_check_element("athtag type", "0x0",
+                       "usage: the format is 0x0-0xffff or 0-65535\n",
+                       cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
+                               0x0));
+    entry.athtag_type = tmpdata & 0xffff;
+
+    *(fal_athtag_rx_cfg_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_athtag_rx_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_athtag_rx_cfg_t *entry;
+
+    entry = (fal_athtag_rx_cfg_t *) buf;
+
+    dprintf("\n[athtag_en]:%s", (entry->athtag_en) ? "YES" : "NO");
+    dprintf("  [athtag_type]:0x%x\n", entry->athtag_type);
+}
+
+sw_error_t
+cmd_data_check_athtag_tx_cfg(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_athtag_tx_cfg_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_athtag_tx_cfg_t));
+
+    dprintf("\n");
+    cmd_data_check_element("athtag enable", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.athtag_en, sizeof (a_bool_t)));
+
+    cmd_data_check_element("athtag type", "0x0",
+                       "usage: the format is 0x0-0xffff or 0-65535\n",
+                       cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
+                               0x0));
+    entry.athtag_type = tmpdata & 0xffff;
+
+    cmd_data_check_element("athtag version", "v3",
+                       "usage: v2 or v3\n",
+                       cmd_data_check_attr, ("athtag_version", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.version = tmpdata & 0x3;
+
+    cmd_data_check_element("athtag action", "normal",
+                       "usage: normal, read_write_reg, disable_learn, disable_offload "
+                       "or disable_learn_offload\n",
+                       cmd_data_check_attr, ("athtag_action", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.action = tmpdata & 0x7;
+
+    cmd_data_check_element("bypass fwd_en", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.bypass_fwd_en, sizeof (a_bool_t)));
+
+    cmd_data_check_element("disable field", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.field_disable, sizeof (a_bool_t)));
+
+    *(fal_athtag_tx_cfg_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_athtag_tx_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_athtag_tx_cfg_t *entry;
+    a_uint32_t tmpdata;
+
+    entry = (fal_athtag_tx_cfg_t *) buf;
+
+    dprintf("\n[athtag_en]:%s", (entry->athtag_en) ? "YES" : "NO");
+    dprintf("  [athtag_type]:0x%x", entry->athtag_type);
+    tmpdata = entry->version;
+    cmd_data_print_attr("athtag_version", "\n[athtag_version]:",
+                    &tmpdata, sizeof(tmpdata));
+    tmpdata = entry->action;
+    cmd_data_print_attr("athtag_action", "  [athtag_action]:",
+                    &tmpdata, sizeof(tmpdata));
+    dprintf("\n[bypass_fwd_en]:%s", (entry->bypass_fwd_en) ? "YES" : "NO");
+    dprintf("  [field_disable]:%s\n", (entry->field_disable) ? "YES" : "NO");
+}
+
+sw_error_t
+cmd_data_check_servcode_athtag(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_servcode_athtag_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_servcode_athtag_t));
+
+    dprintf("\n");
+    cmd_data_check_element("update athtag enable", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("athtag enable", "no",
+                               "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                               (cmd, A_FALSE, &entry.athtag_en, sizeof (a_bool_t)));
+        entry.athtag_update_bitmap |= BIT(FLD_UPDATE_ATH_TAG_INSERT);
+    }
+
+    cmd_data_check_element("update athtag action", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("athtag action", "normal",
+                           "usage: normal, read_write_reg, disable_learn, "
+                           "disable_offload or disable_learn_offload\n",
+                           cmd_data_check_attr, ("athtag_action", cmd,
+                                   &tmpdata, sizeof(tmpdata)));
+        entry.action = tmpdata & 0x7;
+        entry.athtag_update_bitmap |= BIT(FLD_UPDATE_ATH_TAG_ACTION);
+    }
+
+    cmd_data_check_element("update bypass fwd en", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("bypass fwd en", "no",
+                               "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                               (cmd, A_FALSE, &entry.bypass_fwd_en, sizeof (a_bool_t)));
+        entry.athtag_update_bitmap |= BIT(FLD_UPDATE_ATH_TAG_BYPASS_FWD_EN);
+    }
+
+    cmd_data_check_element("update dest port", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("dest port", "0",
+                            "usage: input port id or port bitmap\n",
+                            cmd_data_check_uint8, (cmd, &tmpdata,
+                            sizeof (a_uint32_t)));
+        entry.dest_port = tmpdata & 0x7f;
+        entry.athtag_update_bitmap |= BIT(FLD_UPDATE_ATH_TAG_DEST_PORT);
+    }
+
+    cmd_data_check_element("update disable field", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &tmpdata, sizeof (a_bool_t)));
+    if (A_TRUE == tmpdata)
+    {
+        cmd_data_check_element("disable field", "no",
+                               "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                               (cmd, A_FALSE, &entry.field_disable, sizeof (a_bool_t)));
+        entry.athtag_update_bitmap |= BIT(FLD_UPDATE_ATH_TAG_FIELD_DISABLE);
+    }
+    *(fal_servcode_athtag_t *) val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_servcode_athtag(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_servcode_athtag_t *entry;
+    a_uint32_t tmpdata;
+
+    entry = (fal_servcode_athtag_t *) buf;
+
+    if (entry->athtag_update_bitmap & BIT(FLD_UPDATE_ATH_TAG_INSERT))
+    {
+        dprintf("\n[update athtag en]: YES");
+        cmd_data_print_confirm("  [athtag_en]:", entry->athtag_en, sizeof(a_uint32_t));
+    }
+
+    if (entry->athtag_update_bitmap & BIT(FLD_UPDATE_ATH_TAG_ACTION))
+    {
+        tmpdata = entry->action;
+        dprintf("\n[update athtag action]: YES");
+        cmd_data_print_attr("athtag_action", "  [athtag_action]:",
+                    &tmpdata, sizeof(tmpdata));
+    }
+
+    if (entry->athtag_update_bitmap & BIT(FLD_UPDATE_ATH_TAG_BYPASS_FWD_EN))
+    {
+        dprintf("\n[update bypass_fwd_en]: YES");
+        cmd_data_print_confirm("  [bypass_fwd_en]:", entry->bypass_fwd_en, sizeof(a_uint32_t));
+    }
+
+    if (entry->athtag_update_bitmap & BIT(FLD_UPDATE_ATH_TAG_DEST_PORT))
+    {
+        dprintf("\n[update dest port]: YES");
+        dprintf("  [dest_port]:0x%x", entry->dest_port);
+    }
+
+    if (entry->athtag_update_bitmap & BIT(FLD_UPDATE_ATH_TAG_FIELD_DISABLE))
+    {
+        dprintf("\n[update disable field]: YES");
+        cmd_data_print_confirm("  [field_disable]:", entry->field_disable, sizeof(a_uint32_t));
+    }
+}
 /* auto_insert_flag_1 */

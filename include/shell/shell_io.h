@@ -1,18 +1,18 @@
 /*
  * Copyright (c) 2014-2019, The Linux Foundation. All rights reserved.
- *
  * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
  *
- * Permission to use, copy, modify, and/or distribute this software for
- * any purpose with or without fee is hereby granted, provided that the
- * above copyright notice and this permission notice appear in all copies.
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
- * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 /*qca808x_start*/
 #ifndef _SHELL_IO_H
@@ -1347,6 +1347,29 @@ sw_error_t
 cmd_data_check_queue_hash(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size);
 void
 cmd_data_print_queue_config(a_char_t *param_name, a_uint32_t *buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_direction(char * cmd_str, a_uint32_t * arg_val, a_uint32_t size);
+sw_error_t
+cmd_data_check_athtag_pri_mapping(char * cmd_str, void * val, a_uint32_t size);
+void
+cmd_data_print_athtag_pri_mapping(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_athtag_port_mapping(char * cmd_str, void * val, a_uint32_t size);
+void
+cmd_data_print_athtag_port_mapping(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_athtag_rx_cfg(char * cmd_str, void * val, a_uint32_t size);
+void
+cmd_data_print_athtag_rx_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_athtag_tx_cfg(char * cmd_str, void * val, a_uint32_t size);
+void
+cmd_data_print_athtag_tx_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_servcode_athtag(char * cmd_str, void * val, a_uint32_t size);
+void
+cmd_data_print_servcode_athtag(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 /* auto_insert_flag */
 
 /*qca808x_start*/
