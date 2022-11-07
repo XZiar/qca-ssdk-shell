@@ -869,6 +869,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_ATHTAG_RX_CFG, cmd_data_check_athtag_rx_cfg, cmd_data_print_athtag_rx_cfg),
     SW_TYPE_DEF(SW_ATHTAG_TX_CFG, cmd_data_check_athtag_tx_cfg, cmd_data_print_athtag_tx_cfg),
     SW_TYPE_DEF(SW_SERVCODE_ATHTAG, cmd_data_check_servcode_athtag, cmd_data_print_servcode_athtag),
+    SW_TYPE_DEF(SW_COMBO_LINK, NULL, cmd_data_print_combo_link),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -40678,8 +40679,10 @@ cmd_data_print_port_cnt(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 
 	dprintf("\n[%s] \n", param_name);
 
+	dprintf("\n[ingress_buff_empty_drop]:%ld \n", entry->buff_empty_drop);
+
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
-	dprintf("[rx_pkt_cnt]:%ld [rx_byte_cnt]:%lld"
+	dprintf("\n[rx_pkt_cnt]:%ld [rx_byte_cnt]:%lld"
 			" [rx_drop_pkt_cnt]:%ld [rx_drop_byte_cnt]:%lld\n",
 			entry->rx_pkt_cnt, entry->rx_byte_cnt,
 			entry->rx_drop_pkt_cnt, entry->rx_drop_byte_cnt);
@@ -41496,5 +41499,38 @@ cmd_data_print_servcode_athtag(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
         dprintf("\n[update disable field]: YES");
         cmd_data_print_confirm("  [field_disable]:", entry->field_disable, sizeof(a_uint32_t));
     }
+}
+
+void
+cmd_data_print_combo_link(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_port_combo_link_status_t * status;
+
+	status = (fal_port_combo_link_status_t *) buf;
+
+	if (status->copper_link_status == A_TRUE)
+	{
+		dprintf("[Copper Status]:ENABLE\n");
+	}
+	else if (status->copper_link_status == A_FALSE)
+	{
+		dprintf("[Copper Status]:DISABLE\n");
+	}
+	else
+	{
+		dprintf("[Copper Status]:UNKNOWN VALUE\n");
+	}
+	if (status->fiber_link_status == A_TRUE)
+	{
+		dprintf("[Fiber Status]:ENABLE\n");
+	}
+	else if (status->fiber_link_status == A_FALSE)
+	{
+		dprintf("[Fiber Status]:DISABLE\n");
+	}
+	else
+	{
+		dprintf("[Fiber Status]:UNKNOWN VALUE\n");
+	}
 }
 /* auto_insert_flag_1 */
