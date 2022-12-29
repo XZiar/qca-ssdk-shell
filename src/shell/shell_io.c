@@ -7353,6 +7353,18 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
             {
                 entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_TUNL_CONTEXT);
             }
+
+            /*new add bypass for IPQ53xx*/
+            if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION)
+            {
+                cmd_data_check_element("bypass flow policer", "no", "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                           sizeof (a_bool_t)));
+                if (tmpdata)
+                {
+                    entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_FLOW_POLICER);
+                }
+            }
         }
     }
 
@@ -8018,6 +8030,11 @@ static void cmd_data_print_acl_bypass_bitmap(a_uint32_t bitmap)
         {
             dprintf("\t[bypass_fake_mac_qos]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_FAKE_MAC_DROP)&0x1);
             dprintf("\t[bypass_tunnel_context]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_TUNL_CONTEXT)&0x1);
+            /*new add bypass for IPQ53xx*/
+            if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION)
+            {
+                dprintf("\t[bypass_flow_policer]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_FLOW_POLICER)&0x1);
+            }
         }
 	return;
 }
