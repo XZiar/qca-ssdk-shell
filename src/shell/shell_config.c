@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2021-2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2023, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -269,7 +269,7 @@ struct cmd_des_t gcmd_des[] =
         "vlan", "config VLAN table",
         {
             {"entry", "create", "create a VLAN entry", "<vlan_id>", SW_API_VLAN_ADD, NULL},
-            {"entry", "del", "delete a VLAN entryn", "<vlan_id>", SW_API_VLAN_DEL, NULL},
+            {"entry", "del", "delete a VLAN entry", "<vlan_id>", SW_API_VLAN_DEL, NULL},
             {"entry", "update", "update port member of a VLAN entry",
 		    "<vlan_id> <member_bitmap> <0>", SW_API_VLAN_MEM_UPDATE, NULL},
             {"entry", "find", "find a VLAN entry by VLAN id", "<vlan_id>", SW_API_VLAN_FIND, NULL},
