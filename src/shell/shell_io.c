@@ -41135,6 +41135,7 @@ cmd_data_print_ppe_capacity(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t si
 	dprintf("[queues_capacity]:%d\n", entry->queue_caps);
 	dprintf("[service_codes_capacity]:%d\n", entry->service_code_caps);
 	dprintf("[pppoe_session_capacity]:%d\n", entry->pppoe_session_caps);
+	dprintf("[policer_capacity]:%d\n", entry->policer_caps);
 
 	dprintf("\n");
 }
