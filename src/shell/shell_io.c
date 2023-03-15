@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2023, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -9396,7 +9396,7 @@ cmd_data_check_vlan_translation(char *info, fal_vlan_trans_entry_t *val, a_uint3
 		}
 		else
 		{
-			rv = cmd_data_check_uint32(cmd, &entry.o_vid, sizeof (a_uint32_t));
+			rv = cmd_data_check_integer(cmd, &entry.o_vid, 0xfff, 0x0);
 			if (SW_OK != rv)
 				dprintf("usage: the range is 0 -- 4095\n");
 		}
@@ -9502,7 +9502,7 @@ cmd_data_check_vlan_translation(char *info, fal_vlan_trans_entry_t *val, a_uint3
 		}
 		else
 		{
-			rv = cmd_data_check_uint32(cmd, &entry.s_vid, sizeof (a_uint32_t));
+			rv = cmd_data_check_integer(cmd, &entry.s_vid, 0xfff, 0x0);
 			if (SW_OK != rv)
 				dprintf("usage: the range is 0 -- 4095\n");
 		}
@@ -9528,7 +9528,7 @@ cmd_data_check_vlan_translation(char *info, fal_vlan_trans_entry_t *val, a_uint3
 		}
 		else
 		{
-			rv = cmd_data_check_uint32(cmd, &entry.c_vid, sizeof (a_uint32_t));
+			rv = cmd_data_check_integer(cmd, &entry.c_vid, 0xfff, 0x0);
 			if (SW_OK != rv)
 				dprintf("usage: the range is 0 -- 4095\n");
 		}
@@ -9746,7 +9746,7 @@ cmd_data_check_vlan_translation(char *info, fal_vlan_trans_entry_t *val, a_uint3
 		}
 		else
 		{
-			rv = cmd_data_check_uint32(cmd, &entry.s_vid, sizeof (a_uint32_t));
+			rv = cmd_data_check_integer(cmd, &entry.s_vid, 0xfff, 0x0);
 			if (SW_OK != rv)
 				dprintf("usage: the range is 0 -- 4095\n");
 		}
@@ -9799,7 +9799,7 @@ cmd_data_check_vlan_translation(char *info, fal_vlan_trans_entry_t *val, a_uint3
 		}
 		else
 		{
-			rv = cmd_data_check_uint32(cmd, &entry.c_vid, sizeof (a_uint32_t));
+			rv = cmd_data_check_integer(cmd, &entry.c_vid, 0xfff, 0x0);
 			if (SW_OK != rv)
 				dprintf("usage: the range is 0 -- 4095\n");
 		}
@@ -10410,7 +10410,7 @@ cmd_data_check_vlan_translation(char *info, fal_vlan_trans_entry_t *val, a_uint3
            }
            else
            {
-               rv = cmd_data_check_uint16(cmd, &tmp, sizeof (a_uint32_t));
+               rv = cmd_data_check_integer(cmd, &tmp, 0xfff, 0x0);
                if (SW_OK != rv)
                {
                     dprintf("usage: the range is 0 -- 4095\n");
@@ -10462,7 +10462,7 @@ cmd_data_check_vlan_translation(char *info, fal_vlan_trans_entry_t *val, a_uint3
            }
            else
            {
-               rv = cmd_data_check_uint16(cmd, &tmp, sizeof (a_uint32_t));
+               rv = cmd_data_check_integer(cmd, &tmp, 0xfff, 0x0);
                if (SW_OK != rv)
                {
                     dprintf("usage: the range is 0 -- 4095\n");
@@ -25585,7 +25585,7 @@ cmd_data_check_port_vlan_tag(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+            rv = cmd_data_check_integer(cmd, &tmp, 0xfff, 0x0);
             if (SW_OK != rv)
                 dprintf("usage: <0-4095>\n");
 
@@ -25610,7 +25610,7 @@ cmd_data_check_port_vlan_tag(char *info, void *val, a_uint32_t size)
         }
         else
         {
-            rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+            rv = cmd_data_check_integer(cmd, &tmp, 0xfff, 0x0);
             if (SW_OK != rv)
                 dprintf("usage: <0-4095>\n");
 
@@ -25882,7 +25882,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 		}
 		else
 		{
-			rv = cmd_data_check_uint32(cmd, &entry.s_vid, sizeof (a_uint32_t));
+			rv = cmd_data_check_integer(cmd, &entry.s_vid, 0xfff, 0x0);
 			if (SW_OK != rv)
 				dprintf("usage: the range is 0 -- 4095\n");
 		}
@@ -26074,7 +26074,7 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 		}
 		else
 		{
-			rv = cmd_data_check_uint32(cmd, &entry.c_vid, sizeof (a_uint32_t));
+			rv = cmd_data_check_integer(cmd, &entry.c_vid, 0xfff, 0x0);
 			if (SW_OK != rv)
 				dprintf("usage: the range is 0 -- 4095\n");
 		}
@@ -26554,7 +26554,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else
 		{
-			rv = cmd_data_check_uint16(cmd, &tmp, sizeof (a_uint32_t));
+			rv = cmd_data_check_integer(cmd, &tmp, 0xfff, 0x0);
 			if (SW_OK != rv)
 			{
 				dprintf("usage: the range is 0 -- 4095\n");
@@ -26606,7 +26606,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else
 		{
-			rv = cmd_data_check_uint16(cmd, &tmp, sizeof (a_uint32_t));
+			rv = cmd_data_check_integer(cmd, &tmp, 0xfff, 0x0);
 			if (SW_OK != rv)
 			{
 				dprintf("usage: the range is 0 -- 4095\n");
@@ -36085,11 +36085,11 @@ cmd_data_check_tunnel_decap_action_entry(char *cmd_str,
 			rv = SW_BAD_VALUE;
 		}
 		else {
-			rv = cmd_data_check_tag_format(cmd,
-					(a_uint32_t *)&(entry_action.verify_entry.svlan_fmt),
-					sizeof(a_uint32_t));
+			rv = cmd_data_check_tag_format(cmd, &tmp, sizeof(a_uint32_t));
 			if (SW_OK != rv)
 				dprintf("usage: tag or untag\n");
+			else
+				entry_action.verify_entry.svlan_fmt = tmp;
 		}
 	} while (talk_mode && (SW_OK != rv));
 
@@ -36152,11 +36152,11 @@ cmd_data_check_tunnel_decap_action_entry(char *cmd_str,
 			rv = SW_BAD_VALUE;
 		}
 		else {
-			rv = cmd_data_check_tag_format(cmd,
-					(a_uint32_t *)&(entry_action.verify_entry.cvlan_fmt),
-					sizeof(a_uint32_t));
+			rv = cmd_data_check_tag_format(cmd, &tmp, sizeof(a_uint32_t));
 			if (SW_OK != rv)
 				dprintf("usage: tag or untag\n");
+			else
+				entry_action.verify_entry.cvlan_fmt = tmp;
 		}
 	} while (talk_mode && (SW_OK != rv));
 
@@ -36899,10 +36899,11 @@ cmd_data_check_tunnel_encap_entry(char *cmd_str, fal_tunnel_encap_cfg_t *arg_val
 			rv = SW_BAD_VALUE;
 		}
 		else {
-			rv = cmd_data_check_tag_format(cmd, (a_uint32_t *)&(entry.svlan_fmt),
-					sizeof(a_uint32_t));
+			rv = cmd_data_check_tag_format(cmd, &tmp, sizeof(a_uint32_t));
 			if (SW_OK != rv)
 				dprintf("usage: tag or untag\n");
+			else
+				entry.svlan_fmt = tmp;
 		}
 	} while (talk_mode && (SW_OK != rv));
 
@@ -36954,10 +36955,11 @@ cmd_data_check_tunnel_encap_entry(char *cmd_str, fal_tunnel_encap_cfg_t *arg_val
 			rv = SW_BAD_VALUE;
 		}
 		else {
-			rv = cmd_data_check_tag_format(cmd, (a_uint32_t *)&(entry.cvlan_fmt),
-					sizeof(a_uint32_t));
+			rv = cmd_data_check_tag_format(cmd, &tmp, sizeof(a_uint32_t));
 			if (SW_OK != rv)
 				dprintf("usage: tag or untag\n");
+			else
+				entry.cvlan_fmt = tmp;
 		}
 	} while (talk_mode && (SW_OK != rv));
 
@@ -38786,11 +38788,11 @@ cmd_data_check_mapt_decap_entry(char *cmd_str, void *arg_val, a_uint32_t size)
 			rv = SW_BAD_VALUE;
 		}
 		else {
-			rv = cmd_data_check_tag_format(cmd,
-					(a_uint32_t *)&(entry.verify_entry.svlan_fmt),
-					sizeof(a_uint32_t));
+			rv = cmd_data_check_tag_format(cmd, &tmp, sizeof(a_uint32_t));
 			if (SW_OK != rv)
 				dprintf("usage: tag or untag\n");
+			else
+				entry.verify_entry.svlan_fmt = tmp;
 		}
 	} while (talk_mode && (SW_OK != rv));
 
@@ -38853,11 +38855,11 @@ cmd_data_check_mapt_decap_entry(char *cmd_str, void *arg_val, a_uint32_t size)
 			rv = SW_BAD_VALUE;
 		}
 		else {
-			rv = cmd_data_check_tag_format(cmd,
-					(a_uint32_t *)&(entry.verify_entry.cvlan_fmt),
-					sizeof(a_uint32_t));
+			rv = cmd_data_check_tag_format(cmd, &tmp, sizeof(a_uint32_t));
 			if (SW_OK != rv)
 				dprintf("usage: tag or untag\n");
+			else
+				entry.verify_entry.cvlan_fmt = tmp;
 		}
 	} while (talk_mode && (SW_OK != rv));
 
