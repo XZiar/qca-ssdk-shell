@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014, 2017-2018, The Linux Foundation. All rights reserved.
  *
- * Copyright (c) 2021-2022 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2023 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -301,13 +301,20 @@ cmd_parse_api(char **cmd_str, a_ulong_t * arg_val)
             /*check and convert input param */
             if (data_type->param_check != NULL)
             {
-                if (data_type->param_check(tmp_str, pentry, pptmp->data_size) != SW_OK)
-                    return SW_BAD_PARAM;
-	    if(!get_talk_mode() && (pptmp->param_type & SW_PARAM_PTR)) {
-	    	if (get_jump())
-	    		jump += get_jump() -1;
-	    }
+                if(!(pptmp->param_type & SW_PARAM_PTR) && sizeof(a_ulong_t) != sizeof(a_uint32_t)) {
+                    a_uint32_t tmp = 0;
+                    if (data_type->param_check(tmp_str, &tmp, pptmp->data_size) != SW_OK)
+                        return SW_BAD_PARAM;
+                    *(a_ulong_t *)pentry = tmp;
+                } else {
+                    if (data_type->param_check(tmp_str, pentry, pptmp->data_size) != SW_OK)
+                        return SW_BAD_PARAM;
+                }
 
+                if(!get_talk_mode() && (pptmp->param_type & SW_PARAM_PTR)) {
+                    if (get_jump())
+                        jump += get_jump() -1;
+                }
             }
         }
     }
