@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014, 2017, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2023, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -92,6 +92,8 @@ typedef struct {
 	a_bool_t pri_en;
 	a_bool_t dp_en;
 	a_uint8_t qos_prec; /* resolution precedence */
+	a_bool_t policy_en; /* added for ipq53xx */
+	a_uint8_t policy_id; /* added for ipq53xx */
 } fal_qos_cosmap_t;
 
 typedef enum {
