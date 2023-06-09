@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014, 2016-2019, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2021-2022 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2023 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -254,6 +254,8 @@ typedef enum {
 				/**<PORT_UQXGMII mode*/
 		PORT_UQXGMII_3CHANNELS,
 				/**<PORT_UQXGMII 3 port mode*/
+		PORT_INTERFACE_MODE_AUTO,
+				/**PORT AUTO INTERFACE MODE*/
 		PORT_INTERFACE_MODE_MAX = 0xFF
 	} fal_port_interface_mode_t;
 

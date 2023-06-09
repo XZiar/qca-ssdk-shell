@@ -1834,6 +1834,8 @@ cmd_data_check_interface_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t si
 	  *arg_val = PORT_UQXGMII;
     else if (!strncasecmp(cmd_str, "uqxgmii_3channels", 20))
 	  *arg_val = PORT_UQXGMII_3CHANNELS;
+    else if (!strncasecmp(cmd_str, "auto", 5))
+	  *arg_val = PORT_INTERFACE_MODE_AUTO;
     else if (!strncasecmp(cmd_str, "interfacemode_max", 20))
 	  *arg_val = PORT_INTERFACE_MODE_MAX;
     else
@@ -1916,6 +1918,10 @@ cmd_data_print_interface_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     else if(*(a_uint32_t *) buf == PORT_UQXGMII_3CHANNELS)
     {
 	    dprintf("uqxgmii_3channels");
+    }
+    else if(*(a_uint32_t *) buf == PORT_INTERFACE_MODE_AUTO)
+    {
+	    dprintf("auto");
     }
     else if (*(a_uint32_t *) buf == PORT_INTERFACE_MODE_MAX)
     {
