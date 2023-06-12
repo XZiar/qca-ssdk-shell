@@ -20642,7 +20642,7 @@ sw_error_t
 cmd_data_check_cosmap(char *cmd_str, void * val, a_uint32_t size)
 {
     char *cmd;
-    a_uint32_t tmp = 0;
+    a_uint32_t tmp;
     sw_error_t rv;
     fal_qos_cosmap_t entry;
 
@@ -20990,19 +20990,6 @@ cmd_data_check_cosmap(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE &&
-		    ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
-	    cmd_data_check_element("policy_en", "no",
-			    "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
-			    (cmd, A_FALSE, &entry.policy_en, sizeof (a_bool_t)));
-
-	    cmd_data_check_element("policy_id", "0",
-			    "usage: flow policy id rang 0-0x7f\n",
-			    cmd_data_check_uint8, (cmd, &tmp,
-				    sizeof (a_uint32_t)));
-	    entry.policy_id= tmp & 0x7f;
-    }
-
     *(fal_qos_cosmap_t *)val = entry;
     return SW_OK;
 }
@@ -21022,10 +21009,6 @@ cmd_data_print_cosmap(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 			entry->dscp_en, entry->pcp_en, entry->dei_en);
     dprintf("\n[pri_en]:0x%x [dp_en]:0x%x [qos_prec]:0x%x ",
 			entry->pri_en, entry->dp_en, entry->qos_prec);
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE &&
-		    ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
-	    dprintf("\n[policy_en]:0x%x [policy_id]:0x%x", entry->policy_en, entry->policy_id);
-    }
 }
 
 void
