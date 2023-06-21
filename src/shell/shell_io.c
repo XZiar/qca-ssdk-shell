@@ -3275,9 +3275,9 @@ cmd_data_check_srctype(char *cmdstr, a_uint8_t def, a_uint8_t *val, a_uint32_t s
 	if (0 == cmdstr[0]) {
 		*val = def;
 	} else if (!strcasecmp(cmdstr, "vp")) {
-		*val = 0;
+		*val = FAL_CHG_SRC_TYPE_VP;
 	} else if (!strcasecmp(cmdstr, "l3_if")) {
-		*val = 1;
+		*val = FAL_CHG_SRC_L3_IF_TUNNEL;
 	} else {
 		return SW_BAD_VALUE;
 	}
@@ -3288,11 +3288,57 @@ void
 cmd_data_print_srctype(char *param_name, a_uint8_t val, a_uint32_t size)
 {
     dprintf("%s", param_name);
-    if (1 == val) {
+    if (FAL_CHG_SRC_L3_IF_TUNNEL == val) {
         dprintf("l3_if");
     } else {
         dprintf("vp");
     }
+
+    return;
+}
+
+sw_error_t
+cmd_data_check_vlan_xlt_tag_fmt(char *cmdstr, a_uint32_t *val, a_uint32_t size)
+{
+	if (!cmdstr)
+		return SW_BAD_VALUE;
+
+	*val = 0;
+
+	if (SW_OK != cmd_data_check_uint8(cmdstr, val, size) && strstr(cmdstr, "tag")) {
+		if (NULL != strstr(cmdstr, "untag"))
+			*val |= FAL_PORT_VLAN_XLT_MATCH_UNTAGGED;
+
+		if (strstr(cmdstr, "pri_tag"))
+			*val |= FAL_PORT_VLAN_XLT_MATCH_PRIO_TAG;
+
+		if (strstr(cmdstr, "tagged"))
+			*val |= FAL_PORT_VLAN_XLT_MATCH_TAGGED;
+	}
+
+	if (0 == *val)
+		return SW_BAD_VALUE;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_vlan_xlt_tag_fmt(char *param_name, a_uint32_t val, a_uint32_t size)
+{
+	char tmp[32] = {'\0'};
+
+    dprintf("%s", param_name);
+
+	if (FAL_PORT_VLAN_XLT_MATCH_UNTAGGED & val)
+		strlcat(tmp, " untag", sizeof(tmp));
+
+	if (FAL_PORT_VLAN_XLT_MATCH_PRIO_TAG & val)
+		strlcat(tmp, " pri_tag", sizeof(tmp));
+
+	if (FAL_PORT_VLAN_XLT_MATCH_TAGGED & val)
+		strlcat(tmp, " tagged", sizeof(tmp));
+
+	dprintf("%s", tmp);
 
     return;
 }
@@ -25817,17 +25863,19 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			dprintf("usage: bit 0 for untagged, bit 1 for priority tagged and bit 2 "
+			dprintf("usage: formatstr as untag,pri_tag,tagged\n");
+			dprintf("	    bitmap as 0x7, bit 0 for untagged, bit 1 for priority tagged and bit 2 "
 				"for tagged\n");
 			rv = SW_BAD_VALUE;
 		}
 		else
 		{
-			rv = cmd_data_check_uint8(cmd, &tmp, sizeof (a_uint32_t));
+			rv = cmd_data_check_vlan_xlt_tag_fmt(cmd, &tmp, sizeof(a_uint32_t));
 			if (SW_OK != rv)
 			{
-				dprintf("usage: bit 0 for untagged, bit 1 for priority tagged and "
-					"bit 2 for tagged\n");
+				dprintf("usage: formatstr as untag,pri_tag,tagged\n");
+				dprintf("	    bitmap as 0x7, bit 0 for untagged, bit 1 for priority tagged and bit 2 "
+					"for tagged\n");
 			}
 			else
 			{
@@ -26009,17 +26057,19 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			dprintf("usage: bit 0 for untagged, bit 1 for priority tagged and "
-				"bit 2 for tagged\n");
+			dprintf("usage: formatstr as untag,pri_tag,tagged\n");
+			dprintf("	    bitmap as 0x7, bit 0 for untagged, bit 1 for priority tagged and bit 2 "
+				"for tagged\n");
 			rv = SW_BAD_VALUE;
 		}
 		else
 		{
-			rv = cmd_data_check_uint8(cmd, &tmp, sizeof (a_uint32_t));
+			rv = cmd_data_check_vlan_xlt_tag_fmt(cmd, &tmp, sizeof(a_uint32_t));
 			if (SW_OK != rv)
 			{
-				dprintf("usage: bit 0 for untagged, bit 1 for priority tagged "
-					"and bit 2 for tagged\n");
+				dprintf("usage: formatstr as untag,pri_tag,tagged\n");
+				dprintf("	    bitmap as 0x7, bit 0 for untagged, bit 1 for priority tagged and bit 2 "
+					"for tagged\n");
 			}
 			else
 			{
@@ -26454,12 +26504,14 @@ cmd_data_print_port_vlan_translation_adv_rule(a_uint8_t * param_name,
 
 	dprintf("\n\n rule field: ");
 	dprintf("\n[port_bitmap]:0x%x", entry->port_bitmap);
-	dprintf("\n[stagformat]:0x%x", entry->s_tagged);
+	cmd_data_print_vlan_xlt_tag_fmt("\n[stagformat]:", entry->s_tagged,
+			sizeof(entry->s_tagged));
 	dprintf("\n[svid_en]:%s  [svid]:%d", entry->s_vid_enable?"ENABLE":"DISABLE", entry->s_vid);
 	dprintf("\n[spcp_en]:%s  [spcp]:%d", entry->s_pcp_enable?"ENABLE":"DISABLE", entry->s_pcp);
 	dprintf("\n[sdei_en]:%s  [sdei]:%d", entry->s_dei_enable?"ENABLE":"DISABLE", entry->s_dei);
 
-	dprintf("\n[ctagformat]:0x%x", entry->c_tagged);
+	cmd_data_print_vlan_xlt_tag_fmt("\n[ctagformat]:", entry->c_tagged,
+			sizeof(entry->c_tagged));
 	dprintf("\n[cvid_en]:%s  [cvid]:%d", entry->c_vid_enable?"ENABLE":"DISABLE", entry->c_vid);
 	dprintf("\n[cpcp_en]:%s  [cpcp]:%d", entry->c_pcp_enable?"ENABLE":"DISABLE", entry->c_pcp);
 	dprintf("\n[cdei_en]:%s  [cdei]:%d", entry->c_dei_enable?"ENABLE":"DISABLE", entry->c_dei);
