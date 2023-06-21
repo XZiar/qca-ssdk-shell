@@ -8836,7 +8836,10 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
 
     dprintf("\n[match_counter]:%d", rule->match_cnt);
     dprintf("\n[match_bytes]:%lld", rule->match_bytes);
-
+    dprintf("\n\n[hw_rule_id]:%d  [hw_list_id]:%d",
+        rule->hw_info.hw_rule_id, rule->hw_info.hw_list_id);
+    cmd_data_print_portmap("  [hw_entries]:",
+        rule->hw_info.hw_entries, sizeof (rule->hw_info.hw_entries));
     return;
 }
 
