@@ -11417,7 +11417,7 @@ cmd_data_print_cable_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t
 void
 cmd_data_print_cable_len(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 {
-    dprintf("[%s]:%d", param_name, *(a_uint32_t *) buf);
+    dprintf("[%s]:%d meter", param_name, *(a_uint32_t *) buf);
 }
 
 char*
