@@ -11386,10 +11386,6 @@ cmd_data_print_cable_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t
     {
         dprintf("OPENED");
     }
-    else if (*(a_uint32_t *) buf == FAL_CABLE_STATUS_INVALID)
-    {
-        dprintf("INVALID");
-    }
     else if (*(a_uint32_t *) buf == FAL_CABLE_STATUS_CROSSOVERA)
     {
         dprintf("CROSSOVERA");
@@ -11416,7 +11412,7 @@ cmd_data_print_cable_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t
     }
     else
     {
-        dprintf("UNKNOWN VALUE");
+        dprintf("OTHERS");
     }
 }
 
