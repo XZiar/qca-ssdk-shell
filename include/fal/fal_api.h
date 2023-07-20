@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2021-2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2023, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -1576,8 +1576,6 @@ extern "C" {
 #define INTERFACECTRL_API \
     SW_API_DEF(SW_API_MAC_MODE_SET, fal_interface_mac_mode_set), \
     SW_API_DEF(SW_API_MAC_MODE_GET, fal_interface_mac_mode_get), \
-    SW_API_DEF(SW_API_PORT_3AZ_STATUS_SET, fal_port_3az_status_set), \
-    SW_API_DEF(SW_API_PORT_3AZ_STATUS_GET, fal_port_3az_status_get), \
     SW_API_DEF(SW_API_PHY_MODE_SET, fal_interface_phy_mode_set), \
     SW_API_DEF(SW_API_PHY_MODE_GET, fal_interface_phy_mode_get), \
     SW_API_DEF(SW_API_FX100_CTRL_SET, fal_interface_fx100_ctrl_set), \
@@ -1589,8 +1587,6 @@ extern "C" {
 #define INTERFACECTRL_API_PARAM \
     SW_API_DESC(SW_API_MAC_MODE_SET)  \
     SW_API_DESC(SW_API_MAC_MODE_GET)  \
-    SW_API_DESC(SW_API_PORT_3AZ_STATUS_SET)  \
-    SW_API_DESC(SW_API_PORT_3AZ_STATUS_GET)  \
     SW_API_DESC(SW_API_PHY_MODE_SET)  \
     SW_API_DESC(SW_API_PHY_MODE_GET)  \
     SW_API_DESC(SW_API_FX100_CTRL_SET)  \

@@ -1182,8 +1182,6 @@ struct cmd_des_t gcmd_des[] =
         {
             {"macmode", "set", "set mac mode info", "<port_id>", SW_API_MAC_MODE_SET, NULL},
             {"macmode", "get", "get mac mode info", "<port_id>", SW_API_MAC_MODE_GET, NULL},
-            {"pt3azstatus", "set", "get mac mode info", "<port_id> <enable/disable>", SW_API_PORT_3AZ_STATUS_SET, NULL},
-            {"pt3azstatus", "get", "get mac mode info", "<port_id>", SW_API_PORT_3AZ_STATUS_GET, NULL},
             {"phymode", "set", "set phy mode info", "<phy_id>", SW_API_PHY_MODE_SET, NULL},
             {"phymode", "get", "get phy mode info", "<phy_id>", SW_API_PHY_MODE_GET, NULL},
             {"fx100ctrl", "set", "set fx100 config", "", SW_API_FX100_CTRL_SET, NULL},
