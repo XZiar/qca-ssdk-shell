@@ -569,6 +569,7 @@ struct cmd_des_t gcmd_des[] =
             {"vpgroup", "get", "get vpgroup", "<vport_id> <vport_type>",
                     SW_API_ACL_VPGROUP_GET, NULL},
             {"macentry", "set", "set mac entry", "<entry>", SW_API_ACL_MAC_ENTRY_SET, NULL},
+            {"counter", "get", "get acl counter", "<entry_index>", SW_API_ACL_COUNTER_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

@@ -778,31 +778,6 @@ typedef struct
     a_uint8_t acl_policy; /*0 deny, 1 accept*/
 } fal_acl_mac_entry_t;
 
-enum
-{
-	/*acl*/
-	FUNC_ACL_LIST_CREAT = 0,
-	FUNC_ACL_LIST_DESTROY,
-	FUNC_ACL_RULE_ADD,
-	FUNC_ACL_RULE_DELETE,
-	FUNC_ACL_RULE_QUERY,
-	FUNC_ACL_RULE_DUMP,
-	FUNC_ACL_LIST_BIND,
-	FUNC_ACL_LIST_UNBIND,
-	FUNC_ACL_LIST_DUMP,
-	FUNC_ACL_UDF_PROFILE_SET,
-	FUNC_ACL_UDF_PROFILE_GET,
-	FUNC_ACL_UDF_PROFILE_ENTRY_ADD,
-	FUNC_ACL_UDF_PROFILE_ENTRY_DEL,
-	FUNC_ACL_UDF_PROFILE_ENTRY_GETFIRST,
-	FUNC_ACL_UDF_PROFILE_ENTRY_GETNEXT,
-	FUNC_ACL_UDF_PROFILE_CFG_SET,
-	FUNC_ACL_UDF_PROFILE_CFG_GET,
-	FUNC_ACL_VPGROUP_SET,
-	FUNC_ACL_VPGROUP_GET,
-};
-
-
 sw_error_t
 fal_acl_list_creat(a_uint32_t dev_id, a_uint32_t list_id, a_uint32_t list_pri);
 
@@ -893,6 +868,10 @@ fal_acl_mac_entry_set(a_uint32_t dev_id, fal_acl_mac_entry_t * entry);
 
 sw_error_t
 fal_acl_mac_entry_dump(a_uint32_t dev_id);
+
+sw_error_t
+fal_acl_counter_get(a_uint32_t dev_id, a_uint32_t entry_index,
+	fal_entry_counter_t *acl_counter);
 #ifdef __cplusplus
 }
 #endif                          /* __cplusplus */
