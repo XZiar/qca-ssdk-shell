@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2019, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2023, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -934,21 +934,6 @@ cmd_data_print_shaper_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
 
 void
 cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
-sw_error_t
-cmd_data_check_module(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
-
-void
-cmd_data_print_module(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
-sw_error_t
-cmd_data_check_func_ctrl(char *cmd_str, void * val, a_uint32_t size);
-
-void
-cmd_data_print_func_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
-
-void
-cmd_data_print_module_func_ctrl(a_uint32_t module, fal_func_ctrl_t *p);
 
 sw_error_t
 cmd_data_check_ptp_config(char *info, void *val, a_uint32_t size);

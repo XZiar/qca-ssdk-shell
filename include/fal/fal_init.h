@@ -93,10 +93,6 @@ sw_error_t fal_reset(a_uint32_t dev_id);
 sw_error_t fal_ssdk_cfg(a_uint32_t dev_id, ssdk_cfg_t *ssdk_cfg);
 /*qca808x_end*/
 sw_error_t fal_cleanup(void);
-sw_error_t fal_module_func_ctrl_set(a_uint32_t dev_id,
-		a_uint32_t module, fal_func_ctrl_t *func_ctrl);
-sw_error_t fal_module_func_ctrl_get(a_uint32_t dev_id,
-		a_uint32_t module, fal_func_ctrl_t *func_ctrl);
 sw_error_t
 fal_ppe_capacity_get(a_uint32_t dev_id, fal_ppe_tbl_caps_t *ppe_capacity);
 /*qca808x_start*/

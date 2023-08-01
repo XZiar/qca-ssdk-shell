@@ -207,12 +207,6 @@ cmd_api_output(sw_api_param_t *pp, a_uint32_t nr_param, a_ulong_t * args)
                 if (data_type->show_func)
                 {
                     data_type->show_func(pptmp->param_name, pbuf, pptmp->data_size);
-/*qca808x_end*/
-                    if(strcmp((a_char_t *)pptmp->param_name, "Function bitmap") == 0)
-                    {
-			cmd_data_print_module_func_ctrl(args[3], (fal_func_ctrl_t *)pbuf);
-                    }
-/*qca808x_start*/
                 }
                 else
                 {

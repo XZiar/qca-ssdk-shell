@@ -1425,8 +1425,6 @@ struct cmd_des_t gcmd_des[] =
             {"aclRule", "dump", "dump all acl rule", "", SW_API_ACL_RULE_DUMP, NULL},
 	    {"aclMacEntry", "dump", "dump all acl mac entry", "", SW_API_ACL_MAC_ENTRY_DUMP, NULL},
             {"device",  "reset", "reset device",     "", SW_API_SWITCH_RESET, NULL},
-            {"module_func",  "set", "set the module function bitmap", "<module>", SW_API_MODULE_FUNC_CTRL_SET, NULL},
-            {"module_func",  "get", "set the module function bitmap", "<module>", SW_API_MODULE_FUNC_CTRL_GET, NULL},
             {"ssdk",  "config", "show ssdk configuration",     "", SW_API_SSDK_CFG, NULL},
 /*qca808x_start*/
             {"phycounter",  "set", "set counter status of a port",   "<port_id> <enable|disable>", SW_API_DEBUG_PHYCOUNTER_SET, NULL},
