@@ -194,9 +194,9 @@ struct cmd_des_t gcmd_des[] =
             {"wolstatus", "get", "get wol status of a port", "<port_id>",
                 SW_API_PT_WOL_STATUS_GET, NULL},
 /*qca808x_end*/
-            {"interfaceMode", "set", "set interface mode of phy", "<port_id> <psgmii_baset|\
-                psgmii_bx1000|psgmii_fx100|psgmii_amdet|sgmii_baset|qsgmii|usxgmii|sgmii_plus|\
-                10gbase_r |sgmii_fiber|psgmii_fiber|interfacemode_max>",\
+            {"interfaceMode", "set", "set interface mode of phy",
+             "<port_id> <psgmii_baset|psgmii_bx1000|psgmii_fx100|psgmii_amdet|sgmii_baset|qsgmii"
+             "|usxgmii|sgmii_plus|10gbase_r |sgmii_fiber|psgmii_fiber|auto|interfacemode_max>",
                 SW_API_PT_INTERFACE_MODE_SET, NULL},
             {"interfaceMode", "get", "get interface mode of phy", "<port_id>",
                 SW_API_PT_INTERFACE_MODE_GET, NULL},
@@ -256,6 +256,8 @@ struct cmd_des_t gcmd_des[] =
                 "<port_id>", SW_API_PT_CNT_FLUSH, NULL},
             {"combolinkstatus", "get", "get link status of a combo port", "<port_id>",
                 SW_API_PT_COMBO_LINK_STATUS_GET, NULL},
+            {"erppowermode", "set", "set port erp power mode", "<port_id> <0:active|1:low_power>",
+                SW_API_PT_ERP_POWER_MODE_SET, NULL},
 /*qca808x_start*/
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL},/*end of desc*/
         },

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2021-2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2023, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -147,7 +147,8 @@ extern "C" {
     SW_API_DEF(SW_API_PT_CNT_CFG_GET, fal_port_cnt_cfg_get), \
     SW_API_DEF(SW_API_PT_CNT_GET, fal_port_cnt_get), \
     SW_API_DEF(SW_API_PT_CNT_FLUSH, fal_port_cnt_flush), \
-    SW_API_DEF(SW_API_PT_COMBO_LINK_STATUS_GET, fal_port_combo_link_status_get ),
+    SW_API_DEF(SW_API_PT_COMBO_LINK_STATUS_GET, fal_port_combo_link_status_get ), \
+    SW_API_DEF(SW_API_PT_ERP_POWER_MODE_SET, fal_port_erp_power_mode_set),
 /*qca808x_start*/\
 /*end of PORTCONTROL_API*/
 #define PORTCONTROL_API_PARAM \
@@ -272,7 +273,8 @@ extern "C" {
     SW_API_DESC(SW_API_PT_CNT_CFG_GET) \
     SW_API_DESC(SW_API_PT_CNT_GET) \
     SW_API_DESC(SW_API_PT_CNT_FLUSH) \
-    SW_API_DESC(SW_API_PT_COMBO_LINK_STATUS_GET)
+    SW_API_DESC(SW_API_PT_COMBO_LINK_STATUS_GET) \
+    SW_API_DESC(SW_API_PT_ERP_POWER_MODE_SET)
 /*qca808x_start*/\
 /*end of PORTCONTROL_API_PARAM*/
 /*qca808x_end*/

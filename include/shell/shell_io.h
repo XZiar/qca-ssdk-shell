@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2019, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2023, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -1372,6 +1372,8 @@ void
 cmd_data_print_servcode_athtag(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 void
 cmd_data_print_combo_link(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_erp_power_mode(char * cmd_str, a_uint32_t * val, a_uint32_t size);
 /* auto_insert_flag */
 
 /*qca808x_start*/
