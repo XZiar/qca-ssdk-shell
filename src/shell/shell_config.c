@@ -256,6 +256,8 @@ struct cmd_des_t gcmd_des[] =
                 "<port_id>", SW_API_PT_CNT_FLUSH, NULL},
             {"combolinkstatus", "get", "get link status of a combo port", "<port_id>",
                 SW_API_PT_COMBO_LINK_STATUS_GET, NULL},
+            {"erppowermode", "set", "set port erp power mode", "<port_id> <0:active|1:low_power>",
+                SW_API_PT_ERP_POWER_MODE_SET, NULL},
 /*qca808x_start*/
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL},/*end of desc*/
         },

@@ -342,6 +342,16 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"erp_power_mode",
+		{
+			{"active", FAL_ERP_ACTIVE},
+			{"low_power", FAL_ERP_LOW_POWER},
+			{"0", FAL_ERP_ACTIVE},
+			{"1", FAL_ERP_LOW_POWER},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -868,6 +878,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_ATHTAG_TX_CFG, cmd_data_check_athtag_tx_cfg, cmd_data_print_athtag_tx_cfg),
     SW_TYPE_DEF(SW_SERVCODE_ATHTAG, cmd_data_check_servcode_athtag, cmd_data_print_servcode_athtag),
     SW_TYPE_DEF(SW_COMBO_LINK, NULL, cmd_data_print_combo_link),
+    SW_TYPE_DEF(SW_ERP_POWER_MODE, cmd_data_check_erp_power_mode, NULL),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -41608,4 +41619,12 @@ cmd_data_print_combo_link(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t s
 		dprintf("[Fiber Status]:UNKNOWN VALUE\n");
 	}
 }
+
+sw_error_t
+cmd_data_check_erp_power_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
+{
+    return cmd_data_check_attr("erp_power_mode", cmd_str,
+                    arg_val, sizeof(*arg_val));
+}
+
 /* auto_insert_flag_1 */
