@@ -478,7 +478,7 @@ struct cmd_des_t gcmd_des[] =
             {"entry", "add", "add a FDB entry", "", SW_API_FDB_ADD, NULL},
             {"entry", "del", "delete a FDB entry", "", SW_API_FDB_DELMAC, NULL},
             {"entry", "flush", "flush all FDB entries", "<0:dynamic only|1:dynamic and static>", SW_API_FDB_DELALL, NULL},
-            {"entry", "show", "show whole FDB entries", "", SW_CMD_FDB_SHOW, cmd_show_fdb},
+            {"entry", "show", "show whole FDB entries", "<0:hardware table, 1: software table>", SW_CMD_FDB_SHOW, cmd_show_fdb},
             {"entry", "find", "find a FDB entry", "", SW_API_FDB_FIND, NULL},
             {"entry", "iterate", "iterate all FDB entries", "<iterator>", SW_API_FDB_ITERATE, NULL},
             {"entry", "extendnext", "find next FDB entry in extend mode", "", SW_API_FDB_EXTEND_NEXT, NULL},
