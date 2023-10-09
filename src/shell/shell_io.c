@@ -3460,8 +3460,8 @@ cmd_data_print_portmap(char * param_name, fal_pbmp_t val, a_uint32_t size)
 				    if(strlen(tmp) == 0)
 					    snprintf(tmp, sizeof(tmp), "%d", i);
 				    else
-					    snprintf(tmp+strlen(tmp),
-							    sizeof(tmp+strlen(tmp)), ",%d", i);
+					    snprintf(tmp + strlen(tmp),
+							    sizeof(tmp) - strlen(tmp), ",%d", i);
 			    }
 		    }
 		    break;
