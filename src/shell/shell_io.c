@@ -17516,7 +17516,8 @@ cmd_data_check_vsi_member(char *cmd_str, void * val, a_uint32_t size)
                         sizeof (a_uint32_t));
 	if (rv)
 		return rv;
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
 
 	{
 		rv = __cmd_data_check_complex("vports_bitmap(port64-port95)", 0,
@@ -17577,7 +17578,8 @@ cmd_data_print_vsi_member_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint
     dprintf("[unknown_unicast_membership]:0x%x\n", entry->uuc_ports);
     dprintf("[unknown_multicast_membership]:0x%x\n", entry->umc_ports);
     dprintf("[broadcast_membership]:0x%x\n", entry->bc_ports);
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
     {
         for(vports_bmp_index = 0;
             vports_bmp_index < sizeof(entry->member_vports)/sizeof(a_uint32_t);
@@ -26447,7 +26449,8 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 	}
 	while (talk_mode && (SW_OK != rv));
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 		do
 		{
 			cmd = get_sub_cmd("vni_resv_enable", "yes");
@@ -26559,7 +26562,8 @@ cmd_data_print_port_vlan_translation_adv_rule(a_uint8_t * param_name,
 	dprintf("\n[vsivalid]:%s  [vsi_en]:%s  [vsi]:%d\n\n", entry->vsi_valid?"ENABLE":"DISABLE",
 			entry->vsi_enable?"ENABLE":"DISABLE", entry->vsi);
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 		dprintf("\n[vni_resv_enable]:%s  [vni_resv_type]:%s  [vni_resv]:0x%x\n\n",
 				entry->vni_resv_enable?"ENABLE":"DISABLE",
 				entry->vni_resv_type?"VNI_RESV":"VNI_ONLY", entry->vni_resv);
@@ -27080,7 +27084,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 	}
 	while (talk_mode && (SW_OK != rv));
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 		do
 		{
 			cmd = get_sub_cmd("src_info_enable", "yes");
@@ -27248,7 +27253,8 @@ cmd_data_print_port_vlan_translation_adv_action(a_uint8_t * param_name, a_uint32
 			entry->vsi_xlt_enable?"ENABLE":"DISABLE",
 			entry->vsi_xlt);
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 		cmd_data_print_srctype("\n[src_info_type]:", entry->src_info_type,
 				sizeof(entry->src_info_type));
 
