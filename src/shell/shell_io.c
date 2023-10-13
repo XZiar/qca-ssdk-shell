@@ -3738,7 +3738,7 @@ cmd_data_check_fdbentry(char *info, void *val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("clone", "no");
+        cmd = get_sub_cmd("entry_ver", "1");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -3748,19 +3748,19 @@ cmd_data_check_fdbentry(char *info, void *val, a_uint32_t size)
         }
         else if (!strncasecmp(cmd, "help", 4))
         {
-            dprintf("usage: <yes/no/y/n>\n");
+            dprintf("usage: input number such as <0/1/>\n");
             rv = SW_BAD_VALUE;
         }
         else
         {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &entry.clone_en,
-                                        sizeof (a_bool_t));
+            rv = cmd_data_check_uint32(cmd, &tmp, sizeof (a_uint32_t));
             if (SW_OK != rv)
-                dprintf("usage: <yes/no/y/n>\n");
+                dprintf("usage: input number such as <0/1/>\n");
         }
 
     }
     while (talk_mode && (SW_OK != rv));
+    entry.entry_ver = tmp;
 
     do
     {
@@ -3922,6 +3922,29 @@ cmd_data_check_fdbentry(char *info, void *val, a_uint32_t size)
         entry.load_balance = tmp;
     }
 
+    do
+    {
+        cmd = get_sub_cmd("type", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("0:software entry, 1:hardware entry\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint8(cmd, &tmp, sizeof (a_uint8_t));
+            if (SW_OK != rv)
+                dprintf("usage: 0, 1\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+    entry.type = tmp;
+
     *(fal_fdb_entry_t *) val = entry;
 
     return SW_OK;
@@ -3966,9 +3989,7 @@ cmd_data_print_fdbentry(a_uint8_t * param_name, a_uint32_t * buf,
     cmd_data_print_confirm("[leaky]:", entry->leaky_en, sizeof (a_bool_t));
     dprintf(" ");
     cmd_data_print_confirm("[mirror]:", entry->mirror_en, sizeof (a_bool_t));
-    dprintf(" ");
-    cmd_data_print_confirm("[clone]:", entry->clone_en, sizeof (a_bool_t));
-    dprintf(" ");
+    dprintf(" \n");
     cmd_data_print_confirm("[da_pri]:", entry->da_pri_en, sizeof (a_bool_t));
     dprintf(" ");
     if (A_TRUE == entry->da_pri_en)
