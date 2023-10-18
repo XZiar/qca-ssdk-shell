@@ -40726,7 +40726,8 @@ cmd_data_check_port_cnt_cfg(char *cmd_str, fal_port_cnt_cfg_t *arg_val, a_uint32
 						cmd_data_check_enable, (cmd,
 						&(entry.mc_tx_cnt_en), sizeof(entry.mc_tx_cnt_en)));
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 		cmd_data_check_element("tl_rx_cnt_enable", "disable",
 							"usage: usage: enable/disable\n",
 							cmd_data_check_enable, (cmd,
@@ -40766,7 +40767,8 @@ cmd_data_print_port_cnt_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t si
 	cmd_data_print_enable("mc_tx_cnt_enable", &entry->mc_tx_cnt_en, sizeof(entry->mc_tx_cnt_en));
 	dprintf("\n");
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 		cmd_data_print_enable("tl_rx_cnt_enable", &entry->tl_rx_cnt_en, sizeof(entry->tl_rx_cnt_en));
 		dprintf("\n");
 
@@ -40793,7 +40795,8 @@ cmd_data_print_port_cnt(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 
 	dprintf("\n[ingress_buff_empty_drop]:%ld \n", entry->buff_empty_drop);
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 	dprintf("\n[rx_pkt_cnt]:%ld [rx_byte_cnt]:%lld"
 			" [rx_drop_pkt_cnt]:%ld [rx_drop_byte_cnt]:%lld\n",
 			entry->rx_pkt_cnt, entry->rx_byte_cnt,
