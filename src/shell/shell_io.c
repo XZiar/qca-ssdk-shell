@@ -20107,7 +20107,8 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("l2flow_type", "flow_aware");
@@ -20178,7 +20179,8 @@ cmd_data_print_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
             entry->deacclr_en, entry->l3route_only_en, entry->l2fwd_only_en);
     dprintf("\n[l3flow_en]:0x%x [l2flow_en]:0x%x [multicast_en]:0x%x ",
 			entry->l3flow_en, entry->l2flow_en, entry->multicast_en);
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         dprintf("\n");
         tmpdata = entry->l3flow_type;
         cmd_data_print_attr("flow_excep_type", "[l3flow_type]:", &tmpdata, sizeof(tmpdata));
@@ -29706,7 +29708,8 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
 
     aos_mem_zero(&entry, sizeof (fal_policer_config_t));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         cmd_data_check_element("meter_type", "rfc",
                         "usage:meter_type:rfc/mef10_3, etc\n",
                         cmd_data_check_attr, ("policer_meter_type", cmd,
@@ -29737,7 +29740,8 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("vp_policer_index", (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION)?"0-127":"0-511");
@@ -29894,7 +29898,8 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("cir_max", "0");
@@ -29962,7 +29967,8 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("eir_max", "0");
@@ -30008,7 +30014,8 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("next_ptr", "0");
@@ -30091,7 +30098,8 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
 
     aos_mem_zero(&entry, sizeof (fal_policer_config_t));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         cmd_data_check_element("meter_type", "rfc",
                         "usage:meter_type:rfc/mef10_3, etc\n",
                         cmd_data_check_attr, ("policer_meter_type", cmd,
@@ -30232,7 +30240,8 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("cir_max", "0");
@@ -30300,7 +30309,8 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("eir_max", "0");
@@ -30346,7 +30356,8 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("next_ptr", "0");
@@ -30531,7 +30542,8 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("yellow_dscp_remark", "no");
@@ -30671,7 +30683,8 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("yellow_dscp", "0-63");
@@ -30818,7 +30831,8 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("red_dscp_remark", "no");
@@ -30958,7 +30972,8 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("red_dscp", "0-63");
@@ -30994,7 +31009,8 @@ cmd_data_print_port_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_u
 
     entry = (fal_policer_config_t *) buf;
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         cmd_data_print_attr("policer_meter_type", "\n[meter_type]:",
     	    &(entry->meter_type), sizeof(entry->meter_type));
     }
@@ -31008,7 +31024,8 @@ cmd_data_print_port_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_u
         dprintf("\n[meter_enable]:no  ");
     }
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         dprintf("\n[vp_policer_index]:0x%x", entry->vp_meter_index);
     }
 
@@ -31035,14 +31052,17 @@ cmd_data_print_port_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_u
     }
 
     dprintf("\n[cir]:0x%08x  [cbs]:0x%08x  ", entry->cir, entry->cbs);
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         dprintf("\n[cir_max]:0x%08x  ", entry->cir_max);
     }
     dprintf("\n[eir]:0x%08x  [ebs]:0x%08x  ", entry->eir, entry->ebs);
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         dprintf("\n[eir_max]:0x%08x  ", entry->eir_max);
     }
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         dprintf("\n[next_ptr]:%d", entry->next_ptr);
         if (A_TRUE == entry->grp_end)
         {
@@ -31108,7 +31128,8 @@ cmd_data_print_policer_cmd_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
         dprintf("\n[yellow_dei_remark]:no  ");
     }
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         if (A_TRUE == entry->yellow_dscp_en)
         {
             dprintf("\n[yellow_dscp_remark]:yes  ");
@@ -31131,7 +31152,8 @@ cmd_data_print_policer_cmd_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
     dprintf("\n[yellow_drop_priority]:0x%x", entry->yellow_drop_priority);
     dprintf("\n[yellow_pcp]:0x%x", entry->yellow_pcp);
     dprintf("\n[yellow_dei]:0x%x", entry->yellow_dei);
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         dprintf("\n[yellow_dscp]:0x%x", entry->yellow_dscp);
     }
 
@@ -31180,7 +31202,8 @@ cmd_data_print_policer_cmd_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
         dprintf("\n[red_dei_remark]:no  ");
     }
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         if (A_TRUE == entry->red_dscp_en)
         {
             dprintf("\n[red_dscp_remark]:yes  ");
@@ -31203,7 +31226,8 @@ cmd_data_print_policer_cmd_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
     dprintf("\n[red_drop_priority]:0x%x", entry->red_drop_priority);
     dprintf("\n[red_pcp]:0x%x", entry->red_pcp);
     dprintf("\n[red_dei]:0x%x", entry->red_dei);
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         dprintf("\n[red_dscp]:0x%x", entry->red_dscp);
     }
 
@@ -31217,7 +31241,8 @@ cmd_data_print_acl_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 
     entry = (fal_policer_config_t *) buf;
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         cmd_data_print_attr("policer_meter_type", "\n[meter_type]:",
         &(entry->meter_type), sizeof(entry->meter_type));
     }
@@ -31254,14 +31279,17 @@ cmd_data_print_acl_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
     }
 
     dprintf("\n[cir]:0x%08x  [cbs]:0x%08x  ", entry->cir, entry->cbs);
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         dprintf("\n[cir_max]:0x%08x  ", entry->cir_max);
     }
     dprintf("\n[eir]:0x%08x  [ebs]:0x%08x  ", entry->eir, entry->ebs);
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         dprintf("\n[eir_max]:0x%08x  ", entry->eir_max);
     }
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         dprintf("\n[next_ptr]:%d", entry->next_ptr);
         if (A_TRUE == entry->grp_end)
         {
