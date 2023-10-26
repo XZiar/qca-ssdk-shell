@@ -1971,7 +1971,8 @@ cmd_data_print_mtu_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size
 
 	dprintf("\n[%s] \n", param_name);
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
 	{
 		cmd_data_print_enable("mtu_enable", &mtu_cfg->mtu_enable,
 			sizeof(mtu_cfg->mtu_enable));
@@ -2086,7 +2087,8 @@ cmd_data_check_mtu_cfg(char *cmd_str, void * val, a_uint32_t size)
 
     aos_mem_zero(&entry, sizeof (fal_mtu_cfg_t));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 
         cmd_data_check_element("mtu_enable", "enable",
                         "usage: usage: enable/disable\n",
@@ -3406,7 +3408,9 @@ cmd_data_check_portid(char *cmdstr, fal_port_t * val, a_uint32_t size)
     //default input null
     if(!strcasecmp(cmdstr, "null"))
     {
-        if (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE || ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
             return SW_BAD_VALUE;
         return SW_OK;
     }
@@ -27762,7 +27766,8 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         }
     }
     while (talk_mode && (SW_OK != rv));
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
     {
         do
         {
@@ -28022,7 +28027,8 @@ cmd_data_print_ctrlpkt_profile(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
     dprintf(" ");
     cmd_data_print_enable("dhcp6_en", (a_uint32_t *) & (entry->protocol_types.mgt_dhcp6), 4);
     dprintf(" ");
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
     {
         cmd_data_print_enable("8023ah_oam_en", (a_uint32_t *) &
             (entry->protocol_types.mgt_8023ah_oam), 4);
