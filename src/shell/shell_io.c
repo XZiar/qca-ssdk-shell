@@ -4224,7 +4224,8 @@ cmd_data_check_ruletype(char *cmd_str, fal_acl_rule_type_t * arg_val,
     }
     else
     {
-        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
         {
             if (!strcasecmp(cmd_str, "tunnel_mac"))
             {
@@ -4991,7 +4992,7 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
 
         if (tmpdata)
         {
-            cmd_data_check_element("vlanid opration", "mask",
+            cmd_data_check_element("vlanid operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
                                        &(entry->vid_op)));
@@ -5130,7 +5131,7 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
 
     if (tmpdata)
     {
-        cmd_data_check_element("stag vid opration", "mask",
+        cmd_data_check_element("stag vid operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
                                        &(entry->stag_vid_op)));
@@ -5247,7 +5248,7 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
 
     if (tmpdata)
     {
-        cmd_data_check_element("ctag vid opration", "mask",
+        cmd_data_check_element("ctag vid operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
                                        &(entry->ctag_vid_op)));
@@ -5718,7 +5719,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
 
     if (tmpdata)
     {
-        cmd_data_check_element("ip l4 dst port opration", "mask",
+        cmd_data_check_element("ip l4 dst port operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
                                        &(entry->dest_l4port_op)));
@@ -5770,7 +5771,7 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
 
     if (tmpdata)
     {
-        cmd_data_check_element("ip l4 src port opration", "mask",
+        cmd_data_check_element("ip l4 src port operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
                                        &(entry->src_l4port_op)));
@@ -6451,7 +6452,7 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if (tmpdata)
     {
-        cmd_data_check_element("udf0 opration", "mask",
+        cmd_data_check_element("udf0 operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
                                        &(entry->udf0_op)));
@@ -6502,7 +6503,7 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if (tmpdata)
     {
-        cmd_data_check_element("udf1 opration", "mask",
+        cmd_data_check_element("udf1 operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
                                        &(entry->udf1_op)));
@@ -6553,9 +6554,10 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if (tmpdata)
     {
-        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
         {
-            cmd_data_check_element("udf2 opration", "mask",
+            cmd_data_check_element("udf2 operation", "mask",
                                    "usage: <mask/range/le/ge/ne> \n",
                                    cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
                                            &(entry->udf2_op)));
@@ -6622,7 +6624,8 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
     }
 
     /* get udfprofile field configuration */
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
     {
         cmd_data_check_element("udfprofile", "no",
                                "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
@@ -7164,7 +7167,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
             FAL_ACL_RULE_TUNNEL_IP4 == entry->rule_type ||
             FAL_ACL_RULE_TUNNEL_IP6 == entry->rule_type ||
             FAL_ACL_RULE_TUNNEL_UDF == entry->rule_type) &&
-            (ssdk_cfg.init_cfg.chip_type == CHIP_APPE))
+            (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	     ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE))
         {
             cmd_data_check_element("snapt", "no", "usage: <yes/no/y/n>\n",
                                    cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
@@ -7422,7 +7426,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
         }
 
         /*new add bypass for IPQ95xx*/
-        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
         {
             cmd_data_check_element("bypass fake mac drop", "no", "usage: <yes/no/y/n>\n",
                     cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
@@ -7441,7 +7446,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
             }
 
             /*new add bypass for IPQ53xx*/
-            if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION)
+            if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION ||
+			    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
             {
                 cmd_data_check_element("bypass flow policer", "no", "usage: <yes/no/y/n>\n",
                         cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
@@ -7530,7 +7536,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
     if (A_TRUE == tmpdata)
     {
         FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_METADATA_EN);
-        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
         {
             /*policy id action configuration */
             cmd_data_check_element("policy id", "0",
@@ -7539,7 +7546,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                                    0x0));
             entry->policy_id= tmpdata & 0xffff;
 
-            if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION)
+            if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION ||
+			    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
             {
                 /*cookie value configuration*/
                 cmd_data_check_element("cookie value", "0",
@@ -7576,7 +7584,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
         FAL_ACL_RULE_TUNNEL_IP4 == entry->rule_type ||
         FAL_ACL_RULE_TUNNEL_IP6 == entry->rule_type ||
         FAL_ACL_RULE_TUNNEL_UDF == entry->rule_type) &&
-        (ssdk_cfg.init_cfg.chip_type == CHIP_APPE))
+        (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	 ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE))
     {
         /* cascade data action configuration */
         cmd_data_check_element("cascade data change", "no", "usage: <yes/no/y/n>\n",
@@ -7978,7 +7987,8 @@ cmd_data_check_aclrule(char *info, void *val, a_uint32_t size)
         FAL_FIELD_FLG_SET(entry.field_flg, FAL_ACL_FIELD_INVERSE_ALL);
     }
 
-    if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) &&
+    if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) &&
         (FAL_ACL_RULE_TUNNEL_MAC == entry.rule_type ||
         FAL_ACL_RULE_TUNNEL_IP4 == entry.rule_type ||
         FAL_ACL_RULE_TUNNEL_IP6 == entry.rule_type ||
@@ -8112,12 +8122,14 @@ static void cmd_data_print_acl_bypass_bitmap(a_uint32_t bitmap)
         dprintf("\t[bypass_pcp_qos]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_PCP_QOS)&0x1);
         dprintf("\t[bypass_preheader_qos]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_PREHEADER_QOS)&0x1);
         /*new add bypass for IPQ95xx*/
-        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
         {
             dprintf("\t[bypass_fake_mac_qos]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_FAKE_MAC_DROP)&0x1);
             dprintf("\t[bypass_tunnel_context]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_TUNL_CONTEXT)&0x1);
             /*new add bypass for IPQ53xx*/
-            if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION)
+            if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION ||
+			    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
             {
                 dprintf("\t[bypass_flow_policer]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_FLOW_POLICER)&0x1);
             }
@@ -8538,7 +8550,8 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF2))
     {
-        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
         {
             cmd_data_print_fieldop("\n[udf2_op]:",
                                    (a_uint32_t *) & (rule->udf2_op),
@@ -8596,7 +8609,8 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
 
     acl_rule_field_print(rule);
 
-    if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) &&
+    if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) &&
         (FAL_ACL_RULE_TUNNEL_MAC == rule->rule_type ||
         FAL_ACL_RULE_TUNNEL_IP4 == rule->rule_type ||
         FAL_ACL_RULE_TUNNEL_IP6 == rule->rule_type ||
@@ -8873,10 +8887,12 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_METADATA_EN))
     {
         dprintf("\n[meta_data]:yes");
-        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
         {
             dprintf("\n[policy_id]:0x%x", rule->policy_id);
-            if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION)
+            if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION ||
+			    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
             {
                 dprintf("\n[cookie_val]:0x%x", rule->cookie_val);
                 dprintf("\n[cookie_pri]:%d", rule->cookie_pri);
@@ -8895,7 +8911,8 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
         FAL_ACL_RULE_TUNNEL_IP4 == rule->rule_type ||
         FAL_ACL_RULE_TUNNEL_IP6 == rule->rule_type ||
         FAL_ACL_RULE_TUNNEL_UDF == rule->rule_type) &&
-        (ssdk_cfg.init_cfg.chip_type == CHIP_APPE))
+        (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE))
     {
         if (FAL_ACTION_FLG_TST(rule->action_flg_ext, FAL_ACL_ACTION_CASCADE))
         {
@@ -11866,7 +11883,8 @@ cmd_data_check_pppoe(char *cmd_str, void * val, a_uint32_t size)
     while (talk_mode && (SW_OK != rv));
 
     if (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+		    ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
     {
         do
         {
@@ -11997,7 +12015,8 @@ cmd_data_check_pppoe(char *cmd_str, void * val, a_uint32_t size)
         }
         while (talk_mode && (SW_OK != rv));
     }
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 	    do
 	    {
 		    cmd = get_sub_cmd("tl_l3if_index", "0");
@@ -12069,7 +12088,8 @@ cmd_data_print_pppoe(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     cmd_data_print_macaddr("[smacaddr]:", (a_uint32_t *) & (entry->smac_addr),
 		    sizeof(fal_mac_addr_t));
     dprintf("  [smacaddr_valid]:%s", entry->smac_valid ? "YES":"NO");
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 	    dprintf("  [tl_l3if_index]:0x%x  [tl_l3if_index_valid]:%s\n",
 			    entry->tl_l3_if_index, entry->tl_l3_if_valid ? "YES":"NO");
     }
@@ -37409,7 +37429,8 @@ cmd_data_check_tunnel_encap_entry(char *cmd_str, fal_tunnel_encap_cfg_t *arg_val
 		}
 	} while(talk_mode && (SW_OK != rv));
 
-	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 		do {
 			cmd = get_sub_cmd("mapt_udp_csm0_keep", "n");
 			SW_RTN_ON_NULL_PARAM(cmd);
@@ -37527,7 +37548,8 @@ cmd_data_print_tunnel_encap_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint3
 	cmd_data_print_confirm(" [vport_en]", entry->vport_en,
 			sizeof(entry->vport_en));
 	dprintf(" [cpu_vport]:%d", entry->vport);
-	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 			cmd_data_print_confirm(" [mapt_udp_csm0_keep]", entry->mapt_udp_csm0_keep,
 			sizeof(entry->mapt_udp_csm0_keep));
 	}
@@ -39163,7 +39185,8 @@ cmd_data_check_mapt_decap_entry(char *cmd_str, void *arg_val, a_uint32_t size)
 		}
 	} while (talk_mode && (SW_OK != rv));
 
-	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 		do {
 			cmd = get_sub_cmd("service_code_en", "n");
 			SW_RTN_ON_NULL_PARAM(cmd);
@@ -39254,7 +39277,8 @@ cmd_data_print_mapt_decap_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_
 	dprintf(" [edit_rule_id]:%d", entry->edit_rule_id);
 	dprintf(" [exp_profile]:%d", entry->exp_profile);
 	dprintf("\n");
-	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 		cmd_data_print_confirm("[service_code_en]", entry->service_code_en,
 			sizeof(entry->service_code_en));
 		dprintf(" [service_code]:%d", entry->service_code);
