@@ -29080,7 +29080,8 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
 
     aos_mem_zero(&entry, sizeof (fal_shaper_config_t));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         cmd_data_check_element("meter_type", "rfc",
                         "usage:meter_type:rfc/mef10_3, etc\n",
                         cmd_data_check_attr, ("shaper_meter_type", cmd,
@@ -29183,7 +29184,8 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("cir_max", "0");
@@ -29278,7 +29280,8 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("eir_max", "0");
@@ -29325,7 +29328,8 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         do
         {
             cmd = get_sub_cmd("next_ptr", "0");
@@ -29595,7 +29599,8 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 
     entry = (fal_shaper_config_t *) buf;
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         cmd_data_print_attr("shaper_meter_type", "\n[shaper_meter_type]:",
         &(entry->meter_type), sizeof(entry->meter_type));
     }
@@ -29621,7 +29626,8 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
     }
 
     dprintf("\n[shaper_cir]:0x%x", entry->cir);
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         dprintf("\n[shaper_cir_max]:0x%x", entry->cir_max);
     }
     dprintf("\n[shaper_cbs]:0x%x", entry->cbs);
@@ -29636,12 +29642,14 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
     }
 
     dprintf("\n[shaper_eir]:0x%x", entry->eir);
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         dprintf("\n[shaper_eir_max]:0x%x", entry->eir_max);
     }
     dprintf("\n[shaper_ebs]:0x%x", entry->ebs);
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         dprintf("\n[next_ptr]:%d", entry->next_ptr);
         if (A_TRUE == entry->grp_end)
         {
