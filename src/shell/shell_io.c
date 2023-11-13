@@ -18026,7 +18026,8 @@ cmd_data_check_intf(char *cmd_str, void * val, a_uint32_t size)
                            cmd_data_check_macaddr, (cmd, &(entry.mac_addr),
                                    sizeof (fal_mac_addr_t)));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) ||
+		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)){
 	    do {
 		    cmd = get_sub_cmd("dmac_check_en", "no");
 		    SW_RTN_ON_NULL_PARAM(cmd);
@@ -18131,6 +18132,33 @@ cmd_data_check_intf(char *cmd_str, void * val, a_uint32_t size)
 			    }
 		    }
 	    } while (talk_mode && (SW_OK != rv));
+
+		if(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
+			do {
+			    cmd = get_sub_cmd("in_mac_valid", "no");
+			    SW_RTN_ON_NULL_PARAM(cmd);
+
+			    if (!strncasecmp(cmd, "quit", 4)) {
+				    return SW_BAD_VALUE;
+			    }
+			    else if (!strncasecmp(cmd, "help", 4)) {
+				    dprintf("usage: <yes/no/y/n>\n");
+				    rv = SW_BAD_VALUE;
+			    }
+			    else {
+				    rv = cmd_data_check_confirm(cmd, A_FALSE,
+						    &(entry.in_mac_valid), sizeof(a_bool_t));
+				    if (SW_OK != rv)
+					    dprintf("usage: <yes/no/y/n>\n");
+			    }
+		    } while (talk_mode && (SW_OK != rv));
+
+			if(entry.in_mac_valid)
+			    cmd_data_check_element("in_mac_addr", NULL,
+		                       "usage: the format is xx-xx-xx-xx-xx-xx \n",
+		                       cmd_data_check_macaddr, (cmd, &(entry.in_mac_addr),
+		                               sizeof (fal_mac_addr_t)));
+		}
     }
 
     *(fal_intf_entry_t *)val = entry;
@@ -23004,7 +23032,31 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    do
+    {
+        cmd = get_sub_cmd("flow_cookie_ext", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: flow_cookie_ext \n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint32(cmd, &(flow_qos->flow_cookie_ext), sizeof (a_uint32_t));
+            if (SW_OK != rv)
+                dprintf("usage: flow_cookie_ext \n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) ||
+		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)){
 	    do
 	    {
 		    cmd = get_sub_cmd("pmtu_check_l3", "yes");
@@ -23183,7 +23235,8 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 		    }
 	    } while (talk_mode && (SW_OK != rv));
 
-	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+	    if ((ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) ||
+			(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)){
 		    cmd_data_check_element("qos_type", "0",
 				    "usage: 0 for tree_id, 1 for flowcookie\n",
 				    cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
@@ -23241,9 +23294,9 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		    entry->port_valid, entry->route_port, entry->bridge_port,
 		    entry->deacclr_en, entry->copy_tocpu_en);
     dprintf("\n[syn_toggle]:0x%x [pri_profile]:0x%x [sevice_code]:0x%x [ip_type]:0x%x \
-		    [src_port]:0x%x [dst_port]:0x%x [tree_id]:0x%x ",
+		    [src_port]:0x%x [dst_port]:0x%x [tree_id]:0x%x [flow_cookie_ext]:0x%x",
 		    entry->syn_toggle, entry->pri_profile, entry->sevice_code,
-		    entry->ip_type, entry->src_port, entry->dst_port, flow_qos->tree_id);
+		    entry->ip_type, entry->src_port, entry->dst_port, flow_qos->tree_id, flow_qos->flow_cookie_ext);
     if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
 	    dprintf("\n[pmtu_check_l3]:0x%x [pmtu]:0x%x [vpn_id]:0x%x",
 			    entry->pmtu_check_l3, entry->pmtu, entry->vpn_id);
@@ -24433,7 +24486,8 @@ cmd_data_print_intf(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
                            (a_uint32_t *) & (entry->mac_addr),
                            sizeof (fal_mac_addr_t));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) || 
+		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)) {
 	    cmd_data_print_confirm("\n[dmac_check_en]", entry->dmac_check_en,
 			    sizeof(a_bool_t));
 	    dprintf(" [ipv6_mru]:0x%x [ipv6_mtu]:0x%x ", entry->ip6_mru, entry->ip6_mtu);
@@ -24442,6 +24496,13 @@ cmd_data_print_intf(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 			    sizeof(fal_udp_zero_csum_cmd_t));
 	    dprintf(" [vpn_id]:%d", entry->vpn_id);
     }
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
+	    cmd_data_print_confirm("\n[in_mac_valid]", entry->in_mac_valid,
+			    sizeof(a_bool_t));		
+    	cmd_data_print_macaddr("\n[in_mac_addr]:",
+                           (a_uint32_t *) & (entry->in_mac_addr),
+                           sizeof (fal_mac_addr_t));
+	}
 
     dprintf("\n[rx_pkt]:0x%x  [rx_byte]:0x%x  [rx_drop_pkt]:0x%x "
 				"[rx_drop_byte]:0x%x  ",
@@ -40967,6 +41028,11 @@ cmd_data_check_flow_qos(char *cmd_str, fal_flow_qos_t *arg_val, a_uint32_t size)
 			cmd_data_check_uint32,
 			(cmd, &(entry.tree_id), sizeof(entry.tree_id)));
 
+        cmd_data_check_element("flow_cookie_ext", "0",
+			"usage: flow_cookie_ext for qos\n",
+			cmd_data_check_uint32,
+			(cmd, &(entry.flow_cookie_ext), sizeof(entry.flow_cookie_ext)));
+
         cmd_data_check_element("wifi_qos_en", "disable",
 			"usage: usage: enable/disable\n",
 			cmd_data_check_enable,
@@ -40977,7 +41043,8 @@ cmd_data_check_flow_qos(char *cmd_str, fal_flow_qos_t *arg_val, a_uint32_t size)
 			cmd_data_check_uint32,
 			(cmd, &(entry.wifi_qos), sizeof(entry.wifi_qos)));
 
-	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+	if ((ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) ||
+		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)){
 		cmd_data_check_element("qos_type", "0",
 				"usage: 0 for tree_id, 1 for flowcookie\n",
 				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
@@ -40999,10 +41066,12 @@ cmd_data_print_flow_qos(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 	dprintf("\n[%s] \n", param_name);
 
 	cmd_data_print_uint32("tree_id", &entry->tree_id, sizeof(entry->tree_id));
+	cmd_data_print_uint32("flow_cookie_ext", &entry->flow_cookie_ext, sizeof(entry->flow_cookie_ext));	
 	cmd_data_print_enable("wifi_qos_en", &entry->wifi_qos_en, sizeof(entry->wifi_qos_en));
 	cmd_data_print_uint32("wifi_qos", &entry->wifi_qos, sizeof(entry->wifi_qos));
 
-	if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+	if ((ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) ||
+		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)) {
 		cmd_data_print_uint8("qos_type", (a_uint32_t *)&entry->qos_type,
 				sizeof(a_uint32_t));
 	}

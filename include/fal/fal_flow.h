@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2023, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -68,6 +68,7 @@ typedef enum {
 #define FAL_FLOW_QOS_TYPE_COOKIE	1
 typedef struct {
 	a_uint32_t tree_id; /*for qos for flow cookie */
+	a_uint32_t flow_cookie_ext; /* flow_cookie_ext, added for ipq54xx */
 	a_bool_t wifi_qos_en; /* enable wifi qos or not, added for ipq95xx */
 	a_uint32_t wifi_qos; /* wifi qos value, added for ipq95xx */
 	a_uint8_t qos_type; /* wifi qos value, added for ipq53xx */
