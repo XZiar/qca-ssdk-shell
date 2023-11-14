@@ -135,6 +135,8 @@ extern "C" {
 	    CHIP_MRPPE,
     } ssdk_chip_type;
 /*qca808x_end*/
+
+#define APPE_REVISION       0x0
 #define MPPE_REVISION		0x1
 
     typedef struct

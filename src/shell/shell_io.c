@@ -9483,7 +9483,8 @@ cmd_data_check_vlan_translation(char *info, fal_vlan_trans_entry_t *val, a_uint3
     memset(&entry, 0, sizeof (fal_vlan_trans_entry_t));
 
     if (ssdk_cfg.init_cfg.chip_type != CHIP_HPPE &&
-		    ssdk_cfg.init_cfg.chip_type != CHIP_APPE) {
+		ssdk_cfg.init_cfg.chip_type != CHIP_APPE &&
+		ssdk_cfg.init_cfg.chip_type != CHIP_MRPPE) {
 	do
 	{
 		cmd = get_sub_cmd("ovid", "1");
@@ -9752,7 +9753,8 @@ cmd_data_check_vlan_translation(char *info, fal_vlan_trans_entry_t *val, a_uint3
     }
 
     if (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	    ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 	do
 	{
 		cmd = get_sub_cmd("direction", "0");
@@ -10887,7 +10889,8 @@ cmd_data_print_vlan_translation(a_uint8_t * param_name, a_uint32_t * buf, a_uint
     entry = (fal_vlan_trans_entry_t *) buf;
 
     if (ssdk_cfg.init_cfg.chip_type != CHIP_HPPE &&
-		    ssdk_cfg.init_cfg.chip_type != CHIP_APPE) {
+	    ssdk_cfg.init_cfg.chip_type != CHIP_APPE &&
+	    ssdk_cfg.init_cfg.chip_type != CHIP_MRPPE) {
 	    dprintf("[Ovid]:0x%x  [Svid]:0x%x  [Cvid]:0x%x  [BiDirect]:%s  [ForwardDirect]:%s  [ReverseDirect]:%s",
 		    entry->o_vid, entry->s_vid, entry->c_vid,
 		    entry->bi_dir?"ENABLE":"DISABLE",
@@ -10901,8 +10904,9 @@ cmd_data_print_vlan_translation(a_uint8_t * param_name, a_uint32_t * buf, a_uint
 		    entry->one_2_one_vlan?"YES":"NO");
     }
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE ||
+	    ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+	    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 	    dprintf("\n\n rule field: ");
 	    dprintf("\n[TranslateDirect]:%d", entry->trans_direction);
 	    dprintf("\n[port_bitmap]:0x%x",
@@ -25142,7 +25146,8 @@ cmd_data_check_port_qinqmode(char *info, void *val, a_uint32_t size)
 		}
 	}while (talk_mode && (SW_OK != rv));
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 		do
 		{
 			cmd = get_sub_cmd("tunnel_qinq_role", "edge");
@@ -25167,7 +25172,8 @@ cmd_data_check_port_qinqmode(char *info, void *val, a_uint32_t size)
 		} while (talk_mode && (SW_OK != rv));
 
 		/* select which port used for ingress_port_role */
-	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+	    if (!(ssdk_cfg.init_cfg.chip_type == CHIP_APPE &&
+			ssdk_cfg.init_cfg.chip_revision == APPE_REVISION)) {
 		    cmd_data_check_element("tunnel_ingress_port_select", "tnl_decap_src_vp",
 							"usage: tnl_decap_src_vp or org_src_port\n",
 							cmd_data_check_attr, ("port_select", cmd,
@@ -25195,13 +25201,15 @@ cmd_data_print_port_qinqmode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 			(a_uint32_t *) & (entry->egress_port_role),
 			sizeof(a_uint32_t));
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 		cmd_data_print_qinq_role("tunnel_qinq_role",
 				(a_uint32_t *) & (entry->tunnel_port_role),
 				sizeof(a_uint32_t));
 
 		/* print which port selected for ingress_port_role */
-	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+	    if (!(ssdk_cfg.init_cfg.chip_type == CHIP_APPE &&
+			ssdk_cfg.init_cfg.chip_revision == APPE_REVISION)) {
 		    cmd_data_print_attr("port_select", "[tunnel_ingress_port_select]:",
 				&(entry->ingress_port_sel), sizeof(entry->ingress_port_sel));
 			dprintf("\n");
@@ -25294,7 +25302,8 @@ cmd_data_check_tpid(char *info, void *val, a_uint32_t size)
 		}
 	} while (talk_mode && (SW_OK != rv));
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 		do
 		{
 			cmd = get_sub_cmd("tunnel_ctagtpid", "0x8100");
@@ -25358,7 +25367,8 @@ cmd_data_print_tpid(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 	dprintf("[mask]:%d\n", entry->mask);
 	dprintf("[ctagtpid]:0x%x\n", entry->ctpid);
 	dprintf("[stagtpid]:0x%x\n", entry->stpid);
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 		dprintf("[tunnel_ctagtpid]:0x%x\n", entry->tunnel_ctpid);
 		dprintf("[tunnel_stagtpid]:0x%x\n", entry->tunnel_stpid);
 	}
@@ -25465,7 +25475,8 @@ cmd_data_check_ingress_filter(char *info, void *val, a_uint32_t size)
         }
     }while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 	    /* get tag filter */
 	    do
 	    {
@@ -25559,7 +25570,8 @@ cmd_data_print_ingress_filter(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     cmd_data_print_enable("priority_tagged_filter_en", (a_uint32_t *) &
         (entry->priority_filter), 4);
     dprintf("\n");
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
 	    cmd_data_print_enable("ctag_tagged_filter_en",
 			    (a_uint32_t *) & (entry->ctag_tagged_filter), sizeof(a_uint32_t));
 	    dprintf("\n");
