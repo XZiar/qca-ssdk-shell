@@ -11513,7 +11513,15 @@ static void
 _cmd_collect_shell_cfg(ssdk_cfg_t *shell_cfg)
 {
     memset(shell_cfg, 0, sizeof(ssdk_cfg_t));
+#ifdef IOCTL_COMPAT
+    shell_cfg->init_cfg.cpu_mode = init_cfg.cpu_mode;
+    shell_cfg->init_cfg.reg_mode = init_cfg.reg_mode;
+    shell_cfg->init_cfg.chip_type = init_cfg.chip_type;
+    shell_cfg->init_cfg.chip_revision = init_cfg.chip_revision;
+    shell_cfg->init_cfg.nl_prot = init_cfg.nl_prot;
+#else
     shell_cfg->init_cfg = init_cfg;
+#endif
 
 #ifdef VERSION
     aos_mem_copy(shell_cfg->build_ver, VERSION, sizeof(VERSION));
@@ -11580,7 +11588,7 @@ _cmd_collect_shell_cfg(ssdk_cfg_t *shell_cfg)
 static void
 _cmd_data_print_cfg(ssdk_cfg_t *entry)
 {
-    ssdk_init_cfg *init = &(entry->init_cfg);
+    ssdk_init_cfg_us *init = &(entry->init_cfg);
 
     dprintf("[build verison]:%-10s [build date]:%s\n", entry->build_ver, entry->build_date);
     dprintf("[chip type]:%-14s [arch]:%-12s [os]:%s\n", entry->chip_type, entry->cpu_type, entry->os_info);
@@ -11591,8 +11599,10 @@ _cmd_data_print_cfg(ssdk_cfg_t *entry)
             cmd_cpu_mode(init->cpu_mode), cmd_access_mode(init->reg_mode),
             init->nl_prot);
 /*qca808x_end*/
-    dprintf("[inf defined]:mdio_set(%s) mdio_get(%s) header_reg_set(%s) header_reg_get(%s)\n",
+#if 0
+dprintf("[inf defined]:mdio_set(%s) mdio_get(%s) header_reg_set(%s) header_reg_get(%s)\n",
             DEFINED2STR(mdio_set), DEFINED2STR(mdio_get), DEFINED2STR(header_reg_set), DEFINED2STR(header_reg_get));
+#endif
 /*qca808x_start*/
 }
 
